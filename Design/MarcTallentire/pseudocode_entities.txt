@@ -1,0 +1,99 @@
+// this manages entities on a turn by turn basis.
+EntityManager
+{
+	Container entity
+	
+	Add( Entity e )
+	{
+		add Entity to container
+	}
+	
+	Remove( Entity e )
+	{
+		remove Entity from container
+        entity.onDestroy
+	}
+	
+	TakeTurn()
+	{
+		foreach entity
+			turn()
+				
+	}
+
+
+}
+
+// Entity, Entities are basic things that turns are processed for. They have no real behaviour beyond that.
+// most Entities should probably have Actions associated with them that get used in the projectile management process.
+Entity()
+{	
+
+    Entity(Controller)
+    {
+        onCreate();
+        controller = controller.setEntity(this)
+        controller = this.controller
+    
+    }
+	turn()
+	{
+		 Controller::getEvents()
+	}
+    
+    move(Cell)
+    {
+        if( Cell is empty & is movable )
+        {
+            Cell::setEntity( this )
+            currentcell.add( Cell )
+            
+        }
+    }
+    
+    getCell()
+    {
+        returns current cell
+    }
+    
+    onCreate()
+    {
+        // logical implementation
+    }
+    
+    onDestroy()
+    {
+        // logical implementation
+    }
+    
+    onUpdate()
+    {
+        // logical implementation
+    }
+}
+
+// This can be extended into a PC or an NPC controller NPC controllers will be AIs etc.
+Controller
+{
+    eventQueue;
+    
+    getEvents()
+    {
+        return eventQueue;
+    }
+}
+
+PlayerController extends Controller
+{
+    onMouseButtonDown()
+    {
+    
+    }
+    
+    onKeyPressed()
+    {
+    
+    }
+    
+    ... etc general inputs ...
+}

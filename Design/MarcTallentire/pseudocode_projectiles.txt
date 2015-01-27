@@ -1,0 +1,64 @@
+ProjectileManager	// may extend entity, may not.
+{	
+	// action is the skill or type of projectile is it should probably just be a reference to something that
+	// projectile stores.
+	// the receiver is a pointer to a cell so if it is tracking it will try to track the cell of the player it's going towards.
+	// I have NO IDEA if this will end up working in practice but it seems cool.
+	GetProjectile( Ref action, BGO sender, pointer Cell receiver )
+	{
+		if( projectileQueueEmpty )
+		{
+			pro = new Projectile( Ref action, sender )
+		}
+		else
+		{
+			pro = projectileQueue::head
+		}
+		
+		entityManager.add(pro)
+	}
+    
+    enqueue( Projectile )
+    {
+        queue.add( Projectile );
+    }
+    
+    onDestroy()
+    {
+        delete queue and content.
+    }
+}
+
+
+Projectile extends entity 
+{
+	setSpeed(speed)
+	{
+	   _speed = speed
+	}
+	
+	onHit()
+	{
+		Action::onHit	
+		speed = 0
+		ProjectileManager enqueue this	// If this should be persistant it should be handled in actions onhit, and be converted to some other entity.
+		entityManager.remove(this)
+	}
+    
+    onDestroy()
+    {
+        ProjectileManager.enqueue( this );
+    }
+}
+
+
+// This should be referenced by a projectile, when it is created is unknown, that's up to logic team, I would advice attaching it to a character
+// and passing it to the function by reference.
+Action <-- needs to be implemented by logic team.
+{
+	onHit()
+	{
+		// Logic team implementation, this can be whateven
+	}
+
+}
