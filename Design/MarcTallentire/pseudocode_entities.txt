@@ -33,7 +33,6 @@ Entity()
     {
         onCreate();
         controller = controller.setEntity(this)
-        controller = this.controller
     
     }
 	turn()
@@ -41,19 +40,67 @@ Entity()
 		 Controller::getEvents()
 	}
     
-    move(Cell)
+    // This is a bit codey for pseudo-code, but it's done very particular
+    // this function returns the entity collided with on failure and NULL on success.
+    Entity move(float x, float y)
     {
-        if( Cell is empty & is movable )
+        if( entity is 1 cell in size )
         {
-            Cell::setEntity( this )
-            currentcell.add( Cell )
+            // Store all cells moved to in a set. so as to not store any duplicates.
+            tempSet = Map->getCell( floor(x), floor(y) )
+            tempSet = Map->getCell( ceil(x),  ceil(y)  )
+            tempSet = Map->getCell( ceil(x),  floor(y) )
+            tempSet = Map->getCell( floor(x), ceil(y)  )
             
+            // Check if any entities are overlapping.
+            // NOTE: if only one entity can be in a cell at a time this can be simplified.
+            foreach( tempSet t )
+            {
+                if( cell isn't empty )
+                {
+                    foreach( entity in cell e )
+                    {
+                        if( e.checkCollision( this ) )
+                            return e    // return entity blocking
+                    }
+                }
+           }
+           
+           foreach( tempSet t )
+           {
+                t->setEntity( this )
+           }
+            
+            // remove from current.
+            Map->getCell( floor(this.x), floor(this.y) ).removeEntity( this )
+            Map->getCell(  ceil(this.x),  ceil(this.y) ).removeEntity( this )
+            Map->getCell(  ceil(this.x), floor(this.y) ).removeEntity( this )
+            Map->getCell( floor(this.x),  ceil(this.y) ).removeEntity( this )
+            
+            tempSet = cellSet;
+            this x = x
+            this y = y
+            xbound = x + 1;
+            ybound = y + 1;
         }
     }
     
-    getCell()
+    checkCollision( Entity e )
     {
-        returns current cell
+            
+        if( entity's bounds overlap )
+        {
+        
+            return true;
+        }
+    
+    }
+    
+
+    
+    getCells()
+    {
+        returns cellSet
     }
     
     onCreate()
