@@ -37,7 +37,12 @@ Entity()
     }
 	turn()
 	{
-		 Controller::getEvents()
+		 Foreach( Controller::getEvents() )
+         {
+            run event
+         }
+         Controller::ClearEvents
+         
 	}
     
     // This is a bit codey for pseudo-code, but it's done very particular
@@ -132,6 +137,10 @@ Controller
 
 PlayerController extends Controller
 {
+    getEvents()
+    {
+        return eventQueue;
+    }
     onMouseButtonDown()
     {
     
