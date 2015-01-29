@@ -1,0 +1,155 @@
+// this manages entities on a turn by turn basis.
+EntityManager
+{
+	Container entity
+	
+	Add( Entity e )
+	{
+		add Entity to container
+	}
+	
+	Remove( Entity e )
+	{
+		remove Entity from container
+        entity.onDestroy
+	}
+	
+	TakeTurn()
+	{
+		foreach entity
+			turn()
+				
+	}
+
+
+}
+
+// Entity, Entities are basic things that turns are processed for. They have no real behaviour beyond that.
+// most Entities should probably have Actions associated with them that get used in the projectile management process.
+Entity()
+{	
+
+    Entity(Controller)
+    {
+        onCreate();
+        controller = controller.setEntity(this)
+    
+    }
+	turn()
+	{
+		 Foreach( Controller::getEvents() )
+         {
+            run event
+         }
+         Controller::ClearEvents
+         
+	}
+    
+    // This is a bit codey for pseudo-code, but it's done very particular
+    // this function returns the entity collided with on failure and NULL on success.
+    Entity move(float x, float y)
+    {
+        if( entity is 1 cell in size )
+        {
+            // Store all cells moved to in a set. so as to not store any duplicates.
+            tempSet = Map->getCell( floor(x), floor(y) )
+            tempSet = Map->getCell( ceil(x),  ceil(y)  )
+            tempSet = Map->getCell( ceil(x),  floor(y) )
+            tempSet = Map->getCell( floor(x), ceil(y)  )
+            
+            // Check if any entities are overlapping.
+            // NOTE: if only one entity can be in a cell at a time this can be simplified.
+            foreach( tempSet t )
+            {
+                if( cell isn't empty )
+                {
+                    foreach( entity in cell e )
+                    {
+                        if( e.checkCollision( this ) )
+                            return e    // return entity blocking
+                    }
+                }
+           }
+           
+           foreach( tempSet t )
+           {
+                t->setEntity( this )
+           }
+            
+            // remove from current.
+            Map->getCell( floor(this.x), floor(this.y) ).removeEntity( this )
+            Map->getCell(  ceil(this.x),  ceil(this.y) ).removeEntity( this )
+            Map->getCell(  ceil(this.x), floor(this.y) ).removeEntity( this )
+            Map->getCell( floor(this.x),  ceil(this.y) ).removeEntity( this )
+            
+            tempSet = cellSet;
+            this x = x
+            this y = y
+            xbound = x + 1;
+            ybound = y + 1;
+        }
+    }
+    
+    checkCollision( Entity e )
+    {
+            
+        if( entity's bounds overlap )
+        {
+        
+            return true;
+        }
+    
+    }
+    
+
+    
+    getCells()
+    {
+        returns cellSet
+    }
+    
+    onCreate()
+    {
+        // logical implementation
+    }
+    
+    onDestroy()
+    {
+        // logical implementation
+    }
+    
+    onUpdate()
+    {
+        // logical implementation
+    }
+}
+
+// This can be extended into a PC or an NPC controller NPC controllers will be AIs etc.
+Controller
+{
+    eventQueue;
+    
+    getEvents()
+    {
+        return eventQueue;
+    }
+}
+
+PlayerController extends Controller
+{
+    getEvents()
+    {
+        return eventQueue;
+    }
+    onMouseButtonDown()
+    {
+    
+    }
+    
+    onKeyPressed()
+    {
+    
+    }
+    
+    ... etc general inputs ...
+}
