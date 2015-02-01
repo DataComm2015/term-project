@@ -1,0 +1,95 @@
+Batch
+{
+	ObjectBatch(sf::RenderTarget &renderer, uint maxSprites = 1000)
+	{
+		initialize variables;
+		create vertices holder;
+		deactivate self;
+	}
+	~ObjectBatch()
+	{
+		delete/free vertices;
+	}
+
+	void begin()
+	{
+		if I'm currently activated
+		{
+			throw an error;
+		}
+
+		reset status variables;
+		activate myself;
+	}
+	void end()
+	{
+		if I'm not activated
+		{
+			throw an error;
+		}
+
+		call flush();
+		deactivate myself;
+		update status variables;
+	}
+
+	uint prepareDraw(sf::Texture &texture)
+	{
+		if I'm not activated
+		{
+			throw an error;
+		}
+
+		if the texture is not the one I'm currently batching with
+		{
+			call flush();
+			assign my texture to the new one;
+		}
+		else if I've reached my batching limits
+		{
+			call flush();
+		}
+
+		return the first index for the current batching process;
+	}
+	void flush()
+	{
+		return if there is nothing to flush;
+		update status variables;
+		get my renderer to draw my batch;
+		increment drawcalls variable;
+		reset object count;
+	}
+
+	// Might change it so that it combines my renderstates with the one passed in through this method
+	void draw(BGO &bgo, bool scenegraph = false, sf::RenderStates states = sf::RenderStates::Default)
+	{
+		if we're drawing bgo and its children
+			call bgo's draw_sg() method and passing in myself and my renderstates;
+		else
+			call bgo's draw() method and passing in myself and my renderstates;
+	}
+	void draw(SGO &sgo, sf::RenderStates states = sf::RenderStates::Default)
+	{
+		combine sgo's transform matrix with states';
+		calculate and store transformed vertices positions;
+		create the appropriate vertices;
+		send sgo's texture and the newly made vertices to the last draw call;
+	}
+	void draw(TGO &tgo, sf::RenderStates states = sf::RenderStates::Default)
+	{
+		if I'm not activated
+		{
+			throw an error;
+		}
+		call flush();
+		get my renderer to draw this tgo with the states;
+		increment drawcalls variable;
+	}
+	void draw(sf::Texture &texture, sf::Vertex *vertices)
+	{
+		call prepareDraw() with the texture and store its return value;
+		use the return value to point to the first vertex we can use;
+		assign each vertices I'm holding with the vertices passed into this method;
+	}
+}
