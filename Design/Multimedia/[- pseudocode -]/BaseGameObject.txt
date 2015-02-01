@@ -72,7 +72,7 @@ BGO
 	{
 		if hasChildren()
 		{
-			update all my children by calling its update_sg() function and passing in time t;
+			update all my children by calling its update_sg() method and passing in time t;
 		}
 	}
 	void update(sf::Time&)
@@ -86,7 +86,7 @@ BGO
 		{
 			combine my transform matrix with parentStates';
 
-			draw all my children by calling its draw_sg() function and passing in the batch and combined matrix;
+			draw all my children by calling its draw_sg() method and passing in the batch and combined matrix;
 		}
 	}
 	void draw(Batch, sf::RenderStates)

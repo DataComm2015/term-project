@@ -1,5 +1,5 @@
 // For the ones that have the same implementation for both SGO and TGO, it'll be called XGO
-// data refers to either the sprite or text that the GO is holding
+// "data" refers to either the sprite or text that the GO is holding
 
 SGO/TGO
 {

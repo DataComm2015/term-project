@@ -72,6 +72,7 @@ BaseParticleSystem
 }
 
 // the particle builder interface
+
 ParticleBuilder
 {
 	void build(const ParticleSystem &ps, const unsigned int &m_particleCount, const ParticleSystem::Particle *m_particles, sf::Vertex *m_vertices, unsigned int &m_drawCount)
