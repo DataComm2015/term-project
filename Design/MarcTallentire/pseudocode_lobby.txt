@@ -1,0 +1,52 @@
+// Lobby object
+Lobby
+{
+    playerQueue[]
+    spectatorQueue[]
+    
+    int playerLimit    // Network or logic team to set
+    int spectatorLimit // Network or logic team to set
+
+    bool joinBlock
+    
+    // lobby functions
+    join(player)
+    {
+        if(spectatorQueue[].length < spectatorLimit)
+            Add player to spectatorQueue
+        else
+            player cannot join lobby
+
+        if(joinable())
+            move player from spectatorQueue to playerQueue
+    }
+    
+    leave(player)
+    {
+        Remove player from PlayerQueue
+        move first player from spectatorQueue to playerQueue
+    }
+    
+    joinable()
+    {
+        if(playerQueue[].length < playerLimit && !joinBlock)
+            return true
+        else
+            return false
+    }
+    
+    changeScene()
+    {
+        Do something like starting the game etc.
+    }
+}
+
+
+// Player object
+Player
+{
+    playerID
+    playerDataStructure
+}
+
+
