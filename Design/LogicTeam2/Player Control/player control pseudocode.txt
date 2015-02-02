@@ -1,0 +1,33 @@
+function to detect movement
+    if WASD key is pressed
+        case W, if "up" has no obstacles, if "up" is not the edge of the map,
+            then move champion "up"
+        case A, if "left" has no obstacles, if "left" is not the edge of the map,
+            then move champion "left"
+        case S, if "down" has no obstacles, if "down" is not the edge of the map,
+            then move champion "down"    
+        case D, if "right" has no obstacles, if "right" is not the edge of the map,
+            then move champion "right"        
+        for all cases,
+            update champion X, Y on map
+            if powerup/powerdown exists in current cell
+                update champion status
+            
+
+function to detect mouse click
+    if right click detected
+        if space bar is pressed down
+            if long-cooldown special attack has finished cooldown
+                if clicked coordinate is within long-cooldown special attack range
+                    do long-cooldown special attack on target X, Y
+        else if shift key is pressed down
+            if medium-cooldown special attack has finished cooldown
+                if clicked coordinate is within medium-cooldown special attack range
+                    do medium-cooldown special attack on target X, Y
+        else if neither key was pressed down
+            if short-cooldown special attack has finished cooldown
+                if clicked coordinate is within short-cooldown special attack range
+                    do short-cooldown special attack on target X, Y
+    else if left click detected
+        if clicked coordinate is within current normal attack range
+            do current normal attack on target X, Y
