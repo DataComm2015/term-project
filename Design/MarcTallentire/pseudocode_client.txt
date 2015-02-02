@@ -1,0 +1,17 @@
+// Note this interacts with Scenes a lot, in general they are responsible for the work this just calls them
+
+AppWindow
+{
+	Collection of Scenes scene
+	
+	GameLoop
+	{
+		foreach scene
+			ProcessEvents
+			Update
+			Draw
+	}
+	
+	addScene
+	removeScene
+}
