@@ -1,0 +1,39 @@
+// This is a single instance of a game
+World
+{
+	Map map
+	EntityManager manager	// Manager for when game loop is going
+	Array cells[][]		// Could be the map, we may want some abstraction though
+	Container entities	// Holds all entities in current game instance
+	Lobby _lobby
+	
+	// World is held in Lobby, but also needs some information from lobby
+	World (Lobby lobby)
+	{
+		_lobby = lobby;
+	}
+	
+	init()
+	{
+		foreach cell in cells
+			cell.init()
+		map.load()
+	}
+
+	setCell(Cell c, Entitiy e)
+	{
+		c.addEntity(e)
+		e.setCell(c)
+	}
+	
+	getEntities()
+	{
+		return entities
+	}
+	
+	getCells()
+	{
+		return cells
+	}
+
+}
