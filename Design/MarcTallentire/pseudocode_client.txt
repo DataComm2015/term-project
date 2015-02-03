@@ -4,7 +4,7 @@ AppWindow
 {
 	Collection of Scenes scene
 	
-	GameLoop
+	GameLoop()
 	{
 		foreach scene
 			ProcessEvents
@@ -12,6 +12,6 @@ AppWindow
 			Draw
 	}
 	
-	addScene
-	removeScene
+	addScene()
+	removeScene()
 }
