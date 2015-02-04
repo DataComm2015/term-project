@@ -25,6 +25,17 @@ BaseParticleSystem
 			use batch's renderer to draw myself;
 		}
 	}
+	
+	void addCollisionRect(sf::FloatRect rect)
+	{
+		add rect to collisionrects
+	}
+	
+	void clearCollisionRects()
+	{
+		empty collisionrects
+	}
+	
 	void update(sf::Time&)
 	{
 		spawn and update particles till you can't spawn anymore;
@@ -34,6 +45,18 @@ BaseParticleSystem
 		build vertices;
 
 		update status; // total particle count
+	}
+	
+	void detectCollisions(Particle& p)
+	{
+		for each collision rectangle
+			if the vertex is in the rectangle
+				collide particle p
+	}
+	
+	void collide(Particle& p, sf::FloatRect rect)
+	{
+		//empty
 	}
 
 	void setTexture(TextureData newtexture)
