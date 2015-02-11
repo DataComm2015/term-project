@@ -37,12 +37,14 @@ int main(int argc, char* argv[])
 	if (argc != 3)
 	{
 		cerr << "Invalid command line arguments." << endl;
+		cerr << "Usage:" << endl << endl;
+		cerr << "./mapgen [width in cells] [height in cells]" << endl;
 		exit(1);
 	}
 
 	// Retrieve values from command line arguments
-	int mWidth = atoi(argv[0]);
-	int mHeight = atoi(argv[1]);
+	int mWidth = atoi(argv[1]);
+	int mHeight = atoi(argv[2]);
 
 	// Create a 2D cell array
 	Cell **cellMap = new Cell*[mHeight];
@@ -55,6 +57,15 @@ int main(int argc, char* argv[])
 	// Create the GameMap object
 	GameMap gMap(cellMap, mWidth, mHeight);
 
+	// Generate a new map
+	if (!gMap.generateMap())
+	{
+		cerr << "Map generation failed." << endl;
+		delete [] cellMap;
+
+		exit(1);
+	}
+
 	// Print the map
 	printMap(&gMap);
 
@@ -65,6 +76,7 @@ int main(int argc, char* argv[])
 }
 
 
+/* This function prints out the game map */
 void printMap(GameMap *gMap)
 {
 	// Retrieve the list of cells
@@ -82,4 +94,6 @@ void printMap(GameMap *gMap)
 
 		cout << endl;
 	}
+
+	cout << endl;
 }
