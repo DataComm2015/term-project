@@ -1,0 +1,143 @@
+Chat Functionality
+==================
+
+1.
+    class TextBox
+    {
+        variables:
+            buffer
+        
+        functions:
+            KeyboardListener ()
+            {
+                Pull input from keyboard
+                Store input in buffer
+            }
+    }
+    
+    class ChatBox
+    {
+        variables:
+            ActionButton
+            TextBox
+        
+        functions:
+            MouseListener ()
+            {
+                if click on TextBox is registered
+                    Activate TextBox's KeyboardListener function
+                    Get buffer from TextBox
+                
+                if click on ActionButton is registered
+                    if buffer is empty
+                        Ignore action
+                    else
+                        Call ActionButton's ButtonClicked function with buffer
+            }
+    }
+
+Network Message Protocol
+========================
+
+1.
+    class Message
+    {
+        variables:
+            message_type
+    }
+    
+    class EntityMessage extends Message
+    {
+        variables:
+            entity_event
+            entity_ID
+            entity_value
+            entity_update
+    }
+    
+    class UserMessage extends Message
+    {
+        variables:
+            user_event
+            user_name
+            user_data
+    }
+    
+    class ConnectionMessage extends Message
+    {
+        variables:
+            connection_stable
+    }
+
+
+HUD Components
+==============
+
+1.
+    Function InitHUD ()
+    {
+        Set initial values for all HUD elements
+    }
+
+    Function UpdateHUD ()
+    {
+        Wait for character event
+        Update HUD element based on character event
+    }
+
+Menu Functionality
+==================
+    
+1.
+    class Button
+    {
+        variables:
+            button_name;
+            button_ID;
+        functions:
+            ButtonClicked ();
+    }
+
+    
+    class RedirectButton extends Button
+    {
+        variables:
+            page_link
+        functions:
+            ButtonClicked ()
+            {
+                Go to page_link’s page
+            }
+    }
+
+    
+    class UtilityButton extends Button
+    {
+        variables:
+            /*
+             * Various settings
+             *  resolution
+             *  sound
+             *  etc
+             */
+        functions:
+            ButtonClicked ()
+            {
+                Get value from each input control on the page
+                Store them in variables
+            }
+    }
+
+    
+    class ActionButton extends Button
+    {
+        variables:
+            user_name
+            user_data
+        functions:
+            ButtonClicked ()
+            {
+                Create Message structure with user_name and user_data
+                Call onUpdate network function with Message structure
+            }
+    }
