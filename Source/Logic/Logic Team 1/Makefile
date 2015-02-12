@@ -2,8 +2,8 @@
 
 CC=g++ -ggdb -W -pedantic 
 
-mapgen: Cell.o Main.o GameMap.o
-	$(CC) -o mapgen Cell.o Main.o GameMap.o
+mapgen: Cell.o Main.o GameMap.o Block.o
+	$(CC) -o mapgen Cell.o Main.o GameMap.o Block.o
 
 clean:
 	rm -f *.o core.* mapgen*
@@ -16,3 +16,6 @@ GameMap.o:
 
 Cell.o:
 	$(CC) -c Cell.cpp 
+
+Block.o:
+	$(CC) -c Block.cpp

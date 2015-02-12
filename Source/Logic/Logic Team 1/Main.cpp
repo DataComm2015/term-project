@@ -66,8 +66,8 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	// Print the map
-	printMap(&gMap);
+	// Print the map in blocks
+	printMap(&gMap, false);
 
 	// Delete the cell map memory
 	delete [] cellMap;
@@ -77,23 +77,46 @@ int main(int argc, char* argv[])
 
 
 /* This function prints out the game map */
-void printMap(GameMap *gMap)
+void printMap(GameMap *gMap, bool displayCells)
 {
-	// Retrieve the list of cells
-	Cell **cellMap = gMap->getCellMap();
-	int w = gMap->getWidth();
-	int h = gMap->getHeight();
-
-	// Print the map
-	for (int i = 0; i < h; i++)
+	if (displayCells)
 	{
-		for (int j = 0; j < w; j++)
+		// Retrieve the list of cells
+		Cell **cellMap = gMap->getCellMap();
+		int w = gMap->getWidth();
+		int h = gMap->getHeight();
+
+		// Print the map
+		for (int i = 0; i < h; i++)
 		{
-			cout << cellMap[i][j]() << " ";
+			for (int j = 0; j < w; j++)
+			{
+				cout << cellMap[i][j]() << " ";
+			}
+
+			cout << endl;
 		}
 
 		cout << endl;
 	}
+	else
+	{
+		// Retrieve the list of cells
+		Block **blockMap = gMap->getBlockMap();
+		int w = gMap->getBlocksHor();
+		int h = gMap->getBlocksVert();
 
-	cout << endl;
+		// Print the map
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				cout << blockMap[i][j]() << " ";
+			}
+
+			cout << endl;
+		}
+
+		cout << endl;
+	}
 }
