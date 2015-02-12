@@ -6,7 +6,7 @@
 using std::ostream;
 
 
-enum CellType {GRASS, STONE, ARBITER};
+enum CellType {G, S, A};
 typedef enum CellType CellType;
 
 class Cell

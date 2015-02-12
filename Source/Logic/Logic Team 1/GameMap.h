@@ -13,16 +13,25 @@ class GameMap
 {
 	public:
 		GameMap(Cell **cMap, int w, int h);
+		~GameMap();
 		bool generateMap();
+		bool createBlockMap();
+		void generateZones();
+
 		Cell** getCellMap();
+		Block** getBlockMap();
 		int getWidth();
 		int getHeight();
+		int getBlocksHor();
+		int getBlocksVert();
 
 	private:
 		Cell** cellMap;
 		Block** blockMap;
 		int width;
 		int height;
+		int bWidth;
+		int bHeight;
 };
 
 #endif
