@@ -4,4 +4,5 @@ For source code material:
     - ensure capitalization on the class files for both .h's and .cpp's
 
 -> Namespaces List:
-GUI - for all of the GUI classes
+GUI      - for all of the GUI classes
+Managers - for all of the resource managers
