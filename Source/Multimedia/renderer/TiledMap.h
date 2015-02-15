@@ -20,6 +20,12 @@ public:
 		sf::FloatRect rect;
 	};
 
+	enum TileType
+	{
+		  NEXT_COL // adds an empty tile next to the last one
+		, NEXT_ROW // complete current row and move to the next one
+	};
+
 	/**
 	 * Constructor.
 	 */
@@ -54,6 +60,13 @@ public:
 	 * @param id the id of the tile
 	 */
 	void addTile(id_tile id);
+
+	/**
+	 * Manipulates the map according to what kind of tile it is.
+	 *
+	 * @param tt the type of tile
+	 */
+	void addTile(TileType tt);
 
 	/**
 	 * Draws the tiled map.
