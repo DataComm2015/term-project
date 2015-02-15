@@ -71,7 +71,7 @@ public:
 	 * @param  id the specified ID
 	 * @return    the removed BGO
 	 */
-	const BGO *rem(go_id id);
+	const BGO *rem(id_go id);
 
 	/**
 	 * Checks whether or not this BGO is carrying
