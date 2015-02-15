@@ -284,15 +284,21 @@ void GameMap::generateMiniBosses()
     int xMiniBoss = wStone - 1;
     int yMiniBoss = hStone - 1;
 
+    // If the Stone width is greater than 3
+    //      -> Place a Mini-Boss in the middle top/bottom
     if(wStone > 3)
     {
         xMiniBoss = wStone / 2;
     }
+    // If the Stone height is greater than 3
+    //      -> Place a Mini-Boss in the middle left/right
     if(hStone > 3)
     {
         yMiniBoss = hStone / 2;
     }
 
+    // Place Mini-Bosses in the Stone zone
+    // Won't place the last Mini-Bosses if the width or height is even
     for(int i = yStone; i < yStone + hStone; i += yMiniBoss)
     {
         for(int j = xStone; j < xStone + wStone; j += xMiniBoss)
@@ -301,6 +307,25 @@ void GameMap::generateMiniBosses()
         }
     }
 
+    // If the width is even
+    //      -> Place Mini-Bosses in the right Stone row
+	if(wStone % 2 == 0)
+	{
+		blockMap[yStone][xStone + wStone - 1].setEnemy(MINIBOSS);
+		blockMap[yStone + (hStone / 2)][xStone + wStone - 1].setEnemy(MINIBOSS);
+		blockMap[yStone + hStone - 1][xStone + wStone - 1].setEnemy(MINIBOSS);
+	}
+
+    // If the height is even
+    //      -> Place Mini-Bosses in the bottom Stone row
+	if(hStone % 2 == 0)
+	{
+		blockMap[yStone + hStone - 1][xStone].setEnemy(MINIBOSS);
+		blockMap[yStone + hStone - 1][xStone + (wStone / 2)].setEnemy(MINIBOSS);
+		blockMap[yStone + hStone - 1][xStone + wStone - 1].setEnemy(MINIBOSS);
+	}
+
+    // Place Mini-Bosses in the middle of each Grass edge
     blockMap[0][bWidth / 2].setEnemy(MINIBOSS);
     blockMap[bHeight - 1][bWidth / 2].setEnemy(MINIBOSS);
     blockMap[bHeight / 2][0].setEnemy(MINIBOSS);
