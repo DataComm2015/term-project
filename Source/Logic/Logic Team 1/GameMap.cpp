@@ -193,54 +193,54 @@ bool GameMap::createBlockMap()
 
 
 /******************************************************************************
-*  FUNCTION: generateZones
+*	FUNCTION: generateZones
 *
-*  DATE: February 11, 2015
+*	DATE: February 11, 2015
 *
-*  REVISIONS: (Date and Description)
+*	REVISIONS: (Date and Description)
 *
-*  DESIGNER: Chris Klassen
+*	DESIGNER: Chris Klassen
 *
-*  PROGRAMMER: Chris Klassen
+*	PROGRAMMER: Chris Klassen
 *
-*  INTERFACE: void generateZones();
+*	INTERFACE: void generateZones();
 *
-*  PARAMETERS:
+*	PARAMETERS:
 *
-*  RETURNS:
-*    void
+*	RETURNS:
+*		void
 *
-*  NOTES:
-*    This function calculates the size of each map zone and assigns
-*    blocks in the zone to their corresponding map type.
+*	NOTES:
+*		This function calculates the size of each map zone and assigns
+*		blocks in the zone to their corresponding map type.
 ******************************************************************************/
 void GameMap::generateZones()
 {
-    // Find the centre of the map
-    int wCentre = bWidth / 2;
-    int hCentre = bHeight / 2;
+	// Find the centre of the map
+	int wCentre = bWidth / 2;
+	int hCentre = bHeight / 2;
 
-    // Set the central block to the Arbiter zone
-    blockMap[hCentre][wCentre].setZone(ARBITER);
+	// Set the central block to the Arbiter zone
+	blockMap[hCentre][wCentre].setZone(ARBITER);
 
-    // Calculate the width and height of the Stone zone
-    int wStone = max(3, int(ceil(bWidth * 0.4)));
-    int hStone = max(3, int(ceil(bHeight * 0.4)));
+	// Calculate the width and height of the Stone zone
+	int wStone = max(3, int(ceil(bWidth * 0.4)));
+	int hStone = max(3, int(ceil(bHeight * 0.4)));
 
-    int xStone = wCentre - wStone / 2;
-    int yStone = hCentre - hStone / 2;
+	int xStone = wCentre - wStone / 2;
+	int yStone = hCentre - hStone / 2;
 
-    // Set the ring outside the Arbiter zone to Stone blocks
-    for (int i = yStone; i < yStone + hStone; i++)
-    {
-        for (int j = xStone; j < xStone + wStone; j++)
-        {
-            if (!(i == hCentre && j == wCentre))
-            {
-                blockMap[i][j].setZone(STONE);
-            }
-        }
-    }
+	// Set the ring outside the Arbiter zone to Stone blocks
+	for (int i = yStone; i < yStone + hStone; i++)
+	{
+		for (int j = xStone; j < xStone + wStone; j++)
+		{
+			if (!(i == hCentre && j == wCentre))
+			{
+				blockMap[i][j].setZone(STONE);
+			}
+		}
+	}
 }
 
 
