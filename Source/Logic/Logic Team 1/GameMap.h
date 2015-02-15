@@ -5,7 +5,7 @@
 #include "Block.h"
 
 
-/*
+/* 
 *	The GameMap class contains a list of cells, blocks, and functions
 *	for generating a map and placing entities into the map.
 */
@@ -17,7 +17,7 @@ class GameMap
 		bool generateMap();
 		bool createBlockMap();
 		void generateZones();
-		void generateMiniBosses();
+		void generateMiniBosses(); // Julian
 
 		Cell** getCellMap();
 		Block** getBlockMap();
@@ -33,9 +33,6 @@ class GameMap
 		int height;
 		int bWidth;
 		int bHeight;
-
-		int xStone;
-		int yStone;
 };
 
 #endif
