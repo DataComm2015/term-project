@@ -4,39 +4,45 @@
 inline TiledMap*
 Map_Interpreter::create()
 {
-    TiledMap map = new TiledMap();
-    // Read each tile
-    readtset(map);
-    readtmap(map);
+    TiledMap *map = new TiledMap();
+    readtset(&map);
+    readtmap(&map);
     
-    return (map);
+    return (&map);
 }
 
 void Map_Interpreter::readtset(TiledMap& map)
 {
     string dummy, texture, tilesize, tile, index;
     float* coords;
+    char id;
     
     getline(tset_, dummy, ':'); // Remove 'texture:'
     getline(tset_, texture); // Extract file path
-    fgetc(tset_); // Remove new line
+    getline(tset_, dummy); // Remove new line
     getline(tset_, dummy, ':'); // Remove 'tilesize:"
     getline(tset_, tilesize); // Extract tilesize
-    fgetc(tset_); // Remove new line
+    getline(tset_, dummy); // Remove new line
     getline(tset_, dummy); // Remove 'tiles:(x,y,w,h)'
     
     while (tset_.good() && tset_.eof() == false)
     {
         getline(tset_, index, ':');
+        for (string::size_type i = 0; i < index.size(); i++)
+        {
+            if (!(isspace(index[i])))
+            {
+                id = index[i];
+                break;
+            }            
+        }
         getline(tset_, tile);
-        
-        if (tiles.compare(":end"))
+        if (tile.compare("end") == 0)
         {
             break;
         }
         
         coords = tocords(tile);
-        
         map.createTile(index[0], coords[0], coords[1], coords[2], coords[3]);
     }
 }
@@ -44,25 +50,25 @@ void Map_Interpreter::readtset(TiledMap& map)
 void 
 Map_Interpreter::readtmap(TiledMap& map)
 {
-    string dummy, sid;
+    string dummy, id;
     
-    getline(tset_, dummy); // Remove 'map'
+    getline(tmap_, dummy); // Remove 'map'
     
     while (tmap_.good() && tmap_.eof() == false &&
         tmap_ >> id)
     {
-        if (id.compare(":end"))
+        if (id.compare(":end") == 0)
         {
             break;
         }
-        map.addTile(id[0]);
+        map.addTile(id[0]);  
     }
 }
 
 inline float*
 Map_Interpreter::tocords(string& tile)
 {
-    float[4] coords;
+    float coords[4];
     stringstream ss(tile);
     for (size_t i = 0; i < 4; i++)
     {
@@ -70,4 +76,20 @@ Map_Interpreter::tocords(string& tile)
     }
     
     return coords;
+}
+
+int main()
+{
+    Map_Interpreter *mi = new Map_Interpreter();
+    TiledMap *map;
+    try {
+        mi->setfile("tset.txt", "tmap.txt");
+    } catch (const char *e)
+    {
+        cout << "Exception: " << e <<  endl;
+        return(1);
+    }
+    map = mi->create();
+    delete(mi);
+    return 0;
 }
