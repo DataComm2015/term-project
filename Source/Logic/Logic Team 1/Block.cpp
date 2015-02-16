@@ -63,6 +63,11 @@ void Block::setZone(BlockZone z)
 	zone = z;
 }
 
+void Block::setEnemy(EnemyType e) // Julian
+{
+    enemy = e;
+}
+
 
 /******************************************************************************
 *	FUNCTION: operator()
@@ -91,10 +96,18 @@ char Block::operator()()
 	switch(zone)
 	{
 		case GRASS:
+            if(enemy == MINIBOSS)
+            {
+                return 'M';
+            }
 			return 'G';
 			break;
 
 		case STONE:
+            if(enemy == MINIBOSS)
+            {
+                return 'M';
+            }
 			return 'S';
 			break;
 

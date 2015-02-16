@@ -17,6 +17,7 @@ class GameMap
 		bool generateMap();
 		bool createBlockMap();
 		void generateZones();
+		void generateMiniBosses(); // Julian
 
 		Cell** getCellMap();
 		Block** getBlockMap();
