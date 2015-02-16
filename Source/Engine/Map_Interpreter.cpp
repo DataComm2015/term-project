@@ -50,18 +50,26 @@ void Map_Interpreter::readtset(TiledMap& map)
 void 
 Map_Interpreter::readtmap(TiledMap& map)
 {
-    string dummy, id;
-    
+    string dummy, line, id;
+    stringstream ss;
     getline(tmap_, dummy); // Remove 'map'
     
-    while (tmap_.good() && tmap_.eof() == false &&
-        tmap_ >> id)
+    while (tmap_.good() && tmap_.eof() == false)
     {
+        getline(tmap_, line);
+        
         if (id.compare(":end") == 0)
         {
             break;
         }
-        map.addTile(id[0]);  
+        
+        map.addTile(NEW_ROW);
+        ss << line;
+        while(!ss.eof())
+        {
+            ss >> id;
+            map.addTile(id[0]);
+        }
     }
 }
 
