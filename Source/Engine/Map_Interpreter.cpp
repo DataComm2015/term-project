@@ -63,11 +63,13 @@ Map_Interpreter::readtmap(TiledMap& map)
             break;
         }
         
-        map.addTile(NEW_ROW);
+        map.addTile(NEXT_ROW);
         ss << line;
         while(!ss.eof())
         {
             ss >> id;
+            if (id[0] == '0')
+                map.addTile(NEXT_COL);
             map.addTile(id[0]);
         }
     }
