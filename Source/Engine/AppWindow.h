@@ -2,7 +2,11 @@
 #define APPWINDOW_H_
 
 #include <vector>
+
+#include <SFML/Graphics.hpp>
+
 #include "Scene.cpp"
+
 
 /* 
 *	AppWindow is responsible for running the game loop. The game loop processes 
@@ -12,14 +16,15 @@
 */
 class AppWindow
 {
-	
 	public:
-	
+	int		initWindow();
 	bool	gameLoop();
 	int		addScene(Scene* scene);
 	bool	removeScene(int index);
+	AppWindow();
 	
 	private:
+		sf::RenderWindow window;
 		std::vector<Scene*> scenes;
 };
 

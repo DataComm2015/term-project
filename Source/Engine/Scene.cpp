@@ -164,13 +164,3 @@ void Scene::draw()
 {
 }
 
-int main(void)
-{
-	// This is just a test main for scene class
-	Scene testScene;
-	
-	return 0;
-}
-
-
-

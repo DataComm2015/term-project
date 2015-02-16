@@ -24,16 +24,32 @@
 *		the scenes. Each scene is loaded into the app window on creation and 
 *		will not have a loop of its own for the sake of synchronisation.
 *
+*		compile with: -lsfml-graphics -lsfml-window -lsfml-system
 ******************************************************************************/
 bool AppWindow::gameLoop()
 {
-	while(true)
+	// Display the window
+	this->window.clear();
+    this->window.display();
+	
+	while(this->window.isOpen())
 	{
-			//for(vector<Scene
-			//ProcessEvents
-			//Update
-			//Draw
+			for(std::vector<Scene*>::iterator it = this->scenes.begin();
+				it != this->scenes.end();
+				++it)
+			{
+				//ProcessEvents
+				(*it)->events();
+				
+				//Update
+				(*it)->update();
+				
+				//Draw
+				(*it)->draw();
+			}
+			
 	}
+	
 	return true;
 }
 
@@ -98,5 +114,44 @@ bool AppWindow::removeScene(int index)
 	this->scenes.erase(this->scenes.begin() + index);
 	
 	return true;
+}
+
+/******************************************************************************
+*	FUNCTION: AppWindow
+*
+*	DATE: February 15, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: AppWindow()
+*
+*	PARAMETERS:
+*		void
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		Constructor for the AppWindow Class. Initializes the main game window.
+*
+******************************************************************************/
+AppWindow::AppWindow()
+{
+	this->window.create(sf::VideoMode(800, 600), "The Game"); // Temp name
+	this->window.setFramerateLimit(60);
+}
+
+
+// Test to see if the window is opening
+int main()
+{
+	AppWindow window;
+	window.gameLoop();
+	
+	return 0;
 }
 
