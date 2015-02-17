@@ -1,3 +1,17 @@
+/********************************************************************************
+**	SOURCE FILE:	Boss.h -  			Header file for The boss npc class. 
+**										Contains function prototypes
+**	 	
+**	PROGRAM:	Term_Project
+**
+**	DATE: 		February 15, 2015
+**
+**
+**	DESIGNER: 	Filip Gutica A00781910
+**
+**	PROGRAMMER: Filip Gutica A00781910
+**
+***********************************************************************************/
 #include "GateKeeper.h"
 
 class Boss : public GateKeeper

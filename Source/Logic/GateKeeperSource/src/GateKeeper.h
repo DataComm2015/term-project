@@ -1,3 +1,17 @@
+/********************************************************************************
+**	SOURCE FILE:	GateKeeper.h -  		Header file for The gatekeeper npc base
+**											class. Contains function prototypes
+**	 	
+**	PROGRAM:	Term_Project
+**
+**	DATE: 		February 15, 2015
+**
+**
+**	DESIGNER: 	Filip Gutica A00781910
+**
+**	PROGRAMMER: Filip Gutica A00781910
+**
+***********************************************************************************/
 #include <iostream>
 #include <stdio.h>      
 #include <stdlib.h>
