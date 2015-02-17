@@ -47,9 +47,10 @@ template <class T> class ResourceManager
 		*
 		* @param - object<T> res - The resource to store
 		* @param - id_resource id - The id to store it at
+		* @param - bool dealloc - Whether to 'delete' the element, should be true if elements are 'new' pointers
 		* @return - void
 		*/
-		void store(T, id_resource);
+		void store(T, id_resource, bool = false);
 		
 		/**
 		* Gets a resource from a specified ID.
@@ -70,9 +71,10 @@ template <class T> class ResourceManager
 		/**
 		* Clears the manager of all resources and IDs.
 		*
+		* @param - bool dealloc - Whether to 'delete' the elements, should be true if elements are 'new' pointers
 		* @return - unsigned int count - The number of resources purged
 		*/
-		unsigned int clear();
+		unsigned int clear(bool = false);
 		
 	private:
 		unsigned int ID_RESOURCE;
