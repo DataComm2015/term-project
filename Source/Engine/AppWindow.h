@@ -24,8 +24,8 @@ class AppWindow
 	AppWindow();
 	
 	private:
-		sf::RenderWindow window;
-		std::vector<Scene*> scenes;
+		sf::RenderWindow window_;
+		std::vector<Scene*> scenes_;
 };
 
 #endif /* APPWINDOW_H_ */

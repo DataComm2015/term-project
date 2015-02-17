@@ -24,18 +24,19 @@
 *		the scenes. Each scene is loaded into the app window on creation and 
 *		will not have a loop of its own for the sake of synchronisation.
 *
-*		compile with: -lsfml-graphics -lsfml-window -lsfml-system
+*		compile with: 	-std=c++11
+*		libraries:		-lstdc++ -lsfml-graphics -lsfml-window -lsfml-system
 ******************************************************************************/
 bool AppWindow::gameLoop()
 {
 	// Display the window
-	this->window.clear();
-    this->window.display();
+	this->window_.clear();
+    this->window_.display();
 	
-	while(this->window.isOpen())
+	while(this->window_.isOpen())
 	{
-			for(std::vector<Scene*>::iterator it = this->scenes.begin();
-				it != this->scenes.end();
+			for(std::vector<Scene*>::iterator it = this->scenes_.begin();
+				it != this->scenes_.end();
 				++it)
 			{
 				//ProcessEvents
@@ -78,11 +79,11 @@ bool AppWindow::gameLoop()
 ******************************************************************************/
 int AppWindow::addScene(Scene* scene)
 {
-	this->scenes.push_back(scene);
+	this->scenes_.push_back(scene);
 	
 	// return id of the scene added. used for removeScene. Either return
 	// id after adding or overload == operator for the scene.
-	return (this->scenes.size() - 1);
+	return (this->scenes_.size() - 1);
 }
 
 
@@ -111,7 +112,10 @@ int AppWindow::addScene(Scene* scene)
 ******************************************************************************/
 bool AppWindow::removeScene(int index)
 {
-	this->scenes.erase(this->scenes.begin() + index);
+	// Just realized that this will only work for the first removeScene call
+	// as the index will change for the remaining elements. Might change the 
+	// collection to Map instead of a vector
+	this->scenes_.erase(this->scenes_.begin() + index);
 	
 	return true;
 }
@@ -141,8 +145,8 @@ bool AppWindow::removeScene(int index)
 ******************************************************************************/
 AppWindow::AppWindow()
 {
-	this->window.create(sf::VideoMode(800, 600), "The Game"); // Temp name
-	this->window.setFramerateLimit(60);
+	this->window_.create(sf::VideoMode(800, 600), "The Game"); // Temp name
+	this->window_.setFramerateLimit(60);
 }
 
 
