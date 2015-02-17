@@ -1,29 +1,28 @@
-#ifndef MAP_INTERPRETER_H
-#define MAP_INTERPRETER_H
+#ifndef TILE_MGR_H
+#define TILE_MGR_H
+#include <SFML\Graphics.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "TiledMap.h"
 
 using namespace std;
 
-class Map_Interpreter
+class TileMgr
 {
 private:
-    ifstream tset_, tmap_;
+    ifstream tset_;
     
-public:
-    explicit Map_Interpreter(string tset, string tmap)
+public:    
+    explicit TileMgr(string path)
     {
         tset_.open(tset.c_str());
-        tmap_.open(tmap.c_str());
         if (tset_.good() == false || tmap_.good() == false)
             throw "Map_Interpreter() Exception: Could not open file";
     }
 	
-	Map_Interpreter() {}
+	TileMgr() {}
     
-    void setfile(string tset, string tmap)
+    void load(string path)
     {
         tset_.clear();
         tmap_.clear();
@@ -31,12 +30,12 @@ public:
         tmap_.open(tmap.c_str());
         if (tset_.fail() == true || tmap_.fail() == true)
             throw "Map_Interpreter setfile() Exception: Could not open file";
+        readtset();
     }
     
-    TiledMap* create();
-    void readtset(TiledMap& map);
-    void readtmap(TiledMap& map);
+    void readtset();
+    string trim(string line);
     float* tocords(string& tile);
 };
 
-#endif // MAP_INTERPRETER_H
+#endif // TILE_MGR_H
