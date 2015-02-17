@@ -34,17 +34,18 @@ using std::endl;
 int main(int argc, char* argv[])
 {
 	// Validate command line arguments
-	if (argc != 3)
+	if (argc != 4)
 	{
 		cerr << "Invalid command line arguments." << endl;
 		cerr << "Usage:" << endl << endl;
-		cerr << "./mapgen [width in cells] [height in cells]" << endl;
+		cerr << "./mapgen [width in cells] [height in cells] [0 - display blocks, 1 - display cells]" << endl;
 		exit(1);
 	}
 
 	// Retrieve values from command line arguments
 	int mWidth = atoi(argv[1]);
 	int mHeight = atoi(argv[2]);
+	int displayCells = atoi(argv[3]);
 
 	// Create a 2D cell array
 	Cell **cellMap = new Cell*[mHeight];
@@ -67,7 +68,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Print the map in blocks
-	printMap(&gMap, false);
+	printMap(&gMap, displayCells);
 
 	// Delete the cell map memory
 	delete [] cellMap;
