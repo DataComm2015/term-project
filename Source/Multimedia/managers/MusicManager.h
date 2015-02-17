@@ -21,6 +21,11 @@ class MusicManager : ResourceManager<sf::Music*>
 		* @return - sf::Music* - The music that was loaded
 		*/
 		sf::Music* load(const std::string);
+		
+		/**
+		* Destructor.
+		*/
+		~MusicManager(){ clear(true); }
 };
 
 #endif // MUSIC_MANAGER_H

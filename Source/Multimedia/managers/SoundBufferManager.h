@@ -21,6 +21,11 @@ class SoundBufferManager : ResourceManager<sf::SoundBuffer*>
 		* @return - sf::SoundBuffer* - The sound buffer that was loaded
 		*/
 		sf::SoundBuffer* load(const std::string);
+		
+		/**
+		* Destructor.
+		*/
+		~SoundBufferManager(){ clear(true); }
 };
 
 #endif // SOUND_BUFFER_MANAGER_H
