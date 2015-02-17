@@ -100,7 +100,7 @@ char Block::operator()()
             {
                 return 'M';
             }
-			return 'G';
+			return '.';
 			break;
 
 		case STONE:
@@ -108,7 +108,7 @@ char Block::operator()()
             {
                 return 'M';
             }
-			return 'S';
+			return '*';
 			break;
 
 		case ARBITER:

@@ -20,11 +20,11 @@ char Cell::operator()()
 	switch(type)
 	{
 		case G:
-			return 'G';
+			return '.';
 			break;
 
 		case S:
-			return 'S';
+			return '*';
 			break;
 
 		case A:
