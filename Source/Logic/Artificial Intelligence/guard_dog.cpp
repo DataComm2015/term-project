@@ -147,7 +147,7 @@ int GuardDog::CheckDistance(Champion C)
 -- NOTES:
 -- checks to see if champion c is already in the list of target characters, and adds it if it isn't.
 ----------------------------------------------------------------------------------------------------------------------*/
-virtual Champion[] AddTarget(Champion c)
+Champion[] GuardDog::AddTarget(Champion c)
 {
 
 }
@@ -168,7 +168,7 @@ virtual Champion[] AddTarget(Champion c)
 -- removes champion c from the list of target characters. Used when the current target has left the gatekeeper's sight,
 -- or has died.
 ----------------------------------------------------------------------------------------------------------------------*/
-virtual Champion[] RemoveTarget(Champion c)
+Champion[] GuardDog::RemoveTarget(Champion c)
 {
 
 }
@@ -187,7 +187,7 @@ virtual Champion[] RemoveTarget(Champion c)
 -- NOTES:
 -- changes current target to Champion c. Used when the current target has left the gatekeeper's sight, or has died.
 ----------------------------------------------------------------------------------------------------------------------*/
-virtual Champion[] ChangeTarget(Champion c)
+Champion[] GuardDog::ChangeTarget(Champion c)
 {
 
 }
@@ -207,7 +207,7 @@ virtual Champion[] ChangeTarget(Champion c)
 -- NOTES:
 -- returns the target cell in which Champion c is currently located. Typically called when updating pathing information.
 ----------------------------------------------------------------------------------------------------------------------*/
-virtual Cell GgetTargetLocation(Champion c);
+Cell GuardDog::GetTargetLocation(Champion c);
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Die
