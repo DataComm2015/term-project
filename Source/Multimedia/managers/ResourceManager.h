@@ -13,7 +13,7 @@ typedef const unsigned int* id_resource;
  * 
  * @author Lewis Scott
  */
-template <class T> class ResourceManager
+template <typename T> class ResourceManager
 {
 	public:
 		/**

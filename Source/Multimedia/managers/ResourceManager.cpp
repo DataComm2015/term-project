@@ -6,7 +6,7 @@
 * @param - object<T> res - The resource to store
 * @return - id_resource - The ID assigned to the resource
 */
-template <class T> id_resource ResourceManager<T>::store(T res)
+template <typename T> id_resource ResourceManager<T>::store(T res)
 {
 	if(res == NULL)
 		return NULL;
@@ -25,7 +25,7 @@ template <class T> id_resource ResourceManager<T>::store(T res)
 * @param - bool dealloc - Whether to 'delete' the element, should be true if elements are 'new' pointers
 * @return - void
 */
-template <class T> void ResourceManager<T>::store(T res, id_resource id, bool dealloc)
+template <typename T> void ResourceManager<T>::store(T res, id_resource id, bool dealloc)
 {
 	if(res == NULL)
 		return NULL;	
@@ -45,7 +45,7 @@ template <class T> void ResourceManager<T>::store(T res, id_resource id, bool de
 * @param - id_resource id - The id to fetch
 * @return - object<T> - The resource loaded, or NULL if not found
 */
-template <class T> T ResourceManager<T>::get(id_resource id)
+template <typename T> T ResourceManager<T>::get(id_resource id)
 {
 	typename std::map<id_resource, T>::iterator it = resource_map.find(id);
 	
@@ -61,7 +61,7 @@ template <class T> T ResourceManager<T>::get(id_resource id)
 * @param - id_resource id - The id of the resource to remove
 * @return - object<T> - The object removed, or NULL if not found
 */
-template <class T> T ResourceManager<T>::remove(id_resource id)
+template <typename T> T ResourceManager<T>::remove(id_resource id)
 {
 	T retval;
 	if((retval = get(id)) != NULL)
@@ -81,7 +81,7 @@ template <class T> T ResourceManager<T>::remove(id_resource id)
 * @param - bool dealloc - Whether to 'delete' the elements, should be true if elements are 'new' pointers
 * @return - unsigned int count - The number of resources purged
 */
-template <class T> unsigned int ResourceManager<T>::clear(bool dealloc)
+template <typename T> unsigned int ResourceManager<T>::clear(bool dealloc)
 {
 	unsigned int retval = resource_map.size();
 	
