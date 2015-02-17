@@ -2,7 +2,7 @@
 #define RESOURCE_MANAGER_H
 
 #include <map>
-#include <string.h>
+#include <string>
 
 typedef const unsigned int* id_resource;
 
@@ -17,6 +17,11 @@ template <class T> class ResourceManager
 {
 	public:
 		/**
+		* Constructor.
+		*/
+		ResourceManager(){ ID_RESOURCE = 1; }
+	
+		/**
 		* Destructor.
 		*/
 		~ResourceManager(){ clear(); }
@@ -27,7 +32,7 @@ template <class T> class ResourceManager
 		* @param - std::string path - a qualified path to the desired resource
 		* @return - object<T> - The resource that was loaded
 		*/
-		virtual T load(std::string);
+		virtual T load(const std::string);
 		
 		/**
 		* Creates an ID for a resource and stores it.
