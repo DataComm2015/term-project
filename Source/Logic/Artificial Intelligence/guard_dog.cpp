@@ -114,6 +114,102 @@ void GuardDog::Search()
 }
 
 /*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: CheckDistance
+--
+-- DATE: February 14, 2015
+--
+-- REVISIONS (Date and Description):
+--
+-- DESIGNERS: Sebastian Pelka
+--
+-- PROGRAMMERS: Sebastian Pelka
+--
+-- NOTES:
+-- Checks the distance between the gatekeeper and the Champion to determine if an attack is feasible
+----------------------------------------------------------------------------------------------------------------------*/
+int GuardDog::CheckDistance(Champion C)
+{
+
+}
+
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: addTarget
+--
+-- DATE: February 14, 2015
+--
+-- REVISIONS (Date and Description):
+--
+-- DESIGNERS: Sebastian Pelka
+--
+-- PROGRAMMERS: Sebastian Pelka
+--
+-- NOTES:
+-- checks to see if champion c is already in the list of target characters, and adds it if it isn't.
+----------------------------------------------------------------------------------------------------------------------*/
+virtual Champion[] AddTarget(Champion c)
+{
+
+}
+
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: addTarget
+--
+-- DATE: February 14, 2015
+--
+-- REVISIONS (Date and Description):
+--
+-- DESIGNERS: Sebastian Pelka
+--
+-- PROGRAMMERS: Sebastian Pelka
+--
+-- NOTES:
+-- removes champion c from the list of target characters. Used when the current target has left the gatekeeper's sight,
+-- or has died.
+----------------------------------------------------------------------------------------------------------------------*/
+virtual Champion[] RemoveTarget(Champion c)
+{
+
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: changeTarget
+--
+-- DATE: February 14, 2015
+--
+-- REVISIONS (Date and Description):
+--
+-- DESIGNERS: Sebastian Pelka
+--
+-- PROGRAMMERS: Sebastian Pelka
+--
+-- NOTES:
+-- changes current target to Champion c. Used when the current target has left the gatekeeper's sight, or has died.
+----------------------------------------------------------------------------------------------------------------------*/
+virtual Champion[] ChangeTarget(Champion c)
+{
+
+}
+
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getTargetLocation
+--
+-- DATE: February 14, 2015
+--
+-- REVISIONS (Date and Description):
+--
+-- DESIGNERS: Sebastian Pelka
+--
+-- PROGRAMMERS: Sebastian Pelka
+--
+-- NOTES:
+-- returns the target cell in which Champion c is currently located. Typically called when updating pathing information.
+----------------------------------------------------------------------------------------------------------------------*/
+virtual Cell GgetTargetLocation(Champion c);
+
+/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Die
 --
 -- DATE: February 14, 2015

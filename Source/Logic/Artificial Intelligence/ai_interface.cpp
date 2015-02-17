@@ -28,6 +28,11 @@ class AI
 		virtual Entity Move();
 		virtual void Attack(Champion c);
 		virtual void Search();
+		virtual int CheckDistance();
+		virtual Champion[] AddTarget(Champion c);
+		virtual Champion[] RemoveTarget(Champion c);
+		virtual Champion[] ChangeTarget(Champion c);
+		virtual Cell GetTargetLocation(Champion c);
 		virtual void Die();
 };
 
