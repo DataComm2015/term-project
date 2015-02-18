@@ -3,19 +3,23 @@
 
 #include "Cell.h"
 
-/* 
-*	Map base class
-*   
-*/
-class Map
+namespace Marx
 {
-	public:
-		Map();
-		void setCell(int x, int y);
-		Cell getCell(int x, int y);
-	
-	private:
-		Cell cells_[][10]; // temp value to remove compilation error for now
-};
+	/* 
+	*	Map base class
+	*   
+	*/
+	class Map
+	{
+		public:
+			Map();
+			void setCell(const int& x, const int& y, const Cell& cell);
+			Cell getCell(const int& x, const int& y);
+		
+		private:
+			Cell cells_[][10];	// temp value to remove compilation error for now
+								// can be changed to a different container
+	};
+} /* namespace Marx */
 
 #endif /* MAP_H_ */

@@ -1,5 +1,7 @@
 #include "AppWindow.h"
 
+using namespace Marx;
+
 /******************************************************************************
 *	FUNCTION: gameLoop
 *

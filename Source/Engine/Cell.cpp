@@ -1,7 +1,9 @@
 #include "Cell.h"
 
+using namespace Marx;
+
 /******************************************************************************
-*	FUNCTION: Cell
+*	FUNCTION: setId
 *
 *	DATE: February 16, 2015
 *
@@ -11,21 +13,217 @@
 *
 *	PROGRAMMER: Marc Rafanan
 *
-*	INTERFACE: Cell()
+*	INTERFACE: void setId(string id)
 *
 *	PARAMETERS:
-*		// void for now
+*		id	-	id for the cell
 *
 *	RETURNS:
 *		void
 *
 *	NOTES:
-*		Cell constructor
+*		Sets the ID for the cell
 *
 ******************************************************************************/
-Cell::Cell()
+void Cell::setId(std::string id)
 {
-	// Cell initialization here
+		cell_id_ = id;
 }
 
+/******************************************************************************
+*	FUNCTION: getId
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: std::string getId(string id)
+*
+*	PARAMETERS:
+*		void
+*
+*	RETURNS:
+*		std::string	-	ID of the cell
+*
+*	NOTES:
+*		Gets the ID of the cell
+*
+******************************************************************************/
+std::string Cell::getId()
+{
+	return cell_id_;
+}
 
+/******************************************************************************
+*	FUNCTION: setX
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: void setX(const int& x)
+*
+*	PARAMETERS:
+*		x	-	x coordinate of the cell in the map
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		Sets the x coordinate of the cell
+*
+******************************************************************************/
+void Cell::setX(const int& x)
+{
+	xcoord_ = x;
+}
+
+/******************************************************************************
+*	FUNCTION: setY
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: void setY(const int& y)
+*
+*	PARAMETERS:
+*		y	-	y coordinate of the cell in the map
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		Sets the y coordinate of the cell
+*
+******************************************************************************/
+void Cell::setY(const int& y)
+{
+	ycoord_ = y;
+}
+
+/******************************************************************************
+*	FUNCTION: setCoord
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: void setCoord(const int& x, const int& y)
+*
+*	PARAMETERS:
+*		x	-	x coordinate of the cell in the map
+*		y	-	y coordinate of the cell in the map
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		Sets the x and y coordinate of the cell
+*
+******************************************************************************/
+void Cell::setCoord(const int& x, const int& y)
+{
+	xcoord_ = x;
+	ycoord_ = y;
+}
+
+/******************************************************************************
+*	FUNCTION: getX
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: int getX()
+*
+*	PARAMETERS:
+*		void
+*
+*	RETURNS:
+*		int	-	x coordinate of the cell
+*
+*	NOTES:
+*		Gets the x coordinate of the cell
+*
+******************************************************************************/
+int Cell::getX()
+{
+	return xcoord_;
+}
+
+/******************************************************************************
+*	FUNCTION: getY
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: int getY()
+*
+*	PARAMETERS:
+*		void
+*
+*	RETURNS:
+*		int	-	y coordinate of the cell
+*
+*	NOTES:
+*		Gets the y coordinate of the cell
+*
+******************************************************************************/
+int Cell::getY()
+{
+	return ycoord_;
+}
+
+/******************************************************************************
+*	FUNCTION: operator==
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: bool operator==(const Cell& cell)
+*
+*	PARAMETERS:
+*		cell	-	cell to compare
+*
+*	RETURNS:
+*		bool	-	true or false
+*
+*	NOTES:
+*		Compares 2 cells if they are lying on the same coordinate in a map
+*
+******************************************************************************/
+bool Cell::operator==(const Cell& cell)
+{
+	return (xcoord_ == cell.xcoord_ && ycoord_ == cell.ycoord_) ? true : false;
+}

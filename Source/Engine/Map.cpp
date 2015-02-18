@@ -1,5 +1,7 @@
 #include "Map.h"
 
+using namespace Marx;
+
 /******************************************************************************
 *	FUNCTION: Map
 *
@@ -52,10 +54,11 @@ Map::Map()
 *		Sets cell(x, y) in map
 *
 ******************************************************************************/
-void Map::setCell(int x, int y)
+void Map::setCell(const int& x, const int& y, const Cell& cell)
 {
+	cells_[x][y] = cell;
 }
-		
+
 /******************************************************************************
 *	FUNCTION: getCell
 *
@@ -80,7 +83,8 @@ void Map::setCell(int x, int y)
 *		Gets the cell in (x, y) of the Map
 *
 ******************************************************************************/
-Cell Map::getCell(int x, int y)
+Cell Map::getCell(const int& x, const int& y)
 {
+	return cells_[x][y];
 }
 
