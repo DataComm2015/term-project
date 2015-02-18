@@ -5,6 +5,41 @@ namespace Networking
 {
     class NetworkEntityMultiplexer
     {
+    public:
+        /**
+         * constructs a new {NetworkEntityMultiplexer}.
+         */
+        NetworkEntityMultiplexer();
+        /**
+         * method with the same signature as the Session::onMessage. this
+         *   function should be invoked within the session's onMessage method
+         *   and forwarded the parameters if the message received by the session
+         *   was sent from another {NetworkEntityMultiplexer}.
+         *
+         * @param  msg message received from a session object.
+         *
+         * @return integer indicating the outcome of the operation
+         */
+        int onMessage(Message* msg);
+    protected:
+        /**
+         * should only be called from within the Networking library. it creates
+         *   a new NetworkEntity subclass instance, and returns it to the
+         *   {NetworkEntityMultiplexer}.
+         *
+         * this method should be overriden to instantiate an instance of a
+         *   subclass of the {NetworkEntity}, and return it.
+         *
+         * @param  id identifier associated with a {NetworkEntity} instance.
+         * @param  entityType type of the entity, hinting at what kind of
+         *   {NetworkEntity} sub class object to instantiate.
+         * @param  session session being registered with the NetworkEntity.
+         * @param  msg describes the message to send over the wire. this message
+         *   is only sent to the {session}.
+         */
+        virtual NetworkEntity onRegister(
+            int id, int entityType, Session* session, Message msg) = 0;
+    private:
         /**
          * should only be called by {NetworkEntity} objects only. it
          *   encapsulates the passed data into a packet, to be sent to all
@@ -55,23 +90,6 @@ namespace Networking
          *   is only sent to the {session}.
          */
         void onUpdate(int id, Message msg);
-        /**
-         * should only be called from within the Networking library. it creates
-         *   a new NetworkEntity subclass instance, and returns it to the
-         *   {NetworkEntityMultiplexer}.
-         *
-         * this method should be overriden to instantiate an instance of a
-         *   subclass of the {NetworkEntity}, and return it.
-         *
-         * @param  id identifier associated with a {NetworkEntity} instance.
-         * @param  entityType type of the entity, hinting at what kind of
-         *   {NetworkEntity} sub class object to instantiate.
-         * @param  session session being registered with the NetworkEntity.
-         * @param  msg describes the message to send over the wire. this message
-         *   is only sent to the {session}.
-         */
-        virtual NetworkEntity onRegister(
-            int id, int entityType, Session* session, Message msg) = 0;
         /**
          * should only be called from within the Networking library. it calls
          *   the onUnregister method of the {NetworkEntity} instance associated
