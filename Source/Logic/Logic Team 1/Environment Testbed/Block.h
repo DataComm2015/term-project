@@ -13,9 +13,9 @@
 enum BlockZone {GRASS, STONE, ARBITER};
 typedef enum BlockZone BlockZone;
 
-/* Type of enemy this zone contains - Julian */
-enum EnemyType {NONE, MINION, MINIBOSS};
-typedef enum EnemyType EnemyType;
+/* The general type of the block */
+enum BlockType {EMPTY, P1, P2, P3, P4, ENEMIES, MINIBOSS, STRUCTURE};
+typedef enum BlockType BlockType;
 
 /*
 *	The Block class is a collection of cells. Blocks are used
@@ -26,13 +26,16 @@ class Block
 {
 	public:
 		Block();
-		void setEnemy(EnemyType e); // Julian
+		void setType(BlockType t);
 		void setZone(BlockZone z);
 		void setCells(Cell** cells);
 
+		BlockType getType();
+		BlockZone getZone();
+
 		char operator()();
 	private:
-		EnemyType enemy; // Julian
+		BlockType type;
 		BlockZone zone;
 		Cell** cellMap;
 };

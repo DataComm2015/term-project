@@ -1,8 +1,11 @@
 #include "GameMap.h"
 #include <algorithm>
+#include <vector>
 #include <cmath>
+#include <cstdlib>
 
 using std::max;
+using std::vector;
 
 
 /******************************************************************************
@@ -105,11 +108,13 @@ bool GameMap::generateMap()
 	// Place the boss
 
 	// Place the players
+	generatePlayers();
 
 	// Place mini-bosses
     generateMiniBosses();
     
 	// Define placeholder blocks
+	generatePlaceholderBlocks();
 
 	// Generate enemies
 
@@ -227,6 +232,18 @@ void GameMap::generateZones()
 	int wStone = max(3, int(ceil(bWidth * 0.4)));
 	int hStone = max(3, int(ceil(bHeight * 0.4)));
 
+	// If the resulting width or height is even, add one to the dimension
+	if (wStone % 2 == 0)
+	{
+		wStone++;
+	}
+
+	if (hStone % 2 == 0)
+	{
+		hStone++;
+	}
+
+	// Calculate the starting x and y for the stone zone
 	int xStone = wCentre - wStone / 2;
 	int yStone = hCentre - hStone / 2;
 
@@ -245,15 +262,86 @@ void GameMap::generateZones()
 
 
 /******************************************************************************
+*   FUNCTION: generatePlayers
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: void generatePlayers();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       void
+*   
+*   NOTES:
+*     This function randomly selects a player for each corner of
+*	  the map and assigns them to that block.
+******************************************************************************/
+void GameMap::generatePlayers()
+{
+	int freePlayers = NUM_PLAYERS;
+	vector<BlockType> players({P1, P2, P3, P4});
+
+	// Loop through each block and assign a player to it
+	for (int i = 0; i < NUM_PLAYERS; i++)
+	{
+		int nextPlayer = rand() % freePlayers;
+		freePlayers--;
+
+		switch(i)
+		{
+			case 0:
+			{
+				// Corner 1
+				blockMap[0][0].setType(players[nextPlayer]);
+
+				break;
+			}
+
+			case 1:
+			{
+				// Corner 2
+				blockMap[bHeight - 1][0].setType(players[nextPlayer]);
+				break;
+			}
+
+			case 2:
+			{
+				// Corner 3
+				blockMap[0][bWidth - 1].setType(players[nextPlayer]);
+				break;
+			}
+
+			case 3:
+			{
+				// Corner 4
+				blockMap[bHeight - 1][bWidth - 1].setType(players[nextPlayer]);
+				break;
+			}
+		}
+
+		players.erase(players.begin() + nextPlayer);
+
+	}
+}
+
+
+/******************************************************************************
 *   FUNCTION: generateMiniBosses
 *   
 *   DATE: February 15, 2015
 *   
 *   REVISIONS: (Date and Description)
 *   
-*   DESIGNER: Chris Klassen
+*   DESIGNER: Chris Klassen, Julian Brandrick
 *   
-*   PROGRAMMER: Julian Brandrick
+*   PROGRAMMER: Julian Brandrick, Chris Klassen
 *   
 *   INTERFACE: void generateMiniBosses();
 *   
@@ -277,6 +365,17 @@ void GameMap::generateMiniBosses()
     // Calculate the width and height of the Stone zone
     int wStone = max(3, int(ceil(bWidth * 0.4)));
     int hStone = max(3, int(ceil(bHeight * 0.4)));
+
+	// If the resulting width or height is even, add one to the dimension
+	if (wStone % 2 == 0)
+	{
+		wStone++;
+	}
+
+	if (hStone % 2 == 0)
+	{
+		hStone++;
+	}
 
     int xStone = (bWidth / 2) - (wStone / 2);
     int yStone = (bHeight / 2) - (hStone / 2);
@@ -303,7 +402,11 @@ void GameMap::generateMiniBosses()
     {
         for(int j = xStone; j < xStone + wStone; j += xMiniBoss)
         {
-            blockMap[i][j].setEnemy(MINIBOSS);
+        	// If this is not the arbiter zone
+        	if (!(i == bHeight / 2 && j == bWidth / 2))
+			{
+            	blockMap[i][j].setType(MINIBOSS);
+            }
         }
     }
 
@@ -311,25 +414,70 @@ void GameMap::generateMiniBosses()
     //      -> Place Mini-Bosses in the right Stone row
 	if(wStone % 2 == 0)
 	{
-		blockMap[yStone][xStone + wStone - 1].setEnemy(MINIBOSS);
-		blockMap[yStone + (hStone / 2)][xStone + wStone - 1].setEnemy(MINIBOSS);
-		blockMap[yStone + hStone - 1][xStone + wStone - 1].setEnemy(MINIBOSS);
+		blockMap[yStone][xStone + wStone - 1].setType(MINIBOSS);
+		blockMap[yStone + (hStone / 2)][xStone + wStone - 1].setType(MINIBOSS);
+		blockMap[yStone + hStone - 1][xStone + wStone - 1].setType(MINIBOSS);
 	}
 
     // If the height is even
     //      -> Place Mini-Bosses in the bottom Stone row
 	if(hStone % 2 == 0)
 	{
-		blockMap[yStone + hStone - 1][xStone].setEnemy(MINIBOSS);
-		blockMap[yStone + hStone - 1][xStone + (wStone / 2)].setEnemy(MINIBOSS);
-		blockMap[yStone + hStone - 1][xStone + wStone - 1].setEnemy(MINIBOSS);
+		blockMap[yStone + hStone - 1][xStone].setType(MINIBOSS);
+		blockMap[yStone + hStone - 1][xStone + (wStone / 2)].setType(MINIBOSS);
+		blockMap[yStone + hStone - 1][xStone + wStone - 1].setType(MINIBOSS);
 	}
 
     // Place Mini-Bosses in the middle of each Grass edge
-    blockMap[0][bWidth / 2].setEnemy(MINIBOSS);
-    blockMap[bHeight - 1][bWidth / 2].setEnemy(MINIBOSS);
-    blockMap[bHeight / 2][0].setEnemy(MINIBOSS);
-    blockMap[bHeight / 2][bWidth - 1].setEnemy(MINIBOSS);
+    blockMap[0][bWidth / 2].setType(MINIBOSS);
+    blockMap[bHeight - 1][bWidth / 2].setType(MINIBOSS);
+    blockMap[bHeight / 2][0].setType(MINIBOSS);
+    blockMap[bHeight / 2][bWidth - 1].setType(MINIBOSS);
+}
+
+
+/******************************************************************************
+*   FUNCTION: generatePlaceholderBlocks
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: void generatePlaceholderBlocks();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       void
+*   
+*   NOTES:
+*     This function assigns each placeholder block a specific type.
+*	  The type selection depends on the block's zone and surroundings.
+******************************************************************************/
+void generatePlaceholderBlocks()
+{
+	// Define the maximum number of each block type per zone
+	
+
+	// Loop through all blocks
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			if (blockMap[i][j].getZone() == GRASS)
+			{
+				// If this is a grass zone block
+			}
+			else if (blockMap[i][j].getZone() == STONE)
+			{
+				// If this is a stone zone block
+			}
+		}
+	}
 }
 
 

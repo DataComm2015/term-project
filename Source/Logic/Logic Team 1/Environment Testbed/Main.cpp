@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 #include "Main.h"
 
 using std::cout;
@@ -41,6 +42,9 @@ int main(int argc, char* argv[])
 		cerr << "./mapgen [width in cells] [height in cells] [0 - display blocks, 1 - display cells]" << endl;
 		exit(1);
 	}
+
+	// Randomize the seed
+	srand(time(NULL));
 
 	// Retrieve values from command line arguments
 	int mWidth = atoi(argv[1]);
