@@ -1,5 +1,6 @@
 #include "TGO.h"
-#include "Batch.h"
+
+#include "../renderer/Batch.h"
 
 TGO::TGO() {}
 

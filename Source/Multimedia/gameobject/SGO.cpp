@@ -1,5 +1,6 @@
 #include "SGO.h"
-#include "Batch.h"
+
+#include "../renderer/Batch.h"
 
 /**
 * Sprite Game Object.

@@ -24,7 +24,7 @@ public:
 	 * @param renderer   the render target (e.g. a window / a texture)
 	 * @param maxSprites the max number of sprites to batch
 	 */
-	void Batch(sf::RenderTarget &renderer, unsigned int maxSprites = 1000);
+	Batch(sf::RenderTarget &renderer, unsigned int maxSprites = 1000);
 
 	/**
 	 * Destructor.

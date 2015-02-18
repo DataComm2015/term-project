@@ -1,7 +1,7 @@
 #include "BGO.h"
 
 #include <iostream>
-#include "Batch.h"
+#include "../renderer/Batch.h"
 
 /**
 * Base Game Object.
