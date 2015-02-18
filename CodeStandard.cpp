@@ -11,8 +11,8 @@
 --
 --
 -- INTERFACE:
---		void LineUp::addCustomer( Customer* cust, string time, size_t complainDelay )
---		void LineUp::increaseMorale( string time )
+--	void LineUp::addCustomer( Customer* cust, string time, size_t complainDelay )
+--	void LineUp::increaseMorale( string time )
 --
 --
 -- NOTES: 	This file defines and displays the code standard for the COMP 4981 Linux Game
@@ -59,9 +59,9 @@ using namespace std;
 -- PROGRAMMER:		Jeff Bayntun
 --
 -- INTERFACE:		void LineUp::addCustomer( Customer* cust, string time, size_t complainDelay )
--- cust:			pointer to the customer to add
--- time:			formatted string with the current time
--- complainDelay:	delay incurred when a complaint is made
+--	cust:			pointer to the customer to add
+--	time:			formatted string with the current time
+--	complainDelay:	delay incurred when a complaint is made
 --
 -- RETURNS: 		void
 --
@@ -88,7 +88,7 @@ void LineUp::addCustomer( Customer* cust, string time, size_t complainDelay )
 -- PROGRAMMER:	Jeff Bayntun
 --
 -- INTERFACE:	void LineUp::increaseMorale( string time)
--- time:		formatted string with the current time
+--	time:		formatted string with the current time
 --
 -- RETURNS: 	void
 --
