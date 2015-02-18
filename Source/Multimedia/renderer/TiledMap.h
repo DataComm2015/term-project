@@ -1,7 +1,7 @@
 #ifndef TILEDMAP_H
 #define TILEDMAP_H
 
-#include "BGO.h"
+#include "../gameobject/BGO.h"
 
 typedef char id_tile;
 
