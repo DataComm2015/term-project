@@ -1,7 +1,7 @@
 
 #include "Controller.h"
 
-
+/*
 class Cell
 {
     // this is a temp class, for compiling
@@ -9,7 +9,7 @@ class Cell
     public:
         Cell() { id = 0; };
         bool operator==(Cell& c) { if (id == c.id) return true; };
-};
+};/*
 
 class Entity
 {
