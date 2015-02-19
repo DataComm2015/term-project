@@ -13,7 +13,7 @@ namespace Manager
 	 * 
 	 * @author Lewis Scott
 	 */
-	class SoundBuffer : ResourceManager<sf::SoundBuffer*>
+	class SoundBuffer
 	{
 		public:
 			/**
@@ -23,16 +23,27 @@ namespace Manager
 			* @return - sf::SoundBuffer* - The sound buffer that was loaded
 			*/
 			static sf::SoundBuffer* load(const std::string);
+			
+			/**
+			* Wrapper functions
+			*/
+			static id_resource store(sf::SoundBuffer* sb){ return rm.store(sb); }
+			static void store(sf::SoundBuffer* sb, id_resource id){ rm.store(sb, id, true); }
+			static sf::SoundBuffer* get(id_resource id){ return rm.get(id); }
+			static sf::SoundBuffer* remove(id_resource id){ return rm.remove(id); }
+			static unsigned int clear(){ return rm.clear(true); }
 		
 			/**
 			* Destructor.
 			*/
-			~SoundBuffer(){ clear(true); }
+			~SoundBuffer(){ clear(); }
 		private:
+			/**
+			* Private constructor (static class)
+			*/
 			SoundBuffer(){}
 			
-			static unsigned int ID_RESOURCE;
-			static std::map<id_resource, sf::SoundBuffer*> resource_map;
+			static ResourceManager<sf::SoundBuffer*> rm;
 	};
 }
 
