@@ -1,47 +1,131 @@
 /*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE:
+-- SOURCE FILE: Entity.cpp
 --
 -- PROGRAM:
 --
 -- FUNCTIONS:
+--            Entity::Entity(Controller ctrl)
+--            Entity::~Entity()
+--            void Entity::turn()
+--            Entity move(float x, float y, bool force = false ) // not implemented yet
+--            bool Entity::checkCollision( Entity entity )
+--            std::set<Marx::Cell> Entity::getCells()
+--            void Entity::onCreate()
+--            void Entity::onDestroy()
+--            void Entity::onUpdate()
 --
--- DATE:
+-- DATE: February 19, 2015
 --
 -- REVISIONS:
 --
--- DESIGNER:
+-- DESIGNER: Marx-Engine
 --
--- PROGRAMMER:
+-- PROGRAMMER: Michael Chimick
 --
 -- NOTES:
+--        This file implements the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
 #include "Entity.h"
 
-
-Entity::Entity(Controller)
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::Entity
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Michael Chimick
+--
+-- INTERFACE: Entity::Entity(Controller ctrl)
+--
+-- RETURNS: void
+--
+-- NOTES:
+--        Constructor for an Entity
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Entity::Entity(Controller ctrl)
 {
+	controller = ctrl;
     onCreate();
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::~Entity
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Michael Chimick
+--
+-- INTERFACE: Entity::~Entity()
+--
+-- RETURNS: void
+--
+-- NOTES:
+--        Destructor for an entity
+--
+----------------------------------------------------------------------------------------------------------------------*/
 Entity::~Entity()
 {
     onDestroy();
 }
 
-void Entity::Turn()
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::turn
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Michael Chimick
+--
+-- INTERFACE: void Entity::turn()
+--
+-- RETURNS: void
+--
+-- NOTES:
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Entity::turn()
 {
-    std::set<int> events = controller.getEvents();
+    std::set<int> events = controller.getEvents(); // events being a vector of ints is temp, until we know what they are
     // do something
 }
 
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION:
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER:
+--
+-- INTERFACE:
+--
+-- RETURNS:
+--
+-- NOTES:
+--
+----------------------------------------------------------------------------------------------------------------------*/
 /* Leaving this for marc
  *
 // This is a bit codey for pseudo-code, but it's done very particular
 // this function returns the entity collided with on failure and NULL on success.
-Entity move(float x, float y, bool force = false )
+Entity move(float x, float y, bool force = false)
 {
     if( entity is 1 cell in size )
     {
@@ -61,8 +145,27 @@ Entity move(float x, float y, bool force = false )
 		Assign Location and bounding location
     }
 }*/
-    
-bool Entity::CheckCollision( Entity entity )
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::checkCollision
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Michael Chimick
+--
+-- INTERFACE: bool Entity::checkCollision( Entity entity )
+--
+-- RETURNS: bool
+--
+-- NOTES:
+--        Returns true if the entities are in the same cells, else false
+--
+----------------------------------------------------------------------------------------------------------------------*/
+bool Entity::checkCollision( Entity entity )
 {
     std::set<Marx::Cell>::iterator i_1;
     std::set<Marx::Cell>::iterator i_2;
@@ -73,7 +176,7 @@ bool Entity::CheckCollision( Entity entity )
     {
         if (i_2 == occupied_cells.end()) return false;
 
-        if ((Marx::Cell)*i_1 == (Marx::Cell)*i_2) return true;
+        if ((Marx::Cell)*i_1 == (Marx::Cell)*i_2) return true; // This compiles, and should work; but we should make sure
 
         i_2++;
     }
@@ -81,28 +184,119 @@ bool Entity::CheckCollision( Entity entity )
     return false;
 }
 
-std::set<Marx::Cell> Entity::GetCells()
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::getCells
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Michael Chimick
+--
+-- INTERFACE: std::set<Marx::Cell> Entity::getCells()
+--
+-- RETURNS: std::set<Marx::Cell>
+--
+-- NOTES:
+--        Returns the occupiedCells of the Entity object
+--
+----------------------------------------------------------------------------------------------------------------------*/
+std::set<Marx::Cell> Entity::getCells()
 {
     return occupiedCells;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::operator==
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Michael Chimick
+--
+-- INTERFACE: bool Entity::operator==(const Entity& entity)
+--
+-- RETURNS: bool
+--
+-- NOTES:
+--        Returns true if the entities are the same
+--
+----------------------------------------------------------------------------------------------------------------------*/
 bool Entity::operator==(const Entity& entity)
 {
     return false; // for now
 }
 
-
-void Entity::Onreate()
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::onCreate
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE: void Entity::onCreate()
+--
+-- RETURNS: void
+--
+-- NOTES:
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Entity::onCreate()
 {
 	// logic team
 }
 
-void Entity::OnDestroy()
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::onDestroy
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE: void Entity::onDestroy()
+--
+-- RETURNS: void
+--
+-- NOTES:
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Entity::onDestroy()
 {
 	// logic team
 }
 
-void Entity::OnUpdate()
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::onUpdate
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE: void Entity::onUpdate()
+--
+-- RETURNS: void
+--
+-- NOTES:
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Entity::onUpdate()
 {
-	// logic
+	// logic team
 }

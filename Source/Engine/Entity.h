@@ -1,19 +1,20 @@
 /*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE:
+-- SOURCE FILE: Entity.h
 --
 -- PROGRAM:
 --
--- FUNCTIONS:
+-- FUNCTIONS: N/A
 --
--- DATE:
+-- DATE: February 19, 2015
 --
 -- REVISIONS:
 --
--- DESIGNER:
+-- DESIGNER: Marx-Engine
 --
--- PROGRAMMER:
+-- PROGRAMMER: Michael Chimick
 --
 -- NOTES:
+--        This file defines the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -45,13 +46,13 @@ class Entity
 
         Entity(Controller);
         ~Entity();
-	    void Turn();
-        Entity Move(float, float, bool);
-        bool CheckCollision(Entity);
-        std::set<Marx::Cell> GetCells();
-        void OnCreate();
-        void OnDestroy();
-        void OnUpdate();
+	    void turn();
+        Entity move(float, float, bool);
+        bool checkCollision(Entity);
+        std::set<Marx::Cell> getCells();
+        void onCreate();
+        void onDestroy();
+        void onUpdate();
 
         bool operator==(const Entity&);
 };

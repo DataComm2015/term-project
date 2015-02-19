@@ -1,19 +1,20 @@
 /*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE:
+-- SOURCE FILE: Controller.h
 --
 -- PROGRAM:
 --
--- FUNCTIONS:
+-- FUNCTIONS: N/A
 --
--- DATE:
+-- DATE: February 19, 2015
 --
 -- REVISIONS:
 --
--- DESIGNER:
+-- DESIGNER: Marx-Engine
 --
--- PROGRAMMER:
+-- PROGRAMMER: Michael Chimick
 --
 -- NOTES:
+--        This file defines the Controller class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -35,7 +36,7 @@ class Controller
 
     public:
     
-        std::set<int> GetEvents();
+        std::set<int> getEvents();
 };
 
 #endif

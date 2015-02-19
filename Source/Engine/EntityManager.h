@@ -1,19 +1,20 @@
 /*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE:
+-- SOURCE FILE: EntityManager.h
 --
 -- PROGRAM:
 --
 -- FUNCTIONS:
 --
--- DATE:
+-- DATE: February 19, 2015
 --
 -- REVISIONS:
 --
--- DESIGNER:
+-- DESIGNER: Marx-Engine
 --
--- PROGRAMMER:
+-- PROGRAMMER: Michael Chimick
 --
 -- NOTES:
+--        This file defines the EntityManager class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
