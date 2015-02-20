@@ -27,6 +27,7 @@
 Block::Block()
 {
 	zone = GRASS;
+	type = EMPTY;
 }
 
 
@@ -41,7 +42,7 @@ Block::Block()
 *
 *	PROGRAMMER: Chris Klassen
 *
-*	INTERFACE: setCells(Cell** cells);
+*	INTERFACE: void setCells(Cell** cells);
 *
 *	PARAMETERS:
 *		cells - the 2D array of cells to assign to the block
@@ -58,14 +59,113 @@ void Block::setCells(Cell** cells)
 }
 
 
+/******************************************************************************
+*	FUNCTION: setZone
+*
+*	DATE: February 12, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: void setZone(BlockZone z);
+*
+*	PARAMETERS:
+*		z - the zone type to set
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function assigns a zone type to the block.
+******************************************************************************/
 void Block::setZone(BlockZone z)
 {
 	zone = z;
 }
 
-void Block::setEnemy(EnemyType e) // Julian
+
+/******************************************************************************
+*	FUNCTION: setType
+*
+*	DATE: February 12, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: void setType(BlockType t);
+*
+*	PARAMETERS:
+*		t - the block type to set
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function assigns a type to the block.
+******************************************************************************/
+void Block::setType(BlockType t)
 {
-    enemy = e;
+    type = t;
+}
+
+
+/******************************************************************************
+*	FUNCTION: getType
+*
+*	DATE: February 17, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: BlockType getType();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		BlockType - the type of the block
+*
+*	NOTES:
+*		This function returns the block's type.
+******************************************************************************/
+BlockType Block::getType()
+{
+	return type;
+}
+
+
+/******************************************************************************
+*	FUNCTION: getZone
+*
+*	DATE: February 17, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: BlockZone getZone();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		BlockZone - the zone of the block
+*
+*	NOTES:
+*		This function returns the block's zone.
+******************************************************************************/
+BlockZone Block::getZone()
+{
+	return zone;
 }
 
 
@@ -93,26 +193,69 @@ void Block::setEnemy(EnemyType e) // Julian
 ******************************************************************************/
 char Block::operator()()
 {
-	switch(zone)
+	switch(type)
 	{
-		case GRASS:
-            if(enemy == MINIBOSS)
-            {
-                return 'M';
-            }
-			return '.';
+		case ENEMIES:
+		{
+			return 'e';
 			break;
+		}
 
-		case STONE:
-            if(enemy == MINIBOSS)
-            {
-                return 'M';
-            }
-			return '*';
+		case MINIBOSS:
+		{
+			return 'm';
 			break;
+		}
 
-		case ARBITER:
+		case BOSS:
+		{
 			return 'A';
 			break;
+		}
+
+		case STRUCTURE:
+		{
+			return 's';
+			break;
+		}
+
+		case P1:
+		{
+			return '1';
+			break;
+		}
+
+		case P2:
+		{
+			return '2';
+			break;
+		}
+
+		case P3:
+		{
+			return '3';
+			break;
+		}
+
+		case P4:
+		{
+			return '4';
+			break;
+		}
+
+		case EMPTY:
+		{
+			switch(zone)
+			{
+				case GRASS:
+					return '.';
+					break;
+				case STONE:
+					return '*';
+					break;
+			}
+
+			break;
+		}
 	}
 }

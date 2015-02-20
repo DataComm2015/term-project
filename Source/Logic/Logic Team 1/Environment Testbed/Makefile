@@ -1,6 +1,6 @@
 # Map Generation Test Makefile
 
-CC=g++ -ggdb -W -pedantic 
+CC=g++ -std=c++11 -ggdb -W -pedantic 
 
 mapgen: Cell.o Main.o GameMap.o Block.o
 	$(CC) -o mapgen Cell.o Main.o GameMap.o Block.o
