@@ -1,7 +1,7 @@
 #ifndef BATCH_H
 #define BATCH_H
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 #define SPRITE_VERTICES 6
 
@@ -10,9 +10,9 @@ class SGO;
 class TGO;
 
 /**
- * Batches sprites before rendering to increase performance.
+ * Batches count_sprites before rendering to increase performance.
  * Also takes in any kind of game objects for convenience.
- * 
+ *
  * @author Melvin Loho
  */
 class Batch
@@ -22,7 +22,7 @@ public:
 	 * Constructor.
 	 *
 	 * @param renderer   the render target (e.g. a window / a texture)
-	 * @param maxSprites the max number of sprites to batch
+	 * @param maxSprites the max number of count_sprites to batch
 	 */
 	Batch(sf::RenderTarget &renderer, unsigned int maxSprites = 1000);
 
@@ -30,6 +30,43 @@ public:
 	 * Destructor.
 	 */
 	~Batch();
+
+	////////////////////////////////////////////////////////////
+	/// Wrapper for SFML's draw method.
+	/// \brief Draw a drawable object to the render-target
+	///
+	/// \param drawable Object to draw
+	/// \param states   Render states to use for drawing
+	///
+	////////////////////////////////////////////////////////////
+	void sf_draw(const sf::Drawable& drawable, const sf::RenderStates& states);
+
+	////////////////////////////////////////////////////////////
+	/// Wrapper for SFML's draw method.
+	/// \brief Draw primitives defined by an array of vertices
+	///
+	/// \param vertices    Pointer to the vertices
+	/// \param vertexCount Number of vertices in the array
+	/// \param type        Type of primitives to draw
+	/// \param states      Render states to use for drawing
+	///
+	////////////////////////////////////////////////////////////
+	void sf_draw(const sf::Vertex* vertices, unsigned int vertexCount,
+		sf::PrimitiveType type, const sf::RenderStates& states);
+
+	/**
+	* Gets the amount of draw calls made since the last batching.
+	*
+	* @return the number of draw calls
+	*/
+	unsigned getDrawCallCount() const;
+
+	/**
+	* Gets the amount of count_sprites drawn since the last batching.
+	*
+	* @return the number of count_sprites drawn
+	*/
+	unsigned getSpriteCount() const;
 
 	/**
 	 * Starts and activates the batch.
@@ -67,18 +104,6 @@ public:
 	 */
 	void draw(const TGO &tgo, sf::RenderStates states = sf::RenderStates::Default);
 
-	/**
-	 * Batches the specified vertices of a sprite.
-	 * The number of vertices in the array must be the same as the value defined by SPRITE_VERTICES.
-	 *
-	 * @param texture  the texture to batch with
-	 * @param vertices the array of vertices
-	 */
-	void draw(const sf::Texture &texture, const sf::Vertex *vertices);
-
-	unsigned int sprites, drawCalls;
-
-	sf::RenderTarget &renderer;
 	sf::RenderStates states;
 
 private:
@@ -95,8 +120,19 @@ private:
 	 */
 	void flush();
 
+	/**
+	* Batches the specified vertices of a sprite.
+	* The number of vertices in the array must be the same as the value defined by SPRITE_VERTICES.
+	*
+	* @param texture  the texture to batch with
+	* @param vertices the array of vertices
+	*/
+	void drawSprite(const sf::Texture &texture, const sf::Vertex *vertices);
+
+	sf::RenderTarget &renderer;
 	sf::Vertex *vertices;
 	unsigned int maxCount, count, cumulativeCount;
+	unsigned int count_sprites, count_drawcalls;
 	bool active;
 };
 

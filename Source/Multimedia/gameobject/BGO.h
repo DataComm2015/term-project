@@ -1,12 +1,12 @@
 #ifndef BGO_H
 #define BGO_H
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <vector>
 
-typedef const unsigned int* id_go;
-
 class Batch;
+
+typedef unsigned int id_go;
 
 /**
 * Base Game Object.
@@ -110,6 +110,9 @@ public:
 	*/
 	virtual void update(const sf::Time& t);
 
+protected:
+	friend class Batch;
+
 	/**
 	* Draws this BGO's children and itself.
 	*
@@ -127,7 +130,7 @@ public:
 	virtual void draw(Batch& batch, sf::RenderStates states) const;
 
 private:
-	static unsigned int ID_GO;
+	static id_go ID_GO;
 
 	std::vector<BGO*> m_children;
 	BGO* m_parent;
@@ -135,4 +138,4 @@ private:
 	bool m_ignoringChildren;
 };
 
-#endif * BGO_H
+#endif // BGO_H

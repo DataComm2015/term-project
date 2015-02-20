@@ -12,22 +12,19 @@
 * @author Melvin Loho
 */
 
-unsigned int BGO::ID_GO = 0;
+id_go BGO::ID_GO = 0;
 
 BGO::BGO() :
 m_parent(nullptr),
-m_id(new unsigned int(++ID_GO)),
+m_id(++ID_GO),
 m_ignoringChildren(false)
 {
-	std::cout << "Constructed: " << "GO" << "[" << *getID() << "]" << std::endl;
+	std::cout << "Constructed: " << "GO" << "[" << getID() << "]" << std::endl;
 }
 
 BGO::~BGO()
 {
-	std::cout << "Destructed: " << "GO" << "[" << *getID() << "]" << std::endl;
-
-	delete m_id;
-	m_id = nullptr;
+	std::cout << "Destructed: " << "GO" << "[" << getID() << "]" << std::endl;
 }
 
 id_go BGO::getID() const
