@@ -153,7 +153,7 @@ TileManager::readtset()
         }
         
         tocords(tile, coords);
-        store(new sf::FloatRect(coords[0], coords[1], coords[2], coords[3]));
+        store(new sf::FloatRect(coords[0], coords[1], coords[2], coords[3]);
         tsetmap_[id] = value;
     }
 }

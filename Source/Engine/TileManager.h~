@@ -76,7 +76,7 @@ private:
     /**
     * The texture referenced in the tset file
     */
-    sf::Texture *texture_;
+    sf::Texture texture_;
 
     /**
     * Does the actual reading of the file
