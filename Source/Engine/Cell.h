@@ -5,6 +5,8 @@
 
 namespace Marx
 {
+	typedef unsigned int* tile_id;
+	
 	/* 
 	*	A basic cell class that contains an element.
 	*
@@ -18,6 +20,10 @@ namespace Marx
 			void setId(std::string id);
 			std::string getId();
 
+			// Getters and setters for tile id
+			void setTileId(tile_id t_id);
+			tile_id getTileId();
+			
 			// Getters and setters for coords
 			void	setX(const int& x);
 			void	setY(const int& y);
@@ -29,6 +35,7 @@ namespace Marx
 			bool operator==(const Cell& cell);
 			
 		private:
+			tile_id tile_id_;
 			std::string cell_id_;
 			//position on the map
 			int xcoord_;
