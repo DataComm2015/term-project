@@ -4,9 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-typedef const unsigned int* id_go;
-
 class Batch;
+
+typedef unsigned int id_go;
 
 /**
 * Base Game Object.
@@ -130,7 +130,7 @@ protected:
 	virtual void draw(Batch& batch, sf::RenderStates states) const;
 
 private:
-	static unsigned int ID_GO;
+	static id_go ID_GO;
 
 	std::vector<BGO*> m_children;
 	BGO* m_parent;
