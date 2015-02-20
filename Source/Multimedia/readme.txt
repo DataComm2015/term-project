@@ -5,4 +5,4 @@ For source code material:
 
 -> Namespaces List:
 GUI      - for all of the GUI classes
-Managers - for all of the resource managers
+Manager  - for all of the resource managers
