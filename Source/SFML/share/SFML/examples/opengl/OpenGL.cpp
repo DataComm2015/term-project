@@ -22,6 +22,9 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML graphics with OpenGL", sf::Style::Default, contextSettings);
     window.setVerticalSyncEnabled(true);
 
+    // Make it the active window for OpenGL calls
+    window.setActive();
+
     // Create a sprite for the background
     sf::Texture backgroundTexture;
     if (!backgroundTexture.loadFromFile("resources/background.jpg"))
@@ -35,13 +38,6 @@ int main()
     sf::Text text("SFML / OpenGL demo", font);
     text.setColor(sf::Color(255, 255, 255, 170));
     text.setPosition(250.f, 450.f);
-
-    // Make the window the active target for OpenGL calls
-    // Note: If using sf::Texture or sf::Shader with OpenGL,
-    // be sure to call sf::Texture::getMaximumSize() and/or
-    // sf::Shader::isAvailable() at least once before calling
-    // setActive(), as those functions will cause a context switch
-    window.setActive();
 
     // Load an OpenGL texture.
     // We could directly use a sf::Texture as an OpenGL texture (with its Bind() member function),
@@ -146,11 +142,11 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // Close window: exit
+            // Close window : exit
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            // Escape key: exit
+            // Escape key : exit
             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
                 window.close();
 

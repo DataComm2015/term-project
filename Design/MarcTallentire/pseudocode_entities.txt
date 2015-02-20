@@ -7,7 +7,7 @@ EntityManager
 	{
 		add Entity to container
 	}
-	
+	\\\\\\\\
 	Remove( Entity e )
 	{
 		remove Entity from container
