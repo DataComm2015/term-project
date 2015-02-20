@@ -9,16 +9,16 @@
 #define NUM_PLAYERS 4
 
 /* The percent of enemy grass zone blocks */
-#define MAX_GRASS_ENEMIES 0.35
+#define MAX_GRASS_ENEMIES 35
 
 /* The percent of of enemy stone zone blocks */
-#define MAX_STONE_ENEMIES 0.5
+#define MAX_STONE_ENEMIES 40
 
 /* The percent of structure grass zone blocks */
-#define MAX_GRASS_STRUCTURES 0.05
+#define MAX_GRASS_STRUCTURES 5
 
 /* The percent of structure stone zone blocks */
-#define MAX_STONE_STRUCTURES 0.025
+#define MAX_STONE_STRUCTURES 10
 
 
 /* 
@@ -31,12 +31,7 @@ class GameMap
 		GameMap(Cell **cMap, int w, int h);
 		~GameMap();
 		bool generateMap();
-		bool createBlockMap();
-		void generateZones();
-		void generateMiniBosses();
-		void generatePlayers();
-		void generatePlaceholderBlocks();
-
+		
 		Cell** getCellMap();
 		Block** getBlockMap();
 		int getWidth();
@@ -44,13 +39,23 @@ class GameMap
 		int getBlocksHor();
 		int getBlocksVert();
 
+
 	private:
+		bool createBlockMap();
+		void generateZones();
+		void generateMiniBosses();
+		void generatePlayers();
+		void generatePlaceholderBlocks();
+		BlockType makeBlockType(BlockZone z, int rRoll);
+
 		Cell** cellMap;
 		Block** blockMap;
 		int width;
 		int height;
 		int bWidth;
 		int bHeight;
+		int stoneWidth;
+		int stoneHeight;
 };
 
 #endif

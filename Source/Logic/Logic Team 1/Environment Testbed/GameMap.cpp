@@ -227,30 +227,31 @@ void GameMap::generateZones()
 
 	// Set the central block to the Arbiter zone
 	blockMap[hCentre][wCentre].setZone(ARBITER);
+	blockMap[hCentre][wCentre].setType(BOSS);
 
 	// Calculate the width and height of the Stone zone
-	int wStone = max(3, int(ceil(bWidth * 0.4)));
-	int hStone = max(3, int(ceil(bHeight * 0.4)));
+	stoneWidth = max(3, int(ceil(bWidth * 0.4)));
+	stoneHeight = max(3, int(ceil(bHeight * 0.4)));
 
 	// If the resulting width or height is even, add one to the dimension
-	if (wStone % 2 == 0)
+	if (stoneWidth % 2 == 0)
 	{
-		wStone++;
+		stoneWidth++;
 	}
 
-	if (hStone % 2 == 0)
+	if (stoneHeight % 2 == 0)
 	{
-		hStone++;
+		stoneHeight++;
 	}
 
 	// Calculate the starting x and y for the stone zone
-	int xStone = wCentre - wStone / 2;
-	int yStone = hCentre - hStone / 2;
+	int xStone = wCentre - stoneWidth / 2;
+	int yStone = hCentre - stoneHeight / 2;
 
 	// Set the ring outside the Arbiter zone to Stone blocks
-	for (int i = yStone; i < yStone + hStone; i++)
+	for (int i = yStone; i < yStone + stoneHeight; i++)
 	{
-		for (int j = xStone; j < xStone + wStone; j++)
+		for (int j = xStone; j < xStone + stoneWidth; j++)
 		{
 			if (!(i == hCentre && j == wCentre))
 			{
@@ -362,45 +363,30 @@ void GameMap::generatePlayers()
 ******************************************************************************/
 void GameMap::generateMiniBosses()
 {
-    // Calculate the width and height of the Stone zone
-    int wStone = max(3, int(ceil(bWidth * 0.4)));
-    int hStone = max(3, int(ceil(bHeight * 0.4)));
+    int xStone = (bWidth / 2) - (stoneWidth / 2);
+    int yStone = (bHeight / 2) - (stoneHeight / 2);
 
-	// If the resulting width or height is even, add one to the dimension
-	if (wStone % 2 == 0)
-	{
-		wStone++;
-	}
-
-	if (hStone % 2 == 0)
-	{
-		hStone++;
-	}
-
-    int xStone = (bWidth / 2) - (wStone / 2);
-    int yStone = (bHeight / 2) - (hStone / 2);
-
-    int xMiniBoss = wStone - 1;
-    int yMiniBoss = hStone - 1;
+    int xMiniBoss = stoneWidth - 1;
+    int yMiniBoss = stoneHeight - 1;
 
     // If the Stone width is greater than 3
     //      -> Place a Mini-Boss in the middle top/bottom
-    if(wStone > 3)
+    if(stoneWidth > 3)
     {
-        xMiniBoss = wStone / 2;
+        xMiniBoss = stoneWidth / 2;
     }
     // If the Stone height is greater than 3
     //      -> Place a Mini-Boss in the middle left/right
-    if(hStone > 3)
+    if(stoneHeight > 3)
     {
-        yMiniBoss = hStone / 2;
+        yMiniBoss = stoneHeight / 2;
     }
 
     // Place Mini-Bosses in the Stone zone
     // Won't place the last Mini-Bosses if the width or height is even
-    for(int i = yStone; i < yStone + hStone; i += yMiniBoss)
+    for(int i = yStone; i < yStone + stoneHeight; i += yMiniBoss)
     {
-        for(int j = xStone; j < xStone + wStone; j += xMiniBoss)
+        for(int j = xStone; j < xStone + stoneWidth; j += xMiniBoss)
         {
         	// If this is not the arbiter zone
         	if (!(i == bHeight / 2 && j == bWidth / 2))
@@ -412,20 +398,20 @@ void GameMap::generateMiniBosses()
 
     // If the width is even
     //      -> Place Mini-Bosses in the right Stone row
-	if(wStone % 2 == 0)
+	if(stoneWidth % 2 == 0)
 	{
-		blockMap[yStone][xStone + wStone - 1].setType(MINIBOSS);
-		blockMap[yStone + (hStone / 2)][xStone + wStone - 1].setType(MINIBOSS);
-		blockMap[yStone + hStone - 1][xStone + wStone - 1].setType(MINIBOSS);
+		blockMap[yStone][xStone + stoneWidth - 1].setType(MINIBOSS);
+		blockMap[yStone + (stoneHeight / 2)][xStone + stoneWidth - 1].setType(MINIBOSS);
+		blockMap[yStone + stoneHeight - 1][xStone + stoneWidth - 1].setType(MINIBOSS);
 	}
 
     // If the height is even
     //      -> Place Mini-Bosses in the bottom Stone row
-	if(hStone % 2 == 0)
+	if(stoneHeight % 2 == 0)
 	{
-		blockMap[yStone + hStone - 1][xStone].setType(MINIBOSS);
-		blockMap[yStone + hStone - 1][xStone + (wStone / 2)].setType(MINIBOSS);
-		blockMap[yStone + hStone - 1][xStone + wStone - 1].setType(MINIBOSS);
+		blockMap[yStone + stoneHeight - 1][xStone].setType(MINIBOSS);
+		blockMap[yStone + stoneHeight - 1][xStone + (stoneWidth / 2)].setType(MINIBOSS);
+		blockMap[yStone + stoneHeight - 1][xStone + stoneWidth - 1].setType(MINIBOSS);
 	}
 
     // Place Mini-Bosses in the middle of each Grass edge
@@ -458,26 +444,70 @@ void GameMap::generateMiniBosses()
 *     This function assigns each placeholder block a specific type.
 *	  The type selection depends on the block's zone and surroundings.
 ******************************************************************************/
-void generatePlaceholderBlocks()
+void GameMap::generatePlaceholderBlocks()
 {
-	// Define the maximum number of each block type per zone
-	
+	int rRoll;
 
 	// Loop through all blocks
 	for (int i = 0; i < bHeight; i++)
 	{
 		for (int j = 0; j < bWidth; j++)
 		{
-			if (blockMap[i][j].getZone() == GRASS)
+			if (blockMap[i][j].getType() == EMPTY)
 			{
-				// If this is a grass zone block
-			}
-			else if (blockMap[i][j].getZone() == STONE)
-			{
-				// If this is a stone zone block
+				rRoll = (rand() % 100) + 1;
+
+				blockMap[i][j].setType(makeBlockType(blockMap[i][j].getZone(), rRoll));
 			}
 		}
 	}
+}
+
+
+BlockType GameMap::makeBlockType(BlockZone z, int rRoll)
+{
+	BlockType type;
+
+	switch(z)
+	{
+		case GRASS:
+		{
+			if (rRoll < MAX_GRASS_ENEMIES)
+			{
+				type = ENEMIES;
+			}
+			else if (rRoll >= MAX_GRASS_ENEMIES && rRoll < MAX_GRASS_ENEMIES + MAX_GRASS_STRUCTURES)
+			{
+				type = STRUCTURE;
+			}
+			else
+			{
+				type = EMPTY;
+			}
+
+			break;
+		}
+
+		case STONE:
+		{
+			if (rRoll < MAX_STONE_ENEMIES)
+			{
+				type = ENEMIES;
+			}
+			else if (rRoll >= MAX_STONE_ENEMIES && rRoll < MAX_STONE_ENEMIES + MAX_STONE_STRUCTURES)
+			{
+				type = STRUCTURE;
+			}
+			else
+			{
+				type = EMPTY;
+			}
+
+			break;
+		}
+	}
+
+	return type;
 }
 
 

@@ -207,6 +207,12 @@ char Block::operator()()
 			break;
 		}
 
+		case BOSS:
+		{
+			return 'A';
+			break;
+		}
+
 		case STRUCTURE:
 		{
 			return 's';
@@ -246,9 +252,6 @@ char Block::operator()()
 					break;
 				case STONE:
 					return '*';
-					break;
-				case ARBITER:
-					return 'A';
 					break;
 			}
 

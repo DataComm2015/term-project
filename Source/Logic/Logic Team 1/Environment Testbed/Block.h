@@ -14,7 +14,7 @@ enum BlockZone {GRASS, STONE, ARBITER};
 typedef enum BlockZone BlockZone;
 
 /* The general type of the block */
-enum BlockType {EMPTY, P1, P2, P3, P4, ENEMIES, MINIBOSS, STRUCTURE};
+enum BlockType {EMPTY, P1, P2, P3, P4, ENEMIES, MINIBOSS, BOSS, STRUCTURE};
 typedef enum BlockType BlockType;
 
 /*
