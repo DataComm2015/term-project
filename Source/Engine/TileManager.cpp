@@ -20,7 +20,7 @@
 -- file at path
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::FloatRect* 
-TileManager::load(std::string path)
+Manager::TileManager::load(std::string path)
 {
     tset_.clear();
     tset_.open(path.c_str());
@@ -49,9 +49,9 @@ TileManager::load(std::string path)
 -- Uses a string id to get the id_resource to get the rectangle
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::FloatRect* 
-TileManager::get(std::string rectId)
+Manager::TileManager::get(std::string rectId)
 {
-    return ResourceManager<sf::FloatRect*>::get(tsetmap_[rectId]);
+    return get(tsetmap_[rectId]);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -74,9 +74,9 @@ TileManager::get(std::string rectId)
 -- Returns the texture held.
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::Texture* 
-TileManager::getTexture()
+Manager::TileManager::getTexture(id_resource id)
 {
-    return texture_;
+    return (textMgr.get(id));
 }
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: remove
@@ -97,7 +97,7 @@ TileManager::getTexture()
 -- Uses a string id to get the id_resource to remove the rectangle
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::FloatRect* 
-TileManager::remove(std::string rectId)
+Manager::TileManager::remove(std::string rectId)
 {
     sf::FloatRect *rect = ResourceManager<sf::FloatRect*>::remove(tsetmap_[rectId]);
     tsetmap_.erase(rectId);
@@ -123,14 +123,13 @@ TileManager::remove(std::string rectId)
 -- Does the actual reading of the file.
 ----------------------------------------------------------------------------------------------------------------------*/
 void 
-TileManager::readtset()
+Manager::TileManager::readtset()
 {
     std::string dummy, texture, tilesize, tile, index;
     std::string id;
+    std::set<std::string> tile_ids;
     float coords[4];
-    id_resource value;
-    textMgr_ = new TextureManager();
-    
+    id_resource value, texture_id;
     
     std::getline(tset_, dummy, ':'); // Remove 'texture:'
     std::getline(tset_, texture); // Extract file path
@@ -140,7 +139,7 @@ TileManager::readtset()
     std::getline(tset_, dummy); // Remove new line
     std::getline(tset_, dummy); // Remove 'tiles:(x,y,w,h)'
     
-    texture_ = textMgr_->load(texture);
+    texture_id = textMgr.store(textMgr_->load(texture));
     while (tset_.good() && tset_.eof() == false)
     {
         std::getline(tset_, index, ':');
@@ -153,9 +152,12 @@ TileManager::readtset()
         }
         
         tocords(tile, coords);
-        store(new sf::FloatRect(coords[0], coords[1], coords[2], coords[3]));
+        value = store(new sf::FloatRect(coords[0], coords[1], coords[2], coords[3]));
         tsetmap_[id] = value;
+        tile_ids.insert(id);
     }
+    texturemap_[texture_id] = tile_ids;
+    mapTexture = texture_id;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -178,7 +180,7 @@ TileManager::readtset()
 -- and returns a copy.
 ----------------------------------------------------------------------------------------------------------------------*/
 std::string
-TileManager::trim(std::string line)
+Manager::TileManager::trim(std::string line)
 {
     std::string id = "";
     for (std::string::size_type i = 0; i < line.size(); i++)
@@ -211,7 +213,7 @@ TileManager::trim(std::string line)
 -- Changes the given string to an array of floats.
 ----------------------------------------------------------------------------------------------------------------------*/
 void
-TileManager::tocords(std::string& tile, float *coords)
+Manager::TileManager::tocords(std::string& tile, float *coords)
 {
     std::stringstream ss(tile);
     for (size_t i = 0; i < 4; i++)

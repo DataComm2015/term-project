@@ -1,1 +1,0 @@
-Currently still need ResourceMgr

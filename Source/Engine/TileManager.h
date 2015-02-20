@@ -6,8 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-//using namespace std;
+#include <set>
 
 /**
  * Tile Manager.
@@ -16,92 +15,116 @@
  * 
  * @author Thomas Tallentire
  */
-class TileManager : public ResourceManager<sf::FloatRect*>
+namespace Manager
 {
-public: 
-    /**
-    * Destructor
-    */
-    ~TileManager(){ clear(); }
-    
-    /**
-    * Loads and populates the map with the contents of the
-    * file at path
-    *
-    * @param std::string path - The path location of the tset file
-    * @return sf::FloatRect - returns null, needed for proper overloading 
-    */
-    sf::FloatRect* load(std::string);
-    
-    /**
-    * Uses a string id to get the id_resource to get the rectangle
-    *
-    * @param std::string id - The string id to be used on the tsetmap.
-    * @return sf::FloatRect - Returns the appropriate rectangle
-    */
-    sf::FloatRect* get(std::string);
+    class TileManager
+    {
+        public: 
+            TileManager() 
+            {
+                *textMgr = new TextureManager();
+            }
+            /**
+            * Destructor
+            */
+            ~TileManager(){ clear(); }
+         
+            /**
+            * Loads and populates the map with the contents of the
+            * file at path
+            *
+            * @param std::string path - The path location of the tset file
+            * @return sf::FloatRect - returns null, needed for proper overloading 
+            */
+            static sf::FloatRect* load(std::string);
+            
+            /**
+            * Uses a string id to get the id_resource to get the rectangle
+            *
+            * @param std::string id - The string id to be used on the tsetmap.
+            * @return sf::FloatRect - Returns the appropriate rectangle
+            */
+            static sf::FloatRect* get(std::string);
+            
+            /**
+            * Static versions of the Resource Manager functions.
+            */
+            static id_resource store(sf::FloatRect* r) { return rm.store(r); }
+            static void store(sf::FloatRect* r, id_resource id) { return rm.store(r, id, true); }
+            static sf::FloatRect* get(id_resource id) { return rm.get(id); }
+            static sf::FloatRect* remove(id_resource id) { return rm.remove(id); }
+            static unsigned int clear() { return rm.clear(true); }
+            
+            /**
+            * Returns the texture held.
+            *
+            * @param std::string id - The string id to be used on the tsetmap.
+            * @return sf::Texture - the texture held by the manager.
+            */
+            static sf::Texture* getTexture(id_resource);
+            
+            /**
+            * Returns the map texture id.
+            *
+            * @return id_resource - the texture id for the map held by the manager.
+            */
+            static id_resource getMapTexture() { return mapTexture; };
+            
+            /**
+            * Uses a string id to get the id_resource to remove the rectangle
+            *
+            * @param std::string id - The string id to be used on the tsetmap.
+            * @return sf::FloatRect - The object removed.
+            */
+            static sf::FloatRect* remove(std::string);
+        private:
+            static id_resource mapTexture;
+            static ResourceManager<sf::FloatRect*> rm;
+            /**
+            * Map to associate the string id to the tile id_resource
+            */
+            static std::map<std::string, id_resource> tsetmap_;
 
-    /**
-    * Returns the texture held.
-    *
-    * @param std::string id - The string id to be used on the tsetmap.
-    * @return sf::Texture - the texture held by the manager.
-    */
-    sf::Texture* getTexture();
-    
-    /**
-    * Uses a string id to get the id_resource to remove the rectangle
-    *
-    * @param std::string id - The string id to be used on the tsetmap.
-    * @return sf::FloatRect - The object removed.
-    */
-    sf::FloatRect* remove(std::string);
-private:
+            /**
+            * Map to associate a texture id to a map of tiles
+            */
+            static std::map<id_resource, std::set<std::string> > texturemap_;
+            
+            /**
+            * The file stream for the tset file.
+            */
+            static std::ifstream tset_;
 
-    /**
-    * Map to associate the string id to the id_resource
-    */
-    std::map<std::string, id_resource> tsetmap_;
+            /**
+            * The texture manager to hold the texture
+            */
+            static TextureManager *textMgr_;
 
-    /**
-    * The file stream for the tset file.
-    */
-    std::ifstream tset_;
-
-    /**
-    * The texture manager to hold the texture
-    */
-    TextureManager *textMgr_;
-
-    /**
-    * The texture referenced in the tset file
-    */
-    sf::Texture *texture_;
-
-    /**
-    * Does the actual reading of the file
-    *
-    * @param void
-    * @return void
-    */
-    void readtset();
-    
-    /**
-    * Trims leading and trailing whitespace from the given string 
-    * and returns a copy.
-    *
-    * @param std::string line - The string to be trimmed
-    * @return std::string - The trimmed string
-    */
-    std::string trim(std::string);
-    
-    /**
-    * Changes the given string to an array of floats.
-    *
-    * @param std::string tile - The string with the values to be interpreted
-    *        float* - A pointer to the float array to be set
-    */
-    void tocords(std::string&, float*);
-};
+            /**
+            * Does the actual reading of the file
+            *
+            * @param void
+            * @return void
+            */
+            static void readtset();
+            
+            /**
+            * Trims leading and trailing whitespace from the given string 
+            * and returns a copy.
+            *
+            * @param std::string line - The string to be trimmed
+            * @return std::string - The trimmed string
+            */
+            static std::string trim(std::string);
+            
+            /**
+            * Changes the given string to an array of floats.
+            *
+            * @param std::string tile - The string with the values to be interpreted
+            *        float* - A pointer to the float array to be set
+            */
+            static void tocords(std::string&, float*);
+    };
+}
 
 #endif // TILE_MGR_H

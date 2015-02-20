@@ -20,7 +20,7 @@
 -- it fails to load.
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::Texture* 
-TextureManager::load(std::string path)
+Manager::TextureManager::load(std::string path)
 {
     sf::Texture *texture = new sf::Texture();
     

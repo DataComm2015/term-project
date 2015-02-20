@@ -10,23 +10,37 @@
  * 
  * @author Thomas Tallentire
  */
-class TextureManager : public ResourceManager<sf::Texture*>
+namespace Manager
 {
-public: 
-    /**
-    * Destructor
-    */
-    ~TextureManager(){ clear(); }
+    class TextureManager
+        {
+        public: 
+            /**
+            * Destructor
+            */
+            ~TextureManager(){ clear(); }
 
-    /**
-    * Loads a texture from the given address Throws a const char* exception if 
-    * it fails to load.
-    *
-    * @param std::string path - The path location of the tset file
-    * @return sf::Texture - Texture loaded from path
-    */
-    sf::Texture* load(std::string);
-};
-
+            /**
+            * Loads a texture from the given address Throws a const char* exception if 
+            * it fails to load.
+            *
+            * @param std::string path - The path location of the tset file
+            * @return sf::Texture - Texture loaded from path
+            */
+            sf::Texture* load(std::string);
+            
+            /**
+            * Static versions of the Resource Manager functions.
+            */
+            static id_resource store(sf::Texture* r) { return rm.store(r); }
+            static void store(sf::Texture* r, id_resource id) { return rm.store(r, id, true); }
+            static sf::Texture* get(id_resource id) { return rm.get(id); }
+            static sf::Texture* remove(id_resource id) { return rm.remove(id); }
+            static unsigned int clear() { return rm.clear(true); }
+            
+        private:
+            static ResourceManager<sf::Texture*> rm;
+        };
+}
 
 #endif
