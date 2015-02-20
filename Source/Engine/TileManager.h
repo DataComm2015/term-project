@@ -78,8 +78,16 @@ namespace Manager
             */
             static sf::FloatRect* remove(std::string);
         private:
-            static id_resource mapTexture;
+            /**
+            * The resource manager
+            */
             static ResourceManager<sf::FloatRect*> rm;
+            
+            /**
+            * The maptexture id that can be used to reference the map texture
+            */
+            static id_resource mapTexture;
+            
             /**
             * Map to associate the string id to the tile id_resource
             */
