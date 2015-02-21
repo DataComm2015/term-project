@@ -32,7 +32,7 @@ using std::vector;
 *	NOTES:
 *		This is the primary constructor of the GameMap class. 
 *
-*		This constructor creates a 2D array of cells to be manipulated.
+*		This constructor defines the cell map that the GameMap will use.
 ******************************************************************************/
 GameMap::GameMap(Cell **cMap, int w, int h)
 {
@@ -301,7 +301,6 @@ void GameMap::generatePlayers()
 			{
 				// Corner 1
 				blockMap[0][0].setType(players[nextPlayer]);
-
 				break;
 			}
 
@@ -327,8 +326,8 @@ void GameMap::generatePlayers()
 			}
 		}
 
+		// Remove the selected player from the list of possible players
 		players.erase(players.begin() + nextPlayer);
-
 	}
 }
 
@@ -464,6 +463,30 @@ void GameMap::generatePlaceholderBlocks()
 }
 
 
+/******************************************************************************
+*   FUNCTION: makeBlockType
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: BlockType makeBlockType(BlockZone z, int rRoll);
+*   
+*   PARAMETERS:
+*		z - the zone of the block
+*		rRoll - the randomly generated number to use in determination
+*   
+*   RETURNS:
+*       BlockType - the type of zone selected for the block
+*   
+*   NOTES:
+*     This function determines the type of block selected for the placeholder
+*	  block based on the zone and random roll.
+******************************************************************************/
 BlockType GameMap::makeBlockType(BlockZone z, int rRoll)
 {
 	BlockType type;
@@ -517,28 +540,135 @@ Cell** GameMap::getCellMap()
 }
 
 
+/******************************************************************************
+*   FUNCTION: getBlockMap
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: Block** getBlockMap();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       Block** - the block map used by the GameMap
+*   
+*   NOTES:
+*     This function returns the block map used for map generation logic.
+******************************************************************************/
 Block** GameMap::getBlockMap()
 {
 	return blockMap;
 }
 
 
+/******************************************************************************
+*   FUNCTION: getWidth
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: int getWidth();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       int - the width of the GameMap
+*   
+*   NOTES:
+*     This function returns the width of the game map.
+******************************************************************************/
 int GameMap::getWidth()
 {
 	return width;
 }
 
+
+/******************************************************************************
+*   FUNCTION: getHeight
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: int getHeight();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       int - the height of the GameMap
+*   
+*   NOTES:
+*     This function returns the height of the game map.
+******************************************************************************/
 int GameMap::getHeight()
 {
 	return height;
 }
 
 
+/******************************************************************************
+*   FUNCTION: getBlocksHor
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Julian Brandrick
+*   
+*   PROGRAMMER: Julian Brandrick
+*   
+*   INTERFACE: int getBlocksHor();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       int - the width of the GameMap in blocks.
+*   
+*   NOTES:
+*     This function returns the width of the game map in blocks.
+******************************************************************************/
 int GameMap::getBlocksHor()
 {
 	return bWidth;
 }
 
+
+/******************************************************************************
+*   FUNCTION: getBlocksVert
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Julian Brandrick
+*   
+*   PROGRAMMER: Julian Brandrick
+*   
+*   INTERFACE: int getBlocksVert();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       int - the height of the GameMap in blocks.
+*   
+*   NOTES:
+*     This function returns the height of the game map in blocks.
+******************************************************************************/
 int GameMap::getBlocksVert()
 {
 	return bHeight;

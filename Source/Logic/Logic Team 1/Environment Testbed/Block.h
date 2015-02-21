@@ -3,6 +3,7 @@
 
 #include "Cell.h"
 
+
 /* The width of a block in terms of number of cells */
 #define BLOCK_WIDTH 2
 
@@ -14,7 +15,7 @@ enum BlockZone {GRASS, STONE, ARBITER};
 typedef enum BlockZone BlockZone;
 
 /* The general type of the block */
-enum BlockType {EMPTY, P1, P2, P3, P4, ENEMIES, MINIBOSS, BOSS, STRUCTURE};
+enum BlockType {EMPTY, P1, P2, P3, P4, ENEMIES, STRUCTURE, MINIBOSS, BOSS};
 typedef enum BlockType BlockType;
 
 /*
@@ -34,6 +35,7 @@ class Block
 		BlockZone getZone();
 
 		char operator()();
+		
 	private:
 		BlockType type;
 		BlockZone zone;
