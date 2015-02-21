@@ -9,16 +9,16 @@
 #define NUM_PLAYERS 4
 
 /* The percent of enemy grass zone blocks */
-#define MAX_GRASS_ENEMIES 35
+#define MAX_GRASS_ENEMIES 45
 
 /* The percent of of enemy stone zone blocks */
-#define MAX_STONE_ENEMIES 40
+#define MAX_STONE_ENEMIES 30
 
 /* The percent of structure grass zone blocks */
 #define MAX_GRASS_STRUCTURES 5
 
 /* The percent of structure stone zone blocks */
-#define MAX_STONE_STRUCTURES 10
+#define MAX_STONE_STRUCTURES 5
 
 
 /* 
@@ -38,7 +38,6 @@ class GameMap
 		int getHeight();
 		int getBlocksHor();
 		int getBlocksVert();
-
 
 	private:
 		bool createBlockMap();

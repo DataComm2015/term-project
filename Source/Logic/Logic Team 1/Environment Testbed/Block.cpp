@@ -203,7 +203,7 @@ char Block::operator()()
 
 		case MINIBOSS:
 		{
-			return 'm';
+			return 'M';
 			break;
 		}
 
