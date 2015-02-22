@@ -1,6 +1,7 @@
 #ifndef MAP_H_
 #define MAP_H_
 
+#include <vector>
 #include "Cell.h"
 
 namespace Marx
@@ -12,13 +13,14 @@ namespace Marx
 	class Map
 	{
 		public:
-			Map();
-			void setCell(const int& x, const int& y, const Cell& cell);
-			Cell getCell(const int& x, const int& y);
+			Map(unsigned int width);
+			unsigned int getWidth();
+			void setCell(const Cell& cell);
+			Cell getCell(const int& index);
 		
 		private:
-			Cell cells_[][10];	// temp value to remove compilation error for now
-								// can be changed to a different container
+			unsigned int width_;
+			std::vector<Cell> cells_;
 	};
 } /* namespace Marx */
 

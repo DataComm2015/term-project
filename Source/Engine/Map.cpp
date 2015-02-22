@@ -16,7 +16,7 @@ using namespace Marx;
 *	INTERFACE: Map()
 *
 *	PARAMETERS:
-*		// void for now
+*		width	-	unsigned int, width of the map.
 *
 *	RETURNS:
 *		void
@@ -25,9 +25,9 @@ using namespace Marx;
 *		Map constructor
 *
 ******************************************************************************/
-Map::Map()
+Map::Map(unsigned int width)
 {
-	// Initialize Map
+	width_ = width;
 }
 
 /******************************************************************************
@@ -54,9 +54,9 @@ Map::Map()
 *		Sets cell(x, y) in map
 *
 ******************************************************************************/
-void Map::setCell(const int& x, const int& y, const Cell& cell)
+void Map::setCell(const Cell& cell)
 {
-	cells_[x][y] = cell;
+	cells_.push_back(cell);
 }
 
 /******************************************************************************
@@ -64,27 +64,54 @@ void Map::setCell(const int& x, const int& y, const Cell& cell)
 *
 *	DATE: February 16, 2015
 *
-*	REVISIONS: (Date and Description)
+*	REVISIONS: February 21, 2015	- Changed cells form a 2d array to a 
+* 									vector.
 *
 *	DESIGNER: Marc Rafanan
 *
 *	PROGRAMMER: Marc Rafanan
 *
-*	INTERFACE: getCell(int x, int y)
+*	INTERFACE: getCell(const int& index)
 *
 *	PARAMETERS:
-*		x	-	row
-*		y	-	column
+*		index	- index is computed as x * width + y
 *
 *	RETURNS:
 *		Cell
 *
 *	NOTES:
-*		Gets the cell in (x, y) of the Map
+*		Gets the cell specified by the index (x * width + y) of the Map
 *
 ******************************************************************************/
-Cell Map::getCell(const int& x, const int& y)
+Cell Map::getCell(const int& index)
 {
-	return cells_[x][y];
+	return cells_[index];
 }
 
+/******************************************************************************
+*	FUNCTION: getWidth
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS:
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: getWidth()
+*
+*	PARAMETERS:
+*		void
+*
+*	RETURNS:
+*		unsigned int	-	width of the map (in cells)
+*
+*	NOTES:
+*		returns width of the map in cells.
+*
+******************************************************************************/
+unsigned int Map::getWidth()
+{
+	return width_;
+}
