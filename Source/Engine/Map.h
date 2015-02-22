@@ -6,6 +6,7 @@
 
 namespace Marx
 {
+	typedef unsigned int uint;
 	/* 
 	*	Map base class
 	*   
@@ -13,13 +14,15 @@ namespace Marx
 	class Map
 	{
 		public:
-			Map(unsigned int width);
+			Map(const uint& height, const uint& width);
+			unsigned int getHeight();
 			unsigned int getWidth();
-			void setCell(const Cell& cell);
-			Cell getCell(const int& index);
+			void setCell(const uint& x, const uint& y, const Cell& cell);
+			Cell getCell(const uint& x, const uint& y);
 		
 		private:
-			unsigned int width_;
+			uint width_;
+			uint height_;
 			std::vector<Cell> cells_;
 	};
 } /* namespace Marx */

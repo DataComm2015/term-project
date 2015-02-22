@@ -25,9 +25,9 @@ using namespace Marx;
 *		Map constructor
 *
 ******************************************************************************/
-Map::Map(unsigned int width)
+Map::Map(const uint& height, const uint& width) : width_(width), height_(height), cells_(std::vector<Cell>(width * height))
 {
-	width_ = width;
+
 }
 
 /******************************************************************************
@@ -54,9 +54,10 @@ Map::Map(unsigned int width)
 *		Sets cell(x, y) in map
 *
 ******************************************************************************/
-void Map::setCell(const Cell& cell)
+void Map::setCell(const uint& x, const uint& y,const Cell& cell)
 {
-	cells_.push_back(cell);
+	uint index = x * width_ + y;
+	cells_[index] = cell;
 }
 
 /******************************************************************************
@@ -74,7 +75,8 @@ void Map::setCell(const Cell& cell)
 *	INTERFACE: getCell(const int& index)
 *
 *	PARAMETERS:
-*		index	- index is computed as x * width + y
+*		x	- usingned int x coordinate of the cell in the map
+*		y	- unsinged int y coordinate of the cell in the map
 *
 *	RETURNS:
 *		Cell
@@ -83,8 +85,9 @@ void Map::setCell(const Cell& cell)
 *		Gets the cell specified by the index (x * width + y) of the Map
 *
 ******************************************************************************/
-Cell Map::getCell(const int& index)
+Cell Map::getCell(const uint& x, const uint& y)
 {
+	uint index = x * width_ + y;
 	return cells_[index];
 }
 
@@ -114,4 +117,32 @@ Cell Map::getCell(const int& index)
 unsigned int Map::getWidth()
 {
 	return width_;
+}
+
+/******************************************************************************
+*	FUNCTION: getHeigth
+*
+*	DATE: February 16, 2015
+*
+*	REVISIONS:
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: getHeight()
+*
+*	PARAMETERS:
+*		void
+*
+*	RETURNS:
+*		unsigned int	-	height of the map (in cells)
+*
+*	NOTES:
+*		returns height of the map in cells.
+*
+******************************************************************************/
+unsigned int Map::getHeight()
+{
+	return height_;
 }
