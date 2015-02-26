@@ -2,6 +2,7 @@
 #define CELL_H_
 
 #include <string>
+#include <SFML/Graphics/Rect.hpp>
 
 namespace Marx
 {
@@ -11,7 +12,7 @@ namespace Marx
 	*	A basic cell class that contains an element.
 	*
 	*/
-	class Cell
+	class Cell : public sf::IntRect
 	{
 		public:
 			explicit Cell(int x = 0, int y = 0): xcoord_(x), ycoord_(y) {}
