@@ -59,6 +59,62 @@ std::string Cell::getId()
 }
 
 /******************************************************************************
+*	FUNCTION: setTileId
+*
+*	DATE: February 20, 2015
+*
+*	REVISIONS: February 20, 2015 - Added tile id for the cells
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: void setTileId(tile_id t_id)
+*
+*	PARAMETERS:
+*		t_id	-	tile id for the cell (tile_id typedef'd in Cell.h)
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		Sets the tile ID for the cell
+*
+******************************************************************************/
+void Cell::setTileId(tile_id t_id)
+{
+	tile_id_ = t_id;
+}
+
+/******************************************************************************
+*	FUNCTION: getTileId
+*
+*	DATE: February 20, 2015
+*
+*	REVISIONS: February 20, 2015 - added tile id to cells
+*
+*	DESIGNER: Marc Rafanan
+*
+*	PROGRAMMER: Marc Rafanan
+*
+*	INTERFACE: tile_id getTileId()
+*
+*	PARAMETERS:
+*		void
+*
+*	RETURNS:
+*		tile_id	-	typedef in Cell.h. Tile ID for the cell
+*
+*	NOTES:
+*		Gets the tile ID of the cell
+*
+******************************************************************************/
+tile_id Cell::getTileId()
+{
+	return tile_id_;
+}
+
+/******************************************************************************
 *	FUNCTION: setX
 *
 *	DATE: February 16, 2015
