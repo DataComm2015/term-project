@@ -18,25 +18,20 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
-
-#ifndef STD_SET_
-#define STD_SET_
-#include <set>
-#endif
-
-
 #ifndef CONTROLLER_H_
 #define CONTROLLER_H_
+
+#include <vector>
 
 class Controller
 {
     private:
 
-        std::set<int> eventQueue;
+        std::vector<Event> eventQueue;
 
     public:
     
-        std::set<int> getEvents();
+        std::vector<Event> getEvents();
 };
 
 #endif

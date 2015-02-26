@@ -48,7 +48,7 @@ namespace Marx
 	*				Marc Vouve
 	*
 	*	INTERFACE: void removeScene(std::string name)
-	*							std::string name: The name of the scene to remove
+	*		std::string name: The name of the scene to remove
 	*
 	*	PARAMETERS:
 	*		index	- index of the scene to be removed
