@@ -1,0 +1,18 @@
+# Makefile for engine
+
+$CC=g++
+
+
+
+test: Scene.o AppWindow.o
+	$(CC) AppWindow.o -o sfml-app 
+clean:
+	rm -f *.o *.bak test
+
+Scene.o:
+	$(CC) -c Scene.cpp -std=c++11  -lsfml-graphics -lsfml-window -lsfml-system
+
+
+AppWindow.o:
+	$(CC) -c AppWindow.cpp -std=c++11  -lsfml-graphics -lsfml-window -lsfml-system
+	
