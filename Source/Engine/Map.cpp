@@ -172,3 +172,99 @@ unsigned int Map::getHeight()
 {
     return height_;
 }
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setTexture
+--
+-- DATE: February 27, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Melvin Loho
+--           Marc Rafanan
+--
+-- PROGRAMMER: Marc Rafanan
+--
+-- INTERFACE: void setTexture(const uint& texture_id)
+--
+-- PARAMETERS:
+--     unsigned int    -    texture id of the map
+--
+-- RETURNS:
+--     void
+--
+-- NOTES:
+--     returns texture id of the map in cells.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Map::setTexture(const uint& texture_id)
+{
+    texture_id_ = texture_id;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getTexture
+--
+-- DATE: February 27, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Melvin Loho
+--           Marc Rafanan
+--
+-- PROGRAMMER: Marc Rafanan
+--
+-- INTERFACE: uint getTexture()
+--
+-- PARAMETERS:
+--     void
+--
+-- RETURNS:
+--     unsigned int    -    texture id of the map
+--
+-- NOTES:
+--     returns texture id of the map.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+uint Map::getTexture()
+{
+    return texture_id_;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getCellIDs
+--
+-- DATE: February 27, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Melvin Loho
+--           Marc Rafanan
+--
+-- PROGRAMMER: Marc Rafanan
+--
+-- INTERFACE: std::vector<std::string> getCellIDs()
+--
+-- PARAMETERS:
+--     void
+--
+-- RETURNS:
+--     std::vector<std::string>    -    Vector of cell ids
+--
+-- NOTES:
+--     returns a vector of cell ids.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+std::vector<std::string> Map::getCellIDs()
+{
+    std::vector<std::string> result;
+    
+    std::vector<Cell>::iterator it = this->cells_.begin();
+
+    for(; it != this->cells_.end(); ++it)
+    {
+        result.push_back(it->getId());
+    }
+    
+    return result;
+}

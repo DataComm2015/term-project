@@ -40,10 +40,15 @@ namespace Marx
             unsigned int getWidth();
             void setCell(const uint& x, const uint& y, const Cell& cell);
             Cell getCell(const uint& x, const uint& y);
-        
+            void setTexture(const uint& texture_id);
+            uint getTexture();
+            std::vector<std::string> getCellIDs();
+            
+            
         private:
             uint width_;
             uint height_;
+            uint texture_id_;
             std::vector<Cell> cells_;
     };
 } /* namespace Marx */
