@@ -1,37 +1,24 @@
-/*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE: Controller.h
---
--- PROGRAM:
---
--- FUNCTIONS: N/A
---
--- DATE: February 19, 2015
---
--- REVISIONS:
---
--- DESIGNER: Marx-Engine
---
--- PROGRAMMER: Michael Chimick
---
--- NOTES:
---        This file defines the Controller class members
---
-----------------------------------------------------------------------------------------------------------------------*/
-
 #ifndef CONTROLLER_H_
 #define CONTROLLER_H_
 
 #include <vector>
+#include "Event.h"
 
-class Controller
+namespace Marx
 {
-    private:
+	/*
+	* Controller class. Holds controller event queue
+	*/
+	class Controller
+	{
+		private:
 
-        std::vector<Event> eventQueue;
+			std::vector<Event> eventQueue;
 
-    public:
-    
-        std::vector<Event> getEvents();
-};
+		public:
+		
+			std::vector<Event> getEvents();
+	};
+}
 
-#endif
+#endif /* CONTROLLER_H_ */
