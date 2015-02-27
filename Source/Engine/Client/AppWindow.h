@@ -17,18 +17,24 @@ namespace Marx
 	class AppWindow : public sf::RenderWindow
 	{
 		public:
-		int		initWindow();
-		void	run();
-		void	addScene(Scene* scene);
-		void	removeScene(int index);
-		AppWindow();
+			void run();
+			int	addScene(Scene & scene);
+			void removeScene(int index);
+			AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
+			{
+				Scene s;
+				scene.emplace_back(s);
+				timePerFrame = sf::milliseconds(60);
+			};
 		
 		private:
-			std::vector<Scene*> scene;	// Map so that named scenes can be removed.
+			std::vector<Scene> scene;
 			bool isRunning = false;
-			sf::Time elapsedTime, timePerFrame, timeSinceLastUpdate;
+			sf::Time nextUpdate, timePerFrame;
 	};
 
 }
+
+int main();
 
 #endif /* APPWINDOW_H_ */

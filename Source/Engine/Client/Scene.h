@@ -8,6 +8,7 @@
 *
 **/
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 namespace Marx
 {
@@ -16,8 +17,8 @@ namespace Marx
 	public:
 		virtual void onLoad();
 		virtual void unLoad();
-		virtual void processEvents();
-		virtual void update();
+		virtual void processEvents(sf::Event&);
+		virtual void update(sf::Time);
 		virtual void draw();
 	};
 }
