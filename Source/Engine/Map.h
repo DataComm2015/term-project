@@ -35,15 +35,13 @@ namespace Marx
     class Map
     {
         public:
-            Map(const uint& height, const uint& width);
-            unsigned int getHeight();
-            unsigned int getWidth();
-            void setCell(const uint& x, const uint& y, const Cell& cell);
-            Cell getCell(const uint& x, const uint& y);
-            void setTexture(const uint& texture_id);
-            uint getTexture();
-            std::vector<std::string> getCellIDs();
-            
+            Map(const uint height, const uint width);
+            unsigned int getHeight() const;
+            unsigned int getWidth() const;
+            void setCell(const uint x, const uint y, const Cell& cell);
+            Cell getCell(const uint x, const uint y) const;
+            void setTexture(const uint texture_id);
+            uint getTexture() const;
             
         private:
             uint width_;

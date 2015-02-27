@@ -40,18 +40,18 @@ namespace Marx
 
             // Getters and setters for id
             void setId(std::string id);
-            std::string getId();
+            std::string getId() const;
 
             // Getters and setters for tile id
             void setTileId(tile_id t_id);
-            tile_id getTileId();
+            tile_id getTileId() const;
             
             // Getters and setters for coords
             void    setX(const int& x);
             void    setY(const int& y);
             void    setCoord(const int& x, const int& y);
-            int        getX();
-            int        getY();
+            int     getX() const;
+            int     getY() const;
 
             // overloading == operator
             bool operator==(const Cell& cell);
