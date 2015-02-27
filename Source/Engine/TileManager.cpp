@@ -13,21 +13,20 @@
 --
 -- INTERFACE: sf::FloatRect TileManager::load(std::string path)
 --
--- RETURNS: sf::FloatRect - Returns null, needed for proper overloading 
+-- RETURNS: id_resource - Texture id with the tileset
 --
 -- NOTES:
 -- Loads and populates the map with the contents of the
 -- file at path
 ----------------------------------------------------------------------------------------------------------------------*/
-sf::FloatRect* 
+id_resource
 Manager::TileManager::load(std::string path)
 {
     tset_.clear();
     tset_.open(path.c_str());
     if (tset_.fail() == true)
         throw "Map_Interpreter setfile() Exception: Could not open file";
-    readtset();
-    return NULL;
+    return readtset();
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -76,7 +75,7 @@ Manager::TileManager::get(std::string rectId)
 sf::Texture* 
 Manager::TileManager::getTexture(id_resource id)
 {
-    return (textMgr.get(id));
+    return (Manager::TextureManager::get(id));
 }
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: remove
@@ -117,12 +116,12 @@ Manager::TileManager::remove(std::string rectId)
 --
 -- INTERFACE: void TileManager::readtset()
 --
--- RETURNS: void
+-- RETURNS: id_resource - Texture id with the tileset
 --
 -- NOTES:
 -- Does the actual reading of the file.
 ----------------------------------------------------------------------------------------------------------------------*/
-void 
+id_resource 
 Manager::TileManager::readtset()
 {
     std::string dummy, texture, tilesize, tile, index;
@@ -139,7 +138,7 @@ Manager::TileManager::readtset()
     std::getline(tset_, dummy); // Remove new line
     std::getline(tset_, dummy); // Remove 'tiles:(x,y,w,h)'
     
-    texture_id = textMgr.store(textMgr_->load(texture));
+    texture_id = Manager::TextureManager::store(Manager::TextureManager::load(texture));
     while (tset_.good() && tset_.eof() == false)
     {
         std::getline(tset_, index, ':');
@@ -157,7 +156,7 @@ Manager::TileManager::readtset()
         tile_ids.insert(id);
     }
     texturemap_[texture_id] = tile_ids;
-    mapTexture = texture_id;
+    return texture_id;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
