@@ -32,7 +32,7 @@ namespace Manager
             * @param std::string path - The path location of the tset file
             * @return id_resource - Texture id with the tileset
             */
-            static id_resource load(std::string);
+            static id_resource load(std::string path);
             
             /**
             * Uses a string id to get the id_resource to get the rectangle
@@ -40,7 +40,7 @@ namespace Manager
             * @param std::string id - The string id to be used on the tsetmap.
             * @return sf::FloatRect - Returns the appropriate rectangle
             */
-            static sf::FloatRect* get(std::string);
+            static sf::FloatRect* get(std::string rectId);
             
             /**
             * Static versions of the Resource Manager functions.
@@ -57,7 +57,7 @@ namespace Manager
             * @param std::string id - The string id to be used on the tsetmap.
             * @return sf::FloatRect - The object removed.
             */
-            static sf::FloatRect* remove(std::string);
+            static sf::FloatRect* remove(std::string rectId);
         private:
             /**
             * The resource manager
@@ -94,7 +94,7 @@ namespace Manager
             * @param std::string line - The string to be trimmed
             * @return std::string - The trimmed string
             */
-            static std::string trim(std::string);
+            static std::string trim(std::string line);
             
             /**
             * Changes the given string to an array of floats.
@@ -102,7 +102,7 @@ namespace Manager
             * @param std::string tile - The string with the values to be interpreted
             *        float* - A pointer to the float array to be set
             */
-            static void tocords(std::string&, float*);
+            static void tocords(std::string& tile, float* coords);
     };
 }
 

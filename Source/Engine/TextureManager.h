@@ -27,7 +27,7 @@ namespace Manager
             * @param std::string path - The path location of the tset file
             * @return sf::Texture - Texture loaded from path
             */
-            sf::Texture* load(std::string);
+            static sf::Texture* load(std::string);
             
             /**
             * Static versions of the Resource Manager functions.
