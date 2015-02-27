@@ -1,7 +1,5 @@
 #ifndef TILE_MGR_H
 #define TILE_MGR_H
-#include <SFML/Graphics.hpp>
-#include "ResourceManager.h"
 #include "TextureManager.h"
 #include <iostream>
 #include <fstream>
