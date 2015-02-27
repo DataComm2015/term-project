@@ -11,10 +11,13 @@ namespace Marx
 	*/
 	class Controller
 	{
+		private:
+
+			std::vector<Event> eventQueue;
+
 		public:
-			vector<Event> eventQueue_;
-			virtual vector<Event> getEvents() = 0;
-			virtual void gameAction(Event) = 0;
+		
+			std::vector<Event> getEvents();
 	};
 }
 
