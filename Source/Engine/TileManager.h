@@ -20,10 +20,6 @@ namespace Manager
     class TileManager
     {
         public: 
-            TileManager() 
-            {
-                *textMgr = new TextureManager();
-            }
             /**
             * Destructor
             */
@@ -34,9 +30,9 @@ namespace Manager
             * file at path
             *
             * @param std::string path - The path location of the tset file
-            * @return sf::FloatRect - returns null, needed for proper overloading 
+            * @return id_resource - Texture id with the tileset
             */
-            static sf::FloatRect* load(std::string);
+            static id_resource load(std::string);
             
             /**
             * Uses a string id to get the id_resource to get the rectangle
@@ -56,21 +52,6 @@ namespace Manager
             static unsigned int clear() { return rm.clear(true); }
             
             /**
-            * Returns the texture held.
-            *
-            * @param std::string id - The string id to be used on the tsetmap.
-            * @return sf::Texture - the texture held by the manager.
-            */
-            static sf::Texture* getTexture(id_resource);
-            
-            /**
-            * Returns the map texture id.
-            *
-            * @return id_resource - the texture id for the map held by the manager.
-            */
-            static id_resource getMapTexture() { return mapTexture; };
-            
-            /**
             * Uses a string id to get the id_resource to remove the rectangle
             *
             * @param std::string id - The string id to be used on the tsetmap.
@@ -82,11 +63,6 @@ namespace Manager
             * The resource manager
             */
             static ResourceManager<sf::FloatRect*> rm;
-            
-            /**
-            * The maptexture id that can be used to reference the map texture
-            */
-            static id_resource mapTexture;
             
             /**
             * Map to associate the string id to the tile id_resource
@@ -104,17 +80,12 @@ namespace Manager
             static std::ifstream tset_;
 
             /**
-            * The texture manager to hold the texture
-            */
-            static TextureManager *textMgr_;
-
-            /**
             * Does the actual reading of the file
             *
             * @param void
-            * @return void
+            * @return id_resource - Texture id with the tileset
             */
-            static void readtset();
+            static id_resource readtset();
             
             /**
             * Trims leading and trailing whitespace from the given string 
