@@ -54,30 +54,6 @@ Manager::TileManager::get(std::string rectId)
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getTexture
---
--- DATE: February 19, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Thomas Tallentire
-
---
--- PROGRAMMER: Thomas Tallentire
---
--- INTERFACE: sf::Texture TileManager::getTexture()
---
--- RETURNS: sf::Texture - Returns the Texture
---
--- NOTES:
--- Returns the texture held.
-----------------------------------------------------------------------------------------------------------------------*/
-sf::Texture* 
-Manager::TileManager::getTexture(id_resource id)
-{
-    return (Manager::TextureManager::get(id));
-}
-/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: remove
 --
 -- DATE: February 18, 2015
@@ -98,7 +74,7 @@ Manager::TileManager::getTexture(id_resource id)
 sf::FloatRect* 
 Manager::TileManager::remove(std::string rectId)
 {
-    sf::FloatRect *rect = ResourceManager<sf::FloatRect*>::remove(tsetmap_[rectId]);
+    sf::FloatRect *rect = remove(tsetmap_[rectId]);
     tsetmap_.erase(rectId);
     return (rect);
 }
