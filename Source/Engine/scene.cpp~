@@ -1,0 +1,81 @@
+
+/* ----------------------------------------------------------------------------
+-- METHOD: Scene::onLoad
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- DESIGNER: Melvin Loho
+-- 			 Marc Vouve
+--
+-- DATE: Sunday February 15th, 2015
+--
+-- REVISIONS: none
+--
+-- PROTOTYPE void marx::Scene::onLoad
+--
+-- NOTES: this function
+-- 
+-----------------------------------------------------------------------------*/
+Scene Scene::onLoad()
+{
+	if(instance != NULL)
+		return new Secne();
+	else
+		return instance;
+}
+
+/* ----------------------------------------------------------------------------
+-- METHOD: Scene::processEvents
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- DESIGNER: Melvin Loho
+-- 			 Marc Vouve
+--
+-- DATE: Sunday February 15th, 2015
+--
+-- REVISIONS: none
+--
+-- PROTOTYPE void marx::Scene::unLoad
+--
+-- NOTES: This function is called when a scene needs to be unLoaded. The default
+--		  Scene does not get deleted this must be done when the scene is extended.
+-- 
+------------------------------------------------------------------------------*/
+void Scene::processEvents()
+{
+	// no Implementation
+}
+
+/* ----------------------------------------------------------------------------
+-- METHOD: Scene::unLoad
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- DESIGNER: Melvin Loho
+-- 			 Marc Vouve
+--
+-- DATE: Sunday February 15th, 2015
+--
+-- REVISIONS: none
+--
+-- PROTOTYPE void marx::Scene::unLoad
+--
+-- NOTES: This function is called when a scene needs to be unLoaded. The default
+--		  Scene does not get deleted this must be done when the scene is extended.
+-- 
+------------------------------------------------------------------------------*/
+void Scene::processEvents()
+{
+	// no implementation
+}
+
+void Scene::update()
+{
+	// no implementation
+}
+
+void Scene::draw()
+{
+	// no implementation
+}

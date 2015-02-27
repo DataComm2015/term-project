@@ -26,8 +26,9 @@
 --        This file implements the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-
 #include "Entity.h"
+
+using namespace Marx;
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Entity::Entity
@@ -83,9 +84,9 @@ Entity::~Entity()
 --
 -- DATE: February 19, 2015
 --
--- REVISIONS:
+-- REVISIONS: February 20, 2015 - changed to use "Event" class.
 --
--- DESIGNER: Marx-Engine
+-- DESIGNER: Marc Vouve
 --
 -- PROGRAMMER: Michael Chimick
 --
@@ -93,13 +94,13 @@ Entity::~Entity()
 --
 -- RETURNS: void
 --
--- NOTES:
+-- NOTES: This doesn't do anything as the base entity, it must be overridden
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-void Entity::turn()
+void  Entity::turn()
 {
-    std::set<int> events = controller.getEvents(); // events being a vector of ints is temp, until we know what they are
-    // do something
+    std::set<Event> events;
+    // process events
 }
 
 
@@ -149,13 +150,13 @@ Entity move(float x, float y, bool force = false)
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Entity::checkCollision
 --
--- DATE: February 19, 2015
+-- DATE: February 20, 2015
 --
 -- REVISIONS:
 --
--- DESIGNER: Marx-Engine
+-- DESIGNER: 	Marc Vouve
 --
--- PROGRAMMER: Michael Chimick
+-- PROGRAMMER: 	Marc Vouve
 --
 -- INTERFACE: bool Entity::checkCollision( Entity entity )
 --
@@ -167,20 +168,6 @@ Entity move(float x, float y, bool force = false)
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Entity::checkCollision( Entity entity )
 {
-    std::set<Marx::Cell>::iterator i_1;
-    std::set<Marx::Cell>::iterator i_2;
-    std::set<Marx::Cell> occupied_cells = entity.getCells();
-    i_2 = occupied_cells.begin();
-
-    for (i_1 = occupiedCells.begin(); i_1 != occupiedCells.end(); i_1++)
-    {
-        if (i_2 == occupied_cells.end()) return false;
-
-        if ((Marx::Cell)*i_1 == (Marx::Cell)*i_2) return true; // This compiles, and should work; but we should make sure
-
-        i_2++;
-    }
-
     return false;
 }
 
@@ -203,7 +190,7 @@ bool Entity::checkCollision( Entity entity )
 --        Returns the occupiedCells of the Entity object
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-std::set<Marx::Cell> Entity::getCells()
+std::set<Cell> Entity::getCells()
 {
     return occupiedCells;
 }
@@ -299,4 +286,50 @@ void Entity::onDestroy()
 void Entity::onUpdate()
 {
 	// logic team
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::getRekt
+--
+-- DATE: February 20, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: void Entity::getRekt()
+--
+-- RETURNS: sf::FloatRect
+--
+-- NOTES: Gets the location of the entity on the map. 
+--
+----------------------------------------------------------------------------------------------------------------------*/
+sf::FloatRect getRekt()
+{
+    return location;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::setRekt
+--
+-- DATE: February 20, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: void Entity::setRekt()
+--
+-- RETURNS: void
+--
+-- NOTES: Gets the location of the entity on the map. 
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void setRekt(sf::FloatRect l)
+{
+    location = l;
 }
