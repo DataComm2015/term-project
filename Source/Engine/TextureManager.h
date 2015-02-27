@@ -1,7 +1,7 @@
 #ifndef TEXTUREMANAGER_H
 #define TEXTUREMANAGER_H
 #include <SFML/Graphics.hpp>
-#include "ResourceManager.h"
+#include "../Multimedia/manager/ResourceManager.h"
 
 /**
  * Texture Manager.
