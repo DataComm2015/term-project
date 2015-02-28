@@ -4,11 +4,18 @@
 #include <SFML/Graphics.hpp>
 
 #define SPRITE_VERTICES 6
+#define TILE_VERTICES 4
+#define RECT_POINTS 4
 
 class BGO;
 class SGO;
 class TGO;
-class Map;
+namespace Marx
+{
+	class Map;
+}
+
+// @TODO : Make Renderer dynamic!!
 
 class Renderer
 {
@@ -30,7 +37,7 @@ public:
 	void draw(const BGO& bgo, bool scenegraph, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const TGO& tgo, sf::RenderStates states = sf::RenderStates::Default);
-	void draw(const Map& map, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const Marx::Map& map, sf::RenderStates states = sf::RenderStates::Default);
 
 	sf::RenderStates states;
 
