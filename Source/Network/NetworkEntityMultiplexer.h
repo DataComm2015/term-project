@@ -1,9 +1,16 @@
 #ifndef NETWORKENTITYMULTIPLEXER_H
 #define NETWORKENTITYMULTIPLEXER_H
 
+#include <map>
+#include <set>
+
 #include "Message.h"
 #include "Session.h"
 #include "NetworkEntity.h"
+
+#define MSG_TYPE_UPDATE     0
+#define MSG_TYPE_REGISTER   1
+#define MSG_TYPE_UNREGISTER 2
 
 namespace Networking
 {
@@ -69,7 +76,7 @@ namespace Networking
          *
          * @return integer indicating the result of the operation
          */
-        int register(int id, Session* session, Message msg);
+        int register(int id, int type, Session* session, Message msg);
         /**
          * should only be invoked by the {NetworkEntity} class. it unregisters
          *   the {session} from the {NetworkEntity} instance associated with
@@ -105,6 +112,13 @@ namespace Networking
          *   is only sent to the {session}.
          */
         void onUnregister(int id, Session* session, Message msg);
+        /**
+         * contains references to network entities.
+         *
+         * the keys to the map are the IDs of the network entities, and the
+         *   values are the network entities.
+         */
+        std::map<int,NetworkEntity*> networkEntities;
     };
 }
 
