@@ -6,7 +6,7 @@ int main(void)
 	Marx::AppWindow window;
     window.run();
 
-return 0;
+	return 0;
 }
 
 using namespace Marx;
@@ -36,7 +36,7 @@ using namespace Marx;
 *		Adds a scene to the app 
 *
 ******************************************************************************/
-int AppWindow::addScene(Scene &scene)
+int AppWindow::addScene(Scene *scene)
 {
 	this->scene.emplace_back(scene);
 
@@ -117,21 +117,19 @@ void AppWindow::run()
 				// if the window is being closed deal with it here.
 				if (event.type == sf::Event::Closed)
                 	close();
-				scene.back().processEvents(event);
+				scene.back()->processEvents(event);
 			}
 			while(clock.getElapsedTime() < nextUpdate)
 			{
-				for(std::vector<Scene>::iterator it = scene.begin(); it != scene.end(); ++it )
+				for(std::vector<Scene*>::iterator it = scene.begin(); it != scene.end(); it++ )
 				{
-					it->update(clock.getElapsedTime());
-					printf("Update");
+					(*it)->update(clock.getElapsedTime());
 				}
 			}
 
-			for(std::vector<Scene>::iterator it = scene.begin(); it != scene.end(); ++it )
+			for(std::vector<Scene*>::iterator it = scene.begin(); it != scene.end(); ++it )
 			{
-				it->draw();
-				printf("draw\n");
+				(*it)->draw();
 			}
 		}
 	}

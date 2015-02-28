@@ -1,5 +1,5 @@
-#ifndef SCENE_H_
-#define SCENE_H_
+#ifndef EG_SCENE_H_
+#define EG_SCENE_H_
 
 /**
 * The base Scene class can be extended to have other funcitonality, or it can be used as a void
@@ -9,17 +9,15 @@
 **/
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "Scene.h"
 
 namespace Marx
 {
-	class Scene
+	class EG_Scene : public Scene
 	{
 	public:
-		virtual void onLoad();
-		virtual void unLoad();
-		virtual void processEvents(sf::Event&);
 		virtual void update(sf::Time);
-		virtual void draw();
+		virtual void processEvents(sf::Event&);
 	};
 }
 
