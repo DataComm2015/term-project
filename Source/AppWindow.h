@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Scene.cpp"
+#include <iostream>
+#include "Engine/Scene.h"
+#include "Engine/EG_Scene.h"
 
 
 namespace Marx
@@ -18,17 +20,19 @@ namespace Marx
 	{
 		public:
 			void run();
-			int	addScene(Scene & scene);
+			int	addScene(Scene * scene);
 			void removeScene(int index);
 			AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
 			{
-				Scene s;
+				Scene *s = new Scene;
+				EG_Scene *s2 = new EG_Scene;
 				scene.emplace_back(s);
+				scene.emplace_back(s2);
 				timePerFrame = sf::milliseconds(60);
 			};
 		
 		private:
-			std::vector<Scene> scene;
+			std::vector<Scene*> scene;
 			bool isRunning = false;
 			sf::Time nextUpdate, timePerFrame;
 	};
