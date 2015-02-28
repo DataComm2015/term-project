@@ -1,3 +1,7 @@
+#ifndef NETWORKENTITYMULTIPLEXER_H
+#define NETWORKENTITYMULTIPLEXER_H
+
+#include "Message.h"
 #include "Session.h"
 #include "NetworkEntity.h"
 
@@ -103,3 +107,5 @@ namespace Networking
         void onUnregister(int id, Session* session, Message msg);
     };
 }
+
+#endif
