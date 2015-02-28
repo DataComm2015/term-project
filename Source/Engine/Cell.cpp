@@ -4,16 +4,16 @@
 -- PROGRAM:
 --
 -- FUNCTIONS:
---        Cell(int x = 0, int y = 0)
---        void setId(std::string id)
---        std::string getId()
---        void setTileId(tile_id t_id)
---        tile_id getTileId()
---        void setX(const int& x)
---        void setY(const int& y)
---        void setCoord(const int& x, const int& y)
---        int getX()
---        int getY()
+--          Cell(int x = 0, int y = 0)
+--          void setId(std::string id)
+--          std::string getId() const
+--          void setTileId(tile_id t_id)
+--          tile_id getTileId() const
+--          void    setX(const int& x)
+--          void    setY(const int& y)
+--          void    setCoord(const int& x, const int& y)
+--          int     getX() const
+--          int     getY() const
 --
 -- DATE: February 16, 2015
 --
@@ -71,7 +71,7 @@ void Cell::setId(std::string id)
 --
 -- PROGRAMMER: Marc Rafanan
 --
--- INTERFACE: std::string getId(string id)
+-- INTERFACE: std::string getId()
 --
 -- PARAMETERS:
 --     void
@@ -83,7 +83,7 @@ void Cell::setId(std::string id)
 --     Gets the ID of the cell
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-std::string Cell::getId()
+std::string Cell::getId() const
 {
     return cell_id_;
 }
@@ -139,7 +139,7 @@ void Cell::setTileId(tile_id t_id)
 --     Gets the tile ID of the cell
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-tile_id Cell::getTileId()
+tile_id Cell::getTileId() const
 {
     return tile_id_;
 }
@@ -253,7 +253,7 @@ void Cell::setCoord(const int& x, const int& y)
 --     Gets the x coordinate of the cell
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-int Cell::getX()
+int Cell::getX() const
 {
     return xcoord_;
 }
@@ -281,7 +281,7 @@ int Cell::getX()
 --     Gets the y coordinate of the cell
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-int Cell::getY()
+int Cell::getY() const
 {
     return ycoord_;
 }

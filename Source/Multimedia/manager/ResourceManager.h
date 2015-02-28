@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-typedef const unsigned int id_resource;
+typedef unsigned int id_resource;
 
 namespace Manager
 {
