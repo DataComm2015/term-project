@@ -16,9 +16,15 @@
  */
 
 #include "Renderer.h"
+
 #include "object/BGO.h"
 #include "object/SGO.h"
 #include "object/TGO.h"
+
+#include "Multimedia/manager/ResourceManager.h"
+#include "Engine/TextureManager.h"
+#include "Engine/TileManager.h"
+#include "Engine/Map.h"
 
 /**
  * Constructor.
@@ -222,7 +228,7 @@ void Renderer::draw(const SGO &sgo, sf::RenderStates states)
 
 	// Store transformed vertices positions
 
-	sf::Vector2f vPos[4];
+	sf::Vector2f vPos[RECT_POINTS];
 	sf::FloatRect sgoLB = sgo().getLocalBounds();
 
 	vPos[0] = states.transform.transformPoint(sgoLB.left, sgoLB.top);
@@ -279,7 +285,7 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
 /**
  * Draws the specified Map.
  *
- * @date       2015-02-25
+ * @date       2015-02-27
  *
  * @revisions
  *
@@ -290,11 +296,91 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
  * @param      map    The specified Map
  * @param      states The render states
  */
-void Renderer::draw(const Map& map, sf::RenderStates states)
+void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 {
 	if (!active) throw std::exception("Renderer is not active.");
 
-	// RENDER THE MAP :D
+	flush();
+
+	states.texture = Manager::TextureManager::get(map.getTexture());
+
+	unsigned
+		mapXCoord = 0,
+		mapYCoord = 0;
+
+	const unsigned
+		mapWidth = map.getWidth(),
+		mapHeight = map.getHeight();
+
+	sf::FloatRect* tile = Manager::TileManager::get(map.getCell(mapXCoord, mapYCoord).getId());
+	const sf::Vector2f mapTileSize(tile->width, tile->height);
+
+	sf::Vector2f vpos[RECT_POINTS];
+	sf::Vertex vert[TILE_VERTICES];
+
+	for (unsigned y = 0; y < mapHeight; ++y)
+	{
+		// FORWARDS!!
+
+		for (unsigned x = 0; x < mapWidth; ++x)
+		{
+			tile = Manager::TileManager::get(map.getCell(x, y).getId());
+
+			vpos[0] = { mapXCoord * mapTileSize.x, mapYCoord * mapTileSize.y };
+			vpos[1] = vpos[0]; vpos[1].y += mapTileSize.y;
+			vpos[2] = vpos[0]; vpos[2].x += mapTileSize.x;
+			vpos[3].y = vpos[1].y; vpos[3].x = vpos[2].x;
+
+			vert[0].position = vpos[0]; vert[2].position = vpos[2];
+			vert[1].position = vpos[1]; vert[3].position = vpos[3];
+
+			vert[0].texCoords = { tile->left, tile->top };
+			vert[1].texCoords = { tile->left, tile->top + tile->height };
+			vert[2].texCoords = { tile->left + tile->width, tile->top };
+			vert[3].texCoords = { tile->left + tile->width, tile->top + tile->height };
+
+			for (unsigned int i = 0; i < TILE_VERTICES; ++i)
+				vertices[mapYCoord * mapWidth + mapXCoord + i] = vert[i];
+
+			++mapXCoord;
+		}
+
+		if (++y == mapHeight) break; // Odd number of rows!! :(
+
+		// BACKWARDS!!
+
+		std::vector<std::string> tempTileIDs;
+
+		for (unsigned x = 0; x < mapWidth; ++x)
+		{
+			tempTileIDs.push_back(map.getCell(x, y).getId());
+		}
+
+		for (int x = tempTileIDs.size() - 1; x >= 0; --x)
+		{
+			tile = Manager::TileManager::get(map.getCell(x, y).getId());
+
+			vpos[0] = { mapXCoord * mapTileSize.x, mapYCoord * mapTileSize.y };
+			vpos[1] = vpos[0]; vpos[1].y += mapTileSize.y;
+			vpos[2] = vpos[0]; vpos[2].x -= mapTileSize.x;
+			vpos[3].y = vpos[1].y; vpos[3].x = vpos[2].x;
+
+			vert[0].position = vpos[0]; vert[2].position = vpos[2];
+			vert[1].position = vpos[1]; vert[3].position = vpos[3];
+
+			vert[2].texCoords = { tile->left, tile->top };
+			vert[3].texCoords = { tile->left, tile->top + tile->height };
+			vert[0].texCoords = { tile->left + tile->width, tile->top };
+			vert[1].texCoords = { tile->left + tile->width, tile->top + tile->height };
+
+			for (unsigned int i = 0; i < TILE_VERTICES; ++i)
+				vertices[mapYCoord * mapWidth + mapXCoord + i] = vert[i];
+
+			--mapXCoord;
+		}
+
+		++mapYCoord;
+	}
 }
 
 /**
