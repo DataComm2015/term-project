@@ -1,193 +1,104 @@
-/*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE: Scene.cpp
---
--- PROGRAM:
---
--- FUNCTIONS:
---          bool onLoad()
---          bool unLoad()
---          void events() 
---          void update()
---          void draw()
---
--- DATE: February 15, 2015
---
--- REVISIONS: N/A
---
--- DESIGNER: Marc Rafanan
---           Marc Vouve
---
--- PROGRAMMER: Marc Rafanan
---
--- NOTES:
---      This file implements the Scene class members
-----------------------------------------------------------------------------------------------------------------------*/
-
 #include "Scene.h"
 
 using namespace Marx;
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: Scene
+/* ----------------------------------------------------------------------------
+-- METHOD: Marx::Scene::onLoad
 --
--- DATE: February 15, 2015
+-- PROGRAMMER: Marc Vouve
 --
--- REVISIONS: (Date and Description)
+-- DESIGNER: Melvin Loho
+-- 	     Marc Vouve
 --
--- DESIGNER: Marc Rafanan
+-- DATE: Sunday February 15th, 2015
 --
--- PROGRAMMER: Marc Rafanan
+-- REVISIONS: none
 --
--- INTERFACE: Scene()
+-- PROTOTYPE void Marx::Scene::onLoad
 --
--- PARAMETERS:
---     // void for now
---
--- RETURNS:
---     void
---
--- NOTES:
---     Scene constructor
---
-----------------------------------------------------------------------------------------------------------------------*/
-Scene::Scene()
+-- NOTES: this function returns a signleton for the VOID scene, however, it
+-- doesn't have to be a signleton for every scene
+-- 
+-----------------------------------------------------------------------------*/
+void Scene::onLoad()
 {
-    // What makes up a scene
+	//no implementation.
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: onLoad
+/* ----------------------------------------------------------------------------
+-- METHOD: Marx::Scene::processEvents
 --
--- DATE: February 15, 2015
+-- PROGRAMMER: Marc Vouve
 --
--- REVISIONS: (Date and Description)
+-- DESIGNER: Melvin Loho
+-- 	         Marc Vouve
 --
--- DESIGNER: Marc Rafanan
+-- DATE: Sunday February 15th, 2015
 --
--- PROGRAMMER: Marc Rafanan
+-- REVISIONS: none
 --
--- INTERFACE: onLoad()
+-- PROTOTYPE void Marx::Scene::unLoad
 --
--- PARAMETERS:
---     // void for now
---
--- RETURNS:
---     bool    - success or failure
---
--- NOTES:
---     logic for the scene on loading
---
-----------------------------------------------------------------------------------------------------------------------*/
-bool Scene::onLoad()
+-- NOTES: This function is called when a scene needs to be unLoaded. The default
+--		  Scene does not get deleted this must be done when the scene is extended.
+-- 
+------------------------------------------------------------------------------*/
+void Scene::processEvents(sf::Event & e)
 {
+	//printf("Event");
+	// no Implementation
+	return;
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: unLoad
+/* ----------------------------------------------------------------------------
+-- METHOD: Marx::Scene::unpdate
 --
--- DATE: February 15, 2015
+-- PROGRAMMER: Marc Vouve
 --
--- REVISIONS: (Date and Description)
+-- DESIGNER: Melvin Loho
+-- 			 Marc Vouve
 --
--- DESIGNER: Marc Rafanan
+-- DATE: Sunday February 14th, 2015
 --
--- PROGRAMMER: Marc Rafanan
+-- REVISIONS: none
 --
--- INTERFACE: unLoad()
+-- PROTOTYPE void Marx::Scene::unLoad
 --
--- PARAMETERS:
---     // void for now
---
--- RETURNS:
---     void
---
--- NOTES:
---     logic for the scene un loading
---
-----------------------------------------------------------------------------------------------------------------------*/
-bool Scene::unLoad()
+-- NOTES: This function is called when a scene needs to be unLoaded. The default
+--		  Scene does not get deleted this must be done when the scene is extended.
+-- 
+------------------------------------------------------------------------------*/
+void Scene::update(sf::Time)
 {
+	//printf("Update NULL Scene\n");
+
+	return;
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: events
+/* ----------------------------------------------------------------------------
+-- METHOD: Scene::unLoad
 --
--- DATE: February 15, 2015
+-- PROGRAMMER: Marc Vouve
 --
--- REVISIONS: (Date and Description)
+-- DESIGNER: Melvin Loho
+-- 			 Marc Vouve
 --
--- DESIGNER: Marc Rafanan
+-- DATE: Sunday February 15th, 2015
 --
--- PROGRAMMER: Marc Rafanan
+-- REVISIONS: none
 --
--- INTERFACE: events()
+-- PROTOTYPE void marx::Scene::unLoad
 --
--- PARAMETERS:
---     // void for now
---
--- RETURNS:
---     void
---
--- NOTES:
---     logic for getting all events on a scene
---
-----------------------------------------------------------------------------------------------------------------------*/
-void Scene::events()
-{
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: update
---
--- DATE: February 15, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Marc Rafanan
---
--- PROGRAMMER: Marc Rafanan
---
--- INTERFACE: update()
---
--- PARAMETERS:
---     // void for now
---
--- RETURNS:
---     void
---
--- NOTES:
---     Updates the scene
---
-----------------------------------------------------------------------------------------------------------------------*/
-void Scene::update()
-{
-}
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: draw
---
--- DATE: February 15, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Marc Rafanan
---
--- PROGRAMMER: Marc Rafanan
---
--- INTERFACE: draw()
---
--- PARAMETERS:
---     // void for now
---
--- RETURNS:
---     void
---
--- NOTES:
---     draws the scene to the screen
---
-----------------------------------------------------------------------------------------------------------------------*/
+-- NOTES: This function is called when a scene needs to be unLoaded. The default
+--		  Scene does not get deleted this must be done when the scene is extended.
+-- 
+------------------------------------------------------------------------------*/
 void Scene::draw()
 {
+	// no implementation
 }
 
+void Scene::unLoad()
+{
+
+}
