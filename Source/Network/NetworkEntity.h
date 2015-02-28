@@ -44,12 +44,11 @@ namespace Networking
          * @param session session to register with this entity
          * @param message message used when calling onRegister on the other side
          */
-        int
-        register( Session * session, Message message );
+        int register( Session * session, Message message );
         
         /**
          * Meant to be overwritten by user. Called when the associated entity on
-         * the other side calls the register method.
+         * the other side calls the register method. MUST CALL silentRegister();
          *
          * @param session session that has been registered to the entity
          * @param message message that sent from the other side
@@ -71,6 +70,7 @@ namespace Networking
         /**
          * Meant to be overwritten by the user. Called when the associated
          * entity on the other side calls the unregister method.
+	 * MUST CALL silentUnregister();
          *
          * @param session session that has been unregistered from the entity
          * @param message message that sent from the other side
@@ -92,7 +92,7 @@ namespace Networking
         /**
          * The multiplexer that this entity sends to and receives from.
          */
-        NetworkEntityMultiplexer mux;
+        NetworkEntityMultiplexer* mux;
 
         /**
          * The set containing all the sessions registerd with this entity

@@ -24,16 +24,15 @@
 
 namespace Networking
 {
-	class socket;
+    class Socket;
 	class ReadProcess;
 	class SendProcess;
-	struct Message;
 	class NetworkEntityMultiplexer;
 
 	class Session
 	{
 		public:
-			Session(socket *socket, ReadProcess *readProcess, SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux);
+            Session(Socket *socket, ReadProcess *readProcess, SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux);
 			virtual ~Session();
 			
 			void send(Message *message);
@@ -43,7 +42,7 @@ namespace Networking
 			void onMessageReceived(Message *message);
 			void onConnectionClosedByRemote();
 			
-			socket *socket;
+            Socket *socket;
 			ReadProcess *readProcess;
 			SendProcess *sendProcess;
 			NetworkEntityMultiplexer *entityMux;
