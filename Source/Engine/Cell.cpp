@@ -313,3 +313,31 @@ bool Cell::operator==(const Cell& cell)
 {
     return (xcoord_ == cell.xcoord_ && ycoord_ == cell.ycoord_) ? true : false;
 }
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getEntity
+--
+-- DATE: February 16, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: getEntity()
+--
+-- PARAMETERS:
+--     cell    -    cell to compare
+--
+-- RETURNS:
+--     std::set<Entity> - set of all the entities currently located inside this cell, stored as pointers in a set.
+--
+-- NOTES:
+--     Returns a list of all the cells in the area.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+std::set<Entity*> Cell::getEntity()
+{
+	return entity;
+}	

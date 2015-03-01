@@ -22,30 +22,27 @@
 
 #include "Cell.h"
 #include "Controller.h"
+#include <set>
 
 namespace Marx
 {
-    class Entity
+    class Entity : public sf::FloatRect
     {
         private:
 
             Controller controller;
-            std::set<Marx::Cell> occupiedCells;
-            sf::FloatRect location;
+            std::set<Cell> occupiedCells;
         public:
-
-            virtual Entity(Controller);
-            virtual ~Entity();
-            void turn();
-            Entity move(float, float, bool);
-            bool checkCollision(Entity);
-            virtual std::set<Marx::Cell> getCells();
+            Entity(Controller);
+            ~Entity();
+            virtual void turn();
+            Entity * move(float, float, float, float, bool);
+            virtual std::set<Cell> getCell();
             virtual void onCreate();
             virtual void onDestroy();
             virtual void onUpdate();
             sf::FloatRect getRekt();
-            void setRekt(sf::FloatRect);
-            bool operator==(const Entity&);
+            virtual bool operator==(const Entity&);
     };
 }
 #endif

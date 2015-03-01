@@ -21,7 +21,7 @@
 
 #include "Controller.h"
 
-
+using namespace Marx;
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: std::vector<Event> Controller::getEvents()
 --

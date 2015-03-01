@@ -1,21 +1,56 @@
-# Makefile for engine
+######################################################################
+# This file is set up to compile object files to the team directories
+# hopefully this will prevent conflicts.
+#
+# If you have a better way to set up this file, and I know there are
+# probably many, please feel free to rewrite it.
+######################################################################
 
 $CC=g++
+$FLAGS=-std=c++11
 
 
-# Not sure why but on some computers -lstdc++ is requred to compile this.
-test: Scene.o AppWindow.o EG_Scene.o
-	$(CC) AppWindow.o Scene.o EG_Scene.o -o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system
+Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine/Controller.o
+	$(CC) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o \
+	Engine/Controller.o \
+	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system $(FLAGS)
 
 clean:
-	rm -f *.o *.bak app 
-
-Scene.o:
-	$(CC) -c Engine/Scene.cpp -std=c++11 
-
+	rm -f -r *.o *.bak app 
 
 AppWindow.o:
-	$(CC) -c AppWindow.cpp -std=c++11
+	$(CC) -c  -o AppWindow.o  AppWindow.cpp -std=c++11
 	
-EG_Scene.o: Scene.o
-	$(CC) -c Engine/EG_Scene.cpp -std=c++11
+Engine/EG_Scene.o:
+	$(CC) -c Engine/EG_Scene.cpp -o Engine/EG_Scene.o $(FLAGS)
+	
+Engine/Cell.o:
+	$(CC) -c Engine/Cell.cpp -o Engine/Cell.o $(FLAGS)
+	
+	
+Engine/Controller.o:
+	$(CC) -c Engine/Controller.cpp -o Engine/Controller.o $(FLAGS)
+	
+Engine/Entity.o:
+	$(CC) -c Engine/Entity.cpp -o Engine/Entity.o $(FLAGS)
+
+Engine/EntityManager.o:
+	$(CC) -c Engine/EntityManager.cpp -o Engine/EntityManager.o $(FLAGS)
+	
+Engine/Lobby.o:
+	$(CC) -c Engine/Lobby.cpp -o Engine/Lobby.o $(FLAGS)
+	
+Engine/Map.o:
+	$(CC) -c Engine/Map.cpp -o Engine/Map.o $(FLAGS)
+	
+Engine/Scene.o:
+	$(CC) -c Engine/Scene.cpp -o Engine/Scene.o $(FLAGS)
+	
+Engine/TextureManager.o:
+	$(CC) -c TextureManager.cpp -o TextureManager.o $(FLAGS)
+	
+Engine/TileManager.o:
+	$(CC) -c TileManager.cpp -o TileManager.o $(FLAGS)
+	
+Engine/World.o:
+	$(CC) -c World.cpp -o Engine/World.o -o World.o $(FLAGS)
