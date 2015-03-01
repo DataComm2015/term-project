@@ -23,7 +23,7 @@ using namespace std;
 --
 -- NOTES:			Creates a NetworkEntity object
 -----------------------------------------------------------------------------------------------*/
-NetworkEntity::NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type )
+Networking::NetworkEntity::NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type )
 {
     this.id = id;
     this.type = type;
@@ -74,10 +74,10 @@ int NetworkEntity::update( Message message )
 -- NOTES:			registers a session so the NetworkEntity can send and recieve
                     to and from the session.
 -----------------------------------------------------------------------------------------------*/
-int NetworkEntity::register( Session * session, Message message )
+int NetworkEntity::registerSession( Session * session, Message message )
 {
     registeredSessions.insert(session);
-    return mux->register(id, type, session, message);
+    return mux->registerSession(id, type, session, message);
 }
 
 
@@ -100,13 +100,13 @@ int NetworkEntity::register( Session * session, Message message )
 --
 -- NOTES:			unregisters this session from this entity
 -----------------------------------------------------------------------------------------------*/
-int NetworkEntity::unregister( Session * session, Message message )
+int NetworkEntity::unregisterSession( Session * session, Message message )
 {
     if( registeredSessions.erase(session) == 0 ) // not in set
     {
         return -1;
     }
-    return mux->unregister(id, session, message);
+    return mux->unregisterSession(id, session, message);
 }
 
 /*----------------------------------------------------------------------------------------------

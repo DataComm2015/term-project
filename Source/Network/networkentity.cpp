@@ -23,11 +23,11 @@ using namespace std;
 --
 -- NOTES:			Creates a NetworkEntity object
 -----------------------------------------------------------------------------------------------*/
-NetworkEntity::NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type )
+Networking::NetworkEntity::NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type )
 {
-    this.id = id;
-    this.type = type;
-    this.mux = mux;
+    this->id = id;
+    this->type = type;
+    this->mux = mux;
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ NetworkEntity::NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type )
 -- NOTES:			a message to send across the network, will call on update on receiving
                     side.
 -----------------------------------------------------------------------------------------------*/
-int NetworkEntity::update( Message message )
+int Networking::NetworkEntity::update( Message message )
 {
     return mux->update(id, registeredSessions, message);
 }
@@ -74,10 +74,10 @@ int NetworkEntity::update( Message message )
 -- NOTES:			registers a session so the NetworkEntity can send and recieve
                     to and from the session.
 -----------------------------------------------------------------------------------------------*/
-int NetworkEntity::register( Session * session, Message message )
+int Networking::NetworkEntity::registerSession( Session * session, Message message )
 {
     registeredSessions.insert(session);
-    return mux->register(session, message);
+    return mux->registerSession(session, message);
 }
 
 
@@ -100,13 +100,13 @@ int NetworkEntity::register( Session * session, Message message )
 --
 -- NOTES:			unregisters this session from this entity
 -----------------------------------------------------------------------------------------------*/
-int NetworkEntity::unregister( Session * session, Message message )
+int Networking::NetworkEntity::unregister( Session * session, Message message )
 {
     if( registeredSessions.erase(session) == 0 ) // not in set
     {
         return -1;
     }
-    return mux->unregister(session, message);
+    return mux->unregisterSession(session, message);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ int NetworkEntity::unregister( Session * session, Message message )
 --
 -- NOTES:			registers this session from this entity
 -----------------------------------------------------------------------------------------------*/
-void NetworkEntity::silentRegister( Session session )
+void Networking::NetworkEntity::silentRegister( Session session )
 {
     registeredSessions.insert(session);
 }
@@ -150,7 +150,7 @@ void NetworkEntity::silentRegister( Session session )
 --
 -- NOTES:			unregisters this session from this entity
 -----------------------------------------------------------------------------------------------*/
-void NetworkEntity::silentRegister( Session session )
+void Networking::NetworkEntity::silentRegister( Session session )
 {
     registeredSessions.erase(session);
 }
