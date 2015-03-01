@@ -21,10 +21,10 @@
 #include "object/SGO.h"
 #include "object/TGO.h"
 
-#include "Multimedia/manager/ResourceManager.h"
-#include "Engine/TextureManager.h"
-#include "Engine/TileManager.h"
-#include "Engine/Map.h"
+#include "../manager/ResourceManager.h"
+#include "../../Engine/TextureManager.h"
+#include "../../Engine/TileManager.h"
+#include "../../Engine/Map.h"
 
 /**
  * Constructor.
@@ -142,7 +142,7 @@ unsigned Renderer::getSpriteCount() const
  */
 void Renderer::begin()
 {
-	if (active) throw std::exception("Renderer is already active.");
+	if (active) throw std::string("Renderer is already active.");
 
 	count = 0;
 	states = sf::RenderStates::Default;
@@ -164,7 +164,7 @@ void Renderer::begin()
  */
 void Renderer::end()
 {
-	if (!active) throw std::exception("Renderer is not active.");
+	if (!active) throw std::string("Renderer is not active.");
 
 	flushSprites();
 	active = false;
@@ -203,7 +203,7 @@ void Renderer::resetStats()
  */
 void Renderer::draw(const BGO &go, bool scenegraph, sf::RenderStates states)
 {
-	if (!active) throw std::exception("Renderer is not active.");
+	if (!active) throw std::string("Renderer is not active.");
 
 	mergeRenderStates(states);
 
@@ -226,7 +226,7 @@ void Renderer::draw(const BGO &go, bool scenegraph, sf::RenderStates states)
  */
 void Renderer::draw(const SGO &sgo, sf::RenderStates states)
 {
-	if (!active) throw std::exception("Renderer is not active.");
+	if (!active) throw std::string("Renderer is not active.");
 
 	// Combine transformations with this sprite's
 
@@ -281,7 +281,7 @@ void Renderer::draw(const SGO &sgo, sf::RenderStates states)
  */
 void Renderer::draw(const TGO &tgo, sf::RenderStates states)
 {
-	if (!active) throw std::exception("Renderer is not active.");
+	if (!active) throw std::string("Renderer is not active.");
 
 	flushSprites();
 
@@ -304,7 +304,7 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
  */
 void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 {
-	if (!active) throw std::exception("Renderer is not active.");
+	if (!active) throw std::string("Renderer is not active.");
 
 	flushSprites();
 
@@ -433,7 +433,7 @@ void Renderer::mergeRenderStates(sf::RenderStates& toMerge) const
  */
 unsigned int Renderer::prepareSpriteDrawing(const sf::Texture &texture)
 {
-	if (!active) throw std::exception("Renderer is not active.");
+	if (!active) throw std::string("Renderer is not active.");
 
 	if (&texture != this->states.texture)
 	{
