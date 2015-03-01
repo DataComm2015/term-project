@@ -76,7 +76,7 @@ namespace Networking
          *
          * @return integer indicating the result of the operation
          */
-        int register(int id, int type, Session* session, Message msg);
+        int registerSession(int id, int type, Session* session, Message msg);
         /**
          * should only be invoked by the {NetworkEntity} class. it unregisters
          *   the {session} from the {NetworkEntity} instance associated with
@@ -90,7 +90,7 @@ namespace Networking
          *
          * @return integer indicating the result of the operation
          */
-        int unregister(int id, Session* session, Message msg);
+        int unregisterSession(int id, Session* session, Message msg);
         /**
          * should only be called from within the Networking library. it calls
          *   the update method of the {NetworkEntity} instance associated with

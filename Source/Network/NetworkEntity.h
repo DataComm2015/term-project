@@ -35,7 +35,7 @@ namespace Networking
          * @param message message sent from the other side
          */
         virtual void
-        onUpdate( Message message ) = 0;
+        onUpdate( Message message );
         
         /**
          * Method used to register a session so the entity can send and receive
@@ -45,17 +45,17 @@ namespace Networking
          * @param message message used when calling onRegister on the other side
          */
         int
-        register( Session * session, Message message );
+        registerSession( Session * session, Message message );
         
         /**
          * Meant to be overwritten by user. Called when the associated entity on
-         * the other side calls the register method.
+         * the other side calls the register method. MUST CALL silentRegister();
          *
          * @param session session that has been registered to the entity
          * @param message message that sent from the other side
          */
         virtual void
-        onRegister( Session * session, Message message ) = 0;
+        onRegister( Session * session, Message message );
         
         /**
          * Unregisters the session from the entity so it will no longer be able
@@ -66,17 +66,18 @@ namespace Networking
          *                on the other side
          */
         int
-        unregister( Session * session, Message message );
+        unregisterSession( Session * session, Message message );
         
         /**
          * Meant to be overwritten by the user. Called when the associated
          * entity on the other side calls the unregister method.
+	 * MUST CALL silentUnregister();
          *
          * @param session session that has been unregistered from the entity
          * @param message message that sent from the other side
          */
         virtual void
-        onUnregister( Session * session, Message message ) = 0;
+        onUnregister( Session * session, Message message );
     private:
         /**
          * The id of the entity. Used for multiplexig purposes.
@@ -92,7 +93,7 @@ namespace Networking
         /**
          * The multiplexer that this entity sends to and receives from.
          */
-        NetworkEntityMultiplexer mux;
+        NetworkEntityMultiplexer* mux;
 
         /**
          * The set containing all the sessions registerd with this entity
