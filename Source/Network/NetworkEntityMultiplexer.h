@@ -1,19 +1,29 @@
 #ifndef NETWORKENTITYMULTIPLEXER_H
 #define NETWORKENTITYMULTIPLEXER_H
 
+#include <map>
+#include <set>
+#include <stdlib.h>
+#include <string.h>
+
 #include "Message.h"
 #include "Session.h"
 #include "NetworkEntity.h"
+
+#define MSG_TYPE_UPDATE     0
+#define MSG_TYPE_REGISTER   1
+#define MSG_TYPE_UNREGISTER 2
 
 namespace Networking
 {
     class NetworkEntityMultiplexer
     {
     public:
-        /**
-         * constructs a new {NetworkEntityMultiplexer}.
-         */
-        NetworkEntityMultiplexer();
+	friend class NetworkEntity;
+        // /**
+        //  * constructs a new {NetworkEntityMultiplexer}.
+        //  */
+        // NetworkEntityMultiplexer();
         /**
          * method with the same signature as the Session::onMessage. this
          *   function should be invoked within the session's onMessage method
@@ -24,7 +34,7 @@ namespace Networking
          *
          * @return integer indicating the outcome of the operation
          */
-        int onMessage(Message* msg);
+        int onMessage(Session* session, Message msg);
     protected:
         /**
          * should only be called from within the Networking library. it creates
@@ -41,7 +51,7 @@ namespace Networking
          * @param  msg describes the message to send over the wire. this message
          *   is only sent to the {session}.
          */
-        virtual NetworkEntity onRegister(
+        virtual NetworkEntity* onRegister(
             int id, int entityType, Session* session, Message msg) = 0;
     private:
         /**
@@ -55,7 +65,7 @@ namespace Networking
          *
          * @return integer indicating the result of the operation
          */
-        int update(int id, Message msg);
+        int update(int id, std::set<Session*>& sessions, Message msg);
         /**
          * should only be called by the {NetworkEntity} class. it registers the
          *   passed {Session} object with the {NetworkEntity} associated with
@@ -69,7 +79,7 @@ namespace Networking
          *
          * @return integer indicating the result of the operation
          */
-        int register(int id, Session* session, Message msg);
+        int registerSession(int id, int type, Session* session, Message msg);
         /**
          * should only be invoked by the {NetworkEntity} class. it unregisters
          *   the {session} from the {NetworkEntity} instance associated with
@@ -83,7 +93,7 @@ namespace Networking
          *
          * @return integer indicating the result of the operation
          */
-        int unregister(int id, Session* session, Message msg);
+        int unregisterSession(int id, Session* session, Message msg);
         /**
          * should only be called from within the Networking library. it calls
          *   the update method of the {NetworkEntity} instance associated with
@@ -105,6 +115,13 @@ namespace Networking
          *   is only sent to the {session}.
          */
         void onUnregister(int id, Session* session, Message msg);
+        /**
+         * contains references to network entities.
+         *
+         * the keys to the map are the IDs of the network entities, and the
+         *   values are the network entities.
+         */
+        std::map<int,NetworkEntity*> networkEntities;
     };
 }
 
