@@ -51,7 +51,7 @@ public:
     {
         // Load and store calls to a resource manager should be done only once, but for demonstration purposes..
         texture_1 = Manager::TextureManager::store(
-            Manager::TextureManager::load("Multimedia/Assets/Art/Placeholder.png")
+            Manager::TextureManager::load("Multimedia/Assets/Art/Misc/placeholder.png")
             );
 
         // configure the sprite
