@@ -24,6 +24,8 @@
 
 #include <string>
 #include <SFML/Graphics/Rect.hpp>
+#include <set>
+#include "Entity.h"
 
 namespace Marx
 {
@@ -52,7 +54,7 @@ namespace Marx
             void    setCoord(const int& x, const int& y);
             int     getX() const;
             int     getY() const;
-
+            std::set<Entity*> getEntity();
             // overloading == operator
             bool operator==(const Cell& cell);
             
@@ -62,6 +64,7 @@ namespace Marx
             //position on the map
             int xcoord_;
             int ycoord_;
+            std::set<Entity*> entity;
     };
 } /* namespace Marx */
 
