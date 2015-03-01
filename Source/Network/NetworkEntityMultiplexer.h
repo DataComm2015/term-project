@@ -17,10 +17,10 @@ namespace Networking
     class NetworkEntityMultiplexer
     {
     public:
-        /**
-         * constructs a new {NetworkEntityMultiplexer}.
-         */
-        NetworkEntityMultiplexer();
+        // /**
+        //  * constructs a new {NetworkEntityMultiplexer}.
+        //  */
+        // NetworkEntityMultiplexer();
         /**
          * method with the same signature as the Session::onMessage. this
          *   function should be invoked within the session's onMessage method

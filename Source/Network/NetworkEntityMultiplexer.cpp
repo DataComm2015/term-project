@@ -1,12 +1,12 @@
 #include "NetworkEntityMultiplexer.h"
 
-/**
- * constructs a new {NetworkEntityMultiplexer}.
- */
-Networking::NetworkEntityMultiplexer::NetworkEntityMultiplexer()
-{
-
-}
+// /**
+//  * constructs a new {NetworkEntityMultiplexer}.
+//  */
+// Networking::NetworkEntityMultiplexer::NetworkEntityMultiplexer()
+// {
+//
+// }
 /**
  * method with the same signature as the Session::onMessage. this
  *   function should be invoked within the session's onMessage method
@@ -19,18 +19,18 @@ Networking::NetworkEntityMultiplexer::NetworkEntityMultiplexer()
  */
 int Networking::NetworkEntityMultiplexer::onMessage(Session* session, Message* msg)
 {
-    int entityId = *(int*) msg->data;
+    int intPtr = *(int*) msg->data;
     switch(msg->type)
     {
         case MSG_TYPE_UPDATE:
-            void onUpdate(int id, Message msg);
+            networkEntities[id]->onUpdate(*intPtr, Message msg);
             break;
         case MSG_TYPE_REGISTER:
-            networkEntities[id] = onRegister(
-                entityId, int entityType, session, msg);
+            networkEntities[id] =
+                &onRegister(*intPtr, *(intPtr+1), session, msg);
             break;
         case MSG_TYPE_UNREGISTER:
-            onUnregister(entityId, session, msg);
+            onUnregister(*intPtr, session, msg);
             networkEntities.erase(id);
             break;
     }
@@ -53,8 +53,8 @@ int Networking::NetworkEntityMultiplexer::update(int id, std::set<Session*>& ses
     char* data = malloc(datalen);
 
     // inject header information
-    int* payloadId = (int*) &data[0];
-    *payloadId = id;
+    int* intPtr = (int*) &data[0];
+    *intPtr = id;
 
     // inject payload information
     memcpy(&data[sizeof(int)], msg.data, len);
@@ -90,15 +90,16 @@ int Networking::NetworkEntityMultiplexer::update(int id, std::set<Session*>& ses
 int Networking::NetworkEntityMultiplexer::register(int id, int type, Session* session, Message msg)
 {
     // allocate enough memory to hold message header, and payload
-    int datalen = msg.len+sizeof(int);
+    int datalen = msg.len+sizeof(int)*2;
     char* data = malloc(datalen);
 
     // inject header information
-    int* payloadId = (int*) &data[0];
-    *payloadId = id;
+    int* intPtr = (int*) &data[0];
+    *intPtr = id;
+    *(intPtr+1) = type;
 
     // inject payload information
-    memcpy(&data[sizeof(int)], msg.data, len);
+    memcpy(&data[sizeof(int)*2], msg.data, len);
 
     // create message structure
     Message wireMsg;
