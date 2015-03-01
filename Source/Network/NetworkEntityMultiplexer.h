@@ -19,18 +19,29 @@ namespace Networking
     class NetworkEntityMultiplexer
     {
     public:
-	friend class NetworkEntity;
-        // /**
-        //  * constructs a new {NetworkEntityMultiplexer}.
-        //  */
-        // NetworkEntityMultiplexer();
+    friend class NetworkEntity;
         /**
          * method with the same signature as the Session::onMessage. this
          *   function should be invoked within the session's onMessage method
          *   and forwarded the parameters if the message received by the session
          *   was sent from another {NetworkEntityMultiplexer}.
          *
-         * @param  msg message received from a session object.
+         * @function   NetworkEntityMultiplexer::onMessage
+         *
+         * @date       2015-02-28
+         *
+         * @revision   none
+         *
+         * @designer   Networking Team
+         *
+         * @programmer Eric Tsang
+         *
+         * @note       none
+         *
+         * @signature  int onMessage(Session* session, Message msg);
+         *
+         * @param      session session that received the message
+         * @param      msg message received from a session object.
          *
          * @return integer indicating the outcome of the operation
          */
@@ -41,8 +52,23 @@ namespace Networking
          *   a new NetworkEntity subclass instance, and returns it to the
          *   {NetworkEntityMultiplexer}.
          *
-         * this method should be overriden to instantiate an instance of a
+         * this method should be overridden to instantiate an instance of a
          *   subclass of the {NetworkEntity}, and return it.
+         *
+         * @function   NetworkEntityMultiplexer::onRegister
+         *
+         * @date       2015-02-28
+         *
+         * @revision   none
+         *
+         * @designer   Networking Team
+         *
+         * @programmer Eric Tsang
+         *
+         * @note       none
+         *
+         * @signature  virtual NetworkEntity* onRegister(int id, int entityType,
+         *   Session* session, Message msg) = 0;
          *
          * @param  id identifier associated with a {NetworkEntity} instance.
          * @param  entityType type of the entity, hinting at what kind of
@@ -50,9 +76,11 @@ namespace Networking
          * @param  session session being registered with the NetworkEntity.
          * @param  msg describes the message to send over the wire. this message
          *   is only sent to the {session}.
+         *
+         * @return     pointer to the new {NetworkEntity} that was registered
          */
-        virtual NetworkEntity* onRegister(
-            int id, int entityType, Session* session, Message msg) = 0;
+        virtual NetworkEntity*
+        onRegister(int id, int entityType, Session* session, Message msg) = 0;
     private:
         /**
          * should only be called by {NetworkEntity} objects only. it
@@ -60,10 +88,27 @@ namespace Networking
          *   session objects registered with the {NetworkEntity} associated with
          *   {id}.
          *
-         * @param  id identifier associated with a {NetworkEntity} instance
-         * @param  msg describes the message to send over the wire
+         * @function   NetworkEntityMultiplexer::update
          *
-         * @return integer indicating the result of the operation
+         * @date       2015-02-28
+         *
+         * @revision   none
+         *
+         * @designer   Networking Team
+         *
+         * @programmer Eric Tsang
+         *
+         * @note       none
+         *
+         * @signature  int update(int id, std::set<Session*>& sessions, Message
+         *   msg);
+         *
+         * @param      id identifier associated with a {NetworkEntity} instance
+         * @param      sessions set of sessions associated with the network
+         *   entity that need to be informed of the update
+         * @param      msg describes the message to send over the wire
+         *
+         * @return     integer indicating the result of the operation
          */
         int update(int id, std::set<Session*>& sessions, Message msg);
         /**
@@ -71,13 +116,29 @@ namespace Networking
          *   passed {Session} object with the {NetworkEntity} associated with
          *   {id}, and sends the {msg} to the {session}.
          *
-         * @param  id identifier associated with a {NetworkEntity} instance
-         * @param  session {Session} to be registered with the {NetworkEntity}
-         *   instance
-         * @param  msg describes the message to send over the wire. this message
-         *   is only sent to the {session}.
+         * @function   NetworkEntityMultiplexer::registerSession
          *
-         * @return integer indicating the result of the operation
+         * @date       2015-02-28
+         *
+         * @revision   none
+         *
+         * @designer   Networking Team
+         *
+         * @programmer Eric Tsang
+         *
+         * @note       none
+         *
+         * @signature  int registerSession(int id, int type, Session* session,
+         *   Message msg)
+         *
+         * @param      id identifier associated with a {NetworkEntity} instance
+         * @param      type type of entity that's being registered
+         * @param      session {Session} to be registered with the
+         *   {NetworkEntity} instance
+         * @param      msg describes the message to send over the wire. this
+         *   message is only sent to the {session}.
+         *
+         * @return     integer indicating the result of the operation
          */
         int registerSession(int id, int type, Session* session, Message msg);
         /**
@@ -85,13 +146,28 @@ namespace Networking
          *   the {session} from the {NetworkEntity} instance associated with
          *   {id}, and sends the {msg} to the {session}.
          *
-         * @param  id identifier associated with a {NetworkEntity} instance
-         * @param  session {Session} to be unregistered with the {NetworkEntity}
-         *   instance
-         * @param  msg describes the message to send over the wire. this message
-         *   is only sent to the {session}.
+         * @function   NetworkEntityMultiplexer::unregisterSession
          *
-         * @return integer indicating the result of the operation
+         * @date       2015-02-28
+         *
+         * @revision   none
+         *
+         * @designer   Networking Team
+         *
+         * @programmer Eric Tsang
+         *
+         * @note       none
+         *
+         * @signature  int unregisterSession(int id, Session* session, Message
+         *   msg)
+         *
+         * @param      id identifier associated with a {NetworkEntity} instance
+         * @param      session {Session} to be unregistered with the
+         *   {NetworkEntity} instance
+         * @param      msg describes the message to send over the wire. this
+         *   message is only sent to the {session}.
+         *
+         * @return     integer indicating the result of the operation
          */
         int unregisterSession(int id, Session* session, Message msg);
         /**
@@ -99,9 +175,23 @@ namespace Networking
          *   the update method of the {NetworkEntity} instance associated with
          *   {id}.
          *
-         * @param  id identifier associated with a {NetworkEntity} instance.
-         * @param  msg describes the message to send over the wire. this message
-         *   is only sent to the {session}.
+         * @function   NetworkEntityMultiplexer::onUpdate
+         *
+         * @date       2015-02-28
+         *
+         * @revision   none
+         *
+         * @designer   Networking Team
+         *
+         * @programmer Eric Tsang
+         *
+         * @note       none
+         *
+         * @signature  void onUpdate(int id, Message msg)
+         *
+         * @param      id identifier associated with a {NetworkEntity} instance.
+         * @param      msg describes the message to send over the wire. this
+         *   message is only sent to the {session}.
          */
         void onUpdate(int id, Message msg);
         /**
@@ -109,9 +199,23 @@ namespace Networking
          *   the onUnregister method of the {NetworkEntity} instance associated
          *   with {id}.
          *
-         * @param  id identifier associated with a {NetworkEntity} instance.
-         * @param  session session being registered with the NetworkEntity.
-         * @param  msg describes the message to send over the wire. this message
+         * @function   NetworkEntityMultiplexer::onUnregister
+         *
+         * @date       2015-02-28
+         *
+         * @revision   none
+         *
+         * @designer   Networking Team
+         *
+         * @programmer Eric Tsang
+         *
+         * @note       none
+         *
+         * @signature  void onUnregister(int id, Session* session, Message msg)
+         *
+         * @param      id identifier associated with a {NetworkEntity} instance.
+         * @param      session session being registered with the NetworkEntity.
+         * @param      msg describes the message to send over the wire. this message
          *   is only sent to the {session}.
          */
         void onUnregister(int id, Session* session, Message msg);
