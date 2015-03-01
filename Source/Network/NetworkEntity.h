@@ -35,7 +35,7 @@ namespace Networking
          * @param message message sent from the other side
          */
         virtual void
-        onUpdate( Message message );
+        onUpdate( Message message ) {}
         
         /**
          * Method used to register a session so the entity can send and receive
@@ -55,7 +55,7 @@ namespace Networking
          * @param message message that sent from the other side
          */
         virtual void
-        onRegister( Session * session, Message message );
+        onRegister( Session * session, Message message ) {}
         
         /**
          * Unregisters the session from the entity so it will no longer be able
@@ -77,7 +77,7 @@ namespace Networking
          * @param message message that sent from the other side
          */
         virtual void
-        onUnregister( Session * session, Message message );
+        onUnregister( Session * session, Message message ) {}
     private:
         /**
          * The id of the entity. Used for multiplexig purposes.
@@ -107,7 +107,7 @@ namespace Networking
          * @param session session to be registered with this entity
          */
         void
-        silentRegister( Session session );
+        silentRegister( Session* session );
         
         /**
          * Invoked before NetworkEntity::onUnregister() callback is invoked
@@ -115,7 +115,7 @@ namespace Networking
          * @param session session to be unregistered from this entity
          */
         void
-        silentUnregister( Session session );
+        silentUnregister( Session* session );
     };
 }
 

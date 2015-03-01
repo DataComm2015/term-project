@@ -17,21 +17,21 @@
  *
  * @return integer indicating the outcome of the operation
  */
-int Networking::NetworkEntityMultiplexer::onMessage(Session* session, Message* msg)
+int Networking::NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
 {
-    int intPtr = *(int*) msg->data;
-    switch(msg->type)
+    int* intPtr = (int*) msg.data;
+    switch(msg.type)
     {
         case MSG_TYPE_UPDATE:
-            networkEntities[id]->onUpdate(*intPtr, Message msg);
+            networkEntities[*intPtr]->onUpdate(msg);
             break;
         case MSG_TYPE_REGISTER:
-            networkEntities[id] =
-                &onRegister(*intPtr, *(intPtr+1), session, msg);
+            networkEntities[*intPtr] =
+                onRegister(*intPtr, *(intPtr+1), session, msg);
             break;
         case MSG_TYPE_UNREGISTER:
-            onUnregister(*intPtr, session, msg);
-            networkEntities.erase(id);
+            networkEntities[*intPtr]->onUnregister(session, msg);
+            networkEntities.erase(*intPtr);
             break;
     }
 }
@@ -50,14 +50,14 @@ int Networking::NetworkEntityMultiplexer::update(int id, std::set<Session*>& ses
 {
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
-    char* data = malloc(datalen);
+    char* data = (char*)malloc(datalen);
 
     // inject header information
     int* intPtr = (int*) &data[0];
     *intPtr = id;
 
     // inject payload information
-    memcpy(&data[sizeof(int)], msg.data, len);
+    memcpy(&data[sizeof(int)], msg.data, msg.len);
 
     // create message structure
     Message wireMsg;
@@ -68,7 +68,7 @@ int Networking::NetworkEntityMultiplexer::update(int id, std::set<Session*>& ses
     // send the message to all the sessions
     for(auto it = sessions.begin(); it != sessions.end(); ++it)
     {
-        it->send(&wireMsg);
+        (*it)->send(&wireMsg);
     }
 
     // free allocated data
@@ -87,11 +87,11 @@ int Networking::NetworkEntityMultiplexer::update(int id, std::set<Session*>& ses
  *
  * @return integer indicating the result of the operation
  */
-int Networking::NetworkEntityMultiplexer::register(int id, int type, Session* session, Message msg)
+int Networking::NetworkEntityMultiplexer::registerSession(int id, int type, Session* session, Message msg)
 {
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int)*2;
-    char* data = malloc(datalen);
+    char* data = (char*)malloc(datalen);
 
     // inject header information
     int* intPtr = (int*) &data[0];
@@ -99,7 +99,7 @@ int Networking::NetworkEntityMultiplexer::register(int id, int type, Session* se
     *(intPtr+1) = type;
 
     // inject payload information
-    memcpy(&data[sizeof(int)*2], msg.data, len);
+    memcpy(&data[sizeof(int)*2], msg.data, msg.len);
 
     // create message structure
     Message wireMsg;
@@ -126,18 +126,18 @@ int Networking::NetworkEntityMultiplexer::register(int id, int type, Session* se
  *
  * @return integer indicating the result of the operation
  */
-int Networking::NetworkEntityMultiplexer::unregister(int id, Session* session, Message msg)
+int Networking::NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Message msg)
 {
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
-    char* data = malloc(datalen);
+    char* data = (char*)malloc(datalen);
 
     // inject header information
     int* payloadId = (int*) &data[0];
     *payloadId = id;
 
     // inject payload information
-    memcpy(&data[sizeof(int)], msg.data, len);
+    memcpy(&data[sizeof(int)], msg.data, msg.len);
 
     // create message structure
     Message wireMsg;

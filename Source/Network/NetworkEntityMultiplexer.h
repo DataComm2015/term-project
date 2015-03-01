@@ -3,6 +3,8 @@
 
 #include <map>
 #include <set>
+#include <stdlib.h>
+#include <string.h>
 
 #include "Message.h"
 #include "Session.h"
@@ -17,6 +19,7 @@ namespace Networking
     class NetworkEntityMultiplexer
     {
     public:
+	friend class NetworkEntity;
         // /**
         //  * constructs a new {NetworkEntityMultiplexer}.
         //  */
@@ -31,7 +34,7 @@ namespace Networking
          *
          * @return integer indicating the outcome of the operation
          */
-        int onMessage(Message* msg);
+        int onMessage(Session* session, Message msg);
     protected:
         /**
          * should only be called from within the Networking library. it creates
@@ -48,7 +51,7 @@ namespace Networking
          * @param  msg describes the message to send over the wire. this message
          *   is only sent to the {session}.
          */
-        virtual NetworkEntity onRegister(
+        virtual NetworkEntity* onRegister(
             int id, int entityType, Session* session, Message msg) = 0;
     private:
         /**
@@ -62,7 +65,7 @@ namespace Networking
          *
          * @return integer indicating the result of the operation
          */
-        int update(int id, Message msg);
+        int update(int id, std::set<Session*>& sessions, Message msg);
         /**
          * should only be called by the {NetworkEntity} class. it registers the
          *   passed {Session} object with the {NetworkEntity} associated with
