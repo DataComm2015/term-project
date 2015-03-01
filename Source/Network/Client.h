@@ -16,20 +16,20 @@ namespace Networking
          * attempts to connect the client to a server using parameters
          *
          * @param  address IP address to connect to
-		 * @param  port to connect to
+         * @param  port to connect to
          *
          * @return integer indicating the outcome of the operation
          */
         int connect(long address, short port);
-		/**
+        /**
          * function to be overriden by children
          *
          * @param  session
          */
-		abstract void onConnect(Session* session);
-		
-	private:
-    
+        void onConnect(Session* session) = 0;
+
+    private:
+
     };
 }
 
