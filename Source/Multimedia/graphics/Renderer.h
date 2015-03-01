@@ -15,7 +15,7 @@ namespace Marx
 	class Map;
 }
 
-// @TODO : Make Renderer dynamic!!
+// @TODO : Make Renderer have a dynamic buffer
 
 class Renderer
 {
@@ -33,6 +33,7 @@ public:
 
 	void begin();
 	void end();
+	void resetStats();
 
 	void draw(const BGO& bgo, bool scenegraph, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
@@ -42,16 +43,15 @@ public:
 	sf::RenderStates states;
 
 private:
-	void flush();
-
+	void mergeRenderStates(sf::RenderStates& toMerge) const;
 	unsigned int prepareSpriteDrawing(const sf::Texture &texture);
-
-	void drawSprite(const sf::Texture &texture, const sf::Vertex *vertices);
+	void batchSprite(const sf::Texture &texture, const sf::Vertex *vertices);
+	void flushSprites();
 
 	sf::RenderTarget &renderer;
 	sf::Vertex *vertices;
-	unsigned int maxCount, count, cumulativeCount;
-	unsigned int count_sprites, count_drawcalls;
+	unsigned int maxCount, count;
+	unsigned int count_drawcalls, count_sprites;
 	bool active;
 };
 
