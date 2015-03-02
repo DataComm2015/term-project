@@ -6,10 +6,10 @@ namespace GUI
 	class Container : BGO
 	{
 		public:
-			Container(BGO*, BGO*, BGO*, sf::Vector2f, bool);
-			void setSeperator(SGO*);
-			void setRatio(int);
-			void setOrientation(bool);
+			Container(BGO* parent, BGO* firstBGO, BGO* secondBGO, sf::Vector2f theScale, bool theOrientation);
+			void setSeperator(SGO* theSeparator);
+			void setRatio(int theRatio);
+			void setOrientation(bool theOrientation);
 			void pack();
 		private:
 			BGO* A, B;
