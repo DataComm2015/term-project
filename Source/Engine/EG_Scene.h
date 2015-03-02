@@ -10,8 +10,8 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Scene.h"
+#include "../AppWindow.h"
 #include <cstdio>
-
 namespace Marx
 {
 	class EG_Scene : public Scene
@@ -19,6 +19,10 @@ namespace Marx
 	public:
 		virtual void update(sf::Time);
 		virtual void processEvents(sf::Event&);
+		virtual void draw();
+		~EG_Scene();
+	private:
+		sf::CircleShape shape;
 	};
 }
 
