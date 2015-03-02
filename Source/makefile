@@ -10,19 +10,23 @@ $CC=g++
 $FLAGS=-std=c++11
 
 
-Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine/Controller.o
+
+
+Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Entity.o Engine/Cell.o Engine/Controller.o
 	$(CC) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o \
 	Engine/Controller.o \
 	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system $(FLAGS)
 
 clean:
-	rm -f -r *.o *.bak app 
+	rm -f -r *.o *.bak app */*.o
 
+
+#Engine Files
 AppWindow.o:
-	$(CC) -c  -o AppWindow.o  AppWindow.cpp -std=c++11
+	$(CC) -c -std=c++11 -o AppWindow.o  AppWindow.cpp 
 	
 Engine/EG_Scene.o:
-	$(CC) -c Engine/EG_Scene.cpp -o Engine/EG_Scene.o $(FLAGS)
+	$(CC) -c -std=c++11 -o Engine/EG_Scene.o Engine/EG_Scene.cpp
 	
 Engine/Cell.o:
 	$(CC) -c Engine/Cell.cpp -o Engine/Cell.o $(FLAGS)
@@ -32,7 +36,7 @@ Engine/Controller.o:
 	$(CC) -c Engine/Controller.cpp -o Engine/Controller.o $(FLAGS)
 	
 Engine/Entity.o:
-	$(CC) -c Engine/Entity.cpp -o Engine/Entity.o $(FLAGS)
+	$(CC) -c -std=c++11 -o Engine/Entity.o Engine/Entity.cpp
 
 Engine/EntityManager.o:
 	$(CC) -c Engine/EntityManager.cpp -o Engine/EntityManager.o $(FLAGS)

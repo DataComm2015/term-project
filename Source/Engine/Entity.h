@@ -17,12 +17,20 @@
 --        This file defines the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
+
+
 #ifndef ENTITY_H_
 #define ENTITY_H_
-
+namespace Marx
+{
+	class Entity;	
+}
 #include "Cell.h"
 #include "Controller.h"
+#include "Map.h"
+
 #include <set>
+#include <cmath>
 
 namespace Marx
 {
@@ -30,18 +38,18 @@ namespace Marx
     {
         private:
 
-            Controller controller;
-            std::set<Cell> occupiedCells;
+            Controller * controller;
+            std::set<Cell*> occupiedCells;
+			Map * map;
         public:
-            Entity(Controller);
+            Entity(float, float, Controller *, float, float);
             ~Entity();
             virtual void turn();
-            Entity * move(float, float, float, float, bool);
-            virtual std::set<Cell> getCell();
+            Entity * move(float, float, bool);
+            virtual std::set<Cell*> getCell();
             virtual void onCreate();
             virtual void onDestroy();
             virtual void onUpdate();
-            sf::FloatRect getRekt();
             virtual bool operator==(const Entity&);
     };
 }
