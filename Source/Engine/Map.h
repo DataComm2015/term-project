@@ -19,11 +19,13 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
+
 #ifndef MAP_H_
 #define MAP_H_
 
 #include <vector>
 #include "Cell.h"
+
 
 namespace Marx
 {
@@ -39,7 +41,7 @@ namespace Marx
             unsigned int getHeight() const;
             unsigned int getWidth() const;
             void setCell(const uint x, const uint y, const Cell& cell);
-            Cell getCell(const uint x, const uint y) const;
+            Cell * getCell(const uint x, const uint y) const;
             void setTexture(const uint texture_id);
             uint getTexture() const;
             

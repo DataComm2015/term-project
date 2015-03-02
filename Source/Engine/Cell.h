@@ -18,12 +18,16 @@
 --        This file defines the Cell class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
+#include "Entity.h"
 
 #ifndef CELL_H_
 #define CELL_H_
 
+
 #include <string>
 #include <SFML/Graphics/Rect.hpp>
+#include <set>
+
 
 namespace Marx
 {
@@ -33,7 +37,7 @@ namespace Marx
     *    A basic cell class that contains an element.
     *
     */
-    class Cell : public sf::IntRect
+    class Cell : public sf::FloatRect
     {
         public:
             explicit Cell(int x = 0, int y = 0): xcoord_(x), ycoord_(y) {}
@@ -52,7 +56,7 @@ namespace Marx
             void    setCoord(const int& x, const int& y);
             int     getX() const;
             int     getY() const;
-
+            std::set<Entity*> getEntity();
             // overloading == operator
             bool operator==(const Cell& cell);
             
@@ -62,6 +66,7 @@ namespace Marx
             //position on the map
             int xcoord_;
             int ycoord_;
+            std::set<Entity*> entity;
     };
 } /* namespace Marx */
 

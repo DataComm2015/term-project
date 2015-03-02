@@ -22,16 +22,10 @@ namespace Marx
 			void run();
 			int	addScene(Scene * scene);
 			void removeScene(int index);
-			AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
-			{
-				Scene *s = new Scene;
-				EG_Scene *s2 = new EG_Scene;
-				scene.emplace_back(s);
-				scene.emplace_back(s2);
-				timePerFrame = sf::milliseconds(60);
-			};
-		
+			static AppWindow * getInstance();
 		private:
+			AppWindow();
+			static AppWindow * app;
 			std::vector<Scene*> scene;
 			bool isRunning = false;
 			sf::Time nextUpdate, timePerFrame;
