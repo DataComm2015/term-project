@@ -18,14 +18,16 @@
 --        This file defines the Cell class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
+#include "Entity.h"
 
 #ifndef CELL_H_
 #define CELL_H_
 
+
 #include <string>
 #include <SFML/Graphics/Rect.hpp>
 #include <set>
-#include "Entity.h"
+
 
 namespace Marx
 {
@@ -35,7 +37,7 @@ namespace Marx
     *    A basic cell class that contains an element.
     *
     */
-    class Cell : public sf::IntRect
+    class Cell : public sf::FloatRect
     {
         public:
             explicit Cell(int x = 0, int y = 0): xcoord_(x), ycoord_(y) {}

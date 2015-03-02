@@ -18,9 +18,10 @@
 --
 -- REVISIONS:
 --
--- DESIGNER: Marx-Engine
+-- DESIGNER: Marc Vouve
 --
 -- PROGRAMMER: Michael Chimick
+--			   Marc Vouve
 --
 -- NOTES:
 --        This file implements the Entity class members
@@ -50,7 +51,7 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(float x, float y, float h = 1.0, float w = 1.0, Controller ctrl = NULL) : 
+Entity::Entity(float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
     sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
     onCreate();
@@ -116,52 +117,53 @@ void  Entity::turn()
 -- PROGRAMMER: Marc Vouve
 --
 -- INTERFACE: move(float x, float y, bool force)
+--					float x: left corner of the entity.
+--					float y: top corner of the entity.
+--					bool force: if this is true the entity will move even if it will collide with another entity.
 --
--- RETURNS:
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
 --
--- NOTES:
+-- NOTES: 
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-// This is a bit codey for pseudo-code, but it's done very particular
-// this function returns the entity collided with on failure and NULL on success.
-Entity * move(float x, float y, bool force = false)
+Entity * Entity::move(float x, float y, bool force = false)
 {
 
-    std::set<Cell> tempCell;
+    std::set<Cell*> tempCell;
+	// loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i < width + floor(x); i++)
     {
         for(int j = floor(y); j < height + floor(y); j)
         {
-            tempCell.insert(Map.getCell(floor(i),floor(j)));
+            tempCell.emplace(map->getCell(floor(i),floor(j)));
         }
     }
-	/*
-    for(auto c : tempArea)
-    {
-
-    }
-    for( int i = left; )
-    if( entity is 1 cell in size )
-    {
-		for(int width = )
-        if( !force )	// This argument is passed to check if bounds checking is required
-        {
-            Check if any entities are overlapping.
-			if( entities overlap )
-				return other entity
-        }
-       
-       assign collection of cells to this as its cells
-        
-        // remove from current.
-        Remove Entity From Previous Location
-        
-		Assign Location and bounding location
-    }
-	*/
 	
-	return null;
+
+	// loop through all cells in the temporary array. looping for 
+    for(Cell *c : tempCell)
+	{
+		std::set<Entity*> entities = c->getEntity();
+		for( Entity * e : entities )
+		{
+			if( intersects(*e) )
+			{
+				if( force )
+				{
+					occupiedCells = tempCell;
+				}
+				
+				return e;
+			}
+		}
+	}
+	
+	occupiedCells = tempCell;
+	
+	return nullptr;
 }
+
 
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -183,7 +185,7 @@ Entity * move(float x, float y, bool force = false)
 --        Returns the occupiedCells of the Entity object
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-std::set<Cell> Entity::getCell()
+std::set<Cell*> Entity::getCell()
 {
     return occupiedCells;
 }
