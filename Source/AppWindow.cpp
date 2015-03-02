@@ -1,10 +1,11 @@
 #include "AppWindow.h"
 
+Marx::AppWindow * Marx::AppWindow::app = nullptr;
 
 int main(void)
 {
-	Marx::AppWindow window;
-    window.run();
+	Marx::AppWindow * window = Marx::AppWindow::getInstance();
+    window->run();
 
 	return 0;
 }
@@ -134,6 +135,27 @@ void AppWindow::run()
 		}
 	}
 }
+
+AppWindow * AppWindow::getInstance()
+{
+	if( app == nullptr )
+	{
+		app = new AppWindow;
+	}
+	
+	return app;
+}
+
+AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
+{
+	Scene *s = new Scene;
+	EG_Scene *s2 = new EG_Scene;
+	scene.emplace_back(s);
+	scene.emplace_back(s2);
+	timePerFrame = sf::milliseconds(16);
+}
+
+
 
 
 // Test to see if the window is opening
