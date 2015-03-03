@@ -1,9 +1,8 @@
 #ifndef GAMEMAP_H_
 #define GAMEMAP_H_
 
-#include "Cell.h"
+#include "../../Engine/Map.h"
 #include "Block.h"
-
 
 /* The number of human players in a round */
 #define NUM_PLAYERS 4
@@ -28,11 +27,11 @@
 class GameMap
 {
 	public:
-		GameMap(Cell **cMap, int w, int h);
+		GameMap(Marx::Map *cMap);
 		~GameMap();
 		bool generateMap();
 		
-		Cell** getCellMap();
+		Marx::Map* getCellMap();
 		Block** getBlockMap();
 		int getWidth();
 		int getHeight();
@@ -47,7 +46,7 @@ class GameMap
 		void generatePlaceholderBlocks();
 		BlockType makeBlockType(BlockZone z, int rRoll);
 
-		Cell** cellMap;
+		Marx::Map cellMap;
 		Block** blockMap;
 		int width;
 		int height;

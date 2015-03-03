@@ -19,7 +19,7 @@ using std::vector;
 *
 *	PROGRAMMER: Chris Klassen
 *
-*	INTERFACE: GameMap(Cell **cMap, int w, int h);
+*	INTERFACE: GameMap(Map *cMap, int w, int h);
 *
 *	PARAMETERS:
 *		cMap - the cell map to use with the class
@@ -34,11 +34,11 @@ using std::vector;
 *
 *		This constructor defines the cell map that the GameMap will use.
 ******************************************************************************/
-GameMap::GameMap(Cell **cMap, int w, int h)
+GameMap::GameMap(Map *cMap)
 {
-	cellMap = cMap;
-	width = w;
-	height = h;
+	cellMap = *cMap;
+	width = cMap->getWidth();
+	height = cMap->getHeight();
 	bWidth = 0;
 	bHeight = 0;
 }
@@ -534,7 +534,7 @@ BlockType GameMap::makeBlockType(BlockZone z, int rRoll)
 }
 
 
-Cell** GameMap::getCellMap()
+Map* GameMap::getCellMap()
 {
 	return cellMap;
 }

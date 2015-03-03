@@ -1,7 +1,7 @@
 #ifndef BLOCK_H_
 #define BLOCK_H_
 
-#include "Cell.h"
+#include "../../Engine/Cell.h"
 
 
 /* The width of a block in terms of number of cells */
