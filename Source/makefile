@@ -11,13 +11,15 @@ FLAGS=-std=c++11
 
 
 Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Map.o Engine/Entity.o Engine/Cell.o Engine/Controller.o \
-	Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o
+	Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o \
+	Multimedia/graphics/Renderer.o
 	$(CC) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Map.o Engine/Entity.o Engine/Cell.o \
 	Engine/Controller.o Logic/Environment/GameMap.o Logic/Environment/Block.o Logic/GameScene.o \
+	Multimedia/graphics/Renderer.o \
 	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system $(FLAGS)
 
 clean:
-	rm -f -r *.o *.bak app */*.o
+	rm -f -r *.o *.bak app */*.o */*/*.o
 
 
 #Engine Files
@@ -69,3 +71,9 @@ Logic/Environment/Block.o:
 
 Logic/Environment/GameMap.o:
 	$(CC) -c -std=c++11 -o Logic/Environment/GameMap.o Logic/Environment/GameMap.cpp 
+
+
+# Multimedia Files
+
+Multimedia/graphics/Renderer.o:
+	$(CC) -c -std=c++11 -o Multimedia/graphics/Renderer.o Multimedia/graphics/Renderer.cpp

@@ -1,9 +1,9 @@
-#include "EG_Scene.h"
+#include "GameScene.h"
 
 using namespace Marx;
 
 
-GameScene::GameScene()
+GameScene::GameScene() : renderer(*AppWindow::getInstance())
 {
 	cMap = new Map(40, 40);
 	gMap = new GameMap(cMap);
@@ -17,29 +17,36 @@ GameScene::~GameScene()
 }
 
 
-void EG_Scene::update(sf::Time)
+void GameScene::update(sf::Time)
 {
 	//printf("Update Run Scene\n");
 	
 	return;
 }
 
-void EG_Scene::processEvents(sf::Event& e)
+void GameScene::processEvents(sf::Event& e)
 {
 	if( e.type == sf::Event::KeyPressed )
 	{
 		// Generate the game map
-		GameMap->generateMap();
+		gMap->generateMap();
 	}
 }
 
-void EG_Scene::draw()
+void GameScene::draw()
 {
 	AppWindow * window = AppWindow::getInstance();
-	
+
 	window->clear();
 
+    renderer.resetStats();
+
+    renderer.begin();
+	
 	// Draw the game map
+	renderer.draw(*cMap);
+
+    renderer.end();
 
 	window->display();
 }

@@ -7,6 +7,7 @@
 using std::max;
 using std::vector;
 
+using namespace Marx;
 
 /******************************************************************************
 *	FUNCTION: GameMap
@@ -36,7 +37,7 @@ using std::vector;
 ******************************************************************************/
 GameMap::GameMap(Map *cMap)
 {
-	cellMap = *cMap;
+	cellMap = cMap;
 	width = cMap->getWidth();
 	height = cMap->getHeight();
 	bWidth = 0;

@@ -3,6 +3,7 @@
 
 #include "../../Engine/Cell.h"
 
+using namespace Marx;
 
 /* The width of a block in terms of number of cells */
 #define BLOCK_WIDTH 2

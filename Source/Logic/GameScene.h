@@ -2,12 +2,16 @@
 #define GAME_SCENE_H_
 
 #include <vector>
+#include <cstdio>
 #include <SFML/Graphics.hpp>
 #include "../Engine/Scene.h"
-#include "../Engine/Map.h"
+#include "Environment/GameMap.h"
 #include "../AppWindow.h"
-#include <cstdio>
-
+#include "../Engine/TextureManager.h"
+#include "../Multimedia/graphics/Renderer.h"
+#include "../Multimedia/graphics/object/BGO.h"
+#include "../Multimedia/graphics/object/SGO.h"
+#include "../Multimedia/graphics/object/TGO.h"
 
 /*
 * Testing Game Scene
@@ -23,6 +27,8 @@ class GameScene : public Scene
 	private:
 		Marx::Map *cMap;
 		GameMap *gMap;
+		sf::View viewHUD, viewMain;
+    	Renderer renderer;
 };
 
 #endif

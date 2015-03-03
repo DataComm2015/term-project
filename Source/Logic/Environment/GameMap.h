@@ -46,7 +46,7 @@ class GameMap
 		void generatePlaceholderBlocks();
 		BlockType makeBlockType(BlockZone z, int rRoll);
 
-		Marx::Map cellMap;
+		Marx::Map *cellMap;
 		Block** blockMap;
 		int width;
 		int height;
