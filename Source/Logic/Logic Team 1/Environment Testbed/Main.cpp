@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 #include "Main.h"
 
 using std::cout;
@@ -34,17 +35,21 @@ using std::endl;
 int main(int argc, char* argv[])
 {
 	// Validate command line arguments
-	if (argc != 3)
+	if (argc != 4)
 	{
 		cerr << "Invalid command line arguments." << endl;
 		cerr << "Usage:" << endl << endl;
-		cerr << "./mapgen [width in cells] [height in cells]" << endl;
+		cerr << "./mapgen [width in cells] [height in cells] [0 - display blocks, 1 - display cells]" << endl;
 		exit(1);
 	}
+
+	// Randomize the seed
+	srand(time(NULL));
 
 	// Retrieve values from command line arguments
 	int mWidth = atoi(argv[1]);
 	int mHeight = atoi(argv[2]);
+	int displayCells = atoi(argv[3]);
 
 	// Create a 2D cell array
 	Cell **cellMap = new Cell*[mHeight];
@@ -66,8 +71,8 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	// Print the map
-	printMap(&gMap);
+	// Print the map in blocks
+	printMap(&gMap, displayCells);
 
 	// Delete the cell map memory
 	delete [] cellMap;
@@ -77,23 +82,46 @@ int main(int argc, char* argv[])
 
 
 /* This function prints out the game map */
-void printMap(GameMap *gMap)
+void printMap(GameMap *gMap, bool displayCells)
 {
-	// Retrieve the list of cells
-	Cell **cellMap = gMap->getCellMap();
-	int w = gMap->getWidth();
-	int h = gMap->getHeight();
-
-	// Print the map
-	for (int i = 0; i < h; i++)
+	if (displayCells)
 	{
-		for (int j = 0; j < w; j++)
+		// Retrieve the list of cells
+		Cell **cellMap = gMap->getCellMap();
+		int w = gMap->getWidth();
+		int h = gMap->getHeight();
+
+		// Print the map
+		for (int i = 0; i < h; i++)
 		{
-			cout << cellMap[i][j]() << " ";
+			for (int j = 0; j < w; j++)
+			{
+				cout << cellMap[i][j]() << " ";
+			}
+
+			cout << endl;
 		}
 
 		cout << endl;
 	}
+	else
+	{
+		// Retrieve the list of cells
+		Block **blockMap = gMap->getBlockMap();
+		int w = gMap->getBlocksHor();
+		int h = gMap->getBlocksVert();
 
-	cout << endl;
+		// Print the map
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				cout << blockMap[i][j]() << " ";
+			}
+
+			cout << endl;
+		}
+
+		cout << endl;
+	}
 }
