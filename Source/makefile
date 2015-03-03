@@ -9,17 +9,26 @@
 CC=g++
 CFLAGS=-std=c++11
 
-Game:               AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine/Controller.o
-	$(CC) $(CFLAGS) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine/Controller.o \
-	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system
+## FILES
 
-clean:
-	rm -f -r *.o *.bak app */*.o
+FILES_ENGINE=	AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine/Controller.o
 
-#Engine Files
+FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o #Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
+					#Multimedia/graphics/Renderer.o
+
+FILES_LOGIC=	
+
+FILES_NETWORK=	
+
+##
+
+Game: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
+	$(CC) $(CFLAGS) \
+	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
+	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-Engine/%.o: Engine/%.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+clean:
+	rm -f -r *.o *.bak app */*.o

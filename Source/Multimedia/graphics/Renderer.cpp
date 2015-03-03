@@ -319,7 +319,7 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 		mapWidth = map.getWidth(),
 		mapHeight = map.getHeight();
 
-	sf::FloatRect* tile = Manager::TileManager::get(map.getCell(mapXCoord, mapYCoord).getId());
+	sf::FloatRect* tile = Manager::TileManager::get(map.getCell(mapXCoord, mapYCoord)->getId());
 	const sf::Vector2f mapTileSize(tile->width, tile->height);
 
 	sf::Vector2f vpos[RECT_POINTS];
@@ -331,7 +331,7 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 
 		for (unsigned x = 0; x < mapWidth; ++x)
 		{
-			tile = Manager::TileManager::get(map.getCell(x, y).getId());
+			tile = Manager::TileManager::get(map.getCell(x, y)->getId());
 
 			vpos[0] = { mapXCoord * mapTileSize.x, mapYCoord * mapTileSize.y };
 			vpos[1] = vpos[0]; vpos[1].y += mapTileSize.y;
@@ -360,12 +360,12 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 
 		for (unsigned x = 0; x < mapWidth; ++x)
 		{
-			tempTileIDs.push_back(map.getCell(x, y).getId());
+			tempTileIDs.push_back(map.getCell(x, y)->getId());
 		}
 
 		for (int x = tempTileIDs.size() - 1; x >= 0; --x)
 		{
-			tile = Manager::TileManager::get(map.getCell(x, y).getId());
+			tile = Manager::TileManager::get(map.getCell(x, y)->getId());
 
 			vpos[0] = { mapXCoord * mapTileSize.x, mapYCoord * mapTileSize.y };
 			vpos[1] = vpos[0]; vpos[1].y += mapTileSize.y;
