@@ -12,9 +12,9 @@ $FLAGS=-std=c++11
 
 
 
-Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Entity.o Engine/Cell.o Engine/Controller.o
+Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Entity.o Engine/Cell.o Engine/Controller.o Logic/Environment/Block.o Logic/Environment/GameMap.o
 	$(CC) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o \
-	Engine/Controller.o \
+	Engine/Controller.o Logic/Environment/Block.o Logic/Environment/GameMap.o \
 	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system $(FLAGS)
 
 clean:
@@ -58,3 +58,12 @@ Engine/TileManager.o:
 	
 Engine/World.o:
 	$(CC) -c World.cpp -o Engine/World.o -o World.o $(FLAGS)
+
+
+# Logic Files
+
+Logic/Environment/Block.o:
+	$(CC) -c Logic/Environment/Block.cpp -o Logic/Environment/Block.o $(FLAGS)
+
+Logic/Environment/GameMap.o:
+	$(CC) -c Logic/Environment/GameMap.cpp -o Logic/Environment/GameMap.o $(FLAGS)
