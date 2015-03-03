@@ -23,6 +23,11 @@
 #ifndef MAP_H_
 #define MAP_H_
 
+namespace Marx
+{
+	class Map;	
+}
+
 #include <vector>
 #include "Cell.h"
 
@@ -38,10 +43,11 @@ namespace Marx
     {
         public:
             Map(const uint height, const uint width);
+            ~Map();
             unsigned int getHeight() const;
             unsigned int getWidth() const;
-            void setCell(const uint x, const uint y, const Cell& cell);
-            Cell * getCell(const uint x, const uint y) const;
+            void setCell(const uint x, const uint y, Cell* cell);
+            Cell* getCell(const uint x, const uint y) const;
             void setTexture(const uint texture_id);
             uint getTexture() const;
             
@@ -49,7 +55,7 @@ namespace Marx
             uint width_;
             uint height_;
             uint texture_id_;
-            std::vector<Cell> cells_;
+            std::vector<Cell*> cells_;
     };
 } /* namespace Marx */
 
