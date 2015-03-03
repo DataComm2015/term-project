@@ -6,15 +6,14 @@
 # probably many, please feel free to rewrite it.
 ######################################################################
 
-$CC=g++
-$FLAGS=-std=c++11
+CC=g++
+FLAGS=-std=c++11
 
 
-
-
-Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Entity.o Engine/Cell.o Engine/Controller.o
-	$(CC) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o \
-	Engine/Controller.o \
+Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Map.o Engine/Entity.o Engine/Cell.o Engine/Controller.o \
+	Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o
+	$(CC) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Map.o Engine/Entity.o Engine/Cell.o \
+	Engine/Controller.o Logic/Environment/GameMap.o Logic/Environment/Block.o Logic/GameScene.o \
 	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system $(FLAGS)
 
 clean:
@@ -58,3 +57,15 @@ Engine/TileManager.o:
 	
 Engine/World.o:
 	$(CC) -c World.cpp -o Engine/World.o -o World.o $(FLAGS)
+
+
+# Logic Files
+
+Logic/GameScene.o:
+	$(CC) -c -std=c++11 Logic/GameScene.cpp -o Logic/GameScene.o
+
+Logic/Environment/Block.o:
+	$(CC) -c -std=c++11 Logic/Environment/Block.cpp -o Logic/Environment/Block.o
+
+Logic/Environment/GameMap.o:
+	$(CC) -c -std=c++11 -o Logic/Environment/GameMap.o Logic/Environment/GameMap.cpp 
