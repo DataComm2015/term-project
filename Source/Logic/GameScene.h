@@ -27,7 +27,6 @@ class GameScene : public Scene
 	private:
 		Marx::Map *cMap;
 		GameMap *gMap;
-		sf::View viewHUD, viewMain;
     	Renderer renderer;
 };
 

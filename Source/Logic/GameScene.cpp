@@ -3,7 +3,7 @@
 using namespace Marx;
 
 
-GameScene::GameScene() : renderer(*AppWindow::getInstance())
+GameScene::GameScene() : renderer(*(AppWindow::getInstance()), 4000)
 {
 	cMap = new Map(40, 40);
 	gMap = new GameMap(cMap);
@@ -35,18 +35,8 @@ void GameScene::processEvents(sf::Event& e)
 
 void GameScene::draw()
 {
-	AppWindow * window = AppWindow::getInstance();
-
-	window->clear();
-
-    renderer.resetStats();
-
-    renderer.begin();
+	AppWindow* window = AppWindow::getInstance();
 	
-	// Draw the game map
-	renderer.draw(*cMap);
-
-    renderer.end();
-
+	window->clear();
 	window->display();
 }
