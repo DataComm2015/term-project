@@ -20,9 +20,44 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( int jobclass, GameMap gmap, int x, int y )
+Vessel::Vessel( int jobclass, Ability[3] abilityList, int x, int y )
 {
+	xPosition = x;
+	yPosition = y;
+	direction = 0;
+	moving = false;
+	abilities = abilityList;
 	
+	//class-specific instantiation
+	if ( jobClass == 0 )			//warrior
+	{
+		currentHealth = 150;
+		maxHealth = 150;
+		travelSpeed = 5;
+		//Weapon = Spear;
+		
+	}
+	else if ( jobClass == 1 )		//shaman
+	{
+		currentHealth = 75;
+		maxHealth = 75;
+		travelSpeed = 6;
+		//weapon = Fireball;
+	}
+	else if ( jobClass == 2 )		//Hunter
+	{
+		currentHealth = 100;
+		maxHealth = 100;
+		travelSpeed = 6;
+		//weapon = Javelin;
+	}
+	else if ( jobClass == 3 ) 		//Scout
+	{
+		currentHealth = 125
+		maxHealth = 125;
+		travelSpeed = 7;
+		//weapon = Sword;
+	}
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -628,9 +663,39 @@ bool Vessel::die()
 -- The movement may fail because something is blocking the Vessel, or the Vessel is attempting to move off the 
 -- edge of the map. If there's an upgrade/downgrade item on the target x, y and the Vessel successfully moved,
 -- then the effect of the upgrade/downgrade item is applied to the Vessel.
+--
+-- Bookmarks:
+-- http://en.sfml-dev.org/forums/index.php?topic=11539.0
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::move( int direction )
+void Vessel::move(sf::Event::KeyEvent keypress )
 {
+	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
+	
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'w'))
+	{
+		moving = true;
+		this.setPosition( this.getXPosition(), this.getYPosition() - 1 );
+	}
+	
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'s'))
+	{
+		moving = true;
+		this.setPosition( this.getXPosition(), this.getYPosition() + 1 );
+	}
+	
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'a'))
+	{
+		moving = true;
+		direction = 0;	//signal to animate left facing sprite
+		this.setPosition( this.getXPosition() - 1 , this.getYPosition() );
+	}
+	
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'d'))
+	{
+		moving = true;
+		direction = 1; //signal to animate right facing sprite
+		this.setPosition( this.getXPosition() + 1, this.getYPosition());
+	}
 }
 
 
@@ -681,4 +746,51 @@ void Vessel::normalAttack( int x, int y )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Entity parameter for abilities that target an entity, such as healing
 {
+}
+
+
+/*--
+--
+--
+--*/
+int getXPosition()
+{
+	return xPosition;
+}
+
+
+/*--
+--
+--
+--*/
+int getYPosition()
+{
+	return yPosition;
+}
+
+/*--
+--
+--
+--*/
+bool isMoving()
+{
+	return moving;
+}
+
+/*--
+--
+--
+--*/
+int getDirection()
+{
+	return direction;
+}
+
+/*--
+--
+--
+--*/
+int getJobClass()
+{
+	return jobClass;
 }

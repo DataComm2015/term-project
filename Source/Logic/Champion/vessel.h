@@ -59,11 +59,16 @@
 class Vessel
 {
 	protected:
+		int jobClass;		//0 = warrior, 1 = shaman, 2 = hunter, 3 = scout;
 		int currentHealth;
 		int totalHealth;
 		int currentEXP;
 		int nextLevelEXP;
 		int travelSpeed;
+		int xPosition;
+		int yPosition;
+		int direction;	//0 = right, 1 = left
+		bool moving;
 		Weapon* weapon;
 		Ability abilities[3];	//3 abilities for each Vessel
 		//TO DO: pointer to the game map needed in the future
@@ -73,6 +78,10 @@ class Vessel
 		~Vessel();
 		
 		void setPosition( int x, int y );
+		int getXPosition();
+		int getYPosition();
+		bool isMoving();
+		int getDirection();
 		
 		void resetEXP();
 		void increaseEXP( int exp );
@@ -81,6 +90,8 @@ class Vessel
 		
 		int  getLevel();
 		void increaseLevel();
+		
+		int  getJobClass();
 		
 		void resetHP();
 		void increaseHP( int hp );
