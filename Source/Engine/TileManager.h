@@ -1,10 +1,15 @@
 #ifndef TILE_MGR_H
 #define TILE_MGR_H
 #include "TextureManager.h"
+#include "../Multimedia/manager/ResourceManager.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <set>
+#include <SFML/Graphics.hpp>
+
+typedef unsigned int id_resource;
+
 
 /**
  * Tile Manager.
@@ -43,11 +48,11 @@ namespace Manager
             /**
             * Static versions of the Resource Manager functions.
             */
-            static id_resource store(sf::FloatRect* r) { return rm.store(r); }
-            static void store(sf::FloatRect* r, id_resource id) { return rm.store(r, id, true); }
-            static sf::FloatRect* get(id_resource id) { return rm.get(id); }
-            static sf::FloatRect* remove(id_resource id) { return rm.remove(id); }
-            static unsigned int clear() { return rm.clear(true); }
+            static id_resource store(sf::FloatRect* r);
+            static void store(sf::FloatRect* r, id_resource id);
+            static sf::FloatRect* get(id_resource id);
+            static sf::FloatRect* remove(id_resource id);
+            static unsigned int clear();
             
             /**
             * Uses a string id to get the id_resource to remove the rectangle

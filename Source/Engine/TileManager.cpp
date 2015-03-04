@@ -1,5 +1,17 @@
 #include "TileManager.h"
 
+
+using namespace Manager;
+
+ResourceManager<sf::FloatRect*> TileManager::rm;
+
+std::map<std::string, id_resource> TileManager::tsetmap_;
+
+std::map<id_resource, std::set<std::string> > TileManager::texturemap_;
+
+std::ifstream TileManager::tset_;
+
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: load
 --
@@ -20,7 +32,7 @@
 -- file at path
 ----------------------------------------------------------------------------------------------------------------------*/
 id_resource
-Manager::TileManager::load(std::string path)
+TileManager::load(std::string path)
 {
     tset_.clear();
     tset_.open(path.c_str());
@@ -48,7 +60,7 @@ Manager::TileManager::load(std::string path)
 -- Uses a string id to get the id_resource to get the rectangle
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::FloatRect* 
-Manager::TileManager::get(std::string rectId)
+TileManager::get(std::string rectId)
 {
     return get(tsetmap_[rectId]);
 }
@@ -72,7 +84,7 @@ Manager::TileManager::get(std::string rectId)
 -- Uses a string id to get the id_resource to remove the rectangle
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::FloatRect* 
-Manager::TileManager::remove(std::string rectId)
+TileManager::remove(std::string rectId)
 {
     sf::FloatRect *rect = remove(tsetmap_[rectId]);
     tsetmap_.erase(rectId);
@@ -98,7 +110,7 @@ Manager::TileManager::remove(std::string rectId)
 -- Does the actual reading of the file.
 ----------------------------------------------------------------------------------------------------------------------*/
 id_resource 
-Manager::TileManager::readtset()
+TileManager::readtset()
 {
     std::string dummy, texture, tilesize, tile, index;
     std::string id;
@@ -155,7 +167,7 @@ Manager::TileManager::readtset()
 -- and returns a copy.
 ----------------------------------------------------------------------------------------------------------------------*/
 std::string
-Manager::TileManager::trim(std::string line)
+TileManager::trim(std::string line)
 {
     std::string id = "";
     for (std::string::size_type i = 0; i < line.size(); i++)
@@ -188,7 +200,7 @@ Manager::TileManager::trim(std::string line)
 -- Changes the given string to an array of floats.
 ----------------------------------------------------------------------------------------------------------------------*/
 void
-Manager::TileManager::tocords(std::string& tile, float *coords)
+TileManager::tocords(std::string& tile, float *coords)
 {
     std::stringstream ss(tile);
     for (size_t i = 0; i < 4; i++)
@@ -196,5 +208,11 @@ Manager::TileManager::tocords(std::string& tile, float *coords)
         ss >> coords[i];
     }
 }
+
+id_resource TileManager::store(sf::FloatRect* r) { return rm.store(r); }
+void TileManager::store(sf::FloatRect* r, id_resource id) { rm.store(r, id, true); }
+sf::FloatRect* TileManager::get(id_resource id) { return rm.get(id); }
+sf::FloatRect* TileManager::remove(id_resource id) { return rm.remove(id); }
+unsigned int TileManager::clear() { return rm.clear(true); }
 
 
