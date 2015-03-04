@@ -1,0 +1,33 @@
+to start writing programs using google test:
+
+    google google test, and download gtest 1.7.0
+    extract resultant zip, doesn't matter where
+
+    navigate the terminal until you are in the gtest-1.7.0 folder
+        ^ the main parent folder
+
+    execute the following commands:
+        ./configure
+        make
+        cp -a include/gtest /usr/include
+        cp -a lib/.libs/* /usr/lib/
+
+this is a check:
+    ldconfig -v | grep gtest
+
+output of valid check:
+    lgbtest.so.0 -> libgtest.so.0.0.0
+    lgbtest_main.so.0 -> libgtest_main.so.0.0.0
+
+
+when writing code:
+    #include "gtest/gtest.h"
+        ^yes quotes, and yes gtest/
+
+when compiling, these are needed:
+    -lgtest -pthread
+
+
+"yum install gtest" may or may not be needed, didn't have time to check
+
+I'll probably write a script to do all this
