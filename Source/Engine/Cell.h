@@ -31,6 +31,8 @@
 
 namespace Marx
 {
+    class Entity;
+
     typedef unsigned int tile_id;
     
     /* 
