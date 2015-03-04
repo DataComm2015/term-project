@@ -6,9 +6,9 @@
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: Sebastian Pelka
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: Sebastian Pelka
 --
 -- INTERFACE: Vessel::Vessel( int jobclass, GameMap gmap, int x, int y )
 -- int jobclass: the job class you wish to set up the Vessel as
@@ -92,9 +92,9 @@ Vessel::~Vessel()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: Sebastian Pelka
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: Sebastian Pelka
 --
 -- INTERFACE: void Vessel::setPosition( int x, int y )
 -- int x, int y: the coordinates to set the Vessel on the map
@@ -650,9 +650,9 @@ bool Vessel::die()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: Sanders Lee, Sebastian Pelka
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: Sanders Lee, Sebastian Pelka
 --
 -- INTERFACE: void Vessel::move( int direction )
 -- int direction: the value of the direction to move in (0 to 7)
