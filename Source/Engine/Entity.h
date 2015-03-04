@@ -23,11 +23,10 @@
 #define ENTITY_H_
 namespace Marx
 {
-	class Entity;	
+    class Map;
 }
 #include "Cell.h"
 #include "Controller.h"
-#include "Map.h"
 
 #include <set>
 #include <cmath>
