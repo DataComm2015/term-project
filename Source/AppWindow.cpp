@@ -149,9 +149,9 @@ AppWindow * AppWindow::getInstance()
 AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
 {
 	Scene *s = new Scene;
-	EG_Scene *s2 = new EG_Scene;
+	GameScene *sGame = new GameScene;
 	scene.emplace_back(s);
-	scene.emplace_back(s2);
+	scene.emplace_back(sGame);
 	timePerFrame = sf::milliseconds(16);
 }
 
