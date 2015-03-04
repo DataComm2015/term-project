@@ -1,16 +1,14 @@
 #include "AppWindow.h"
 
-Marx::AppWindow * Marx::AppWindow::app = nullptr;
+using namespace Marx;
 
-int main(void)
+AppWindow& AppWindow::getInstance()
 {
-	Marx::AppWindow * window = Marx::AppWindow::getInstance();
-    window->run();
-
-	return 0;
+	static AppWindow app;
+	
+	return app;
 }
 
-using namespace Marx;
 /******************************************************************************
 *	FUNCTION: addScene
 *
@@ -136,26 +134,22 @@ void AppWindow::run()
 	}
 }
 
-AppWindow * AppWindow::getInstance()
-{
-	if( app == nullptr )
-	{
-		app = new AppWindow;
-	}
-	
-	return app;
-}
-
 AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
 {
 	Scene *s = new Scene;
-	EG_Scene *s2 = new EG_Scene;
 	scene.emplace_back(s);
-	scene.emplace_back(s2);
 	timePerFrame = sf::milliseconds(16);
 }
 
 
 
+int main()
+{
+	AppWindow& window = Marx::AppWindow::getInstance();
 
-// Test to see if the window is opening
+	window.addScene(new GameScene);
+
+	window.run();
+
+	return 0;
+}

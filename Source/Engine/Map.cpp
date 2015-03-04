@@ -57,6 +57,13 @@ Map::Map(const uint height, const uint width) : width_(width), height_(height), 
 
 }
 
+
+Map::~Map()
+{
+	// Empty for now
+}
+
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: setCell
 --

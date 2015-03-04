@@ -1,5 +1,9 @@
 #include "TextureManager.h"
 
+using namespace Manager;
+
+ResourceManager<sf::Texture*> TextureManager::rm;
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: load
 --
@@ -20,7 +24,7 @@
 -- it fails to load.
 ----------------------------------------------------------------------------------------------------------------------*/
 sf::Texture* 
-Manager::TextureManager::load(std::string path)
+TextureManager::load(std::string path)
 {
     sf::Texture *texture = new sf::Texture();
     
@@ -30,3 +34,9 @@ Manager::TextureManager::load(std::string path)
     }
     return (texture);
 }
+
+id_resource TextureManager::store(sf::Texture* r) { return rm.store(r); }
+void TextureManager::store(sf::Texture* r, id_resource id) { return rm.store(r, id, true); }
+sf::Texture* TextureManager::get(id_resource id) { return rm.get(id); }
+sf::Texture* TextureManager::remove(id_resource id) { return rm.remove(id); }
+unsigned int TextureManager::clear() { return rm.clear(true); }
