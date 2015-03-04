@@ -7,29 +7,73 @@
 ######################################################################
 
 CC=g++
-CFLAGS=-std=c++11
+FLAGS=-std=c++11
 
-## FILES
 
-FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine/Controller.o Engine/Map.o \
-					Engine/TextureManager.o Engine/TileManager.o
-
-FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
-					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o
-
-FILES_LOGIC=	
-
-FILES_NETWORK=	
-
-##
-
-Game: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
-	$(CC) $(CFLAGS) \
-	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
-	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
-
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+Game: AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Map.o Engine/Entity.o Engine/Cell.o Engine/Controller.o \
+	Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o \
+	Multimedia/graphics/Renderer.o
+	$(CC) AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Map.o Engine/Entity.o Engine/Cell.o \
+	Engine/Controller.o Logic/Environment/GameMap.o Logic/Environment/Block.o Logic/GameScene.o \
+	Multimedia/graphics/Renderer.o \
+	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system $(FLAGS)
 
 clean:
-	rm -f -r *.o *.bak app */*.o
+	rm -f -r *.o *.bak app */*.o */*/*.o
+
+
+#Engine Files
+AppWindow.o:
+	$(CC) -c -std=c++11 -o AppWindow.o  AppWindow.cpp 
+	
+Engine/EG_Scene.o:
+	$(CC) -c -std=c++11 -o Engine/EG_Scene.o Engine/EG_Scene.cpp
+	
+Engine/Cell.o:
+	$(CC) -c Engine/Cell.cpp -o Engine/Cell.o $(FLAGS)
+	
+	
+Engine/Controller.o:
+	$(CC) -c Engine/Controller.cpp -o Engine/Controller.o $(FLAGS)
+	
+Engine/Entity.o:
+	$(CC) -c -std=c++11 -o Engine/Entity.o Engine/Entity.cpp
+
+Engine/EntityManager.o:
+	$(CC) -c Engine/EntityManager.cpp -o Engine/EntityManager.o $(FLAGS)
+	
+Engine/Lobby.o:
+	$(CC) -c Engine/Lobby.cpp -o Engine/Lobby.o $(FLAGS)
+	
+Engine/Map.o:
+	$(CC) -c Engine/Map.cpp -o Engine/Map.o $(FLAGS)
+	
+Engine/Scene.o:
+	$(CC) -c Engine/Scene.cpp -o Engine/Scene.o $(FLAGS)
+	
+Engine/TextureManager.o:
+	$(CC) -c TextureManager.cpp -o TextureManager.o $(FLAGS)
+	
+Engine/TileManager.o:
+	$(CC) -c TileManager.cpp -o TileManager.o $(FLAGS)
+	
+Engine/World.o:
+	$(CC) -c World.cpp -o Engine/World.o -o World.o $(FLAGS)
+
+
+# Logic Files
+
+Logic/GameScene.o:
+	$(CC) -c -std=c++11 Logic/GameScene.cpp -o Logic/GameScene.o
+
+Logic/Environment/Block.o:
+	$(CC) -c -std=c++11 Logic/Environment/Block.cpp -o Logic/Environment/Block.o
+
+Logic/Environment/GameMap.o:
+	$(CC) -c -std=c++11 -o Logic/Environment/GameMap.o Logic/Environment/GameMap.cpp 
+
+
+# Multimedia Files
+
+Multimedia/graphics/Renderer.o:
+	$(CC) -c -std=c++11 -o Multimedia/graphics/Renderer.o Multimedia/graphics/Renderer.cpp

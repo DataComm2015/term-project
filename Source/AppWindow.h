@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Engine/Scene.h"
 #include "Engine/EG_Scene.h"
+#include "Logic/GameScene.h"
 
 
 namespace Marx
