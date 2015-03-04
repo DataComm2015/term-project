@@ -1,13 +1,6 @@
-######################################################################
-# This file is set up to compile object files to the team directories
-# hopefully this will prevent conflicts.
-#
-# If you have a better way to set up this file, and I know there are
-# probably many, please feel free to rewrite it.
-######################################################################
-
-CC=g++
-CFLAGS=-std=c++11
+CXX=g++
+CPPFLAGS=-std=c++11
+EXE=app
 
 ## FILES
 
@@ -19,17 +12,18 @@ FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SG
 
 FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o
 
-FILES_NETWORK=	
+FILES_NETWORK=		
 
 ##
 
-Game: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
-	$(CC) $(CFLAGS) \
-	-o app -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
+all: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
+	$(CXX) $(CPPFLAGS) \
+	-o $(EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
 	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	rm -f -r *.o *.bak app */*.o */*/*.o
+	find . -name "*.o" -type f -delete
+	rm -f $(EXE)
