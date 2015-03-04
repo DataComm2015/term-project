@@ -1,8 +1,10 @@
 #ifndef BLOCK_H_
 #define BLOCK_H_
 
+#include <vector>
 #include "../../Engine/Cell.h"
 
+using std::vector;
 using namespace Marx;
 
 /* The width of a block in terms of number of cells */
@@ -30,7 +32,7 @@ class Block
 		Block();
 		void setType(BlockType t);
 		void setZone(BlockZone z);
-		void setCells(Cell** cells);
+		void setCells(vector<Cell> *cells);
 
 		BlockType getType();
 		BlockZone getZone();
@@ -40,7 +42,7 @@ class Block
 	private:
 		BlockType type;
 		BlockZone zone;
-		Cell** cellMap;
+		vector<Cell> *cellMap;
 };
 
 #endif

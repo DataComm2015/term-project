@@ -42,7 +42,7 @@ Block::Block()
 *
 *	PROGRAMMER: Chris Klassen
 *
-*	INTERFACE: void setCells(Cell** cells);
+*	INTERFACE: void setCells(vector<Cell> *cells);
 *
 *	PARAMETERS:
 *		cells - the 2D array of cells to assign to the block
@@ -53,7 +53,7 @@ Block::Block()
 *	NOTES:
 *		This function assigns a sub-array of cells to the block.
 ******************************************************************************/
-void Block::setCells(Cell** cells)
+void Block::setCells(vector<Cell> *cells)
 {
 	cellMap = cells;
 }

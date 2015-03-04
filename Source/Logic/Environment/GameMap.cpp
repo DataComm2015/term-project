@@ -189,8 +189,19 @@ bool GameMap::createBlockMap()
 		for (int j = 0; j < bWidth; j++)
 		{
 			// Retrieve the subgroup of cells
+			vector<Cell> cellGroup;
+
+			for (int k = 0; k < BLOCK_HEIGHT; k++)
+			{
+				for (int l = 0; l < BLOCK_WIDTH; l++)
+				{
+					Cell tempCell = cellMap->getCell(l + j * BLOCK_WIDTH, k + i * BLOCK_HEIGHT);
+					cellGroup.push_back(tempCell);
+				}
+			}
 
 			// Assign the cells to the block
+			blockMap[i][j].setCells(&cellGroup)
 		}
 	}
 
