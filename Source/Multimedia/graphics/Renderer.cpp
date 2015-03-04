@@ -313,11 +313,10 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 	mergeRenderStates(states);
 	states.texture = Manager::TextureManager::get(map.getTexture());
 
-	std::cout << states.texture << std::endl;
-
 	unsigned
 		mapXCoord = 0,
-		mapYCoord = 0;
+		mapYCoord = 0,
+		currVertex = 0;
 
 	const unsigned
 		mapWidth = map.getWidth(),
@@ -352,7 +351,7 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 			vert[3].texCoords = { tile->left + tile->width, tile->top + tile->height };
 
 			for (unsigned int i = 0; i < TILE_VERTICES; ++i)
-				vertices[mapYCoord * mapWidth + mapXCoord + i] = vert[i];
+				vertices[currVertex++] = vert[i];
 
 			++mapXCoord;
 		}
@@ -386,7 +385,7 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 			vert[1].texCoords = { tile->left + tile->width, tile->top + tile->height };
 
 			for (unsigned int i = 0; i < TILE_VERTICES; ++i)
-				vertices[mapYCoord * mapWidth + mapXCoord + i] = vert[i];
+				vertices[currVertex++] = vert[i];
 
 			--mapXCoord;
 		}
