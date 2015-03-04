@@ -4,7 +4,7 @@ EXE=app
 
 ## FILES
 
-FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine/Controller.o Engine/Map.o \
+FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engine/Map.o \
 					Engine/TextureManager.o Engine/TileManager.o
 
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
