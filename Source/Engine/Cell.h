@@ -33,7 +33,7 @@ namespace Marx
 {
     class Entity;
 
-    typedef unsigned int* tile_id;
+    typedef unsigned int tile_id;
     
     /* 
     *    A basic cell class that contains an element.

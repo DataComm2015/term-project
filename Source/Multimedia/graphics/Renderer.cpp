@@ -26,6 +26,8 @@
 #include "../../Engine/TileManager.h"
 #include "../../Engine/Map.h"
 
+ #include <iostream>
+
 /**
  * Constructor.
  *
@@ -311,6 +313,8 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 	mergeRenderStates(states);
 	states.texture = Manager::TextureManager::get(map.getTexture());
 
+	std::cout << states.texture << std::endl;
+
 	unsigned
 		mapXCoord = 0,
 		mapYCoord = 0;
@@ -319,7 +323,8 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 		mapWidth = map.getWidth(),
 		mapHeight = map.getHeight();
 
-	sf::FloatRect* tile = Manager::TileManager::get(map.getCell(mapXCoord, mapYCoord)->getId());
+	sf::FloatRect* tile = Manager::TileManager::get(map.getCell(mapXCoord, mapYCoord)->getTileId());
+
 	const sf::Vector2f mapTileSize(tile->width, tile->height);
 
 	sf::Vector2f vpos[RECT_POINTS];
@@ -331,7 +336,7 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 
 		for (unsigned x = 0; x < mapWidth; ++x)
 		{
-			tile = Manager::TileManager::get(map.getCell(x, y)->getId());
+			tile = Manager::TileManager::get(map.getCell(x, y)->getTileId());
 
 			vpos[0] = { mapXCoord * mapTileSize.x, mapYCoord * mapTileSize.y };
 			vpos[1] = vpos[0]; vpos[1].y += mapTileSize.y;
@@ -356,16 +361,16 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 
 		// BACKWARDS!!
 
-		std::vector<std::string> tempTileIDs;
+		std::vector<Marx::tile_id> tempTileIDs;
 
 		for (unsigned x = 0; x < mapWidth; ++x)
 		{
-			tempTileIDs.push_back(map.getCell(x, y)->getId());
+			tempTileIDs.push_back(map.getCell(x, y)->getTileId());
 		}
 
 		for (int x = tempTileIDs.size() - 1; x >= 0; --x)
 		{
-			tile = Manager::TileManager::get(map.getCell(x, y)->getId());
+			tile = Manager::TileManager::get(map.getCell(x, y)->getTileId());
 
 			vpos[0] = { mapXCoord * mapTileSize.x, mapYCoord * mapTileSize.y };
 			vpos[1] = vpos[0]; vpos[1].y += mapTileSize.y;

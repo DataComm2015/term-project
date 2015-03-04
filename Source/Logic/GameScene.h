@@ -27,7 +27,9 @@ class GameScene : public Scene
 	private:
 		Marx::Map *cMap;
 		GameMap *gMap;
+
     	Renderer renderer;
+    	id_resource tilemap;
 };
 
 #endif
