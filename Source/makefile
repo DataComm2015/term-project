@@ -17,7 +17,7 @@ FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/EG_Scene.o Engine/Cell.o Engine
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
 					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o
 
-FILES_LOGIC=
+FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o
 
 FILES_NETWORK=	
 
@@ -32,4 +32,4 @@ Game: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f -r *.o *.bak app */*.o
+	rm -f -r *.o *.bak app */*.o */*/*.o
