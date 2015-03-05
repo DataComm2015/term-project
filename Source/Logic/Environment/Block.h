@@ -30,9 +30,11 @@ class Block
 {
 	public:
 		Block();
+		~Block();
 		void setType(BlockType t);
 		void setZone(BlockZone z);
-		void setCells(vector<Cell> *cells);
+		void setCells(vector<Cell*> *cells);
+		void setTile(tile_id id);
 
 		BlockType getType();
 		BlockZone getZone();
@@ -42,7 +44,7 @@ class Block
 	private:
 		BlockType type;
 		BlockZone zone;
-		vector<Cell> *cellMap;
+		vector<Cell*> *cellMap;
 };
 
 #endif

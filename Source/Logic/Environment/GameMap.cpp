@@ -122,6 +122,7 @@ bool GameMap::generateMap()
 	// Generate miscellaneous objects
 
 	// Generate tiles
+	generateTiles();
 
 
 	return true;
@@ -189,19 +190,19 @@ bool GameMap::createBlockMap()
 		for (int j = 0; j < bWidth; j++)
 		{
 			// Retrieve the subgroup of cells
-			vector<Cell> cellGroup;
+			vector<Cell*> *cellGroup = new vector<Cell*>();
 
 			for (int k = 0; k < BLOCK_HEIGHT; k++)
 			{
 				for (int l = 0; l < BLOCK_WIDTH; l++)
 				{
-					Cell tempCell = cellMap->getCell(l + j * BLOCK_WIDTH, k + i * BLOCK_HEIGHT);
-					cellGroup.push_back(tempCell);
+					Cell *tempCell = cellMap->getCell(l + j * BLOCK_WIDTH, k + i * BLOCK_HEIGHT);
+					cellGroup->push_back(tempCell);
 				}
 			}
 
 			// Assign the cells to the block
-			blockMap[i][j].setCells(&cellGroup)
+			blockMap[i][j].setCells(cellGroup);
 		}
 	}
 
@@ -544,6 +545,55 @@ BlockType GameMap::makeBlockType(BlockZone z, int rRoll)
 
 	return type;
 }
+
+
+
+/******************************************************************************
+*   FUNCTION: generateTiles
+*   
+*   DATE: March 4, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: void generateTiles();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       void
+*   
+*   NOTES:
+*     This function sets the correct tile ID for each cell in
+*     the game map.
+******************************************************************************/
+void GameMap::generateTiles()
+{
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			BlockZone zone = blockMap[i][j].getZone();
+
+			if (zone == GRASS)
+			{
+				blockMap[i][j].setTile(8);
+			}
+			else if (zone == STONE)
+			{
+				blockMap[i][j].setTile(9);
+			}
+			else
+			{
+				blockMap[i][j].setTile(10);
+			}
+		}
+	}
+}
+
 
 
 Map* GameMap::getCellMap()
