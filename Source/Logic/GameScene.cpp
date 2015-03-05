@@ -3,7 +3,6 @@
 
 using namespace Marx;
 
-
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 {
 	// Create the cell map
@@ -14,7 +13,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 		for (int j = 0; j < cMap->getWidth(); j++)
 		{
 			Cell *tempCell = new Cell();
-			tempCell->setTileId(27);
+			tempCell->setTileId(rand() % 36 + 1);
 
 			cMap->setCell(j, i, tempCell);
 		}
@@ -37,10 +36,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	}
 
 	cMap->setTexture(tilemap);
-
-	std::cout << cMap->getCell(0, 0)->getId() << ", " << cMap->getCell(0, 0)->getTileId() << std::endl;
 }
-
 
 GameScene::~GameScene()
 {
@@ -57,7 +53,6 @@ GameScene::~GameScene()
 	delete cMap;
 }
 
-
 void GameScene::update(sf::Time)
 {
 	//printf("Update Run Scene\n");
@@ -67,10 +62,25 @@ void GameScene::update(sf::Time)
 
 void GameScene::processEvents(sf::Event& e)
 {
-	if( e.type == sf::Event::KeyPressed )
+	if (e.type == sf::Event::Closed)
+	{
+		AppWindow::getInstance().close();
+	}
+	else if( e.type == sf::Event::KeyPressed )
 	{
 		// Generate the game map
 		gMap->generateMap();
+
+		for (int i = 0; i < cMap->getHeight(); i++)
+		{
+			for (int j = 0; j < cMap->getWidth(); j++)
+			{
+				Cell *tempCell = new Cell();
+				tempCell->setTileId(rand() % 36 + 1);
+
+				cMap->setCell(j, i, tempCell);
+			}
+		}
 	}
 }
 
