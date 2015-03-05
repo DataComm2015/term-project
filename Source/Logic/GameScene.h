@@ -26,10 +26,14 @@ class GameScene : public Scene
 		~GameScene();
 	private:
 		Marx::Map *cMap;
+		//Marx::Map *waterMap;
 		GameMap *gMap;
 
     	Renderer renderer;
+    	sf::View viewMain;
+
     	id_resource tilemap;
+    	//id_resource watermap;
 };
 
 #endif

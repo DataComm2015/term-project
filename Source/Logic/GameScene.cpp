@@ -1,19 +1,23 @@
 #include "GameScene.h"
 #include <iostream>
 
+using std::cout;
+using std::cerr;
+using std::endl;
 using namespace Marx;
 
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 {
 	// Create the cell map
-	cMap = new Map(40, 40);
+	cMap = new Map(18, 18);
+	//waterMap = new Map(20, 20);
 
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
 		{
 			Cell *tempCell = new Cell();
-			tempCell->setTileId(rand() % 36 + 1);
+			tempCell->setTileId(1);
 
 			cMap->setCell(j, i, tempCell);
 		}
@@ -21,21 +25,37 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 
 	gMap = new GameMap(cMap);
 
-	// Set the Tile Manager active tileset
-	try
-	{
-		tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
-	}
-	catch(const char* e)
-	{
-		std::cerr << e << std::endl;
-	}
-	catch(std::string e)
-	{
-		std::cerr << e << std::endl;
-	}
+	// Load the tileset
+	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
 
 	cMap->setTexture(tilemap);
+
+	// Generate the game map
+	if (!gMap->generateMap())
+	{
+		cerr << "Invalid map dimensions." << endl;
+	}
+
+	/*
+	// Set the water map tiles
+	for (int i = 0; i < waterMap->getHeight(); i++)
+	{
+		for (int j = 0; j < waterMap->getWidth(); i++)
+		{
+			Cell *tempCell = new Cell();
+			tempCell->setTileId(31);
+
+			waterMap->setCell(j, i, tempCell);
+		}
+	}
+
+	//watermap = Manager::TileManager::load("Logic/Environment/map.tset");
+	waterMap->setTexture(tilemap);
+	*/
+
+	// Set the active view
+	AppWindow& window = AppWindow::getInstance();
+	viewMain = window.getView();
 }
 
 GameScene::~GameScene()
@@ -50,7 +70,18 @@ GameScene::~GameScene()
 		}
 	}
 
+	/*
+	for (int i = 0; i < waterMap->getHeight(); i++)
+	{
+		for (int j = 0; j < waterMap->getWidth(); j++)
+		{
+			delete waterMap->getCell(j, i);
+		}
+	}
+	*/
+
 	delete cMap;
+	//delete waterMap;
 }
 
 void GameScene::update(sf::Time)
@@ -68,17 +99,51 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if( e.type == sf::Event::KeyPressed )
 	{
-		// Generate the game map
-		gMap->generateMap();
-
-		for (int i = 0; i < cMap->getHeight(); i++)
+		// ALL OF THE FOLLOWING IS TEMPORARY
+		switch(e.key.code)
 		{
-			for (int j = 0; j < cMap->getWidth(); j++)
+			case sf::Keyboard::Left:
 			{
-				Cell *tempCell = new Cell();
-				tempCell->setTileId(rand() % 36 + 1);
+				viewMain.move(-5, 0);
+				break;
+			}
 
-				cMap->setCell(j, i, tempCell);
+			case sf::Keyboard::Right:
+			{
+				viewMain.move(5, 0);
+				break;
+			}
+
+			case sf::Keyboard::Up:
+			{
+				viewMain.move(0, -5);
+				break;
+			}
+
+			case sf::Keyboard::Down:
+			{
+				viewMain.move(0, 5);
+				break;
+			}
+
+			case sf::Keyboard::Dash:
+			{
+				viewMain.zoom(1.1);
+				break;
+			}
+
+			case sf::Keyboard::Equal:
+			{
+				viewMain.zoom(0.9);
+				break;
+			}
+
+			case sf::Keyboard::Space:
+			{
+				// Generate the game map
+				gMap->generateMap();
+
+				break;
 			}
 		}
 	}
@@ -90,9 +155,12 @@ void GameScene::draw()
 	
 	window.clear();
 
+	window.setView(viewMain);
+
 	renderer.begin();
 
 	// Draw the tile map
+	//renderer.draw(*waterMap);
 	renderer.draw(*cMap);
 
 	renderer.end();
