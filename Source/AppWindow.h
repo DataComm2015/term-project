@@ -27,7 +27,7 @@ namespace Marx
 			AppWindow();
 			std::vector<Scene*> scene;
 			bool isRunning = false;
-			sf::Time nextUpdate, timePerFrame;
+			sf::Time m_elapsedTime, m_timePerFrame, m_timeSinceLastUpdate;
 	};
 
 }
