@@ -6,9 +6,9 @@
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sebastian Pelka
+-- DESIGNER: Sebastian Pelka, Sanders Lee
 --
--- PROGRAMMER: Sebastian Pelka
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee
 --
 -- INTERFACE: Vessel::Vessel( int jobclass, GameMap gmap, int x, int y )
 -- int jobclass: the job class you wish to set up the Vessel as
@@ -63,13 +63,13 @@ Vessel::Vessel( int jobclass, Ability[3] abilityList, int x, int y )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel destructor
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: 
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: 
 --
 -- INTERFACE: Vessel::~Vessel( )
 --
@@ -88,7 +88,7 @@ Vessel::~Vessel()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: setPosition
 --
--- DATE: February 15, 2015
+-- DATE: February 27, 2015
 --
 -- REVISIONS: (Date and Description)
 --
@@ -113,13 +113,13 @@ void Vessel::setPosition( int x, int y )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetEXP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: 
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: 
 --
 -- INTERFACE: void Vessel::resetEXP()
 --
@@ -136,13 +136,13 @@ void Vessel::resetEXP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: increaseEXP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::increaseEXP( int exp )
 -- int exp: the amount of exp increase by
@@ -160,13 +160,13 @@ void Vessel::increaseEXP( int exp )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getEXP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getEXP()
 --
@@ -183,13 +183,13 @@ int Vessel::getEXP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getNextLevelEXP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getNextLevelEXP()
 --
@@ -211,13 +211,13 @@ int Vessel::getNextLevelEXP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getLevel
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getLevel()
 --
@@ -235,13 +235,13 @@ int Vessel::getLevel()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: increaseLevel
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::increaseLevel()
 --
@@ -261,13 +261,13 @@ void Vessel::increaseLevel()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetHP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: 
 --
 -- INTERFACE: void Vessel::resetHP()
 --
@@ -284,13 +284,13 @@ void Vessel::resetHP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: increaseHP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::increaseHP( int hp )
 -- int hp: the amount of HP to increase by
@@ -308,13 +308,13 @@ void Vessel::increaseHP( int hp )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: decreaseHP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::decreaseHP( int hp )
 -- int hp: the amount of HP to decrease by
@@ -331,13 +331,13 @@ void Vessel::decreaseHP( int hp )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getHP
 --
--- DATE: February 15, 2015
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getHP()
 --
@@ -353,13 +353,13 @@ int Vessel::getHP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getMaxHP
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: 
 --
 -- INTERFACE: int Vessel::getMaxHP()
 --
@@ -375,13 +375,13 @@ int Vessel::getMaxHP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetAttackPower
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: 
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: 
 --
 -- INTERFACE: void Vessel::resetAttackPower()
 --
@@ -397,13 +397,13 @@ void Vessel::resetAttackPower()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: attackPowerUp
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: 
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::attackPowerUp( int attackpower )
 -- int attackpower: the amount of attack power to increase by
@@ -420,13 +420,13 @@ void Vessel::attackPowerUp( int attackpower )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: attackPowerDown
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: 
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: 
 --
 -- INTERFACE: void Vessel::attackPowerDown( int attackpower )
 -- int attackpower: the amount of attack power to decrease by
@@ -443,13 +443,13 @@ void Vessel::attackPowerDown( int attackpower )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getAttackPower
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER: 
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: 
 --
 -- INTERFACE: int Vessel::getAttackPower()
 --
@@ -465,13 +465,13 @@ int Vessel::getAttackPower()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getDefaultAttackPower
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getDefaultAttackPower()
 --
@@ -487,13 +487,13 @@ int Vessel::getDefaultAttackPower()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetSpeed
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::resetSpeed()
 --
@@ -509,13 +509,13 @@ void Vessel::resetSpeed()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: speedUp
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::speedUp( int speed )
 -- int speed: the amount of speed to increase by
@@ -527,18 +527,19 @@ void Vessel::resetSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedUp( int speed )
 {
+	
 }
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: speedDown
 --
--- DATE: February 15, 2015
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::speedDown( int speed )
 -- int speed: the amount of speed to decrease by
@@ -550,18 +551,19 @@ void Vessel::speedUp( int speed )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedDown( int speed )
 {
+	
 }
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getSpeed
 --
--- DATE: February 15, 2015
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getSpeed()
 --
@@ -572,6 +574,7 @@ void Vessel::speedDown( int speed )
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getSpeed()
 {
+	
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -581,9 +584,9 @@ int Vessel::getSpeed()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getDefaultSpeed()
 --
@@ -594,18 +597,19 @@ int Vessel::getSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getDefaultSpeed()
 {
+	
 }
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: checkDeath
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: bool Vessel::checkDeath()
 --
@@ -616,18 +620,19 @@ int Vessel::getDefaultSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::checkDeath()
 {
+	
 }
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: die
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::die()
 --
@@ -638,6 +643,7 @@ bool Vessel::checkDeath()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::die()
 {
+	
 }
 
 
@@ -646,7 +652,7 @@ bool Vessel::die()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: move
 --
--- DATE: February 15, 2015
+-- DATE: February 27, 2015
 --
 -- REVISIONS: (Date and Description)
 --
@@ -672,26 +678,26 @@ void Vessel::move(sf::Event::KeyEvent keypress )
 {
 	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
 	
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'w'))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		moving = true;
 		this.setPosition( this.getXPosition(), this.getYPosition() - 1 );
 	}
 	
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'s'))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		moving = true;
 		this.setPosition( this.getXPosition(), this.getYPosition() + 1 );
 	}
 	
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'a'))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		moving = true;
 		direction = 0;	//signal to animate left facing sprite
 		this.setPosition( this.getXPosition() - 1 , this.getYPosition() );
 	}
 	
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::'d'))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		moving = true;
 		direction = 1; //signal to animate right facing sprite
@@ -703,13 +709,13 @@ void Vessel::move(sf::Event::KeyEvent keypress )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: normalAttack
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::normalAttack( int x, int y )
 -- int x, int y: the target position of the attack
@@ -728,13 +734,13 @@ void Vessel::normalAttack( int x, int y )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: useAbility
 --
--- DATE: February 15, 2015
+-- DATE: 
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER:
 --
 -- INTERFACE: void useAbility( int abilityNum, int x, int y )
 -- abilityNum: the position of the ability in the Vessel's ability array
