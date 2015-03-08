@@ -1,10 +1,18 @@
 #ifndef _RECEIVE_PROCESS_H_
 #define _RECEIVE_PROCESS_H_
 
-#include <map.h>
+#include <map>
+
+
+#define NETWORK_MESSAGE_SIZE 512
+//wasn't compiling because this was not defined.
+#define BUFLEN 512
+
 
 namespace Networking
 {
+	
+
 	struct Message;
 	class Session;
 
@@ -21,16 +29,17 @@ namespace Networking
 		ReceiveMessageType type;
 		int socket_id;
 		char data[NETWORK_MESSAGE_SIZE];
-	}
+	};
 
 	class ReceiveProcess
 	{
 		public:
 			ReceiveProcess();
 			~ReceiveProcess();
-			void addSession(int socket);
-			void removeSession(int socket);
+			void addSession(Session *session);
+			void removeSession(Session *session);
 			void onMessageReceived(int socket, Message *message);
+			void runProcess();
 			void closeProcess();
 		
 		private:
