@@ -1,3 +1,26 @@
+/*----------------------------------------------------------------------------------------------
+-- DATE: February 21, 2015
+--
+-- Source File: ReceiveProcess.cpp
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: 
+--
+-- PROGRAMMER: Alex Lam, Calvin Rempel, Jeff Bayntun, Manuel Gonzales
+--
+-- INTERFACE:
+-- ReceiveProcess();
+--	~ReceiveProcess();
+--	void addSession(Session *session);
+--	void removeSession(Session *session);
+--	void onMessageReceived(int socket, Message *message);
+--	void runProcess();
+--	void closeProcess();
+--
+--
+-- NOTES: This file provides definitions for a ReceiveProcess object.
+-----------------------------------------------------------------------------------------------*/
 #include "ReceiveProcess.h"
 
 #include <stdio.h>
@@ -20,7 +43,7 @@
 #include "Session.h"
 
 /*----------------------------------------------------------------------------------------------
--- FUNCTION:		Receive
+-- FUNCTION:		ReceiveProcess
 --
 -- DATE:			February 21, 2015
 --
@@ -30,7 +53,7 @@
 --
 -- PROGRAMMER:		Alex Lam
 --
--- INTERFACE:		Receive::Receive()
+-- INTERFACE:		Receive::ReceiveProcess()
 --
 -- RETURNS: 		void
 --
@@ -81,12 +104,11 @@ Networking::ReceiveProcess::ReceiveProcess()
 --
 -- PROGRAMMER:		Alex Lam
 --
--- INTERFACE:		void Receive::addSocket(int new_sd)
---	new_sd:			The new socket to be added
+-- INTERFACE:		void addSession(Session *session)
+--	new_sd:			pointer to session to add
 --
 -- RETURNS: 		void
 --
--- NOTES:			Takes the new socket and adds it to the receive process
 -----------------------------------------------------------------------------------------------*/
 void Networking::ReceiveProcess::addSession(Session *session)
 {
@@ -102,13 +124,30 @@ void Networking::ReceiveProcess::addSession(Session *session)
 	// Create Message to Send on Pipe
 	ReceiveMessage message;
 	message.type = ADD_SOCKET;
-	message.socket = new_sd;
+	message.socket_id = new_sd;
 	
 	// Inform child process of new Socket
 	write(p[1], &message, 1);
 }
 
-// COMMENT HEADER FOR removeSocket
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:		removeSession
+--
+-- DATE:			February 27, 2015
+--
+-- REVISIONS:		(Date and Description)
+--
+-- DESIGNER:		Alex Lam
+--
+-- PROGRAMMER:		Alex Lam, Jeff Bayntun
+--
+-- INTERFACE:		void removeSession(Session *session)
+--	session:		pointer to the session to remove
+--
+-- RETURNS: 		void
+--
+-- NOTES:			
+-----------------------------------------------------------------------------------------------*/
 void Networking::ReceiveProcess::removeSession(Session *session)
 {
 	unsigned int sd = session->getSocket();
@@ -121,7 +160,7 @@ void Networking::ReceiveProcess::removeSession(Session *session)
 	// Create Message to Send on Pipe
 	ReceiveMessage message;
 	message.type = REMOVE_SOCKET;
-	message.socket = sd;
+	message.socket_id = sd;
 	
 	// Inform child process of new Socket
 	write(p[1], &message, 1);
@@ -171,13 +210,13 @@ void Networking::ReceiveProcess::closeProcess()
 {
 	ReceiveMessage message;
 	message.type = SHUTDOWN;
-	message.socket = 0;
+	message.socket_id = 0;
 	
 	write(p[1], &message, sizeof(ReceiveMessage));
 }
 
 /*----------------------------------------------------------------------------------------------
--- FUNCTION:		ReceiveProcess
+-- FUNCTION:		runProcess
 --
 -- DATE:			February 27, 2015
 --
@@ -185,9 +224,9 @@ void Networking::ReceiveProcess::closeProcess()
 --
 -- DESIGNER:		Alex Lam
 --
--- PROGRAMMER:		Alex Lam
+-- PROGRAMMER:		Alex Lam, Jeff Bayntun
 --
--- INTERFACE:		void Receive::ReceiveProcess()
+-- INTERFACE:		void Receive::runProcess()
 --
 -- RETURNS: 		void
 --
@@ -196,13 +235,8 @@ void Networking::ReceiveProcess::closeProcess()
 					Then it monitors the pipe between this process and the main for any messages
 					and checks for any tcp data coming in.
 -----------------------------------------------------------------------------------------------*/
-void Networking::ReceiveProcess::ReceiveProcess()
+void Networking::ReceiveProcess::runProcess()
 {
-
-
-	//   **  	< -- CHANGE ALL ITERATION OVER clientList TO ITERATE OVER sockets MAP!!! -- > **
-
-
 	fd_set readfds;
 	int max_sd = 0;
 	int n;
@@ -212,18 +246,23 @@ void Networking::ReceiveProcess::ReceiveProcess()
 	char* bp;
 	int bytes_to_read;
 
+	using std::map;
+	using std::cerr;
+	using std::endl;
+	using std::cout;
+
 	while (1)
 	{
 		// DON'T THINK THIS TOP PART IS NEEDED ANYMORE...
 		FD_ZERO(&readfds);
 		FD_SET(p[0], &readfds);
 		max_sd = p[0];
-		for(vector<int>::iterator it = clientList.begin(); it != clientList.end(); ++it)
+		for(std::map<int, int>::iterator it = sockets.begin(); it != sockets.end(); ++it)
 		{
-			FD_SET(*it, &readfds);
-			if(*it > max_sd)
+			FD_SET(it->first, &readfds);
+			if(it->first > max_sd)
 			{
-				max_sd = *it;
+				max_sd = it->first;
 			}	
 		}
 		//
@@ -234,10 +273,10 @@ void Networking::ReceiveProcess::ReceiveProcess()
 		// If an error occurred, close all sockets and exit the process
 		if(activity == -1)
 		{
-			vector<int>::iterator it;
-			for (it = clientList.begin(); it != clientList.end(); ++it)
+			map<int,int>::iterator it;
+			for (it = sockets.begin(); it != sockets.end(); ++it)
 			{
-				close(*it);
+				close(it->first);
 			}
 			
 			// Print the error
@@ -249,17 +288,21 @@ void Networking::ReceiveProcess::ReceiveProcess()
 		cout << "Number of activity detected: " << activity << endl;
 		if (FD_ISSET(p[0], &readfds))//If it is the PIPE that has activity
 		{
-			int parent_messages;
-			read(p[0], &parent_messages, MSGSIZE);
+			char temp_message[NETWORK_MESSAGE_SIZE];
+			ReceiveMessage* parent_messages;
+
+			read(p[0], temp_message, NETWORK_MESSAGE_SIZE);
+			parent_messages = (ReceiveMessage*)temp_message;
+
 			
 			// Shutdown the Process
-			if(parent_messages == ReceiveMessageType::SHUTDOWN)
+			if(parent_messages->type == ReceiveMessageType::SHUTDOWN)
 			{
 				// < -- CLOSE SOCKET HANDLES HERE! -- >
 				exit(0);
 			}
 			// Add a Socket From the Parent Process
-			else if (parent_messages == ReceiveMessageType::ADD_SOCKET)
+			else if (parent_messages->type == ReceiveMessageType::ADD_SOCKET)
 			{
 				int new_socket;
 				cout << "Check for new connections" << endl;
@@ -269,7 +312,7 @@ void Networking::ReceiveProcess::ReceiveProcess()
 				FD_SET(new_socket, &readfds); //Sets socket for 'select' monitor
 				
 				// Add socket to map where socket id on original process is used as the key
-				sockets.insert(std::pair<int, int>(parent_messages.socket_id, new_socket));
+				sockets.insert(std::pair<int, int>(parent_messages->socket_id, new_socket));
 
 				if(new_socket > max_sd)
 				{
@@ -278,26 +321,26 @@ void Networking::ReceiveProcess::ReceiveProcess()
 			}
 			
 			// Remove a specified Socket from the fd_set
-			else if (parent_messages == ReceiveMessageType::REMOVE_SOCKET)
+			else if (parent_messages->type == ReceiveMessageType::REMOVE_SOCKET)
 			{
-				int socket_id = sockets[parent_messages.socket_id];
+				int socket_id = sockets[parent_messages->socket_id];
 				FD_CLR(socket_id, &readfds);
 				close(socket_id);
-				sockets.erase(parent_messages.socket_id);
+				sockets.erase(parent_messages->socket_id);
 			}
 		}
 		
 		// Check all clients to see if they have data available
-		for(vector<int>::iterator it = clientList.begin(); it != clientList.end(); ++it)
+		for(map<int, int>::iterator it = sockets.begin(); it != sockets.end(); ++it)
 		{
-			if (FD_ISSET(*it, &readfds))
+			if (FD_ISSET(it->first, &readfds))
 			{
 				//Read tcp data
 				bp = buf;
 				bytes_to_read = BUFLEN;
 				n = 0;
 				
-				while ((n = recv (*it, bp, bytes_to_read, 0)) < BUFLEN)
+				while ((n = recv (it->first, bp, bytes_to_read, 0)) < BUFLEN)
 				{
 					bp += n;
 					bytes_to_read -= n;
@@ -305,7 +348,7 @@ void Networking::ReceiveProcess::ReceiveProcess()
 				
 				// < -- SEND MESSAGE BACK TO MAIN PROCESS HERE -- >
 				ReceiveMessage message;
-				message.type = MESSAGE_RECEIVED;
+				message.type = MESSAGE_AVAILABLE;
 				message.socket_id = 
 				printf ("Received: %s\n", buf);
 				fflush(stdout);
