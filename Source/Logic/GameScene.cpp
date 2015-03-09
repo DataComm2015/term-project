@@ -10,7 +10,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 {
 	// Create the cell map
 	cMap = new Map(25, 25);
-	//waterMap = new Map(20, 20);
 
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
@@ -36,22 +35,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 		cerr << "Invalid map dimensions." << endl;
 	}
 
-	/*
-	// Set the water map tiles
-	for (int i = 0; i < waterMap->getHeight(); i++)
-	{
-		for (int j = 0; j < waterMap->getWidth(); i++)
-		{
-			Cell *tempCell = new Cell();
-			tempCell->setTileId(31);
-
-			waterMap->setCell(j, i, tempCell);
-		}
-	}
-
-	//watermap = Manager::TileManager::load("Logic/Environment/map.tset");
-	waterMap->setTexture(tilemap);
-	*/
+	generateWater();
 
 	// Set the active view
 	AppWindow& window = AppWindow::getInstance();
@@ -70,7 +54,6 @@ GameScene::~GameScene()
 		}
 	}
 
-	/*
 	for (int i = 0; i < waterMap->getHeight(); i++)
 	{
 		for (int j = 0; j < waterMap->getWidth(); j++)
@@ -78,10 +61,9 @@ GameScene::~GameScene()
 			delete waterMap->getCell(j, i);
 		}
 	}
-	*/
 
 	delete cMap;
-	//delete waterMap;
+	delete waterMap;
 }
 
 void GameScene::update(sf::Time)
@@ -160,10 +142,41 @@ void GameScene::draw()
 	renderer.begin();
 
 	// Draw the tile map
-	//renderer.draw(*waterMap);
+	renderer.draw(*waterMap);
 	renderer.draw(*cMap);
 
 	renderer.end();
 	
 	window.display();
+}
+
+
+void GameScene::generateWater()
+{
+	// Create the water map
+	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
+
+	// Set the water map tiles
+	int randomWater;
+	vector<CellTile> waterTiles({WATER_1, WATER_2});
+
+	for (int i = 0; i < waterMap->getHeight(); i++)
+	{
+		for (int j = 0; j < waterMap->getWidth(); j++)
+		{
+			Cell *tempCell = new Cell();
+
+			randomWater = rand() % 2;
+
+			tempCell->setTileId(waterTiles[randomWater]);
+
+			waterMap->setCell(j, i, tempCell);
+		}
+	}
+
+	// Set the water map texture
+	waterMap->setTexture(tilemap);
+
+	// Re-adjust the water map location
+
 }
