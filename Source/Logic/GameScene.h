@@ -13,8 +13,13 @@
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
 
+
+/* The water buffer around the island */
+#define WATER_BUFFER 10
+
+
 /*
-* Testing Game Scene
+*	This is the In-game Scene where all round-events occur.
 */
 class GameScene : public Scene
 {
@@ -24,16 +29,17 @@ class GameScene : public Scene
 		virtual void processEvents(sf::Event&);
 		virtual void draw();
 		~GameScene();
+
+		void generateWater();
 	private:
 		Marx::Map *cMap;
-		//Marx::Map *waterMap;
+		Marx::Map *waterMap;
 		GameMap *gMap;
 
     	Renderer renderer;
     	sf::View viewMain;
 
     	id_resource tilemap;
-    	//id_resource watermap;
 };
 
 #endif
