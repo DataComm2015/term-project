@@ -58,7 +58,7 @@ public:
         background().setTexture(Manager::TextureManager::get(texture_1));
 
         // might want to have another resource manager for fonts...
-        font.loadFromFile("Multimedia/Assets/Font/Wingdings.ttf");
+        font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
 
         // configure the text
         welcomeText().setFont(font);
