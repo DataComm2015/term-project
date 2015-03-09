@@ -3,7 +3,7 @@
 /* Default constructor */
 Cell::Cell()
 {
-	type = GRASS;
+	type = G;
 }
 
 
@@ -19,15 +19,15 @@ char Cell::operator()()
 {
 	switch(type)
 	{
-		case GRASS:
-			return 'G';
+		case G:
+			return '.';
 			break;
 
-		case STONE:
-			return 'S';
+		case S:
+			return '*';
 			break;
 
-		case ARBITER:
+		case A:
 			return 'A';
 			break;
 	}
