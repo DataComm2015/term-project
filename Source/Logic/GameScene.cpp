@@ -9,7 +9,7 @@ using namespace Marx;
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 {
 	// Create the cell map
-	cMap = new Map(18, 18);
+	cMap = new Map(25, 25);
 	//waterMap = new Map(20, 20);
 
 	for (int i = 0; i < cMap->getHeight(); i++)
