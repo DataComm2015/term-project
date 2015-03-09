@@ -17,6 +17,8 @@
 /* The water buffer around the island */
 #define WATER_BUFFER 10
 
+/* Amount to add to wave phase per frame */
+#define WAVE_PHASE_CHANGE 0.001
 
 /*
 *	This is the In-game Scene where all round-events occur.
@@ -40,6 +42,9 @@ class GameScene : public Scene
     	sf::View viewMain;
 
     	id_resource tilemap;
+    	
+    	sf::Shader waveShader;
+    	float phase;
 };
 
 #endif

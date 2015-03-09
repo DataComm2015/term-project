@@ -133,6 +133,9 @@ void GameScene::processEvents(sf::Event& e)
 
 void GameScene::draw()
 {
+	// Increment the wave phase
+	phase += WAVE_PHASE_CHANGE;
+	
 	AppWindow& window = AppWindow::getInstance();
 	
 	window.clear();
@@ -141,8 +144,10 @@ void GameScene::draw()
 
 	renderer.begin();
 
+	waveShader.setParameter("wave_phase", phase);
+
 	// Draw the tile map
-	renderer.draw(*waterMap);
+	renderer.draw(*waterMap, &waveShader);
 	renderer.draw(*cMap);
 
 	renderer.end();
@@ -153,6 +158,12 @@ void GameScene::draw()
 
 void GameScene::generateWater()
 {
+	// Setup the wave shader
+	phase = 0.0;
+	waveShader.loadFromFile("Multimedia/Assets/Shaders/wave.vert", sf::Shader::Vertex);
+	waveShader.setParameter("wave_amplitude", sf::Vector2f(5.0, 5.0));
+	waveShader.setParameter("wave_phase", phase);
+
 	// Create the water map
 	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
 
