@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 
 using std::max;
 using std::vector;
@@ -157,6 +158,7 @@ bool GameMap::createBlockMap()
 	// Calculate the dimensions in block units
 	bWidth = width / BLOCK_WIDTH;
 	bHeight = height / BLOCK_HEIGHT;
+
 
 	// If the width or height is not evenly divisible by the block size
 	if (width % BLOCK_WIDTH != 0 || height % BLOCK_HEIGHT != 0)
@@ -572,6 +574,7 @@ BlockType GameMap::makeBlockType(BlockZone z, int rRoll)
 ******************************************************************************/
 void GameMap::generateTiles()
 {
+	// Base tiles
 	for (int i = 0; i < bHeight; i++)
 	{
 		for (int j = 0; j < bWidth; j++)
@@ -580,18 +583,171 @@ void GameMap::generateTiles()
 
 			if (zone == GRASS)
 			{
-				blockMap[i][j].setTile(8);
+				blockMap[i][j].setTile(GRASS_1);
 			}
 			else if (zone == STONE)
 			{
-				blockMap[i][j].setTile(9);
+				blockMap[i][j].setTile(STONE_1);
 			}
 			else
 			{
-				blockMap[i][j].setTile(10);
+				blockMap[i][j].setTile(ARBITER_1);
 			}
 		}
 	}
+
+
+	// Decoration
+	vector<CellTile> grassDecos({GRASS_D1, GRASS_D2, GRASS_D3, GRASS_D4, GRASS_D5, GRASS_D6});
+	vector<CellTile> stoneDecos({STONE_D1, STONE_D2, STONE_D3});
+	vector<CellTile> arbiterDecos({ARBITER_D1, ARBITER_D2, ARBITER_D3});
+	
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			BlockZone zone = blockMap[i][j].getZone();
+
+			if (zone == GRASS)
+			{
+				blockMap[i][j].setDeco(&grassDecos);
+			}
+			else if (zone == STONE)
+			{
+				blockMap[i][j].setDeco(&stoneDecos);
+			}
+			else
+			{
+				blockMap[i][j].setDeco(&arbiterDecos);
+			}
+		}
+	}
+
+
+	// Grass edge tiles
+	for (int i = 0; i < width; i++)
+	{
+		int offset = rand() % 4;
+		cellMap->getCell(i, 0)->setTileId(GRASS_T1 + offset);
+	}
+
+	for (int i = 0; i < width; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(i, height - 1)->setTileId(GRASS_C1 + offset);
+	}
+
+	for (int i = 0; i < height; i++)
+	{
+		int offset = rand() % 3;
+		cellMap->getCell(0, i)->setTileId(GRASS_L1 + (offset * 6));
+	}
+
+	for (int i = 0; i < height; i++)
+	{
+		int offset = rand() % 3;
+		cellMap->getCell(width - 1, i)->setTileId(GRASS_R1 + (offset * 6));
+	}
+
+
+	// Stone edge tiles
+	int stoneStartX = (width - stoneWidth * BLOCK_WIDTH) / 2;
+	int stoneStartY = (height - stoneHeight * BLOCK_HEIGHT) / 2;
+
+	for (int i = 0; i < stoneWidth * BLOCK_WIDTH; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(stoneStartX + i, stoneStartY)->setTileId(STONE_T1 + offset);
+	}
+
+	for (int i = 0; i < stoneWidth * BLOCK_WIDTH; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(stoneStartX + i, stoneStartY + (stoneHeight * BLOCK_HEIGHT) - 1)->setTileId(STONE_B1 + offset);
+	}
+
+	for (int i = 0; i < stoneHeight * BLOCK_HEIGHT; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(stoneStartX, stoneStartY + i)->setTileId(STONE_L1 + (offset * 4));
+	}
+
+	for (int i = 0; i < stoneHeight * BLOCK_HEIGHT; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(stoneStartX + (stoneWidth * BLOCK_WIDTH) - 1, stoneStartY + i)->setTileId(STONE_R1 + (offset * 4));
+	}
+
+
+	// Arbiter edge tiles
+	int arbStartX = floor(width / 2) - floor(BLOCK_WIDTH / 2);
+	int arbStartY = floor(height / 2) - floor(BLOCK_HEIGHT / 2);
+
+	for (int i = 0; i < BLOCK_WIDTH; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(arbStartX + i, arbStartY)->setTileId(ARBITER_T1 + offset);
+	}
+
+	for (int i = 0; i < BLOCK_WIDTH; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(arbStartX + i, arbStartY + BLOCK_HEIGHT - 1)->setTileId(ARBITER_B1 + offset);
+	}
+
+	for (int i = 0; i < BLOCK_HEIGHT; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(arbStartX, arbStartY + i)->setTileId(ARBITER_L1 + (offset * 4));
+	}
+
+	for (int i = 0; i < BLOCK_HEIGHT; i++)
+	{
+		int offset = rand() % 2;
+		cellMap->getCell(arbStartX + BLOCK_WIDTH - 1, arbStartY + i)->setTileId(ARBITER_R1 + (offset * 4));
+	}
+
+
+	// Grass Corner Tiles
+	cellMap->getCell(0, 0)->setTileId(GRASS_TL);
+	cellMap->getCell(width - 1, 0)->setTileId(GRASS_TR);
+	cellMap->getCell(0, height - 1)->setTileId(GRASS_BL);
+	cellMap->getCell(width - 1, height - 1)->setTileId(GRASS_BR);
+
+
+	// Stone Corner Tiles
+	cellMap->getCell(stoneStartX, stoneStartY)->setTileId(STONE_TL);
+	cellMap->getCell(stoneStartX + (stoneWidth * BLOCK_WIDTH) - 1, stoneStartY)->setTileId(STONE_TR);
+	cellMap->getCell(stoneStartX, stoneStartY + (stoneHeight * BLOCK_HEIGHT) - 1)->setTileId(STONE_BL);
+	cellMap->getCell(stoneStartX + (stoneWidth * BLOCK_WIDTH) - 1, stoneStartY + (stoneHeight * BLOCK_HEIGHT) - 1)->setTileId(STONE_BR);
+
+
+	// Arbiter Corner Tiles
+	cellMap->getCell(arbStartX, arbStartY)->setTileId(ARBITER_TL);
+	cellMap->getCell(arbStartX + (BLOCK_WIDTH) - 1, arbStartY)->setTileId(ARBITER_TR);
+	cellMap->getCell(arbStartX, arbStartY + (BLOCK_HEIGHT) - 1)->setTileId(ARBITER_BL);
+	cellMap->getCell(arbStartX + (BLOCK_WIDTH) - 1, arbStartY + (BLOCK_HEIGHT) - 1)->setTileId(ARBITER_BR);
+
+
+	// Cliff edges
+	cellMap->getCell(1, height - 1)->setTileId(GRASS_CL);
+	cellMap->getCell(width - 2, height - 1)->setTileId(GRASS_CR);
+
+
+	// Cliff Water Edge Tiles	
+	// for (int i = 0; i < width; i++)
+	// {
+	// 	int offset = rand() % 2;
+	// 	cellMap->getCell(i, height - 1)->setTileId(WATER_C1 + offset);
+	// }
+
+
+	// Cliff Water Corner Tiles
+	// cellMap->getCell(0, height - 1)->setTileId(NO_TILE);
+	// cellMap->getCell(width - 1, height - 1)->setTileId(NO_TILE);
+
+	// cellMap->getCell(1, height - 1)->setTileId(WATER_CL);
+	// cellMap->getCell(width - 2, height - 1)->setTileId(WATER_CR);
 }
 
 
