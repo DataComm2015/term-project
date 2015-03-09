@@ -131,6 +131,46 @@ void Block::setTile(tile_id id)
 }
 
 
+void Block::setDeco(vector<CellTile> *tiles)
+{
+	int decoChance;
+	int randomDeco;
+
+	for (int i = 0; i < (int) cellMap->size(); i++)
+	{
+			Cell *cell = cellMap->at(i);
+			
+			if (zone == GRASS)
+			{
+				decoChance = rand() % 100;
+				if (decoChance <= GRASS_DECO_CHANCE)
+				{
+					randomDeco = rand() % tiles->size();
+					cell->setTileId(tiles->at(randomDeco));
+				}
+			}
+			else if (zone == STONE)
+			{
+				decoChance = rand() % 100;
+				if (decoChance <= STONE_DECO_CHANCE)
+				{
+					randomDeco = rand() % tiles->size();
+					cell->setTileId(tiles->at(randomDeco));
+				}
+			}
+			else
+			{
+				decoChance = rand() % 100;
+				if (decoChance <= ARBITER_DECO_CHANCE)
+				{
+					randomDeco = rand() % tiles->size();
+					cell->setTileId(tiles->at(randomDeco));
+				}
+			}
+	}
+}
+
+
 /******************************************************************************
 *	FUNCTION: getType
 *
