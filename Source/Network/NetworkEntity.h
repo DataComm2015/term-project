@@ -4,10 +4,11 @@
 #include <set>
 
 #include "Message.h"
-#include "Session.h"
 
 namespace Networking
 {
+	class Session;
+
     class NetworkEntity
     {
     public:

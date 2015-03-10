@@ -12,6 +12,7 @@ namespace Networking
          * constructs a new {Client}.
          */
         Client();
+        ~Client();
         /**
          * attempts to connect the client to a server using parameters
          *
@@ -20,15 +21,19 @@ namespace Networking
          *
          * @return integer indicating the outcome of the operation
          */
-        int connect(long address, short port);
+        int connect(unsigned long address, short port);
         /**
          * function to be overriden by children
          *
          * @param  session
          */
-        void onConnect(Session* session) = 0;
+        virtual void onConnect(Session* session) = 0;
 
     private:
+        Session                  * session;
+        ReceiveProcess           * readProcess;
+        SendProcess              * sendProcess;
+        NetworkEntityMultiplexer * entityMux;
 
     };
 }
