@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "../Multimedia/manager/ResourceManager.h"
 
+typedef unsigned int id_resource;
+
 /**
  * Texture Manager.
  * 
@@ -32,11 +34,11 @@ namespace Manager
             /**
             * Static versions of the Resource Manager functions.
             */
-            static id_resource store(sf::Texture* r) { return rm.store(r); }
-            static void store(sf::Texture* r, id_resource id) { return rm.store(r, id, true); }
-            static sf::Texture* get(id_resource id) { return rm.get(id); }
-            static sf::Texture* remove(id_resource id) { return rm.remove(id); }
-            static unsigned int clear() { return rm.clear(true); }
+            static id_resource store(sf::Texture* r);
+            static void store(sf::Texture* r, id_resource id);
+            static sf::Texture* get(id_resource id);
+            static sf::Texture* remove(id_resource id);
+            static unsigned int clear();
             
         private:
             static ResourceManager<sf::Texture*> rm;

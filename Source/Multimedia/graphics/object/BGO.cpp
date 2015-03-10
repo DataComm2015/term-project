@@ -109,7 +109,7 @@ BGO* BGO::getParent() const
 void BGO::add(BGO& gO)
 {
 	if (gO.m_id == m_id) {
-		throw std::exception("Are you crazy!? You just tried to add a graphic object to itself!");
+		throw std::string("Are you crazy!? You just tried to add a graphic object to itself!");
 	}
 	else {
 		if (gO.m_parent) gO.m_parent->rem(gO);

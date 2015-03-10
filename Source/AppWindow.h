@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Engine/Scene.h"
-#include "Engine/EG_Scene.h"
+#include "Logic/GameScene.h"
 
 
 namespace Marx
@@ -19,22 +19,15 @@ namespace Marx
 	class AppWindow : public sf::RenderWindow
 	{
 		public:
+			static AppWindow& getInstance();
 			void run();
 			int	addScene(Scene * scene);
 			void removeScene(int index);
-			AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
-			{
-				Scene *s = new Scene;
-				EG_Scene *s2 = new EG_Scene;
-				scene.emplace_back(s);
-				scene.emplace_back(s2);
-				timePerFrame = sf::milliseconds(60);
-			};
-		
 		private:
+			AppWindow();
 			std::vector<Scene*> scene;
 			bool isRunning = false;
-			sf::Time nextUpdate, timePerFrame;
+			sf::Time m_elapsedTime, m_timePerFrame, m_timeSinceLastUpdate;
 	};
 
 }
