@@ -5,7 +5,7 @@
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: 
+-- DESIGNER:
 --
 -- PROGRAMMER: Alex Lam, Calvin Rempel, Jeff Bayntun, Manuel Gonzales
 --
@@ -41,6 +41,41 @@
 
 #include "ancillary.h"
 #include "Session.h"
+#include <signal.h>
+
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:		sig_handler
+--
+-- DATE:			February 21, 2015
+--
+-- REVISIONS:		(Date and Description)
+--
+-- DESIGNER:		Alex Lam
+--
+-- PROGRAMMER:		Alex Lam
+--
+-- INTERFACE:		void sig_handler()
+--
+-- RETURNS: 		void
+--
+-- NOTES:			calls onMessageReceived after the receive process signals the main process
+
+							this will need the process -> game pipe
+							//int p2[2];
+
+-----------------------------------------------------------------------------------------------*/
+
+void sig_handler(int signum)
+{
+	int socket;
+	int messagelength;
+	Message* message;
+	read(p2[0], socket, sizeof(int));
+	read(p2[0], messagelength, sizeof(int));
+	read(p2[0], &message, messagelength);
+
+	onMessageReceived(socket, message);
+}
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:		ReceiveProcess
@@ -61,23 +96,32 @@
 					creating the socket for file descriptors to be shared between processes,
 					creates child process
 -----------------------------------------------------------------------------------------------*/
-Networking::ReceiveProcess::ReceiveProcess()
+Networking::ReceiveProcess::ReceiveProcess(int gamePipe[2])
 {
+	signal(SIGUSR1, sig_handler);
+
+	p2 = gamePipe;
+
+	if (pipe(gamePipe) < 0)
+	{
+		perror("pipe call");
+	}
+
 	/*-- Open the pipe ----*/
 	if (pipe(p) < 0)
 	{
 		perror("pipe call");
 	}
 
-    if(socketpair(PF_UNIX, SOCK_STREAM, 0, ipcsock))
-    {
-		perror("socketpair");
-    }
-    else
-    {
+  if(socketpair(PF_UNIX, SOCK_STREAM, 0, ipcsock))
+  {
+	perror("socketpair");
+  }
+  else
+  {
 		//Create process
 		pid = fork();
-		if (pid == -1) 
+		if (pid == -1)
 		{
 			perror("Fork Failed!");
 		}
@@ -90,7 +134,7 @@ Networking::ReceiveProcess::ReceiveProcess()
 		{
 			close(ipcsock[1]);
 		}
-    }
+  }
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -120,12 +164,12 @@ void Networking::ReceiveProcess::addSession(Session *session)
 
 	// Transfer Socket
 	ancil_send_fd(ipcsock[0], new_sd);
-	
+
 	// Create Message to Send on Pipe
 	ReceiveMessage message;
 	message.type = ADD_SOCKET;
 	message.socket_id = new_sd;
-	
+
 	// Inform child process of new Socket
 	write(p[1], &message, 1);
 }
@@ -146,7 +190,7 @@ void Networking::ReceiveProcess::addSession(Session *session)
 --
 -- RETURNS: 		void
 --
--- NOTES:			
+-- NOTES:
 -----------------------------------------------------------------------------------------------*/
 void Networking::ReceiveProcess::removeSession(Session *session)
 {
@@ -156,12 +200,12 @@ void Networking::ReceiveProcess::removeSession(Session *session)
 	sessions.erase(sd);
 	sockets.erase(sd);
 	close(sd);
-	
+
 	// Create Message to Send on Pipe
 	ReceiveMessage message;
 	message.type = REMOVE_SOCKET;
 	message.socket_id = sd;
-	
+
 	// Inform child process of new Socket
 	write(p[1], &message, 1);
 }
@@ -211,7 +255,7 @@ void Networking::ReceiveProcess::closeProcess()
 	ReceiveMessage message;
 	message.type = SHUTDOWN;
 	message.socket_id = 0;
-	
+
 	write(p[1], &message, sizeof(ReceiveMessage));
 }
 
@@ -263,13 +307,13 @@ void Networking::ReceiveProcess::runProcess()
 			if(it->first > max_sd)
 			{
 				max_sd = it->first;
-			}	
+			}
 		}
 		//
 
 		// Block the Process until one of the sockets (or the pipe) has data to read
 		activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
-		
+
 		// If an error occurred, close all sockets and exit the process
 		if(activity == -1)
 		{
@@ -278,7 +322,7 @@ void Networking::ReceiveProcess::runProcess()
 			{
 				close(it->first);
 			}
-			
+
 			// Print the error
 			cerr << errno << endl;
 			exit(1);
@@ -294,7 +338,7 @@ void Networking::ReceiveProcess::runProcess()
 			read(p[0], temp_message, NETWORK_MESSAGE_SIZE);
 			parent_messages = (ReceiveMessage*)temp_message;
 
-			
+
 			// Shutdown the Process
 			if(parent_messages->type == ReceiveMessageType::SHUTDOWN)
 			{
@@ -310,7 +354,7 @@ void Networking::ReceiveProcess::runProcess()
 				cout << "New connection on socket: " << new_socket << endl;
 
 				FD_SET(new_socket, &readfds); //Sets socket for 'select' monitor
-				
+
 				// Add socket to map where socket id on original process is used as the key
 				sockets.insert(std::pair<int, int>(parent_messages->socket_id, new_socket));
 
@@ -319,7 +363,7 @@ void Networking::ReceiveProcess::runProcess()
 					max_sd = new_socket;
 				}
 			}
-			
+
 			// Remove a specified Socket from the fd_set
 			else if (parent_messages->type == ReceiveMessageType::REMOVE_SOCKET)
 			{
@@ -329,7 +373,7 @@ void Networking::ReceiveProcess::runProcess()
 				sockets.erase(parent_messages->socket_id);
 			}
 		}
-		
+
 		// Check all clients to see if they have data available
 		for(map<int, int>::iterator it = sockets.begin(); it != sockets.end(); ++it)
 		{
@@ -339,17 +383,23 @@ void Networking::ReceiveProcess::runProcess()
 				bp = buf;
 				bytes_to_read = BUFLEN;
 				n = 0;
-				
+
 				while ((n = recv (it->first, bp, bytes_to_read, 0)) < BUFLEN)
 				{
 					bp += n;
 					bytes_to_read -= n;
 				}
-				
+
 				// < -- SEND MESSAGE BACK TO MAIN PROCESS HERE -- >
+				write(p2[1], it->first, sizeof(int));
+				int messageReadLength = sizeof(buf);
+				write(p2[1], messageReadLength, sizeof(int));
+				write(p2[1], buf, messageReadLength);
+				signal(SIGUSR1, sig_handler);
+
 				ReceiveMessage message;
 				message.type = MESSAGE_AVAILABLE;
-				message.socket_id = 
+				message.socket_id =
 				printf ("Received: %s\n", buf);
 				fflush(stdout);
 			}
