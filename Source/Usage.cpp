@@ -43,115 +43,110 @@
 class StartScreen : public Marx::Scene
 {
 public:
-	// Constructors should be used to initialize things only once on scene creation
-	StartScreen() : Scene()
-		, renderer(AppWindow::getInstance(), 4242)
-	{
-		// Load and store calls to a resource manager should be done only once, but for demonstration purposes..
-		texture_1 = Manager::TextureManager::store(
-			Manager::TextureManager::load("Multimedia/Assets/Art/Misc/placeholder.png")
-			);
+    // Constructors should be used to initialize things only once on scene creation
+    StartScreen() : Scene()
+        , renderer(AppWindow::getInstance(), 4242)
+    {
+        // Load and store calls to a resource manager should be done only once, but for demonstration purposes..
+        texture_1 = Manager::TextureManager::store(
+            Manager::TextureManager::load("Multimedia/Assets/Art/Misc/placeholder.png")
+            );
 
-		// configure the sprite
-		background().setTexture(*Manager::TextureManager::get(texture_1));
+        // configure the sprite
+        background().setTexture(*Manager::TextureManager::get(texture_1));
 
-		// might want to have another resource manager for fonts...
-		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
+        // might want to have another resource manager for fonts...
+        font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
 
-		// configure the text
-		welcomeText().setFont(font);
-		welcomeText().setCharacterSize(30);
-		welcomeText().setString("Welcome to Spectre");
-	}
+        // configure the text
+        welcomeText().setFont(font);
+        welcomeText().setCharacterSize(30);
+        welcomeText().setString("Welcome to Spectre");
+    }
 
-	// Destructors are... obvious
-	~StartScreen()
-	{}
+    // Destructors are... obvious
+    ~StartScreen()
+    {}
 
-	// onload's should be used to reinitialize/reset stuff when the scene is loaded or REloaded
-	void onLoad() override
-	{
+    // onload's should be used to reinitialize/reset stuff when the scene is loaded or REloaded
+    void onLoad() override
+    {
 		view_hud = view_main = AppWindow::getInstance().getCurrentView();
-	}
+    }
 
-	// unload's should be used to stop/kill/terminate stuff when the scene leaves, like stopping a playing music.
-	void unLoad() override
-	{
-		// not really useful right now so we don't have to override this
-	}
+    // unload's should be used to stop/kill/terminate stuff when the scene leaves, like stopping a playing music.
+    void unLoad() override
+    {
+        // not really useful right now so we don't have to override this
+    }
 
-	// Hey look! It's the WndProc of SFML!!
-	void processEvents(sf::Event& event) override
-	{
-		// YESS so many switch case statements!!
-		switch (event.type)
-		{
-		case sf::Event::KeyReleased:
-			switch (event.key.code)
-			{
-			case sf::Keyboard::Escape:
-				// TODO Can't suicide yet...
-				// getWindow().removeScene(this->getID()); // SUICIDE
+    // Hey look! It's the WndProc of SFML!!
+    void processEvents(sf::Event& event) override
+    {
+        // YESS so many switch case statements!!
+        switch (event.type)
+        {
+            case sf::Event::KeyReleased:
+            switch (event.key.code)
+            {
+                case sf::Keyboard::Escape:
+					// TODO Can't suicide yet...
+                    // getWindow().removeScene(this->getID()); // SUICIDE
+                    break;
+            }
+            break;
+			case sf::Event::Closed:
+				AppWindow::getInstance().close();
 				break;
-			}
-			break;
+        }
+    }
 
-		case sf::Event::Closed:
-			AppWindow::getInstance().close();
-			break;
+    // Update callback, do logical stuff here
+    void update(sf::Time t) override
+    {
+        // slowly slides the main view to the right, ooohhh
+        // which effects everything drawn when the AppWindow's view is set to view_main
+        view_main.move(1, 0);
+    }
 
-		case sf::Event::Resized:
-			view_hud = view_main = AppWindow::getInstance().getCurrentView();
-			break;
-		}
-	}
+    // Render callback, render stuff here
+    void draw() override
+    {
+        AppWindow::getInstance().clear(); // necessary at top
 
-	// Update callback, do logical stuff here
-	void update(sf::Time t) override
-	{
-		// slowly slides the main view to the left, ooohhh
-		// which effects everything drawn when the AppWindow's view is set to view_main
-		view_main.move(-1, 0);
-	}
-
-	// Render callback, render stuff here
-	void draw() override
-	{
-		AppWindow::getInstance().clear(); // necessary at top
-
-		renderer.resetStats(); // necessary before rendering unless you don't care about the stats
+        renderer.resetStats(); // necessary before rendering unless you don't care about the stats
 
 		AppWindow::getInstance().setView(view_main); // change view to view_main for stuff like: entities, players, map, world...
 
-		renderer.begin(); // always begin before rendering anything
+        renderer.begin(); // always begin before rendering anything
 
-		renderer.states.blendMode = sf::BlendAdd; // pointless in this case, but useful in others
+        renderer.states.blendMode = sf::BlendAdd; // pointless in this case, but useful in others
 
-		renderer.draw(background);
+        renderer.draw(background);
 
-		renderer.end(); // always end when you're done rendering or want to start fresh again
+        renderer.end(); // always end when you're done rendering or want to start fresh again
 
 		AppWindow::getInstance().setView(view_hud); // change view to view_hud for HUD stuff
 
-		renderer.begin();
+        renderer.begin();
 
-		renderer.draw(welcomeText);
+        renderer.draw(welcomeText);
 
-		renderer.end();
+        renderer.end();
 
 		AppWindow::getInstance().display(); // necessary at bottom
-	}
+    }
 
 private:
-	sf::View view_hud, view_main;
+    sf::View view_hud, view_main;
 
-	Renderer renderer;
+    Renderer renderer;
 
-	id_resource texture_1;
-	SGO background;
+    id_resource texture_1;
+    SGO background;
 
-	sf::Font font;
-	TGO welcomeText;
+    sf::Font font;
+    TGO welcomeText;
 };
 
 //> In the main file
@@ -166,5 +161,5 @@ int main()
 
 	AppWindow::getInstance().run();
 
-	return 0;
+    return 0;
 }
