@@ -121,8 +121,13 @@ public:
 	// Update callback, do logical stuff here
 	void update(sf::Time t) override
 	{
+		/* This code moves the background but keeps the vessel centered */
 		view_main.move(v->getXSpeed(), v->getYSpeed());
-		sgo().setPosition(view_main.getCenter());
+		sgo().setPosition(view_main.getCenter()); //*/
+		
+		/* This code moves the vessel around but keeps the screen centered
+		sgo().setPosition(v->getXPosition(), v->getYPosition());
+		//*/
 	}
 
 	// Render callback, render stuff here
