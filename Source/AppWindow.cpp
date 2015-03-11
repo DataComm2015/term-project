@@ -5,7 +5,7 @@ using namespace Marx;
 AppWindow& AppWindow::getInstance()
 {
 	static AppWindow app;
-	
+
 	return app;
 }
 
@@ -53,18 +53,20 @@ sf::View AppWindow::getCurrentView() const
 *
 *	PARAMETERS:
 *		scene	- scene to be added to the appwindow
-*				
+*
 *
 *	RETURNS:
 *		void
 *
 *	NOTES:
-*		Adds a scene to the app 
+*		Adds a scene to the app
 *
 ******************************************************************************/
 int AppWindow::addScene(Scene *scene)
 {
 	this->scene.emplace_back(scene);
+
+	this->scene.back()->onLoad();
 
 	return 0;
 }
@@ -90,7 +92,7 @@ int AppWindow::addScene(Scene *scene)
 *		index	- index of the scene to be removed
 *
 *	RETURNS:
-*		void 
+*		void
 *
 *	NOTES:
 *		Removes a scene from the scenes vector in the app window
@@ -98,7 +100,10 @@ int AppWindow::addScene(Scene *scene)
 ******************************************************************************/
 void AppWindow::removeScene(int id)
 {
-	this->scene.erase(this->scene.begin() + id);
+	auto removedScene =
+		this->scene.erase(this->scene.begin() + id);
+
+	(*removedScene)->unLoad();
 }
 
 /******************************************************************************
@@ -120,7 +125,7 @@ void AppWindow::removeScene(int id)
 *		index	- index of the scene to be removed
 *
 *	RETURNS:
-*		void 
+*		void
 *
 *	NOTES:
 *		Removes a scene from the scenes vector in the app window
@@ -166,7 +171,7 @@ void AppWindow::run()
 	}
 }
 
-AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
+AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game")
 {
 	Scene *s = new Scene;
 	scene.emplace_back(s);
