@@ -1,8 +1,8 @@
 #include "Server.h"
 
-#include "Session.h"
-#include "ReceiveProcess.h"
-#include "SendProcess.h"
+// #include "Session.h"
+// #include "ReceiveProcess.h"
+// #include "SendProcess.h"
 
 #include <stdio.h>
 #include <netdb.h>
@@ -14,68 +14,90 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <vector>
 
 // < -- NEED MECHANISM FOR REMOVING STALE SESSIONS -- >
 
 Networking::Server::Server()
 {
-	receiveProcess = new ReceiveProcess();
-	sendProcess = new SendProcess();
+    // receiveProc = new ReceiveProcess();
+    // sendProc = new SendProcess();
 }
 
 Networking::Server::~Server()
 {
-	stopServer();
+    stopServer();
 }
 
+/**
+ * returns 0 upon success, -1 on network error, and an error number on thread
+ *   creation error.
+ */
 int Networking::Server::startServer(short port)
 {
-	sockaddr_in server;
-	pthread_thread thread;
+    sockaddr_in server;
+    pthread_t thread;
 
-	// Create the Listening Socket
-	if ((listeningSocket = socket(AF_INET, SOCK_STREAM, 0) == -1)
-	{
-		return 0;
-	}
+    // create the listening socket
+    printf("create the listening socket\n");
+    if((listeningSocket = socket(AF_INET,SOCK_STREAM,0)) == -1)
+    {
+        return -1;
+    }
 
-	// Bind an address to the socket
-	bzero((char *)&server, sizeof(sockaddr_in));
-	server.sin_family = AF_INET;
-	server.sin_port = htons(port);
-	server.sin_addr.s_addr = htonl(INADDR_ANY);
+    // bind an address to the socket
+    printf("bind an address to the socket\n");
+    bzero((char*) &server,sizeof(server));
+    server.sin_family      = AF_INET;
+    server.sin_port        = htons(port);
+    server.sin_addr.s_addr = htonl(INADDR_ANY);
+    if(bind(listeningSocket,(sockaddr*) &server,sizeof(server)) == -1)
+    {
+        return -1;
+    }
 
-	if (bind(listeningSocket, (sockaddr *)&server, sizeof(server)) == -1)
-	{
-		return 0;
-	}
-
-	// Start Listening Thread
-	pthread_create(&thread, Server::listeningThread, NULL, this);
+    // start listening thread
+    printf("start listening thread\n");
+    return pthread_create(&thread, 0, listeningThread, this);
 }
 
 int Networking::Server::stopServer()
 {
-	close(listeningSocket);
+    return close(listeningSocket);
 }
 
-void *Networking::Server::listeningThread(void *server)
+void Networking::Server::onConnect(Session* session)
 {
-	Server *pThis = (Server*) server;
-	int client_len, socket;
-	sockaddr_in client;
+    printf("session %p connected\n",session);
+}
 
-	listen->server(pThis->listeningSocket, 5);
-	socket = 0;
+void* Networking::Server::listeningThread(void* params)
+{
+    using Networking::Server;
 
-	while (socket != -1)
-	{
-		client_len= sizeof(client);
-		if ((socket = accept (listeningSocket, (sockaddr *)&client, &client_len)) != -1)
-		{
-			// Create a new Session and add it to the Server's client list
-			Session *session = new Session(socket, pThis->readProcess, pThis->sendProcess, pThis->entityMux);
-			pThis->sessions.push_back(session);
-		}
-	}
+    // parse thread parameters
+    Server* dis = (Server*) params;
+
+    // start listening on the server socket
+    listen(dis->listeningSocket, 5);
+
+    // accept any connection requests, and create a session for each
+    while(true)
+    {
+        printf("waiting for connections...\n");
+
+        // accept the next connection & check for errors
+        int socket;
+        if((socket = accept(dis->listeningSocket,0,0)) == -1)
+        {
+            printf("accept fails...\n");
+            break;
+        }
+        // Session* session = new Session(socket,readProc,sendProc,entityMux);
+        // sessions.push_back(session);
+        dis->onConnect(0);
+    }
+
+    return 0;
 }

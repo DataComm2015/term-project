@@ -28,18 +28,18 @@ namespace Networking
     class ReceiveProcess;
     class SendProcess;
     class NetworkEntityMultiplexer;
+
     struct Message;
 
     class Session
     {
-        friend class ReceiveProcess;
 
         public:
             Session(unsigned int socket, ReceiveProcess *readProcess,
                 SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux);
             virtual ~Session();
 
-            uint getSocket();
+            unsigned int getSocket();
             void send(Message *message);
             void disconnect();
 
