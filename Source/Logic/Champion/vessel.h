@@ -55,13 +55,17 @@
 -- This class file provides the functions needed to set up and modify Vessel status.
 -- It also provides the functions to control a Vessel (movement and attack).
 ----------------------------------------------------------------------------------------------------------------------*/
+#include <SFML/Graphics.hpp>
+
+#define Weapon char
+#define Ability char
 
 class Vessel
 {
 	protected:
 		int jobClass;		//0 = warrior, 1 = shaman, 2 = hunter, 3 = scout;
 		int currentHealth;
-		int totalHealth;
+		int maxHealth;
 		int currentEXP;
 		int nextLevelEXP;
 		int travelSpeed;
@@ -70,11 +74,11 @@ class Vessel
 		int direction;	//0 = right, 1 = left
 		bool moving;
 		Weapon* weapon;
-		Ability abilities[3];	//3 abilities for each Vessel
+		Ability* abilities;	//3 abilities for each Vessel
 		//TO DO: pointer to the game map needed in the future
 		
 	public:
-		Vessel( int jobclass, GameMap gmap, int x, int y );
+		Vessel( int jobclass, Ability* abilityList, int x, int y );
 		~Vessel();
 		
 		void setPosition( int x, int y );
@@ -86,7 +90,7 @@ class Vessel
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
-        int  getNextLevelEXP();
+        	int  getNextLevelEXP();
 		
 		int  getLevel();
 		void increaseLevel();
@@ -114,7 +118,7 @@ class Vessel
 		bool checkDeath();
 		void die();
 		
-		void move( int direction );
+		void move( sf::Event::KeyEvent keypress );
 		
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );

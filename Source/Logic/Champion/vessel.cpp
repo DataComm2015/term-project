@@ -20,7 +20,7 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( int jobclass, Ability[3] abilityList, int x, int y )
+Vessel::Vessel( int jobclass, Ability* abilityList, int x, int y )
 {
 	xPosition = x;
 	yPosition = y;
@@ -53,7 +53,7 @@ Vessel::Vessel( int jobclass, Ability[3] abilityList, int x, int y )
 	}
 	else if ( jobClass == 3 ) 		//Scout
 	{
-		currentHealth = 125
+		currentHealth = 125;
 		maxHealth = 125;
 		travelSpeed = 7;
 		//weapon = Sword;
@@ -641,7 +641,7 @@ bool Vessel::checkDeath()
 -- NOTES:
 -- Invokes a death animation, destructor, and any other housekeeping functions that need to occur when a Vessel dies.
 ----------------------------------------------------------------------------------------------------------------------*/
-bool Vessel::die()
+void Vessel::die()
 {
 	
 }
@@ -674,34 +674,34 @@ bool Vessel::die()
 -- Bookmarks:
 -- http://en.sfml-dev.org/forums/index.php?topic=11539.0
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::move(sf::Event::KeyEvent keypress )
+void Vessel::move( sf::Event::KeyEvent keypress )
 {
 	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		moving = true;
-		this.setPosition( this.getXPosition(), this.getYPosition() - 1 );
+		setPosition( getXPosition(), getYPosition() - 1 );
 	}
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		moving = true;
-		this.setPosition( this.getXPosition(), this.getYPosition() + 1 );
+		setPosition( getXPosition(), getYPosition() + 1 );
 	}
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		moving = true;
 		direction = 0;	//signal to animate left facing sprite
-		this.setPosition( this.getXPosition() - 1 , this.getYPosition() );
+		setPosition( getXPosition() - 1 , getYPosition() );
 	}
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		moving = true;
 		direction = 1; //signal to animate right facing sprite
-		this.setPosition( this.getXPosition() + 1, this.getYPosition());
+		setPosition( getXPosition() + 1, getYPosition());
 	}
 }
 
@@ -760,7 +760,7 @@ void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Enti
 --
 --
 --*/
-int getXPosition()
+int Vessel::getXPosition()
 {
 	return xPosition;
 }
@@ -770,7 +770,7 @@ int getXPosition()
 --
 --
 --*/
-int getYPosition()
+int Vessel::getYPosition()
 {
 	return yPosition;
 }
@@ -779,7 +779,7 @@ int getYPosition()
 --
 --
 --*/
-bool isMoving()
+bool Vessel::isMoving()
 {
 	return moving;
 }
@@ -788,7 +788,7 @@ bool isMoving()
 --
 --
 --*/
-int getDirection()
+int Vessel::getDirection()
 {
 	return direction;
 }
@@ -797,7 +797,7 @@ int getDirection()
 --
 --
 --*/
-int getJobClass()
+int Vessel::getJobClass()
 {
 	return jobClass;
 }
