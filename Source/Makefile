@@ -1,5 +1,5 @@
 CXX=g++
-CPPFLAGS=-std=c++11 -ggdb
+CPPFLAGS=-std=c++11
 EXE=app
 
 ## FILES

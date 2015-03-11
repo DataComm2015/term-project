@@ -20,6 +20,7 @@ namespace Marx
 	{
 		public:
 			static AppWindow& getInstance();
+			sf::View getCurrentView() const;
 			void run();
 			int	addScene(Scene * scene);
 			void removeScene(int index);
