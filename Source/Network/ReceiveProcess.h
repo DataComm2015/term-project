@@ -43,9 +43,10 @@ namespace Networking
 			void closeProcess();
 
 		private:
+			static void sig_handler(int signum);
 			int pid;
 			int p[2]; // game -> process pipe
-			int p2[2]; //process -> game pipe
+			static int p2[2]; //process -> game pipe
 			std::map<int, int> sockets;
 			std::map<int, Session*> sessions;
 			int ipcsock[2];

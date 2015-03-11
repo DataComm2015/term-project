@@ -7,38 +7,40 @@
 
 #include <sys/socket.h>
 
-Networking::Session::Session(unsigned int socket, ReadProcess *readProcess, SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux)
-	: socket(socket), readProcess(readProcess), sendProcess(sendProcess), entityMux(entityMux)
+Networking::Session::Session(unsigned int socket, ReceiveProcess *readProcess,
+    SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux)
+    : socket(socket), readProcess(readProcess), sendProcess(sendProcess),
+    entityMux(entityMux)
 {
-	// Nothing to do
+    // Nothing to do
 }
 
 Networking::Session::~Session()
 {
-	disconnect();
+    disconnect();
 }
 
 unsigned int Networking::Session::getSocket()
 {
-	return socket;
+    return socket;
 }
 
 void Networking::Session::send(Message *message)
 {
-	sendProcess->send(message);
+    sendProcess->send(message);
 }
 
 void Networking::Session::disconnect()
 {
-	close(socket);
+    close(socket);
 }
 
 void onMessageReceived(Message *message)
 {
-	entityMux->onMessage(this, message);
+    entityMux->onMessage(this, message);
 }
 
 void onConnectionClosedByRemote()
 {
-	// Handle Closed Connections
+    // Handle Closed Connections
 }

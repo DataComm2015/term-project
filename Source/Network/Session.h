@@ -24,33 +24,34 @@
 
 namespace Networking
 {
-	class Socket;
-	class ReceiveProcess;
-	class SendProcess;
-	class NetworkEntityMultiplexer;
-	struct Message;
+    class Socket;
+    class ReceiveProcess;
+    class SendProcess;
+    class NetworkEntityMultiplexer;
+    struct Message;
 
-	class Session
-	{
-		friend class ReceiveProcess;
-	
-		public:
-    		Session(unsigned int socket, ReceiveProcess *readProcess, SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux);
-			virtual ~Session();
-		
-			uint getSocket();
-			void send(Message *message);
-			void disconnect();
+    class Session
+    {
+        friend class ReceiveProcess;
 
-		private:
-			void onMessageReceived(Message *message);
-			void onConnectionClosedByRemote();
-		
-    		unsigned int socket;
-			ReceiveProcess *readProcess;
-			SendProcess *sendProcess;
-			NetworkEntityMultiplexer *entityMux;
-	};
+        public:
+            Session(unsigned int socket, ReceiveProcess *readProcess,
+                SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux);
+            virtual ~Session();
+
+            uint getSocket();
+            void send(Message *message);
+            void disconnect();
+
+        private:
+            void onMessageReceived(Message *message);
+            void onConnectionClosedByRemote();
+
+            unsigned int socket;
+            ReceiveProcess *readProcess;
+            SendProcess *sendProcess;
+            NetworkEntityMultiplexer *entityMux;
+    };
 }
 
 #endif

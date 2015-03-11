@@ -32,13 +32,13 @@ int Networking::Server::startServer(short port)
 {
 	sockaddr_in server;
 	pthread_thread thread;
-	
+
 	// Create the Listening Socket
 	if ((listeningSocket = socket(AF_INET, SOCK_STREAM, 0) == -1)
 	{
 		return 0;
 	}
-		
+
 	// Bind an address to the socket
 	bzero((char *)&server, sizeof(sockaddr_in));
 	server.sin_family = AF_INET;
@@ -49,7 +49,7 @@ int Networking::Server::startServer(short port)
 	{
 		return 0;
 	}
-	
+
 	// Start Listening Thread
 	pthread_create(&thread, Server::listeningThread, NULL, this);
 }
@@ -64,10 +64,10 @@ void *Networking::Server::listeningThread(void *server)
 	Server *pThis = (Server*) server;
 	int client_len, socket;
 	sockaddr_in client;
-	
+
 	listen->server(pThis->listeningSocket, 5);
 	socket = 0;
-	
+
 	while (socket != -1)
 	{
 		client_len= sizeof(client);
