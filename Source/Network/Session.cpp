@@ -1,46 +1,46 @@
 #include "Session.h"
-
-#include "ReceiveProcess"
-#include "SendProcess"
-#include "NetworkEntityMultiplexer.h"
 #include "Message.h"
+// #include "ReceiveProcess"
+// #include "SendProcess"
+// #include "NetworkEntityMultiplexer.h"
 
+#include <stdio.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
-Networking::Session::Session(unsigned int socket, ReceiveProcess *readProcess,
-    SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux)
-    : socket(socket), readProcess(readProcess), sendProcess(sendProcess),
-    entityMux(entityMux)
+using namespace Networking;
+
+Session::Session(int socket)
 {
-    // Nothing to do
+    printf("session: session %p connected\n", this);
+    this->socket = socket;
+    // ReceiveProcess* readProcess
+    // SendProcess* sendProcess
+    // NetworkEntityMultiplexer* entityMux
 }
 
-Networking::Session::~Session()
+Session::~Session()
 {
     disconnect();
 }
 
-unsigned int Networking::Session::getSocket()
+void Session::send(Message *message)
 {
-    return socket;
+    // sendProcess->send(message);
 }
 
-void Networking::Session::send(Message *message)
-{
-    sendProcess->send(message);
-}
-
-void Networking::Session::disconnect()
+void Session::disconnect()
 {
     close(socket);
+    printf("session: session %p disconnected\n", this);
 }
 
-void onMessageReceived(Message *message)
+void Session::onMessageReceived(Message *message)
 {
-    entityMux->onMessage(this, message);
+    // entityMux->onMessage(this, message);
 }
 
-void onConnectionClosedByRemote()
+void Session::onConnectionClosedByRemote()
 {
     // Handle Closed Connections
 }

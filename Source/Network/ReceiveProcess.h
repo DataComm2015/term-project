@@ -11,46 +11,44 @@
 
 namespace Networking
 {
+    struct Message;
+    class Session;
 
+    enum ReceiveMessageType
+    {
+        ADD_SOCKET = 0,
+        REMOVE_SOCKET = 1,
+        MESSAGE_AVAILABLE = 2,
+        SHUTDOWN = 3
+    };
 
-	struct Message;
-	class Session;
+    struct ReceiveMessage
+    {
+        ReceiveMessageType type;
+        int socket_id;
+        char data[NETWORK_MESSAGE_SIZE];
+    };
 
-	enum ReceiveMessageType
-	{
-		ADD_SOCKET = 0,
-		REMOVE_SOCKET = 1,
-		MESSAGE_AVAILABLE = 2,
-		SHUTDOWN = 3
-	};
+    class ReceiveProcess
+    {
+    public:
+        ReceiveProcess();
+        ~ReceiveProcess();
+        void addSession(Session *session);
+        void removeSession(Session *session);
+        void onMessageReceived(int socket, Message *message);
+        void runProcess();
+        void closeProcess();
 
-	struct ReceiveMessage
-	{
-		ReceiveMessageType type;
-		int socket_id;
-		char data[NETWORK_MESSAGE_SIZE];
-	};
-
-	class ReceiveProcess
-	{
-		public:
-			ReceiveProcess();
-			~ReceiveProcess();
-			void addSession(Session *session);
-			void removeSession(Session *session);
-			void onMessageReceived(int socket, Message *message);
-			void runProcess();
-			void closeProcess();
-
-		private:
-			static void sig_handler(int signum);
-			int pid;
-			int p[2]; // game -> process pipe
-			static int p2[2]; //process -> game pipe
-			std::map<int, int> sockets;
-			std::map<int, Session*> sessions;
-			int ipcsock[2];
-	};
+    private:
+        static void sig_handler(int signum);
+        int pid;
+        int p[2]; // game -> process pipe
+        static int p2[2]; //process -> game pipe
+        std::map<int, int> sockets;
+        std::map<int, Session*> sessions;
+        int ipcsock[2];
+    };
 }
 
 #endif

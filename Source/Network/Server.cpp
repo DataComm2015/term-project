@@ -1,8 +1,5 @@
 #include "Server.h"
-
-// #include "Session.h"
-// #include "ReceiveProcess.h"
-// #include "SendProcess.h"
+#include "Session.h"
 
 #include <stdio.h>
 #include <netdb.h>
@@ -19,35 +16,45 @@
 
 // < -- NEED MECHANISM FOR REMOVING STALE SESSIONS -- >
 
-Networking::Server::Server()
+using namespace Networking;
+
+/**
+ * constructs a new {Server}.
+ */
+Server::Server()
 {
-    // receiveProc = new ReceiveProcess();
-    // sendProc = new SendProcess();
 }
 
-Networking::Server::~Server()
+/**
+ * Clean up the Server on destruction.
+ */
+Server::~Server()
 {
     stopServer();
 }
 
 /**
- * returns 0 upon success, -1 on network error, and an error number on thread
- *   creation error.
+ * initializes the server to listen for incoming connections on the
+ *   given port
+ *
+ * @param  port to connect to
+ *
+ * @return integer indicating the outcome of the operation
  */
-int Networking::Server::startServer(short port)
+int Server::startServer(short port)
 {
     sockaddr_in server;
     pthread_t thread;
 
     // create the listening socket
-    printf("create the listening socket\n");
+    printf("server: create the listening socket\n");
     if((listeningSocket = socket(AF_INET,SOCK_STREAM,0)) == -1)
     {
         return -1;
     }
 
     // bind an address to the socket
-    printf("bind an address to the socket\n");
+    printf("server: bind an address to the socket\n");
     bzero((char*) &server,sizeof(server));
     server.sin_family      = AF_INET;
     server.sin_port        = htons(port);
@@ -58,24 +65,45 @@ int Networking::Server::startServer(short port)
     }
 
     // start listening thread
-    printf("start listening thread\n");
+    printf("server: start listening thread\n");
     return pthread_create(&thread, 0, listeningThread, this);
 }
 
-int Networking::Server::stopServer()
+/**
+ * stops server, and closes all connections connected with the server.
+ *
+ * @return integer indicating the outcome of the operation
+ */
+int Server::stopServer()
 {
+    // close and remove all sessions
+    for(auto session = sessions.begin(); session != sessions.end(); ++session)
+    {
+        delete (*session);
+    }
+    sessions.erase(sessions.begin(),sessions.end());
+
+    // close the server socket
     return close(listeningSocket);
 }
 
-void Networking::Server::onConnect(Session* session)
+/**
+ * function to be overridden by subclasses
+ *
+ * @param  session
+ */
+void Server::onConnect(Session* session)
 {
-    printf("session %p connected\n",session);
+    printf("server: session %p connected\n",session);
 }
 
-void* Networking::Server::listeningThread(void* params)
+/**
+ * function run on a thread. it polls the server socket, accepting connections.
+ *
+ * @param params thread parameters; points to the calling server instance.
+ */
+void* Server::listeningThread(void* params)
 {
-    using Networking::Server;
-
     // parse thread parameters
     Server* dis = (Server*) params;
 
@@ -85,18 +113,20 @@ void* Networking::Server::listeningThread(void* params)
     // accept any connection requests, and create a session for each
     while(true)
     {
-        printf("waiting for connections...\n");
+        printf("server: waiting for connections...\n");
 
         // accept the next connection & check for errors
         int socket;
         if((socket = accept(dis->listeningSocket,0,0)) == -1)
         {
-            printf("accept fails...\n");
+            printf("server: accept fails...\n");
             break;
         }
-        // Session* session = new Session(socket,readProc,sendProc,entityMux);
-        // sessions.push_back(session);
-        dis->onConnect(0);
+
+        // create a session for the new connection
+        Session* session = new Session(socket);
+        dis->sessions.push_back(session);
+        dis->onConnect(session);
     }
 
     return 0;
