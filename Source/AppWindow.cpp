@@ -10,6 +10,33 @@ AppWindow& AppWindow::getInstance()
 }
 
 /******************************************************************************
+*	FUNCTION: getCurrentView
+*
+*	DATE: March 10, 2015
+*
+*	DESIGNER: Melvin Loho
+*
+*	PROGRAMMER: Melvin Loho
+*
+*	INTERFACE: sf::View getCurrentView()
+*
+*	RETURNS:
+*		sf::View - the up to date view of the AppWindow
+*
+*	NOTES:
+*		Gets the up to date view of the AppWindow
+*
+******************************************************************************/
+sf::View AppWindow::getCurrentView() const
+{
+	sf::Vector2u size = getSize();
+	return sf::View(
+		sf::Vector2f(size.x * 0.5f, size.y * 0.5f),
+		sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y))
+		);
+}
+
+/******************************************************************************
 *	FUNCTION: addScene
 *
 *	DATE: February 15, 2015
@@ -144,17 +171,4 @@ AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game")
 	Scene *s = new Scene;
 	scene.emplace_back(s);
 	m_timePerFrame = sf::seconds(1.f / 60);
-}
-
-
-
-int main()
-{
-	AppWindow& window = Marx::AppWindow::getInstance();
-
-	window.addScene(new GameScene);
-
-	window.run();
-
-	return 0;
 }
