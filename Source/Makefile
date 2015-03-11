@@ -1,5 +1,5 @@
 CXX=g++
-CPPFLAGS=-std=c++11 -ggdb
+CPPFLAGS=-std=c++11
 EXE=app
 
 ## FILES
@@ -10,16 +10,18 @@ FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engi
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
 					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o
 
-FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o
+FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/vessel.o
 
 FILES_NETWORK=		
 
+FILE_MAIN=			Usage.cpp
+
 ##
 
-all: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
+all: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
 	$(CXX) $(CPPFLAGS) \
 	-o $(EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
-	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
+	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@
