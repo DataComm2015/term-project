@@ -30,9 +30,6 @@ namespace Marx
 		bool isRunning = false;
 		sf::Time m_elapsedTime, m_timePerFrame, m_timeSinceLastUpdate;
 	};
-
 }
-
-int main();
 
 #endif /* APPWINDOW_H_ */
