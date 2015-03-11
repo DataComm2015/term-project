@@ -40,9 +40,7 @@
 #include "Multimedia/graphics/object/SGO.h"
 #include "Multimedia/graphics/object/TGO.h"
 
-using namespace Marx;
-
-class StartScreen : public Scene
+class StartScreen : public Marx::Scene
 {
 public:
     // Constructors should be used to initialize things only once on scene creation
@@ -97,6 +95,9 @@ public:
                     break;
             }
             break;
+			case sf::Event::Closed:
+				AppWindow::getInstance().close();
+				break;
         }
     }
 
@@ -149,7 +150,7 @@ private:
 };
 
 //> In the main file
-#include <AppWindow.h>
+#include "AppWindow.h"
 // include the separate scene file
 
 int main()

@@ -14,12 +14,14 @@ FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameSc
 
 FILES_NETWORK=		
 
+FILE_MAIN=			Usage.cpp
+
 ##
 
-all: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
+all: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
 	$(CXX) $(CPPFLAGS) \
 	-o $(EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
-	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK)
+	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@

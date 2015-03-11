@@ -172,16 +172,3 @@ AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game")
 	scene.emplace_back(s);
 	m_timePerFrame = sf::seconds(1.f / 60);
 }
-
-
-
-int main()
-{
-	AppWindow& window = Marx::AppWindow::getInstance();
-
-	window.addScene(new GameScene);
-
-	window.run();
-
-	return 0;
-}
