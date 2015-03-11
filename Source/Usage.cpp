@@ -96,7 +96,9 @@ public:
 		case sf::Event::KeyPressed:
 			v->move(event.key);
 			break;
+
 		case sf::Event::KeyReleased:
+			v->stop();
 			switch (event.key.code)
 			{
 			case sf::Keyboard::Escape:
@@ -119,7 +121,8 @@ public:
 	// Update callback, do logical stuff here
 	void update(sf::Time t) override
 	{
-		
+		view_main.move(v->getXSpeed(), v->getYSpeed());
+		sgo().setPosition(view_main.getCenter());
 	}
 
 	// Render callback, render stuff here

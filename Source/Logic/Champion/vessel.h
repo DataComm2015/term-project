@@ -71,6 +71,8 @@ class Vessel
 		int travelSpeed;
 		int xPosition;
 		int yPosition;
+		int xSpeed;
+		int ySpeed;
 		int direction;	//0 = right, 1 = left
 		bool moving;
 		Weapon* weapon;
@@ -84,6 +86,8 @@ class Vessel
 		void setPosition( int x, int y );
 		int getXPosition();
 		int getYPosition();
+		int getXSpeed();
+		int getYSpeed();
 		bool isMoving();
 		int getDirection();
 		
@@ -119,6 +123,7 @@ class Vessel
 		void die();
 		
 		void move( sf::Event::KeyEvent keypress );
+		void stop();
 		
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );

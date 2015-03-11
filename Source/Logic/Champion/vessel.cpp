@@ -25,6 +25,9 @@ Vessel::Vessel( int jobclass, Ability* abilityList, int x, int y )
 	xPosition = x;
 	yPosition = y;
 	direction = 0;
+	
+	xSpeed = 0;
+	ySpeed = 0;
 	moving = false;
 	abilities = abilityList;
 	
@@ -681,18 +684,21 @@ void Vessel::move( sf::Event::KeyEvent keypress )
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		moving = true;
+		ySpeed = -1;
 		setPosition( getXPosition(), getYPosition() - 1 );
 	}
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		moving = true;
+		ySpeed = 1;
 		setPosition( getXPosition(), getYPosition() + 1 );
 	}
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		moving = true;
+		xSpeed = -1;
 		direction = 0;	//signal to animate left facing sprite
 		setPosition( getXPosition() - 1 , getYPosition() );
 	}
@@ -700,11 +706,22 @@ void Vessel::move( sf::Event::KeyEvent keypress )
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		moving = true;
+		xSpeed = 1;
 		direction = 1; //signal to animate right facing sprite
 		setPosition( getXPosition() + 1, getYPosition());
 	}
 }
 
+/*--
+--
+--
+--*/
+void Vessel::stop()
+{
+	xSpeed = 0;
+	ySpeed = 0;
+	moving = false;
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: normalAttack
@@ -773,6 +790,26 @@ int Vessel::getXPosition()
 int Vessel::getYPosition()
 {
 	return yPosition;
+}
+
+
+/*--
+--
+--
+--*/
+int Vessel::getXSpeed()
+{
+	return xSpeed;
+}
+
+
+/*--
+--
+--
+--*/
+int Vessel::getYSpeed()
+{
+	return ySpeed;
 }
 
 /*--
