@@ -32,6 +32,7 @@
 //> In a separate scene file
 // Note that a scene made for content can just be a header file
 
+#include "AppWindow.h"
 #include "Engine/Scene.h"
 #include "Engine/TextureManager.h"
 #include "Multimedia/graphics/Renderer.h"
