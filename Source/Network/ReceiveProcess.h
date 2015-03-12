@@ -17,8 +17,7 @@ namespace Networking
     enum ReceiveMessageType
     {
         ADD_SOCKET = 0,
-        REMOVE_SOCKET = 1,
-        MESSAGE_AVAILABLE = 2,
+        REMOVE_SOCKET = 1
     };
 
     struct ReceiveMessage
@@ -28,20 +27,22 @@ namespace Networking
         char data[NETWORK_MESSAGE_SIZE];
     };
 
+    /**
+     * this is a singleton class. the receive thread is started the first time
+     *   getInstance is invoked. any subsequent calls will return the first one.
+     *   the thread is terminated when this object is deleted.
+     */
     class ReceiveProcess
     {
     public:
         static ReceiveProcess* getInstance();
         void addSession(Session *session);
         void removeSession(Session *session);
-        // void onMessageReceived(int socket, Message *message);
-        // void closeProcess();
 
     private:
         ReceiveProcess();
         ~ReceiveProcess();
-        void receiveRoutine();
-        // static void sig_handler(int signum);
+        static void* receiveRoutine(void* params);
 
         /**
          * pointer to the singleton receive process.
@@ -49,30 +50,9 @@ namespace Networking
         static ReceiveProcess* instance;
 
         /**
-         * IPC pipe used to send data to the receive process.
+         * IPC pipe used to control what to select.
          */
-        int recvPipe[2];
-
-        /**
-         * IPC pipe used to send data to the main process.
-         */
-        int mainPipe[2];
-
-        /**
-         * used to send sockets across processes; used to send sockets from the
-         *   main process to the receive process when adding new sockets to the
-         *   receive process to select from.
-         */
-        int ipcsock[2];
-
-        /**
-         * used only on the receive process.
-         *
-         * maps sockets on the main process to sockets on the receive process.
-         *   although sockets may be physically the same, they have different
-         *   descriptor numbers on different processes.
-         */
-        std::map<int, int> sockets;
+        int ctrlPipe[2];
 
         /**
          * used only on the main process.

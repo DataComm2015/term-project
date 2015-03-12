@@ -7,7 +7,7 @@
 --
 -- DESIGNER:
 --
--- PROGRAMMER: Alex Lam, Calvin Rempel, Jeff Bayntun, Manuel Gonzales
+-- PROGRAMMER: Alex Lam, Calvin Rempel, Jeff Bayntun, Manuel Gonzales, Eric Tsang
 --
 -- INTERFACE:
 -- ReceiveProcess();
@@ -22,9 +22,9 @@
 -- NOTES: This file provides definitions for a ReceiveProcess object.
 -----------------------------------------------------------------------------------------------*/
 #include "ReceiveProcess.h"
-// #include "Message.h"
-#include "ancillary.h"
+#include "Message.h"
 #include "Session.h"
+#include "select_helper.h"
 
 #include <stdio.h>
 #include <netdb.h>
@@ -59,54 +59,6 @@ ReceiveProcess* ReceiveProcess::getInstance()
 }
 
 /*----------------------------------------------------------------------------------------------
--- FUNCTION:        sig_handler
---
--- DATE:            February 21, 2015
---
--- REVISIONS:       (Date and Description)
---
--- DESIGNER:        Alex Lam
---
--- PROGRAMMER:      Alex Lam, Eric Tsang
---
--- INTERFACE:       void sig_handler()
---
--- RETURNS:         void
---
--- NOTES:           calls onMessageReceived after the receive process signals the main process
-
-                            this will need the process -> game pipe
-                            //int p2[2];
-
------------------------------------------------------------------------------------------------*/
-
-/*void ReceiveProcess::sig_handler(int signum)
-{
-    printf("receive: sig_handler\n");
-    // allocate data to hold data from pipe
-    int socket;
-    int messagelength;
-    void* msgData;
-    Message message;
-
-    // read header data from pipe
-    read(p2[0], &socket, sizeof(int));
-    read(p2[0], &messagelength, sizeof(int));
-    read(p2[0], &message.type, sizeof(int));
-    read(p2[0], &message.len, sizeof(int));
-
-    // allocate space for payload
-    msgData = malloc(message.len);
-    message.data = msgData;
-
-    // read in payload
-    read(p2[0], msgData, message.len);
-
-    // invoke callback
-    onMessageReceived(socket, message);
-}*/
-
-/*----------------------------------------------------------------------------------------------
 -- FUNCTION:        ReceiveProcess
 --
 -- DATE:            February 21, 2015
@@ -115,7 +67,7 @@ ReceiveProcess* ReceiveProcess::getInstance()
 --
 -- DESIGNER:        Alex Lam
 --
--- PROGRAMMER:      Alex Lam
+-- PROGRAMMER:      Alex Lam, Eric Tsang
 --
 -- INTERFACE:       Receive::ReceiveProcess()
 --
@@ -129,41 +81,15 @@ ReceiveProcess::ReceiveProcess()
 {
     printf("receive: ReceiveProcess\n");
 
-    // TODO: uncomment this later when dealing with communication from receive
-    //       process to main process
-    // signal(SIGUSR1, sig_handler);
-
-    // open pipes
-    if (pipe(recvPipe) < 0 || pipe(mainPipe) < 0)
+    // open pipe
+    if (pipe(ctrlPipe) < 0)
     {
-        perror("failed to open pipes");
-    }
-
-    // create socketpair
-    if(socketpair(PF_UNIX,SOCK_STREAM,0,ipcsock))
-    {
-        perror("failed to create socketpair");
+        perror("failed to open pipe");
     }
 
     // create receive process
-    switch(fork())
-    {
-    case -1:    // fork error; report the error
-        perror("failed to create receive process");
-        break;
-    case  0:    // recv process; close unused pipes, and run receive routine
-        close(ipcsock[0]);
-        close(recvPipe[1]);
-        close(mainPipe[0]);
-        receiveRoutine();
-        exit(1);
-        break;
-    default:    // main process; close necessary pipes
-        close(ipcsock[1]);
-        close(recvPipe[0]);
-        close(mainPipe[1]);
-        break;
-    }
+    pthread_t thread;
+    pthread_create(&thread,0,receiveRoutine,this);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -175,7 +101,7 @@ ReceiveProcess::ReceiveProcess()
 --
 -- DESIGNER:        Alex Lam
 --
--- PROGRAMMER:      Alex Lam
+-- PROGRAMMER:      Alex Lam, Eric Tsang
 --
 -- INTERFACE:       void addSession(Session *session)
 --  new_sd:         pointer to session to add
@@ -190,16 +116,13 @@ void ReceiveProcess::addSession(Session* session)
     // add socket to map on parent process
     sessions[session->socket] = session;
 
-    // transfer socket
-    ancil_send_fd(ipcsock[0], session->socket);
-
     // create message to send on pipe
     ReceiveMessage msg;
     msg.type      = ADD_SOCKET;
     msg.socket_id = session->socket;
 
     // tell receive process of the new socket
-    write(recvPipe[1],&msg,sizeof(msg));
+    write(ctrlPipe[1],&msg,sizeof(msg));
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -211,7 +134,7 @@ void ReceiveProcess::addSession(Session* session)
 --
 -- DESIGNER:        Alex Lam
 --
--- PROGRAMMER:      Alex Lam, Jeff Bayntun
+-- PROGRAMMER:      Alex Lam, Jeff Bayntun, Eric Tsang
 --
 -- INTERFACE:       void removeSession(Session *session)
 --  session:        pointer to the session to remove
@@ -233,32 +156,8 @@ void ReceiveProcess::removeSession(Session* session)
     msg.socket_id = session->socket;
 
     // tell receive process to remove the socket
-    write(recvPipe[1],&msg,sizeof(msg));
+    write(ctrlPipe[1],&msg,sizeof(msg));
 }
-
-/*----------------------------------------------------------------------------------------------
--- FUNCTION:        onmessageReceived
---
--- DATE:            February 27, 2015
---
--- REVISIONS:       (Date and Description)
---
--- DESIGNER:        Alex Lam
---
--- PROGRAMMER:      Alex Lam
---
--- INTERFACE:       void onMessageReceived(int socket, Message *message)
---
--- RETURNS:         void
---
--- NOTES:           Calls the "onMessageReceived" method of the Session that received data.
------------------------------------------------------------------------------------------------*/
-/*void ReceiveProcess::onMessageReceived(int socket, Message *message)
-{
-    printf("receive: onMessageReceived\n");
-    Session *session = sessions[socket];
-    session->onMessageReceived(message);
-}*/
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        closeProcess
@@ -269,7 +168,7 @@ void ReceiveProcess::removeSession(Session* session)
 --
 -- DESIGNER:        Alex Lam
 --
--- PROGRAMMER:      Alex Lam
+-- PROGRAMMER:      Alex Lam, Eric Tsang
 --
 -- INTERFACE:       void Receive::closeProcess()
 --
@@ -282,7 +181,7 @@ ReceiveProcess::~ReceiveProcess()
     printf("receive: ~ReceiveProcess\n");
 
     // close pipe, which implicitly tells receive process to shutdown
-    close(recvPipe[1]);
+    close(ctrlPipe[1]);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -294,7 +193,7 @@ ReceiveProcess::~ReceiveProcess()
 --
 -- DESIGNER:        Alex Lam
 --
--- PROGRAMMER:      Alex Lam, Jeff Bayntun
+-- PROGRAMMER:      Alex Lam, Jeff Bayntun, Eric Tsang
 --
 -- INTERFACE:       void Receive::runProcess()
 --
@@ -305,137 +204,113 @@ ReceiveProcess::~ReceiveProcess()
                     Then it monitors the pipe between this process and the main for any messages
                     and checks for any tcp data coming in.
 -----------------------------------------------------------------------------------------------*/
-void ReceiveProcess::receiveRoutine()
+void* ReceiveProcess::receiveRoutine(void* params)
 {
     printf("receive process started...\n");
-    char buffer[80];
-    while(read(recvPipe[0],buffer,80) > 0)
+
+    // parse thread parameters
+    ReceiveProcess* dis = (ReceiveProcess*) params;
+
+    // set up files structure
+    Files files;
+    files_init(&files);
+    files_add_file(&files,dis->ctrlPipe[0]);
+
+    while(true)
     {
-        printf("receive process looped...\n");
-    }
-    printf("receive process stopped...\n");
-    /*fd_set readfds;
-    int max_sd = 0;
-    int n;
-    int clientSockets[25];
-    char buf[BUFLEN];
-    int activity;
-    char* bp;
-    int bytes_to_read;
+        // wait for activity to occur
+        int activity = files_select(&files);
 
-    using std::map;
-    using std::cerr;
-    using std::endl;
-    using std::cout;
-
-    while (1)
-    {
-        // DON'T THINK THIS TOP PART IS NEEDED ANYMORE...
-        FD_ZERO(&readfds);
-        FD_SET(p[0], &readfds);
-        max_sd = p[0];
-        for(std::map<int, int>::iterator it = sockets.begin(); it != sockets.end(); ++it)
-        {
-            FD_SET(it->second, &readfds);
-            if(it->second > max_sd)
-            {
-                max_sd = it->second;
-            }
-        }
-        //
-
-        // Block the Process until one of the sockets (or the pipe) has data to read
-        activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
-
-        // If an error occurred, close all sockets and exit the process
+        // an error has occured
         if(activity == -1)
         {
-            map<int,int>::iterator it;
-            for (it = sockets.begin(); it != sockets.end(); ++it)
-            {
-                close(it->second);
-            }
-
-            // Print the error
-            cerr << "receive process error: " << errno << endl;
-            exit(1);
+            break;
         }
 
-        //Wait for activity on either the pipe or one of the sockets
-        cout << "Number of activity detected: " << activity << endl;
-        if (FD_ISSET(p[0], &readfds))//If it is the PIPE that has activity
+        // handle control pipe activity
+        if(FD_ISSET(dis->ctrlPipe[0],&files.selectFds))
         {
-            char temp_message[NETWORK_MESSAGE_SIZE];
-            ReceiveMessage* parent_messages;
+            ReceiveMessage msg;
+            printf("handle control pipe activity\n");
 
-            read(p[0], temp_message, NETWORK_MESSAGE_SIZE);
-            parent_messages = (ReceiveMessage*)temp_message;
+            // read from pipe
+            int result = read(dis->ctrlPipe[0],&msg,sizeof(msg));
 
-
-            // Shutdown the Process
-            if(parent_messages->type == ReceiveMessageType::SHUTDOWN)
+            // terminate the receive process when the control pipe is closed, or
+            // encounters an error.
+            if(result == 0 || result == -1)
             {
-                // < -- CLOSE SOCKET HANDLES HERE! -- >
-                exit(0);
+                break;
             }
-            // Add a Socket From the Parent Process
-            else if (parent_messages->type == ReceiveMessageType::ADD_SOCKET)
+
+            // deal with the read data otherwise
+            switch(msg.type)
             {
-                int new_socket;
-                cout << "Check for new connections" << endl;
-                ancil_recv_fd(ipcsock[1], &new_socket);
-                cout << "New connection on socket: " << new_socket << endl;
 
-                FD_SET(new_socket, &readfds); //Sets socket for 'select' monitor
+            // add a socket to socket set
+            case ADD_SOCKET:
+                // add socket to set of files to select
+                files_add_file(&files,msg.socket_id);
+                printf("adding socket %d\n",msg.socket_id);
+                break;
 
-                // Add socket to map where socket id on original process is used as the key
-                sockets.insert(std::pair<int, int>(parent_messages->socket_id, new_socket));
+            // remove a socket from socket set
+            case REMOVE_SOCKET:
+                // remove the socket from set of files to select
+                files_rm_file(&files,msg.socket_id);
+                printf("rming socket %d\n",msg.socket_id);
+                break;
+            }
+        }
 
-                if(new_socket > max_sd)
+        // handle socket activity
+        for(auto socket = files.fdSet.begin(); socket != files.fdSet.end();
+            ++socket)
+        {
+            int selectedSocket = *socket;
+
+            if(FD_ISSET(selectedSocket,&files.selectFds)
+                && selectedSocket != dis->ctrlPipe[0])
+            {
+                // printf("handle socket activity\n");
+
+                Message msg;
+
+                // read from socket
+                int result = read(selectedSocket,&msg.type,sizeof(msg.type));
+
+                // remove socket if the socket encounters an error, or is closed
+                if(result == 0 || result == -1)
                 {
-                    max_sd = new_socket;
+                    printf("close socket %d\n",selectedSocket);
+                    // close the socket
+                    close(selectedSocket);
+                    // remove the socket from set of files to select
+                    files_rm_file(&files,selectedSocket);
+                    // invoke session callback
+                    dis->sessions[selectedSocket]->onConnectionClosedByRemote();
+                }
+                else
+                {
+                    // deal with the read data otherwise by writing the received
+                    // data to the main process through a pipe
+                    read(selectedSocket,&msg.len,sizeof(msg.len));
+                    void* buffer = malloc(msg.len);
+                    read(selectedSocket,buffer,msg.len);
+
+                    // invoke session callback
+                    msg.data = buffer;
+                    dis->sessions[selectedSocket]->onMessageReceived(&msg);
+
+                    // cleanup...
+                    free(buffer);
                 }
             }
-
-            // Remove a specified Socket from the fd_set
-            else if (parent_messages->type == ReceiveMessageType::REMOVE_SOCKET)
-            {
-                int socket_id = sockets[parent_messages->socket_id];
-                FD_CLR(socket_id, &readfds);
-                close(socket_id);
-                sockets.erase(parent_messages->socket_id);
-            }
         }
+    }
 
-        // Check all clients to see if they have data available
-        for(map<int, int>::iterator it = sockets.begin(); it != sockets.end(); ++it)
-        {
-            if (FD_ISSET(it->first, &readfds))
-            {
-                //Read tcp data
-                bp = buf;
-                bytes_to_read = BUFLEN;
-                n = 0;
+    // cleanup
+    printf("receive process stopped...\n");
 
-                while ((n = recv (it->first, bp, bytes_to_read, 0)) < BUFLEN)
-                {
-                    bp += n;
-                    bytes_to_read -= n;
-                }
-
-                // < -- SEND MESSAGE BACK TO MAIN PROCESS HERE -- >
-                write(p2[1], it->first, sizeof(int));
-                int messageReadLength = sizeof(buf);
-                write(p2[1], messageReadLength, sizeof(int));
-                write(p2[1], buf, messageReadLength);
-                signal(SIGUSR1, sig_handler);
-
-                ReceiveMessage message;
-                message.type = MESSAGE_AVAILABLE;
-                message.socket_id =
-                printf ("Received: %s\n", buf);
-                fflush(stdout);
-            }
-        }
-    }*/
+    return 0;
 }

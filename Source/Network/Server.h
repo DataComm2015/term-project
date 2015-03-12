@@ -1,7 +1,7 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
-#include <vector>
+#include <set>
 
 namespace Networking
 {
@@ -19,7 +19,7 @@ namespace Networking
     private:
         static void* listeningThread(void* params);
         int svrSock;
-        std::vector<Session*> sessions;
+        std::set<Session*> sessions;
     };
 }
 

@@ -159,7 +159,7 @@ void* Server::listeningThread(void* params)
 
         // create a session for the new connection
         Session* session = new Session(socket);
-        dis->sessions.push_back(session);
+        dis->sessions.insert(session);
         dis->onConnect(session);
     }
 

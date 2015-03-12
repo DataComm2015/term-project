@@ -40,12 +40,12 @@ void Session::disconnect()
     printf("session: session %p:%d disconnected\n",this,socket);
 }
 
-void Session::onMessageReceived(Message *message)
+void Session::onMessageReceived(Message* msg)
 {
-    // entityMux->onMessage(this, message);
+    printf("Session::onMessageReceived %.*s\n",msg->len,msg->data);
 }
 
 void Session::onConnectionClosedByRemote()
 {
-    // Handle Closed Connections
+    printf("Session::onConnectionClosedByRemote\n");
 }
