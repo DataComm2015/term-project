@@ -5,9 +5,6 @@
 
 namespace Networking
 {
-    class ReceiveProcess;
-    class Session;
-
     class Server
     {
     public:
@@ -20,12 +17,9 @@ namespace Networking
         virtual void onDisconnect(int socket, int remote);
 
     private:
-        static void* listeningRoutine(void* params);
-        static void onSocketActivity(void* dis, int socket);
-        ReceiveProcess* receiveProcess;
+        static void* serverRoutine(void* params);
         int svrSock;
-        std::map<int,Session*> sessions;
-        pthread_t acceptThread;
+        pthread_t serverThread;
     };
 }
 
