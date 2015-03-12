@@ -19,7 +19,6 @@ namespace Networking
         ADD_SOCKET = 0,
         REMOVE_SOCKET = 1,
         MESSAGE_AVAILABLE = 2,
-        SHUTDOWN = 3
     };
 
     struct ReceiveMessage
@@ -33,23 +32,54 @@ namespace Networking
     {
     public:
         static ReceiveProcess* getInstance();
-        // ~ReceiveProcess();
-        // void addSession(Session *session);
-        // void removeSession(Session *session);
+        void addSession(Session *session);
+        void removeSession(Session *session);
         // void onMessageReceived(int socket, Message *message);
         // void closeProcess();
 
     private:
-        // ReceiveProcess();
-        // static void receiveRoutine();
+        ReceiveProcess();
+        ~ReceiveProcess();
+        void receiveRoutine();
         // static void sig_handler(int signum);
+
+        /**
+         * pointer to the singleton receive process.
+         */
         static ReceiveProcess* instance;
-        int pid;
-        int p[2]; // game -> process pipe
-        static int p2[2]; //process -> game pipe
-        std::map<int, int> sockets;
-        std::map<int, Session*> sessions;
+
+        /**
+         * IPC pipe used to send data to the receive process.
+         */
+        int recvPipe[2];
+
+        /**
+         * IPC pipe used to send data to the main process.
+         */
+        int mainPipe[2];
+
+        /**
+         * used to send sockets across processes; used to send sockets from the
+         *   main process to the receive process when adding new sockets to the
+         *   receive process to select from.
+         */
         int ipcsock[2];
+
+        /**
+         * used only on the receive process.
+         *
+         * maps sockets on the main process to sockets on the receive process.
+         *   although sockets may be physically the same, they have different
+         *   descriptor numbers on different processes.
+         */
+        std::map<int, int> sockets;
+
+        /**
+         * used only on the main process.
+         *
+         * maps sockets to their corresponding sessions.
+         */
+        std::map<int, Session*> sessions;
     };
 }
 

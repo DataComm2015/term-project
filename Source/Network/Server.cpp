@@ -53,7 +53,9 @@ int Server::startServer(short port)
     pthread_t thread;
 
     // create the listening socket
+    #ifdef DEBUG
     printf("server: create the listening socket\n");
+    #endif
     if((svrSock = socket(AF_INET,SOCK_STREAM,0)) == -1)
     {
         perror("failed to create the listening socket");
@@ -69,7 +71,9 @@ int Server::startServer(short port)
     }
 
     // bind an address to the socket
+    #ifdef DEBUG
     printf("server: bind an address to the socket\n");
+    #endif
     bzero((char*) &server,sizeof(server));
     server.sin_family      = AF_INET;
     server.sin_port        = htons(port);
@@ -81,7 +85,9 @@ int Server::startServer(short port)
     }
 
     // start listening thread
+    #ifdef DEBUG
     printf("server: start listening thread\n");
+    #endif
     return pthread_create(&thread, 0, listeningThread, this);
 }
 
@@ -118,7 +124,9 @@ int Server::stopServer()
  */
 void Server::onConnect(Session* session)
 {
+    #ifdef DEBUG
     printf("server: session %p connected\n",session);
+    #endif
 }
 
 /**
@@ -137,13 +145,15 @@ void* Server::listeningThread(void* params)
     // accept any connection requests, and create a session for each
     while(true)
     {
+        #ifdef DEBUG
         printf("server: waiting for connections...\n");
+        #endif
 
         // accept the next connection & check for errors
         int socket;
         if((socket = accept(dis->svrSock,0,0)) == -1)
         {
-            printf("server: accept fails...\n");
+            perror("failed to accept connection\n");
             break;
         }
 

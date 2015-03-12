@@ -19,6 +19,8 @@ Session::Session(int socket)
     this->recvProcess = ReceiveProcess::getInstance();
     // SendProcess* sendProcess
     // NetworkEntityMultiplexer* entityMux
+
+    recvProcess->addSession(this);
 }
 
 Session::~Session()
@@ -34,6 +36,7 @@ void Session::send(Message *message)
 void Session::disconnect()
 {
     close(socket);
+    recvProcess->removeSession(this);
     printf("session: session %p:%d disconnected\n",this,socket);
 }
 

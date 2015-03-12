@@ -23,7 +23,7 @@
 -----------------------------------------------------------------------------------------------*/
 #include "ReceiveProcess.h"
 // #include "Message.h"
-// #include "ancillary.h"
+#include "ancillary.h"
 #include "Session.h"
 
 #include <stdio.h>
@@ -125,52 +125,46 @@ ReceiveProcess* ReceiveProcess::getInstance()
                     creating the socket for file descriptors to be shared between processes,
                     creates child process
 -----------------------------------------------------------------------------------------------*/
-/*ReceiveProcess::ReceiveProcess()
+ReceiveProcess::ReceiveProcess()
 {
     printf("receive: ReceiveProcess\n");
-    static onetimeSetupComplete = false;
 
-    if(!onetimeSetupComplete)
+    // TODO: uncomment this later when dealing with communication from receive
+    //       process to main process
+    // signal(SIGUSR1, sig_handler);
+
+    // open pipes
+    if (pipe(recvPipe) < 0 || pipe(mainPipe) < 0)
     {
-        onetimeSetupComplete = true;
-
-        signal(SIGUSR1, sig_handler);
-
-        // open pipe used to talk with main process
-        if (pipe(p2) < 0)
-        {
-            perror("pipe call");
-        }
+        perror("failed to open pipes");
     }
 
-    // open pipe used to talk with receive process
-    if (pipe(p) < 0)
+    // create socketpair
+    if(socketpair(PF_UNIX,SOCK_STREAM,0,ipcsock))
     {
-        perror("pipe call");
-    }
-
-    // create pipe used to share sockets with other processes
-    if(socketpair(PF_UNIX, SOCK_STREAM, 0, ipcsock))
-    {
-        perror("socketpair");
+        perror("failed to create socketpair");
     }
 
     // create receive process
-    pid = fork();
-    switch(pid)
+    switch(fork())
     {
-    case -1:
-        perror("Fork Failed!");
+    case -1:    // fork error; report the error
+        perror("failed to create receive process");
         break;
-    case  0:
+    case  0:    // recv process; close unused pipes, and run receive routine
         close(ipcsock[0]);
-        runProcess();
+        close(recvPipe[1]);
+        close(mainPipe[0]);
+        receiveRoutine();
+        exit(1);
         break;
-    default:
+    default:    // main process; close necessary pipes
         close(ipcsock[1]);
+        close(recvPipe[0]);
+        close(mainPipe[1]);
         break;
     }
-}*/
+}
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        addSocket
@@ -189,25 +183,24 @@ ReceiveProcess* ReceiveProcess::getInstance()
 -- RETURNS:         void
 --
 -----------------------------------------------------------------------------------------------*/
-/*void ReceiveProcess::addSession(Session *session)
+void ReceiveProcess::addSession(Session* session)
 {
-    printf("receive: addSession\n");
-    unsigned int new_sd = session->getSocket();
+    printf("receive: addSession %p\n",session);
 
-    // Add Socket to Map on Parent Process
-    sessions.insert(std::pair<int, Session*>(new_sd, session));
+    // add socket to map on parent process
+    sessions[session->socket] = session;
 
-    // Transfer Socket
-    ancil_send_fd(ipcsock[0], new_sd);
+    // transfer socket
+    ancil_send_fd(ipcsock[0], session->socket);
 
-    // Create Message to Send on Pipe
-    ReceiveMessage message;
-    message.type = ADD_SOCKET;
-    message.socket_id = new_sd;
+    // create message to send on pipe
+    ReceiveMessage msg;
+    msg.type      = ADD_SOCKET;
+    msg.socket_id = session->socket;
 
-    // Inform child process of new Socket
-    write(p[1], &message, 1);
-}*/
+    // tell receive process of the new socket
+    write(recvPipe[1],&msg,sizeof(msg));
+}
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        removeSession
@@ -227,23 +220,21 @@ ReceiveProcess* ReceiveProcess::getInstance()
 --
 -- NOTES:
 -----------------------------------------------------------------------------------------------*/
-/*void ReceiveProcess::removeSession(Session *session)
+void ReceiveProcess::removeSession(Session* session)
 {
-    printf("receive: removeSession\n");
-    unsigned int sd = session->getSocket();
+    printf("receive: removeSession %p\n",session);
 
-    // Remove Socket from Map on Parent Process
-    sessions.erase(sd);
-    close(sd);
+    // remove socket from map on parent process
+    sessions.erase(session->socket);
 
-    // Create Message to Send on Pipe
-    ReceiveMessage message;
-    message.type = REMOVE_SOCKET;
-    message.socket_id = sd;
+    // create message to send on pipe
+    ReceiveMessage msg;
+    msg.type      = REMOVE_SOCKET;
+    msg.socket_id = session->socket;
 
-    // Inform child process of new Socket
-    write(p[1], &message, 1);
-}*/
+    // tell receive process to remove the socket
+    write(recvPipe[1],&msg,sizeof(msg));
+}
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        onmessageReceived
@@ -286,15 +277,13 @@ ReceiveProcess* ReceiveProcess::getInstance()
 --
 -- NOTES:           Writes close signal to the receive process
 -----------------------------------------------------------------------------------------------*/
-/*void ReceiveProcess::closeProcess()
+ReceiveProcess::~ReceiveProcess()
 {
-    printf("receive: closeProcess\n");
-    ReceiveMessage message;
-    message.type = SHUTDOWN;
-    message.socket_id = 0;
+    printf("receive: ~ReceiveProcess\n");
 
-    write(p[1], &message, sizeof(ReceiveMessage));
-}*/
+    // close pipe, which implicitly tells receive process to shutdown
+    close(recvPipe[1]);
+}
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        runProcess
@@ -316,9 +305,16 @@ ReceiveProcess* ReceiveProcess::getInstance()
                     Then it monitors the pipe between this process and the main for any messages
                     and checks for any tcp data coming in.
 -----------------------------------------------------------------------------------------------*/
-/*void ReceiveProcess::runProcess()
+void ReceiveProcess::receiveRoutine()
 {
-    fd_set readfds;
+    printf("receive process started...\n");
+    char buffer[80];
+    while(read(recvPipe[0],buffer,80) > 0)
+    {
+        printf("receive process looped...\n");
+    }
+    printf("receive process stopped...\n");
+    /*fd_set readfds;
     int max_sd = 0;
     int n;
     int clientSockets[25];
@@ -441,5 +437,5 @@ ReceiveProcess* ReceiveProcess::getInstance()
                 fflush(stdout);
             }
         }
-    }
-}*/
+    }*/
+}

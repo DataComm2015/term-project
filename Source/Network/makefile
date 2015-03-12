@@ -14,14 +14,20 @@ Client.o: Client.cpp Client.h
 	$(CC) -c Client.cpp
 
 # server modules
-ServerTest: ServerTest.o Server.o Session.o ReceiveProcess.o
-	$(CC) $(LIBS) -o ./ServerTest.out ServerTest.o Server.o Session.o ReceiveProcess.o
+ServerTest: ServerTest.o Server.o Session.o ReceiveProcess.o fd_recv.o fd_send.o
+	$(CC) $(LIBS) -o ./ServerTest.out ServerTest.o Server.o Session.o ReceiveProcess.o fd_recv.o fd_send.o
 
 Server.o: Server.cpp Server.h
 	$(CC) -c Server.cpp
 
 ReceiveProcess.o: ReceiveProcess.cpp ReceiveProcess.h
 	$(CC) -c ReceiveProcess.cpp
+
+fd_recv.o: fd_recv.c ancillary.h
+	$(CC) -c fd_recv.c
+
+fd_send.o: fd_send.c ancillary.h
+	$(CC) -c fd_send.c
 
 # shared helper modules
 Session.o: Session.cpp Session.h
