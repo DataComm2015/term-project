@@ -24,7 +24,6 @@
 
 namespace Networking
 {
-    class Socket;
     // class ReceiveProcess;
     // class SendProcess;
     // class NetworkEntityMultiplexer;
@@ -36,16 +35,14 @@ namespace Networking
     friend class ReceiveProcess;
 
     public:
-        Session(int socket);
+        Session();
         virtual ~Session();
         void send(Message *message);
         void disconnect();
+        void onMessageReceived(Message *message);
+        void onDisconnect(int remote);
 
     private:
-        void onMessageReceived(Message *message);
-        void onConnectionClosedByRemote();
-
-        int socket;
         // ReceiveProcess* recvProcess;
         // SendProcess* sendProcess;
         // NetworkEntityMultiplexer* entityMux;

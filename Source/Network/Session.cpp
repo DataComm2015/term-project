@@ -10,12 +10,11 @@
 
 using namespace Networking;
 
-Session::Session(int socket)
+Session::Session()
 {
-    printf("session: session %p:%d connected\n",this,socket);
+    printf("session: session %p connected\n",this);
 
     // initialize instance variables
-    this->socket = socket;
     // this->recvProcess = ReceiveProcess::getInstance();
     // SendProcess* sendProcess
     // NetworkEntityMultiplexer* entityMux
@@ -35,17 +34,21 @@ void Session::send(Message *message)
 
 void Session::disconnect()
 {
-    close(socket);
+    // printf("session: session %p disconnected\n",this);
     // recvProcess->removeSession(this);
-    printf("session: session %p:%d disconnected\n",this,socket);
 }
 
 void Session::onMessageReceived(Message* msg)
 {
-    printf("Session::onMessageReceived %.*s\n",msg->len,msg->data);
+    printf("server: socket %p: ",this);
+    for(int i = 0; i < msg->len; ++i)
+    {
+        printf("%c",((char*)msg->data)[i]);
+    }
+    printf("\n");
 }
 
-void Session::onConnectionClosedByRemote()
+void Session::onDisconnect(int remote)
 {
-    printf("Session::onConnectionClosedByRemote\n");
+    printf("server: session %p disconnected by %s host\n",this,remote?"remote":"local");
 }

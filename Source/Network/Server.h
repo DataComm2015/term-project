@@ -6,6 +6,7 @@
 namespace Networking
 {
     class ReceiveProcess;
+    class Session;
 
     class Server
     {
@@ -23,7 +24,8 @@ namespace Networking
         static void onSocketActivity(void* dis, int socket);
         ReceiveProcess* receiveProcess;
         int svrSock;
-        // std::map<int,Session*> sessions;
+        std::map<int,Session*> sessions;
+        pthread_t acceptThread;
     };
 }
 

@@ -1,5 +1,7 @@
 #include "Server.h"
+#include "Session.h"
 #include "ReceiveProcess.h"
+#include "Message.h"
 
 #include <stdio.h>
 #include <netdb.h>
@@ -12,8 +14,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <signal.h>
 #include <vector>
 
+
+// #define DEBUG
 // < -- NEED MECHANISM FOR REMOVING STALE SESSIONS -- >
 
 using namespace Networking;
@@ -24,7 +29,6 @@ using namespace Networking;
 Server::Server()
 {
     svrSock = 0;
-    receiveProcess = new ReceiveProcess(this,onSocketActivity);
 }
 
 /**
@@ -32,8 +36,6 @@ Server::Server()
  */
 Server::~Server()
 {
-    printf("Server::~Server()\n");
-    delete receiveProcess;
     stopServer();
 }
 
@@ -52,8 +54,6 @@ int Server::startServer(short port)
         return 0;
     }
 
-    sockaddr_in server;
-    pthread_t thread;
 
     // create the listening socket
     if((svrSock = socket(AF_INET,SOCK_STREAM,0)) == -1)
@@ -71,6 +71,7 @@ int Server::startServer(short port)
     }
 
     // bind an address to the socket
+    sockaddr_in server;
     bzero((char*) &server,sizeof(server));
     server.sin_family      = AF_INET;
     server.sin_port        = htons(port);
@@ -81,8 +82,9 @@ int Server::startServer(short port)
         return -1;
     }
 
-    // start listening thread
-    return pthread_create(&thread, 0, listeningRoutine, this);
+    // start listening and receive threads
+    receiveProcess = new ReceiveProcess(this,onSocketActivity);
+    return pthread_create(&acceptThread, 0, listeningRoutine, this);
 }
 
 /**
@@ -97,12 +99,16 @@ int Server::stopServer()
         return 0;
     }
 
-    // // close and remove all sessions
-    // for(auto session = sessions.begin(); session != sessions.end(); ++session)
-    // {
-    //     delete (*session);
-    // }
-    // sessions.erase(sessions.begin(),sessions.end());
+    // stop the listening and receive process
+    delete receiveProcess;
+    // pthread_cancel(acceptThread);
+
+    // close and remove all sessions
+    for(auto session = sessions.begin(); session != sessions.end(); ++session)
+    {
+        delete (*session).second;
+    }
+    sessions.erase(sessions.begin(),sessions.end());
 
     // close the server socket
     int ret = close(svrSock);
@@ -114,6 +120,7 @@ int Server::stopServer()
 void Server::onConnect(int socket)
 {
     printf("server: socket %d connected\n",socket);
+    // sessions[socket] = new Session();
 }
 
 void Server::onMessage(int socket, char* data, int len)
@@ -124,11 +131,19 @@ void Server::onMessage(int socket, char* data, int len)
         printf("%c",data[i]);
     }
     printf("\n");
+    // Message msg;
+    // msg.type = *(int*)data;
+    // msg.data = ((int*)data)+1;
+    // msg.len  = len-sizeof(int);
+    // sessions[socket]->onMessageReceived(&msg);
 }
 
 void Server::onDisconnect(int socket, int remote)
 {
     printf("server: socket %d disconnected by %s host\n",socket,remote?"remote":"local");
+    // sessions[socket]->onDisconnect(remote);
+    // free(sessions[socket]);
+    // sessions.erase(socket);
 }
 
 /**

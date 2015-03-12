@@ -6,14 +6,18 @@ int main(void)
 {
     using Networking::Server;
 
-    Server svr;
+    Server* svr = new Server();
 
-    svr.startServer(7000);
-
+    svr->startServer(7000);
+    printf("server started\n");
     getchar();
 
-    svr.stopServer();
+    svr->stopServer();
+    printf("server stopped\n");
+    getchar();
 
+    delete svr;
+    printf("server deleted\n");
     getchar();
 
     return 0;
