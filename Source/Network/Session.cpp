@@ -16,11 +16,11 @@ Session::Session(int socket)
 
     // initialize instance variables
     this->socket = socket;
-    this->recvProcess = ReceiveProcess::getInstance();
+    // this->recvProcess = ReceiveProcess::getInstance();
     // SendProcess* sendProcess
     // NetworkEntityMultiplexer* entityMux
 
-    recvProcess->addSession(this);
+    // recvProcess->addSession(this);
 }
 
 Session::~Session()
@@ -36,7 +36,7 @@ void Session::send(Message *message)
 void Session::disconnect()
 {
     close(socket);
-    recvProcess->removeSession(this);
+    // recvProcess->removeSession(this);
     printf("session: session %p:%d disconnected\n",this,socket);
 }
 

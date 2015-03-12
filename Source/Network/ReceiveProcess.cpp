@@ -12,8 +12,8 @@
 -- INTERFACE:
 -- ReceiveProcess();
 --  ~ReceiveProcess();
---  void addSession(Session *session);
---  void removeSession(Session *session);
+--  void addSocket(Session *session);
+--  void removeSocket(Session *session);
 --  void onMessageReceived(int socket, Message *message);
 --  void runProcess();
 --  void closeProcess();
@@ -44,20 +44,6 @@
 
 using namespace Networking;
 
-// set initial value of static variable
-ReceiveProcess* ReceiveProcess::instance = 0;
-
-ReceiveProcess* ReceiveProcess::getInstance()
-{
-    if(instance == 0)
-    {
-        instance = new ReceiveProcess();
-    }
-
-    printf("receive: getInstance %p\n",instance);
-    return instance;
-}
-
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        ReceiveProcess
 --
@@ -77,9 +63,15 @@ ReceiveProcess* ReceiveProcess::getInstance()
                     creating the socket for file descriptors to be shared between processes,
                     creates child process
 -----------------------------------------------------------------------------------------------*/
-ReceiveProcess::ReceiveProcess()
+ReceiveProcess::ReceiveProcess(void* params, void (*handleSocket)(void* params, int socket))
 {
+    #ifdef DEBUG
     printf("receive: ReceiveProcess\n");
+    #endif
+
+    // initialize instance data
+    this->params       = params;
+    this->handleSocket = handleSocket;
 
     // open pipe
     if (pipe(ctrlPipe) < 0)
@@ -88,75 +80,7 @@ ReceiveProcess::ReceiveProcess()
     }
 
     // create receive process
-    pthread_t thread;
-    pthread_create(&thread,0,receiveRoutine,this);
-}
-
-/*----------------------------------------------------------------------------------------------
--- FUNCTION:        addSocket
---
--- DATE:            February 27, 2015
---
--- REVISIONS:       (Date and Description)
---
--- DESIGNER:        Alex Lam
---
--- PROGRAMMER:      Alex Lam, Eric Tsang
---
--- INTERFACE:       void addSession(Session *session)
---  new_sd:         pointer to session to add
---
--- RETURNS:         void
---
------------------------------------------------------------------------------------------------*/
-void ReceiveProcess::addSession(Session* session)
-{
-    printf("receive: addSession %p\n",session);
-
-    // add socket to map on parent process
-    sessions[session->socket] = session;
-
-    // create message to send on pipe
-    ReceiveMessage msg;
-    msg.type      = ADD_SOCKET;
-    msg.socket_id = session->socket;
-
-    // tell receive process of the new socket
-    write(ctrlPipe[1],&msg,sizeof(msg));
-}
-
-/*----------------------------------------------------------------------------------------------
--- FUNCTION:        removeSession
---
--- DATE:            February 27, 2015
---
--- REVISIONS:       (Date and Description)
---
--- DESIGNER:        Alex Lam
---
--- PROGRAMMER:      Alex Lam, Jeff Bayntun, Eric Tsang
---
--- INTERFACE:       void removeSession(Session *session)
---  session:        pointer to the session to remove
---
--- RETURNS:         void
---
--- NOTES:
------------------------------------------------------------------------------------------------*/
-void ReceiveProcess::removeSession(Session* session)
-{
-    printf("receive: removeSession %p\n",session);
-
-    // remove socket from map on parent process
-    sessions.erase(session->socket);
-
-    // create message to send on pipe
-    ReceiveMessage msg;
-    msg.type      = REMOVE_SOCKET;
-    msg.socket_id = session->socket;
-
-    // tell receive process to remove the socket
-    write(ctrlPipe[1],&msg,sizeof(msg));
+    pthread_create(&receiveThread,0,receiveRoutine,this);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -178,10 +102,77 @@ void ReceiveProcess::removeSession(Session* session)
 -----------------------------------------------------------------------------------------------*/
 ReceiveProcess::~ReceiveProcess()
 {
+    #ifdef DEBUG
     printf("receive: ~ReceiveProcess\n");
+    #endif
 
     // close pipe, which implicitly tells receive process to shutdown
     close(ctrlPipe[1]);
+}
+
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        addSocket
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Alex Lam
+--
+-- PROGRAMMER:      Alex Lam, Eric Tsang
+--
+-- INTERFACE:       void addSocket(Session *session)
+--  new_sd:         pointer to session to add
+--
+-- RETURNS:         void
+--
+-----------------------------------------------------------------------------------------------*/
+void ReceiveProcess::addSocket(int socket)
+{
+    #ifdef DEBUG
+    printf("receive: addSocket %d\n",socket);
+    #endif
+
+    // create message to send on pipe
+    ReceiveMessage msg;
+    msg.type      = ADD_SOCKET;
+    msg.socket_id = socket;
+
+    // tell receive process of the new socket
+    write(ctrlPipe[1],&msg,sizeof(msg));
+}
+
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        removeSocket
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Alex Lam
+--
+-- PROGRAMMER:      Alex Lam, Jeff Bayntun, Eric Tsang
+--
+-- INTERFACE:       void removeSocket(Session *session)
+--  session:        pointer to the session to remove
+--
+-- RETURNS:         void
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
+void ReceiveProcess::removeSocket(int socket)
+{
+    #ifdef DEBUG
+    printf("receive: removeSocket %d\n",socket);
+    #endif
+
+    // create message to send on pipe
+    ReceiveMessage msg;
+    msg.type      = REMOVE_SOCKET;
+    msg.socket_id = socket;
+
+    // tell receive process to remove the socket
+    write(ctrlPipe[1],&msg,sizeof(msg));
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -206,7 +197,9 @@ ReceiveProcess::~ReceiveProcess()
 -----------------------------------------------------------------------------------------------*/
 void* ReceiveProcess::receiveRoutine(void* params)
 {
+    #ifdef DEBUG
     printf("receive process started...\n");
+    #endif
 
     // parse thread parameters
     ReceiveProcess* dis = (ReceiveProcess*) params;
@@ -219,19 +212,15 @@ void* ReceiveProcess::receiveRoutine(void* params)
     while(true)
     {
         // wait for activity to occur
-        int activity = files_select(&files);
-
-        // an error has occured
-        if(activity == -1)
-        {
-            break;
-        }
+        files_select(&files);
 
         // handle control pipe activity
         if(FD_ISSET(dis->ctrlPipe[0],&files.selectFds))
         {
             ReceiveMessage msg;
+            #ifdef DEBUG
             printf("handle control pipe activity\n");
+            #endif
 
             // read from pipe
             int result = read(dis->ctrlPipe[0],&msg,sizeof(msg));
@@ -251,66 +240,40 @@ void* ReceiveProcess::receiveRoutine(void* params)
             case ADD_SOCKET:
                 // add socket to set of files to select
                 files_add_file(&files,msg.socket_id);
+                #ifdef DEBUG
                 printf("adding socket %d\n",msg.socket_id);
+                #endif
                 break;
 
             // remove a socket from socket set
             case REMOVE_SOCKET:
                 // remove the socket from set of files to select
                 files_rm_file(&files,msg.socket_id);
+                #ifdef DEBUG
                 printf("rming socket %d\n",msg.socket_id);
+                #endif
                 break;
             }
         }
 
         // handle socket activity
-        for(auto socket = files.fdSet.begin(); socket != files.fdSet.end();
-            ++socket)
+        for(auto socket = files.fdSet.end(); socket != files.fdSet.begin();
+            --socket)
         {
             int selectedSocket = *socket;
 
             if(FD_ISSET(selectedSocket,&files.selectFds)
                 && selectedSocket != dis->ctrlPipe[0])
             {
-                // printf("handle socket activity\n");
-
-                Message msg;
-
-                // read from socket
-                int result = read(selectedSocket,&msg.type,sizeof(msg.type));
-
-                // remove socket if the socket encounters an error, or is closed
-                if(result == 0 || result == -1)
-                {
-                    printf("close socket %d\n",selectedSocket);
-                    // close the socket
-                    close(selectedSocket);
-                    // remove the socket from set of files to select
-                    files_rm_file(&files,selectedSocket);
-                    // invoke session callback
-                    dis->sessions[selectedSocket]->onConnectionClosedByRemote();
-                }
-                else
-                {
-                    // deal with the read data otherwise by writing the received
-                    // data to the main process through a pipe
-                    read(selectedSocket,&msg.len,sizeof(msg.len));
-                    void* buffer = malloc(msg.len);
-                    read(selectedSocket,buffer,msg.len);
-
-                    // invoke session callback
-                    msg.data = buffer;
-                    dis->sessions[selectedSocket]->onMessageReceived(&msg);
-
-                    // cleanup...
-                    free(buffer);
-                }
+                dis->handleSocket(dis->params,selectedSocket);
             }
         }
     }
 
-    // cleanup
+
+    #ifdef DEBUG// cleanup
     printf("receive process stopped...\n");
+    #endif
 
     return 0;
 }

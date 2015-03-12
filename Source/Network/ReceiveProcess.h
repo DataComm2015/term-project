@@ -13,6 +13,7 @@ namespace Networking
 {
     struct Message;
     class Session;
+    class Server;
 
     enum ReceiveMessageType
     {
@@ -35,31 +36,27 @@ namespace Networking
     class ReceiveProcess
     {
     public:
-        static ReceiveProcess* getInstance();
-        void addSession(Session *session);
-        void removeSession(Session *session);
+        ReceiveProcess(void* params, void (*handleSocket)(void* params, int socket));
+        ~ReceiveProcess();
+        void addSocket(int socket);
+        void removeSocket(int socket);
 
     private:
-        ReceiveProcess();
-        ~ReceiveProcess();
         static void* receiveRoutine(void* params);
 
+        void* params;
+
+        void (*handleSocket)(void* params, int socket);
+
         /**
-         * pointer to the singleton receive process.
+         * handle to thread that does the receiving.
          */
-        static ReceiveProcess* instance;
+        pthread_t receiveThread;
 
         /**
          * IPC pipe used to control what to select.
          */
         int ctrlPipe[2];
-
-        /**
-         * used only on the main process.
-         *
-         * maps sockets to their corresponding sessions.
-         */
-        std::map<int, Session*> sessions;
     };
 }
 

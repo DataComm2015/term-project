@@ -25,7 +25,7 @@
 namespace Networking
 {
     class Socket;
-    class ReceiveProcess;
+    // class ReceiveProcess;
     // class SendProcess;
     // class NetworkEntityMultiplexer;
 
@@ -46,7 +46,7 @@ namespace Networking
         void onConnectionClosedByRemote();
 
         int socket;
-        ReceiveProcess* recvProcess;
+        // ReceiveProcess* recvProcess;
         // SendProcess* sendProcess;
         // NetworkEntityMultiplexer* entityMux;
     };

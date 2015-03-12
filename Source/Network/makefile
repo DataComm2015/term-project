@@ -14,8 +14,11 @@ Client.o: Client.cpp Client.h
 	$(CC) -c Client.cpp
 
 # server modules
-ServerTest: ServerTest.o Server.o Session.o ReceiveProcess.o select_helper.o
-	$(CC) $(LIBS) -o ./ServerTest.out ServerTest.o Server.o Session.o ReceiveProcess.o select_helper.o
+ServerTest: ServerTest.o Server.o ReceiveProcess.o select_helper.o
+	$(CC) $(LIBS) -o ./ServerTest.out ServerTest.o Server.o ReceiveProcess.o select_helper.o
+
+# Session.o
+# Session.o
 
 Server.o: Server.cpp Server.h
 	$(CC) -c Server.cpp

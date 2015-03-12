@@ -1,5 +1,5 @@
 #include "Server.h"
-#include "Session.h"
+#include "ReceiveProcess.h"
 
 #include <stdio.h>
 #include <netdb.h>
@@ -24,6 +24,7 @@ using namespace Networking;
 Server::Server()
 {
     svrSock = 0;
+    receiveProcess = new ReceiveProcess(this,onSocketActivity);
 }
 
 /**
@@ -31,6 +32,8 @@ Server::Server()
  */
 Server::~Server()
 {
+    printf("Server::~Server()\n");
+    delete receiveProcess;
     stopServer();
 }
 
@@ -53,9 +56,6 @@ int Server::startServer(short port)
     pthread_t thread;
 
     // create the listening socket
-    #ifdef DEBUG
-    printf("server: create the listening socket\n");
-    #endif
     if((svrSock = socket(AF_INET,SOCK_STREAM,0)) == -1)
     {
         perror("failed to create the listening socket");
@@ -71,9 +71,6 @@ int Server::startServer(short port)
     }
 
     // bind an address to the socket
-    #ifdef DEBUG
-    printf("server: bind an address to the socket\n");
-    #endif
     bzero((char*) &server,sizeof(server));
     server.sin_family      = AF_INET;
     server.sin_port        = htons(port);
@@ -85,10 +82,7 @@ int Server::startServer(short port)
     }
 
     // start listening thread
-    #ifdef DEBUG
-    printf("server: start listening thread\n");
-    #endif
-    return pthread_create(&thread, 0, listeningThread, this);
+    return pthread_create(&thread, 0, listeningRoutine, this);
 }
 
 /**
@@ -103,12 +97,12 @@ int Server::stopServer()
         return 0;
     }
 
-    // close and remove all sessions
-    for(auto session = sessions.begin(); session != sessions.end(); ++session)
-    {
-        delete (*session);
-    }
-    sessions.erase(sessions.begin(),sessions.end());
+    // // close and remove all sessions
+    // for(auto session = sessions.begin(); session != sessions.end(); ++session)
+    // {
+    //     delete (*session);
+    // }
+    // sessions.erase(sessions.begin(),sessions.end());
 
     // close the server socket
     int ret = close(svrSock);
@@ -117,16 +111,24 @@ int Server::stopServer()
     return ret;
 }
 
-/**
- * function to be overridden by subclasses
- *
- * @param  session
- */
-void Server::onConnect(Session* session)
+void Server::onConnect(int socket)
 {
-    #ifdef DEBUG
-    printf("server: session %p connected\n",session);
-    #endif
+    printf("server: socket %d connected\n",socket);
+}
+
+void Server::onMessage(int socket, char* data, int len)
+{
+    printf("server: socket %d: ",socket);
+    for(int i = 0; i < len; ++i)
+    {
+        printf("%c",data[i]);
+    }
+    printf("\n");
+}
+
+void Server::onDisconnect(int socket, int remote)
+{
+    printf("server: socket %d disconnected by %s host\n",socket,remote?"remote":"local");
 }
 
 /**
@@ -134,7 +136,7 @@ void Server::onConnect(Session* session)
  *
  * @param params thread parameters; points to the calling server instance.
  */
-void* Server::listeningThread(void* params)
+void* Server::listeningRoutine(void* params)
 {
     // parse thread parameters
     Server* dis = (Server*) params;
@@ -158,10 +160,34 @@ void* Server::listeningThread(void* params)
         }
 
         // create a session for the new connection
-        Session* session = new Session(socket);
-        dis->sessions.insert(session);
-        dis->onConnect(session);
+        dis->receiveProcess->addSocket(socket);
+        dis->onConnect(socket);
     }
 
     return 0;
+}
+
+void Server::onSocketActivity(void* params, int socket)
+{
+    // parse callback parameters
+    Server* dis = (Server*) params;
+
+    // read from socket
+    int msglen;
+    int result = read(socket,&msglen,sizeof(msglen));
+
+    // remove socket if the socket encounters an error, or is closed
+    if(result == 0 || result == -1)
+    {
+        dis->onDisconnect(socket,1);
+        dis->receiveProcess->removeSocket(socket);
+        close(socket);
+    }
+    else
+    {
+        void* buffer = malloc(msglen);
+        read(socket,buffer,msglen);
+        dis->onMessage(socket,(char*) buffer,msglen);
+        free(buffer);
+    }
 }
