@@ -1,6 +1,6 @@
 #include "Session.h"
 #include "Message.h"
-// #include "ReceiveProcess"
+#include "ReceiveProcess.h"
 // #include "SendProcess"
 // #include "NetworkEntityMultiplexer.h"
 
@@ -12,9 +12,11 @@ using namespace Networking;
 
 Session::Session(int socket)
 {
-    printf("session: session %p connected\n", this);
+    printf("session: session %p:%d connected\n",this,socket);
+
+    // initialize instance variables
     this->socket = socket;
-    // ReceiveProcess* readProcess
+    this->recvProcess = ReceiveProcess::getInstance();
     // SendProcess* sendProcess
     // NetworkEntityMultiplexer* entityMux
 }
@@ -32,7 +34,7 @@ void Session::send(Message *message)
 void Session::disconnect()
 {
     close(socket);
-    printf("session: session %p disconnected\n", this);
+    printf("session: session %p:%d disconnected\n",this,socket);
 }
 
 void Session::onMessageReceived(Message *message)

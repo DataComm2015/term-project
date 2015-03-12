@@ -23,6 +23,7 @@ using namespace Networking;
  */
 Server::Server()
 {
+    svrSock = 0;
 }
 
 /**
@@ -43,13 +44,27 @@ Server::~Server()
  */
 int Server::startServer(short port)
 {
+    if(svrSock != 0)
+    {
+        return 0;
+    }
+
     sockaddr_in server;
     pthread_t thread;
 
     // create the listening socket
     printf("server: create the listening socket\n");
-    if((listeningSocket = socket(AF_INET,SOCK_STREAM,0)) == -1)
+    if((svrSock = socket(AF_INET,SOCK_STREAM,0)) == -1)
     {
+        perror("failed to create the listening socket");
+        return -1;
+    }
+
+    // set sock opt to reuse address
+    int arg = 1;
+    if(setsockopt(svrSock,SOL_SOCKET,SO_REUSEADDR,&arg,sizeof(arg)) == -1)
+    {
+        perror("failed to set sock opt to reuse address");
         return -1;
     }
 
@@ -59,8 +74,9 @@ int Server::startServer(short port)
     server.sin_family      = AF_INET;
     server.sin_port        = htons(port);
     server.sin_addr.s_addr = htonl(INADDR_ANY);
-    if(bind(listeningSocket,(sockaddr*) &server,sizeof(server)) == -1)
+    if(bind(svrSock,(sockaddr*) &server,sizeof(server)) == -1)
     {
+        perror("failed to bind an address to the socket");
         return -1;
     }
 
@@ -72,10 +88,15 @@ int Server::startServer(short port)
 /**
  * stops server, and closes all connections connected with the server.
  *
- * @return integer indicating the outcome of the operation
+ * @return 0 upon success; -1 on failure. check errno for details.
  */
 int Server::stopServer()
 {
+    if(svrSock == 0)
+    {
+        return 0;
+    }
+
     // close and remove all sessions
     for(auto session = sessions.begin(); session != sessions.end(); ++session)
     {
@@ -84,7 +105,10 @@ int Server::stopServer()
     sessions.erase(sessions.begin(),sessions.end());
 
     // close the server socket
-    return close(listeningSocket);
+    int ret = close(svrSock);
+    svrSock = 0;
+
+    return ret;
 }
 
 /**
@@ -108,7 +132,7 @@ void* Server::listeningThread(void* params)
     Server* dis = (Server*) params;
 
     // start listening on the server socket
-    listen(dis->listeningSocket, 5);
+    listen(dis->svrSock,5);
 
     // accept any connection requests, and create a session for each
     while(true)
@@ -117,7 +141,7 @@ void* Server::listeningThread(void* params)
 
         // accept the next connection & check for errors
         int socket;
-        if((socket = accept(dis->listeningSocket,0,0)) == -1)
+        if((socket = accept(dis->svrSock,0,0)) == -1)
         {
             printf("server: accept fails...\n");
             break;

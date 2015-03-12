@@ -22,6 +22,9 @@
 -- NOTES: This file provides definitions for a ReceiveProcess object.
 -----------------------------------------------------------------------------------------------*/
 #include "ReceiveProcess.h"
+// #include "Message.h"
+// #include "ancillary.h"
+#include "Session.h"
 
 #include <stdio.h>
 #include <netdb.h>
@@ -35,14 +38,25 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <iostream>
-
 #include <signal.h>
 #include <vector>
-
-#include "Message.h"
-#include "ancillary.h"
-#include "Session.h"
 #include <signal.h>
+
+using namespace Networking;
+
+// set initial value of static variable
+ReceiveProcess* ReceiveProcess::instance = 0;
+
+ReceiveProcess* ReceiveProcess::getInstance()
+{
+    if(instance == 0)
+    {
+        instance = new ReceiveProcess();
+    }
+
+    printf("receive: getInstance %p\n",instance);
+    return instance;
+}
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        sig_handler
@@ -66,8 +80,9 @@
 
 -----------------------------------------------------------------------------------------------*/
 
-void Networking::ReceiveProcess::sig_handler(int signum)
+/*void ReceiveProcess::sig_handler(int signum)
 {
+    printf("receive: sig_handler\n");
     // allocate data to hold data from pipe
     int socket;
     int messagelength;
@@ -89,7 +104,7 @@ void Networking::ReceiveProcess::sig_handler(int signum)
 
     // invoke callback
     onMessageReceived(socket, message);
-}
+}*/
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        ReceiveProcess
@@ -110,8 +125,9 @@ void Networking::ReceiveProcess::sig_handler(int signum)
                     creating the socket for file descriptors to be shared between processes,
                     creates child process
 -----------------------------------------------------------------------------------------------*/
-Networking::ReceiveProcess::ReceiveProcess()
+/*ReceiveProcess::ReceiveProcess()
 {
+    printf("receive: ReceiveProcess\n");
     static onetimeSetupComplete = false;
 
     if(!onetimeSetupComplete)
@@ -154,7 +170,7 @@ Networking::ReceiveProcess::ReceiveProcess()
         close(ipcsock[1]);
         break;
     }
-}
+}*/
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        addSocket
@@ -173,8 +189,9 @@ Networking::ReceiveProcess::ReceiveProcess()
 -- RETURNS:         void
 --
 -----------------------------------------------------------------------------------------------*/
-void Networking::ReceiveProcess::addSession(Session *session)
+/*void ReceiveProcess::addSession(Session *session)
 {
+    printf("receive: addSession\n");
     unsigned int new_sd = session->getSocket();
 
     // Add Socket to Map on Parent Process
@@ -190,7 +207,7 @@ void Networking::ReceiveProcess::addSession(Session *session)
 
     // Inform child process of new Socket
     write(p[1], &message, 1);
-}
+}*/
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        removeSession
@@ -210,8 +227,9 @@ void Networking::ReceiveProcess::addSession(Session *session)
 --
 -- NOTES:
 -----------------------------------------------------------------------------------------------*/
-void Networking::ReceiveProcess::removeSession(Session *session)
+/*void ReceiveProcess::removeSession(Session *session)
 {
+    printf("receive: removeSession\n");
     unsigned int sd = session->getSocket();
 
     // Remove Socket from Map on Parent Process
@@ -225,7 +243,7 @@ void Networking::ReceiveProcess::removeSession(Session *session)
 
     // Inform child process of new Socket
     write(p[1], &message, 1);
-}
+}*/
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        onmessageReceived
@@ -244,11 +262,12 @@ void Networking::ReceiveProcess::removeSession(Session *session)
 --
 -- NOTES:           Calls the "onMessageReceived" method of the Session that received data.
 -----------------------------------------------------------------------------------------------*/
-void Networking::ReceiveProcess::onMessageReceived(int socket, Message *message)
+/*void ReceiveProcess::onMessageReceived(int socket, Message *message)
 {
+    printf("receive: onMessageReceived\n");
     Session *session = sessions[socket];
     session->onMessageReceived(message);
-}
+}*/
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        closeProcess
@@ -267,14 +286,15 @@ void Networking::ReceiveProcess::onMessageReceived(int socket, Message *message)
 --
 -- NOTES:           Writes close signal to the receive process
 -----------------------------------------------------------------------------------------------*/
-void Networking::ReceiveProcess::closeProcess()
+/*void ReceiveProcess::closeProcess()
 {
+    printf("receive: closeProcess\n");
     ReceiveMessage message;
     message.type = SHUTDOWN;
     message.socket_id = 0;
 
     write(p[1], &message, sizeof(ReceiveMessage));
-}
+}*/
 
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        runProcess
@@ -296,7 +316,7 @@ void Networking::ReceiveProcess::closeProcess()
                     Then it monitors the pipe between this process and the main for any messages
                     and checks for any tcp data coming in.
 -----------------------------------------------------------------------------------------------*/
-void Networking::ReceiveProcess::runProcess()
+/*void ReceiveProcess::runProcess()
 {
     fd_set readfds;
     int max_sd = 0;
@@ -422,4 +442,4 @@ void Networking::ReceiveProcess::runProcess()
             }
         }
     }
-}
+}*/

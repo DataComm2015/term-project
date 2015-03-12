@@ -32,16 +32,18 @@ namespace Networking
     class ReceiveProcess
     {
     public:
-        ReceiveProcess();
-        ~ReceiveProcess();
-        void addSession(Session *session);
-        void removeSession(Session *session);
-        void onMessageReceived(int socket, Message *message);
-        void runProcess();
-        void closeProcess();
+        static ReceiveProcess* getInstance();
+        // ~ReceiveProcess();
+        // void addSession(Session *session);
+        // void removeSession(Session *session);
+        // void onMessageReceived(int socket, Message *message);
+        // void closeProcess();
 
     private:
-        static void sig_handler(int signum);
+        // ReceiveProcess();
+        // static void receiveRoutine();
+        // static void sig_handler(int signum);
+        static ReceiveProcess* instance;
         int pid;
         int p[2]; // game -> process pipe
         static int p2[2]; //process -> game pipe

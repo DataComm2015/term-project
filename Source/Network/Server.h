@@ -18,7 +18,7 @@ namespace Networking
 
     private:
         static void* listeningThread(void* params);
-        int listeningSocket;
+        int svrSock;
         std::vector<Session*> sessions;
     };
 }
