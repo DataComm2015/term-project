@@ -2,9 +2,12 @@
 #define SERVER_H_
 
 #include <map>
+#include <pthread.h>
 
 namespace Networking
 {
+    class Session;
+
     class Server
     {
     public:
@@ -12,11 +15,11 @@ namespace Networking
         virtual ~Server();
         int startServer(short port);
         int stopServer();
+
+    private:
         virtual void onConnect(int socket);
         virtual void onMessage(int socket, char* data, int len);
         virtual void onDisconnect(int socket, int remote);
-
-    private:
         static void* serverRoutine(void* params);
 
         /**

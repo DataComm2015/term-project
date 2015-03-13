@@ -1,7 +1,5 @@
 #include "Session.h"
 #include "Message.h"
-#include "ReceiveProcess.h"
-// #include "SendProcess"
 // #include "NetworkEntityMultiplexer.h"
 
 #include <stdio.h>
@@ -10,11 +8,12 @@
 
 using namespace Networking;
 
-Session::Session()
+Session::Session(int socket)
 {
-    printf("session: session %p connected\n",this);
+    printf("session %p connected\n",this);
 
     // initialize instance variables
+    this->socket = socket;
     // this->recvProcess = ReceiveProcess::getInstance();
     // SendProcess* sendProcess
     // NetworkEntityMultiplexer* entityMux
@@ -27,28 +26,31 @@ Session::~Session()
     disconnect();
 }
 
-void Session::send(Message *message)
+void Session::send(Message* msg)
 {
-    // sendProcess->send(message);
+    int packetlen = msg->len+sizeof(msg->len)+sizeof(msg->type);
+    write(socket,&packetlen,sizeof(packetlen));
+    write(socket,&msg->type,sizeof(msg->type));
+    write(socket,&msg->len,sizeof(msg->len));
+    write(socket,msg->data,msg->len);
 }
 
 void Session::disconnect()
 {
-    // printf("session: session %p disconnected\n",this);
-    // recvProcess->removeSession(this);
+    close(socket);
 }
 
-void Session::onMessageReceived(Message* msg)
+void Session::onMessage(Message* msg)
 {
-    printf("server: socket %p: ",this);
+    printf("session %p: ",this);
     for(int i = 0; i < msg->len; ++i)
     {
-        printf("%c",((char*)msg->data)[i]);
+        printf("%c",*(((char*)msg->data)+i));
     }
     printf("\n");
 }
 
 void Session::onDisconnect(int remote)
 {
-    printf("server: session %p disconnected by %s host\n",this,remote?"remote":"local");
+    printf("session %p disconnected by %s host\n",this,remote?"remote":"local");
 }

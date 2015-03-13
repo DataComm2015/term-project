@@ -35,14 +35,15 @@ namespace Networking
     friend class ReceiveProcess;
 
     public:
-        Session();
+        Session(int socket);
         virtual ~Session();
-        void send(Message *message);
+        void send(Message* msg);
         void disconnect();
-        void onMessageReceived(Message *message);
+        void onMessage(Message* msg);
         void onDisconnect(int remote);
 
     private:
+        int socket;
         // ReceiveProcess* recvProcess;
         // SendProcess* sendProcess;
         // NetworkEntityMultiplexer* entityMux;

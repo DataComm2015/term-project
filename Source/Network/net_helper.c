@@ -200,7 +200,7 @@ struct sockaddr make_sockaddr(char* hostName, long hostAddr, short hostPort)
  * reads from a socket, and returns when the read finishes, EOF occurs, or an
  *   error is thrown.
  *
- * @function   read_socket
+ * @function   read_file
  *
  * @date       2015-03-05
  *
@@ -212,7 +212,7 @@ struct sockaddr make_sockaddr(char* hostName, long hostAddr, short hostPort)
  *
  * @note       none
  *
- * @signature  int read_socket(int socket, void* buffer, int bytesToRead)
+ * @signature  int read_file(int socket, void* buffer, int bytesToRead)
  *
  * @param      socket socket file descriptor.
  * @param      buffer pointer to a buffer to read data from the socket into.
@@ -221,7 +221,7 @@ struct sockaddr make_sockaddr(char* hostName, long hostAddr, short hostPort)
  * @return     non-zero if the read was successful, 0 on when the socket closes,
  *   and -1 on error.
  */
-int read_socket(int socket, void* bufferPointer, int bytesToRead)
+int read_file(int socket, void* bufferPointer, int bytesToRead)
 {
     int bytesRead;
     int result = 0;
@@ -229,7 +229,7 @@ int read_socket(int socket, void* bufferPointer, int bytesToRead)
 
     // read message from socket
     while(bytesToRead > 0
-        && (bytesRead = recv(socket,bufPtr,bytesToRead,0)) > 0)
+        && (bytesRead = read(socket,bufPtr,bytesToRead)) > 0)
     {
         bufPtr += bytesRead;
         bytesToRead -= bytesRead;

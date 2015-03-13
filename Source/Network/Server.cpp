@@ -1,6 +1,5 @@
 #include "Server.h"
 #include "Session.h"
-#include "ReceiveProcess.h"
 #include "net_helper.h"
 #include "select_helper.h"
 #include "Message.h"
@@ -66,7 +65,7 @@ int Server::startServer(short port)
     svrSock = make_tcp_server_socket(port);
 
     // start the server thread
-    return pthread_create(&serverThread, 0, serverRoutine, this);
+    return pthread_create(&serverThread,0,serverRoutine,this);
 }
 
 /**
@@ -100,7 +99,7 @@ void Server::onConnect(int socket)
 #ifdef DEBUG
     printf("server: socket %d connected\n",socket);
 #endif
-    sessions[socket] = new Session();
+    sessions[socket] = new Session(socket);
 }
 
 void Server::onMessage(int socket, char* data, int len)
@@ -113,10 +112,11 @@ void Server::onMessage(int socket, char* data, int len)
     }
     printf("\n");
 #endif
+    // packet comes in order of: int type, int length, array data
     Message msg;
-    msg.type = *(int*)data;
-    msg.data = ((int*)data)+1;
-    msg.len  = len-sizeof(int);
+    msg.type = *(((int*)data)+0);
+    msg.len  = *(((int*)data)+1);
+    msg.data = ((int*)data)+2;
     sessions[socket]->onMessage(&msg);
 }
 
@@ -223,7 +223,7 @@ void* Server::serverRoutine(void* params)
                 // read from socket
                 int result;
                 int msglen;
-                if((result = read_socket(curSock,&msglen,sizeof(msglen))) == 0)
+                if((result = read_file(curSock,&msglen,sizeof(msglen))) == 0)
                 {
                     // socket closed; remove from select set, and call callback
                     files_rm_file(&files,curSock);
@@ -233,7 +233,7 @@ void* Server::serverRoutine(void* params)
                 {
                     // socket read; read more from socket, and call callback
                     char* buffer = (char*) malloc(msglen);
-                    read_socket(curSock,buffer,msglen);
+                    read_file(curSock,buffer,msglen);
                     dis->onMessage(curSock,buffer,msglen);
                     free(buffer);
                 }
