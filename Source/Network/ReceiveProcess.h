@@ -11,7 +11,7 @@
 
 namespace Networking
 {
-	
+
 
 	struct Message;
 	class Session;
@@ -23,7 +23,7 @@ namespace Networking
 		MESSAGE_AVAILABLE = 2,
 		SHUTDOWN = 3
 	};
-	
+
 	struct ReceiveMessage
 	{
 		ReceiveMessageType type;
@@ -41,10 +41,11 @@ namespace Networking
 			void onMessageReceived(int socket, Message *message);
 			void runProcess();
 			void closeProcess();
-		
+
 		private:
 			int pid;
-			int p[2];
+			int p[2]; // game -> process pipe
+			int p2[2]; //process -> game pipe
 			std::map<int, int> sockets;
 			std::map<int, Session*> sessions;
 			int ipcsock[2];
