@@ -14,8 +14,8 @@ Client.o: Client.cpp Client.h
 	$(CC) -c Client.cpp
 
 # server modules
-ServerTest: ServerTest.o Server.o ReceiveProcess.o select_helper.o Session.o
-	$(CC) $(LIBS) -o ./ServerTest.out ServerTest.o Server.o ReceiveProcess.o select_helper.o Session.o
+ServerTest: ServerTest.o Server.o ReceiveProcess.o select_helper.o Session.o net_helper.o
+	$(CC) $(LIBS) -o ./ServerTest.out ServerTest.o Server.o ReceiveProcess.o select_helper.o Session.o net_helper.o
 
 Server.o: Server.cpp Server.h
 	$(CC) -c Server.cpp
@@ -31,6 +31,9 @@ ReceiveProcess.o: ReceiveProcess.cpp ReceiveProcess.h
 
 select_helper.o: select_helper.c select_helper.h
 	$(CC) -c select_helper.c
+
+net_helper.o: net_helper.c net_helper.h
+	$(CC) -c net_helper.c
 
 # shared helper modules
 Session.o: Session.cpp Session.h

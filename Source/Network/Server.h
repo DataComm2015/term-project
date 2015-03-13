@@ -18,7 +18,20 @@ namespace Networking
 
     private:
         static void* serverRoutine(void* params);
+
+        /**
+         * server socket used to listen for new connections to the server.
+         */
         int svrSock;
+
+        /**
+         * pipe used to communicate with the serverThread.
+         */
+        int ctrlPipe[2];
+
+        /**
+         * thread id for the thread that runs the serverRoutine.
+         */
         pthread_t serverThread;
     };
 }

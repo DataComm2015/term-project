@@ -20,10 +20,13 @@
 #include <vector>
 
 
-// #define DEBUG
+#define DEBUG
 // < -- NEED MECHANISM FOR REMOVING STALE SESSIONS -- >
 
 using namespace Networking;
+
+// forward declarations
+static void fatal_error(const char* errstr);
 
 /**
  * constructs a new {Server}.
@@ -57,6 +60,12 @@ int Server::startServer(short port)
         return 0;
     }
 
+    // create the control pipe
+    if(pipe(ctrlPipe) == -1)
+    {
+        fatal_error("failed to create the control pipe");
+    }
+
     // create the listening socket
     svrSock = make_tcp_server_socket(port);
 
@@ -77,7 +86,11 @@ int Server::stopServer()
         return 0;
     }
 
-    // close the server socket, which also terminates the server thread
+    // close the control pipe which terminates the server thread
+    close(ctrlPipe[1]);
+
+    // close the server socket
+    pthread_join(serverThread,0);
     int ret = close(svrSock);
 
     // set svrSock to 0, so we know it's closed
@@ -137,8 +150,9 @@ void* Server::serverRoutine(void* params)
     Files files;
     files_init(&files);
 
-    // add the server socket to the select set
-    files_add_file(&files,serverSocket);
+    // add the server socket and control pipe to the select set
+    files_add_file(&files,dis->svrSock);
+    files_add_file(&files,dis->ctrlPipe[0]);
 
     // accept any connection requests, and create a session for each
     while(!terminateThread)
@@ -156,18 +170,27 @@ void* Server::serverRoutine(void* params)
             int curSock = *socketIt;
 
             // if this socket doesn't have any activity, move on to next socket
-            if(!FD_ISSET(curSock,&files.selectFds)
+            if(!FD_ISSET(curSock,&files.selectFds))
             {
                 continue;
             }
 
             // handle socket activity depending on which socket it is
-            switch(curSock)
+            if(curSock == dis->svrSock)
             {
-            case dis->svrSock;  // server socket
+                /*
+                 * this is the server socket, try to accept a connection.
+                 *
+                 * if the operation fails, end the server thread, because when
+                 *   accept fails, it means that the server socket is closed.
+                 *
+                 * if accept succeeds, add it to the select set, and continue
+                 *   looping...
+                 */
+
                 // accept the connection
                 int newSock;
-                if((newSock = accept(svrSock,0,0)) == -1)
+                if((newSock = accept(dis->svrSock,0,0)) == -1)
                 {
                     // accept failed; server socket closed, terminate thread
                     terminateThread = 1;
@@ -175,20 +198,40 @@ void* Server::serverRoutine(void* params)
                 else
                 {
                     // accept success; add to select set, and call callback
-                    files_add_file(files,newSocket);
+                    files_add_file(&files,newSock);
                     dis->onConnect(newSock);
                 }
-                break;
-            default:            // client socket
+            }
+            else if(curSock == dis->ctrlPipe[0])
+            {
+                /*
+                 * this is the control pipe. whenever anything happens on the
+                 *   control pipe, it means it's time for the server to
+                 *   shutdown; break out of the server loop.
+                 */
+                 close(dis->ctrlPipe[0]);
+                 terminateThread = 1;
+            }
+            else
+            {
+                /*
+                 * this is the client socket; try to read from the socket
+                 *
+                 * if read fails, it means that the socket is closed, remove it
+                 *   from the select set, call a callback, and continue looping.
+                 *
+                 * if read succeeds, read until socket is empty, and call
+                 *   callback, then continue looping.
+                 */
+
                 // read from socket
                 int result;
-                int msglen
+                int msglen;
                 if((result = read_socket(curSock,&msglen,sizeof(msglen))) == 0)
                 {
                     // socket closed; remove from select set, and call callback
-                    files_rm_file(files,curSock);
-                    close(selectedSocket);
-                    dis->onDisconnect(curSock,1); // TODO: figure out if it's remote or not
+                    files_rm_file(&files,curSock);
+                    dis->onDisconnect(curSock,(close(curSock) == 0));
                 }
                 else
                 {
@@ -203,5 +246,23 @@ void* Server::serverRoutine(void* params)
         }
     }
 
+    // close all sockets before terminating
+    for(auto socketIt = files.fdSet.begin(); socketIt != files.fdSet.end();
+        ++socketIt)
+    {
+        int curSock = *socketIt;
+        close(curSock);
+        if(curSock != dis->svrSock && curSock != dis->ctrlPipe[0])
+        {
+            dis->onDisconnect(curSock,0);
+        }
+    }
+
     return 0;
+}
+
+static void fatal_error(const char* errstr)
+{
+    perror(errstr);
+    exit(errno);
 }
