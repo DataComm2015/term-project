@@ -1,0 +1,54 @@
+// For the ones that have the same implementation for both SGO and TGO, it'll be called XGO
+// "data" refers to either the sprite or text that the GO is holding
+
+SGO/TGO
+{
+	XGO()
+	{
+		// empty
+	}
+
+	SGO(Texture)
+	{
+		set the texture of the sprite;
+	}
+	SGO(Texture, Rect)
+	{
+		set the texture of the sprite;
+		set the texture rect of the sprite;
+	}
+
+	~XGO()
+	{
+		// empty
+	}
+
+	data& operator()
+	{
+		return the data; // sprite or texture
+	}
+
+	sf::Transform getLocalTransform()
+	{
+		return the data's transform;
+	}
+
+	void setOriginToMiddle(bool b)
+	{
+		if b is true
+		{
+			get the data's local bounds;
+			divide the bounds by half;
+			set the data's origin to the width and height of the bounds;
+		}
+		else
+		{
+			set the data's origin to 0,0;
+		}
+	}
+
+	void draw(Batch, sf::RenderStates)
+	{
+		get the batch to draw me;
+	}
+}

@@ -1,0 +1,96 @@
+BGO
+{
+	BGO()
+	{
+		assign itself a new ID;
+	}
+	~BGO()
+	{
+		destroy its ID;
+	}
+
+	uint* getID()
+	{
+		return its ID;
+	}
+	vector<BGO*>& getChildren()
+	{
+		return my list of children;
+	}
+	BGO* getParent()
+	{
+		return parent;
+	}
+
+	BGO& add(BGO& bgoToAdd)
+	{
+		if bgoToAdd's id is the same as mine
+		{
+			throw an error;
+		}
+		else
+		{
+			remove bgoToAdd's parent;
+			assign myself as bgoToAdd's parent;
+			add bgoToAdd to my list of children;
+		}
+	}
+	BGO* rem(BGO& bgoToRem)
+	{
+		loop through all of my children
+		{
+			if the current child matches with bgoToRem
+			{
+				remove the current child;
+				return the removed child;
+			}
+		}
+		return nothing;
+	}
+
+	bool hasChildren()
+	{
+		if I'm ignoring my children or if I don't have any
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	void ignoreChildren(bool arg)
+	{
+		I'll ignore my children according to arg;
+	}
+	sf::Transform getLocalTransform()
+	{
+		return the Identity Transform;
+	}
+
+	void update_sg(sf::Time& t)
+	{
+		if hasChildren()
+		{
+			update all my children by calling its update_sg() method and passing in time t;
+		}
+	}
+	void update(sf::Time&)
+	{
+		// empty
+	}
+
+	void draw_sg(Batch batch, sf::RenderStates parentStates)
+	{
+		if hasChildren()
+		{
+			combine my transform matrix with parentStates';
+
+			draw all my children by calling its draw_sg() method and passing in the batch and combined matrix;
+		}
+	}
+	void draw(Batch, sf::RenderStates)
+	{
+		// empty
+	}
+}
