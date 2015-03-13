@@ -22,15 +22,19 @@
 #ifndef _NETWORK_SESSION_H_
 #define _NETWORK_SESSION_H_
 
+#include <set>
+
 namespace Networking
 {
+    class NetworkEntity;
     class NetworkEntityMultiplexer;
 
     struct Message;
 
     class Session
     {
-    friend class ReceiveProcess;
+    friend class NetworkEntity;
+    friend class NetworkEntityMultiplexer;
 
     public:
         Session(int socket);
@@ -43,6 +47,7 @@ namespace Networking
     private:
         int socket;
         NetworkEntityMultiplexer* entityMux;
+        std::set<NetworkEntity*> registeredEntities;
     };
 }
 

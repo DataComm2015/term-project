@@ -1,6 +1,11 @@
 #include "NetworkEntity.h"
+#include "Session.h"
 #include "NetworkEntityMultiplexer.h"
 #include "Message.h"
+
+#include <string.h>
+
+#define DEBUG
 
 using namespace std;
 
@@ -29,8 +34,39 @@ Networking::NetworkEntity::NetworkEntity( int id, int type )
     this->id = id;
     this->type = type;
     this->mux = NetworkEntityMultiplexer::getInstance();
+
+    // add this entity to the multiplexer
+    mux->entities[id] = this;
 }
 
+Networking::NetworkEntity::~NetworkEntity()
+{
+    // unregister all sessions registered in this entity from this entity
+    Message msg;
+    msg.type = MSG_TYPE_WARNING;
+    for(auto session = registeredSessions.begin();
+        session != registeredSessions.end(); ++session)
+    {
+        char output[500];
+
+        sprintf(output,"WARNING: NetworkEntity@%p was deleted before Session@%p"
+            " was unregistered",this,*session);
+
+        msg.data = output;
+        msg.len  = strlen(output);
+
+        printf(output);
+
+        (*session)->send(&msg);
+
+        Message nothingMsg;
+        memset(&nothingMsg,0,sizeof(nothingMsg));
+        unregisterSession(*session,nothingMsg);
+    }
+
+    // erase this entity from the multiplexer
+    mux->entities.erase(id);
+}
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        NetworkEntity::update
 --
@@ -52,6 +88,14 @@ Networking::NetworkEntity::NetworkEntity( int id, int type )
 -----------------------------------------------------------------------------------------------*/
 int Networking::NetworkEntity::update( Message message )
 {
+    #ifdef DEBUG
+    printf("NetworkEntity#%d::update(\"",id);
+    for(int i = 0; i < message.len; ++i)
+    {
+        printf("%c",((char*)message.data)[i]);
+    }
+    printf("\")\n");
+    #endif
     return mux->update(id, registeredSessions, message);
 }
 
@@ -99,7 +143,15 @@ void Networking::NetworkEntity::onUpdate( Message message )
 -----------------------------------------------------------------------------------------------*/
 int Networking::NetworkEntity::registerSession( Session * session, Message message )
 {
-    registeredSessions.insert(session);
+    #ifdef DEBUG
+    printf("NetworkEntity#%d::registerSession(Session%p,\"",id,session);
+    for(int i = 0; i < message.len; ++i)
+    {
+        printf("%c",((char*)message.data)[i]);
+    }
+    printf("\")\n");
+    #endif
+    silentRegister(session);
     return mux->registerSession(id, type, session, message);
 }
 
@@ -148,10 +200,15 @@ void Networking::NetworkEntity::onRegister( int type, Session * session, Message
 -----------------------------------------------------------------------------------------------*/
 int Networking::NetworkEntity::unregisterSession( Session * session, Message message )
 {
-    if( registeredSessions.erase(session) == 0 ) // not in set
+    #ifdef DEBUG
+    printf("NetworkEntity#%d::unregisterSession(Session%p,\"",id,session);
+    for(int i = 0; i < message.len; ++i)
     {
-        return -1;
+        printf("%c",((char*)message.data)[i]);
     }
+    printf("\")\n");
+    #endif
+    silentUnregister(session);
     return mux->unregisterSession(id, session, message);
 }
 
@@ -204,6 +261,7 @@ void Networking::NetworkEntity::onUnregister( Session * session, Message message
 void Networking::NetworkEntity::silentRegister( Session* session )
 {
     registeredSessions.insert(session);
+    session->registeredEntities.insert(this);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -227,5 +285,6 @@ void Networking::NetworkEntity::silentRegister( Session* session )
 void Networking::NetworkEntity::silentUnregister( Session* session )
 {
     registeredSessions.erase(session);
+    session->registeredEntities.erase(this);
 }
 

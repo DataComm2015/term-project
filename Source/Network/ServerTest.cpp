@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "Server.h"
+#include "Session.h"
 #include "Message.h"
 #include "NetworkEntity.h"
 #include "NetworkEntityMultiplexer.h"
@@ -26,19 +27,15 @@ public:
         entity = new NetworkEntity(0,0);
 
     }
-    virtual void onConnect(int socket)
+    virtual void onConnect(Session* session)
     {
-        Server::onConnect(socket);
-        entity->registerSession(getSession(socket),registerMsg);
+        entity->registerSession(session,registerMsg);
     }
-    virtual void onMessage(int socket, char* data, int len)
+    virtual void onMessage(Session* session, char* data, int len)
     {
-        Server::onMessage(socket,data,len);
     }
-    virtual void onDisconnect(int socket, int remote)
+    virtual void onDisconnect(Session* session, int remote)
     {
-        entity->unregisterSession(getSession(socket),unregisterMsg);
-        Server::onDisconnect(socket,remote);
     }
 private:
 };
@@ -66,6 +63,11 @@ int main(void)
     printf("server started\n");
     getchar();
 
+    delete entity;
+    entity = 0;
+    printf("entity deleted\n");
+    getchar();
+
     svr->stopServer();
     printf("server stopped\n");
     getchar();
@@ -79,9 +81,10 @@ int main(void)
 
 static void* routine(void* params)
 {
-    while(1)
+    while(entity)
     {
         sleep(1);
-        entity->update(updateMsg);
+        if(entity != 0)
+            entity->update(updateMsg);
     }
 }

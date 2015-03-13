@@ -16,11 +16,13 @@ namespace Networking
         int startServer(short port);
         int stopServer();
     protected:
-        Session* getSession(int socket);
-        virtual void onConnect(int socket);
-        virtual void onMessage(int socket, char* data, int len);
-        virtual void onDisconnect(int socket, int remote);
+        virtual void onConnect(Session* session);
+        virtual void onMessage(Session* session, char* data, int len);
+        virtual void onDisconnect(Session* session, int remote);
     private:
+        void onConnect(int socket);
+        void onMessage(int socket, char* data, int len);
+        void onDisconnect(int socket, int remote);
         static void* serverRoutine(void* params);
 
         /**

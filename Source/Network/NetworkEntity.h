@@ -11,6 +11,7 @@ namespace Networking
 
     class NetworkEntity
     {
+    friend class Session;
     friend class NetworkEntityMultiplexer;
     public:
         /**
@@ -22,6 +23,11 @@ namespace Networking
          * @param type denotes which sub class of NetworkEntity this entity is
          */
         NetworkEntity( int id, int type );
+
+        /**
+         * Destructs a NetwrokEntity.
+         */
+        ~NetworkEntity();
 
         /**
          * Send an update to the other side

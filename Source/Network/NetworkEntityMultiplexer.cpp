@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DEBUG
+
 using namespace Networking;
 
 NetworkEntityMultiplexer* NetworkEntityMultiplexer::instance = 0;
@@ -32,7 +34,6 @@ NetworkEntityMultiplexer* NetworkEntityMultiplexer::instance = 0;
  */
 NetworkEntityMultiplexer* NetworkEntityMultiplexer::getInstance()
 {
-    printf("MUX::getInstance\n");
     if(instance == 0)
     {
         instance = new NetworkEntityMultiplexer();
@@ -110,19 +111,55 @@ int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
     Message logicMsg = msg;
     switch(msg.type)
     {
-        case MSG_TYPE_UPDATE:
-            networkEntities[intPtr[0]]->onUpdate(logicMsg);
-            break;
-        case MSG_TYPE_REGISTER:
-            logicMsg.data = ((int*)logicMsg.data)+2;
-            networkEntities[intPtr[0]] = onRegister(intPtr[0],intPtr[1],session,logicMsg);
-            networkEntities[intPtr[0]]->silentRegister(session);
-            break;
-        case MSG_TYPE_UNREGISTER:
-            networkEntities[intPtr[0]]->onUnregister(session, logicMsg);
-            networkEntities[intPtr[0]]->silentUnregister(session);
-            networkEntities.erase(*intPtr);
-            break;
+    case MSG_TYPE_UPDATE:
+
+        // print debug message
+        #ifdef DEBUG
+        printf("NetworkEntity#%d::onUpdate(\"",intPtr[0]);
+        for(int i = 0; i < logicMsg.len; ++i)
+        {
+            printf("%c",((char*)logicMsg.data)[i]);
+        }
+        printf("\")\n");
+        #endif
+
+        entities[intPtr[0]]->onUpdate(logicMsg);
+        break;
+    case MSG_TYPE_REGISTER:
+
+        // print debug message
+        #ifdef DEBUG
+        printf("NetworkEntity#%d::onRegisterSession(%d,Session%p,\"",intPtr[0],intPtr[1],session);
+        for(int i = 0; i < logicMsg.len; ++i)
+        {
+            printf("%c",((char*)logicMsg.data)[i]);
+        }
+        printf("\")\n");
+        #endif
+
+        logicMsg.data = ((int*)logicMsg.data)+2;
+        entities[intPtr[0]] = onRegister(intPtr[0],intPtr[1],session,logicMsg);
+        entities[intPtr[0]]->silentRegister(session);
+        break;
+    case MSG_TYPE_UNREGISTER:
+
+        // print debug message
+        #ifdef DEBUG
+        printf("NetworkEntity#%d::onUnregisterSession(Session%p,\"",intPtr[0],session);
+        for(int i = 0; i < logicMsg.len; ++i)
+        {
+            printf("%c",((char*)logicMsg.data)[i]);
+        }
+        printf("\")\n");
+        #endif
+
+        entities[intPtr[0]]->onUnregister(session, logicMsg);
+        entities[intPtr[0]]->silentUnregister(session);
+        entities.erase(*intPtr);
+        break;
+    case MSG_TYPE_WARNING:
+        printf("REMOTE %s\n",msg.data);
+        break;
     }
 }
 /**
@@ -153,7 +190,6 @@ int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
  */
 int NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Message msg)
 {
-    printf("MUX::update(%d)\n",sessions.size());
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
     char* data = (char*)malloc(datalen);
@@ -211,7 +247,6 @@ int NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Messa
  */
 int NetworkEntityMultiplexer::registerSession(int id, int type, Session* session, Message msg)
 {
-    printf("MUX::registerSession\n");
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int)*2;
     char* data = (char*)malloc(datalen);
@@ -266,7 +301,6 @@ int NetworkEntityMultiplexer::registerSession(int id, int type, Session* session
  */
 int NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Message msg)
 {
-    printf("MUX::unregisterSession\n");
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
     char* data = (char*)malloc(datalen);
@@ -315,12 +349,10 @@ int NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Messag
  */
 void NetworkEntityMultiplexer::onUpdate(int id, Message msg)
 {
-    printf("MUX::onUpdate\n");
-    networkEntities[id]->onUpdate(msg);
+    entities[id]->onUpdate(msg);
 }
 NetworkEntity* NetworkEntityMultiplexer::onRegister(int id, int entityType, Session* session, Message msg)
 {
-    printf("MUX::onRegister\n");
     return new NetworkEntity(id,entityType);
 }
 /**
@@ -349,6 +381,5 @@ NetworkEntity* NetworkEntityMultiplexer::onRegister(int id, int entityType, Sess
  */
 void NetworkEntityMultiplexer::onUnregister(int id, Session* session, Message msg)
 {
-    printf("MUX::onUnregister\n");
-    networkEntities[id]->onUnregister(session,msg);
+    entities[id]->onUnregister(session,msg);
 }

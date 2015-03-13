@@ -68,11 +68,6 @@ int Server::startServer(short port)
     return pthread_create(&serverThread,0,serverRoutine,this);
 }
 
-Session* Server::getSession(int socket)
-{
-    return sessions[socket];
-}
-
 /**
  * stops server, and closes all connections connected with the server.
  *
@@ -99,37 +94,52 @@ int Server::stopServer()
     return ret;
 }
 
+void Server::onConnect(Session* session)
+{
+}
+
+void Server::onMessage(Session* session, char* data, int len)
+{
+}
+
+void Server::onDisconnect(Session* session, int remote)
+{
+}
+
 void Server::onConnect(int socket)
 {
-#ifdef DEBUG
+    #ifdef DEBUG
     printf("server: socket %d connected\n",socket);
-#endif
+    #endif
     sessions[socket] = new Session(socket);
+    onConnect(sessions[socket]);
 }
 
 void Server::onMessage(int socket, char* data, int len)
 {
-#ifdef DEBUG
+    #ifdef DEBUG
     printf("server: socket %d: ",socket);
     for(int i = 0; i < len; ++i)
     {
         printf("%c",data[i]);
     }
     printf("\n");
-#endif
+    #endif
     // packet comes in order of: int type, int length, array data
     Message msg;
     msg.type = *(((int*)data)+0);
     msg.len  = *(((int*)data)+1);
     msg.data = ((int*)data)+2;
+    onMessage(sessions[socket],data,len);
     sessions[socket]->onMessage(&msg);
 }
 
 void Server::onDisconnect(int socket, int remote)
 {
-#ifdef DEBUG
+    #ifdef DEBUG
     printf("server: socket %d disconnected by %s host\n",socket,remote?"remote":"local");
-#endif
+    #endif
+    onDisconnect(sessions[socket],remote);
     sessions[socket]->onDisconnect(remote);
     free(sessions[socket]);
     sessions.erase(socket);

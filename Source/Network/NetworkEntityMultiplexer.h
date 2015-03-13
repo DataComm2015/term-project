@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 
+#define MSG_TYPE_WARNING    -1
 #define MSG_TYPE_UPDATE     0
 #define MSG_TYPE_REGISTER   1
 #define MSG_TYPE_UNREGISTER 2
@@ -31,7 +32,7 @@ namespace Networking
         void onUpdate(int id, Message msg);
         void onUnregister(int id, Session* session, Message msg);
         static NetworkEntityMultiplexer* instance;
-        std::map<int,NetworkEntity*> networkEntities;
+        std::map<int,NetworkEntity*> entities;
     };
 }
 
