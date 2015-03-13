@@ -12,13 +12,16 @@
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
+#include "../Logic/Champion/Vessel.h"
 
 
 /* The water buffer around the island */
 #define WATER_BUFFER 10
 
 /* Amount to add to wave phase per frame */
-#define WAVE_PHASE_CHANGE 0.001
+#define WAVE_PHASE_CHANGE 0.007
+#define WAVE_X 2.0
+#define WAVE_Y 1.0
 
 /*
 *	This is the In-game Scene where all round-events occur.
@@ -42,6 +45,10 @@ class GameScene : public Scene
     	sf::View viewMain;
 
     	id_resource tilemap;
+    	id_resource championSprite;
+
+    	SGO championSGO;
+		Vessel *v;
     	
     	sf::Shader waveShader;
     	float phase;
