@@ -18,6 +18,8 @@
 #include <signal.h>
 #include <vector>
 
+// #define DEBUG
+
 using namespace Networking;
 
 // forward declarations

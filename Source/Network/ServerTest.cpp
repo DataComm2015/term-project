@@ -12,7 +12,8 @@
 
 using namespace Networking;
 
-NetworkEntity* entity = new NetworkEntity(0,0);
+NetworkEntity* entity0 = new NetworkEntity(0,0);
+NetworkEntity* entity1 = new NetworkEntity(1,0);
 Message registerMsg;
 Message unregisterMsg;
 Message updateMsg;
@@ -24,12 +25,13 @@ class TestServer : public Server
 public:
     TestServer()
     {
-        entity = new NetworkEntity(0,0);
+        entity0 = new NetworkEntity(0,0);
 
     }
     virtual void onConnect(Session* session)
     {
-        entity->registerSession(session,registerMsg);
+        entity0->registerSession(session,registerMsg);
+        entity1->registerSession(session,registerMsg);
     }
     virtual void onMessage(Session* session, char* data, int len)
     {
@@ -63,9 +65,14 @@ int main(void)
     printf("server started\n");
     getchar();
 
-    delete entity;
-    entity = 0;
-    printf("entity deleted\n");
+    delete entity0;
+    entity0 = 0;
+    printf("entity#0 deleted\n");
+    getchar();
+
+    delete entity1;
+    entity1 = 0;
+    printf("entity#1 deleted\n");
     getchar();
 
     svr->stopServer();
@@ -81,10 +88,12 @@ int main(void)
 
 static void* routine(void* params)
 {
-    while(entity)
+    while(entity0 || entity1)
     {
         sleep(1);
-        if(entity != 0)
-            entity->update(updateMsg);
+        if(entity0 != 0)
+            entity0->update(updateMsg);
+        if(entity1 != 0)
+            entity1->update(updateMsg);
     }
 }
