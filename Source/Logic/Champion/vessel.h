@@ -6,40 +6,40 @@
 -- FUNCTIONS:
 --     Vessel( int jobclass, GameMap gmap, int x, int y );
 --     ~Vessel();
---     
+--
 --     void setPosition( int x, int y );
---     
+--
 --     void resetEXP();
 --     void increaseEXP( int exp );
 --     int  getEXP();
 --     int  getNextLevelEXP();
---     
+--
 --     int  getLevel();
 --     void increaseLevel();
---     
+--
 --     void resetHP();
 --     void increaseHP( int hp );
 --     void decreaseHP( int hp );
 --     int  getHP();
 --     int  getMaxHP();
---     
+--
 --     void resetAttackPower();
 --     void attackPowerUp( int attackpower );
 --     void attackPowerDown( int attackpower );
 --     int  getAttackPower();
 --     int  getDefaultAttackPower();
---     
+--
 --     void resetSpeed();
 --     void speedUp( int speed );
 --     void speedDown( int speed );
 --     int  getSpeed();
 --     int  getDefaultSpeed();
---     
+--
 --     bool checkDeath();
 --     void die();
---     
+--
 --     void move( int direction );
---     
+--
 --     void normalAttack( int x, int y );
 --     void useAbility( int abilityNum );
 --
@@ -78,11 +78,11 @@ class Vessel
 		Weapon* weapon;
 		Ability* abilities;	//3 abilities for each Vessel
 		//TO DO: pointer to the game map needed in the future
-		
+
 	public:
-		Vessel( int jobclass, Ability* abilityList, int x, int y );
+		Vessel( int jobClass, Ability* abilityList, int x, int y );
 		~Vessel();
-		
+
 		void setPosition( int x, int y );
 		int getXPosition();
 		int getYPosition();
@@ -90,42 +90,41 @@ class Vessel
 		int getYSpeed();
 		bool isMoving();
 		int getDirection();
-		
+
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
         	int  getNextLevelEXP();
-		
+
 		int  getLevel();
 		void increaseLevel();
-		
+
 		int  getJobClass();
-		
+
 		void resetHP();
 		void increaseHP( int hp );
 		void decreaseHP( int hp );
 		int  getHP();
 		int  getMaxHP();
-		
+
 		void resetAttackPower();
 		void attackPowerUp( int attackpower );
 		void attackPowerDown( int attackpower );
 		int  getAttackPower();
 		int  getDefaultAttackPower();
-		
+
 		void resetSpeed();
 		void speedUp( int speed );
 		void speedDown( int speed );
 		int  getSpeed();
 		int  getDefaultSpeed();
-		
+
 		bool checkDeath();
 		void die();
-		
+
 		void move( sf::Event::KeyEvent keypress );
 		void stop();
-		
+
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
 };
-

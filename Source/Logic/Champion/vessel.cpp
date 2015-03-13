@@ -20,17 +20,17 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( int jobclass, Ability* abilityList, int x, int y )
+Vessel::Vessel( int jobClass, Ability* abilityList, int x, int y )
 {
 	xPosition = x;
 	yPosition = y;
 	direction = 0;
-	
+
 	xSpeed = 0;
 	ySpeed = 0;
 	moving = false;
 	abilities = abilityList;
-	
+
 	//class-specific instantiation
 	if ( jobClass == 0 )			//warrior
 	{
@@ -38,7 +38,6 @@ Vessel::Vessel( int jobclass, Ability* abilityList, int x, int y )
 		maxHealth = 150;
 		travelSpeed = 5;
 		//Weapon = Spear;
-		
 	}
 	else if ( jobClass == 1 )		//shaman
 	{
@@ -66,13 +65,13 @@ Vessel::Vessel( int jobclass, Ability* abilityList, int x, int y )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel destructor
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: 
+-- DESIGNER:
 --
--- PROGRAMMER: 
+-- PROGRAMMER:
 --
 -- INTERFACE: Vessel::~Vessel( )
 --
@@ -116,13 +115,13 @@ void Vessel::setPosition( int x, int y )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetEXP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: 
+-- DESIGNER:
 --
--- PROGRAMMER: 
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::resetEXP()
 --
@@ -139,7 +138,7 @@ void Vessel::resetEXP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: increaseEXP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -163,7 +162,7 @@ void Vessel::increaseEXP( int exp )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getEXP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -186,7 +185,7 @@ int Vessel::getEXP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getNextLevelEXP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -214,7 +213,7 @@ int Vessel::getNextLevelEXP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getLevel
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -238,7 +237,7 @@ int Vessel::getLevel()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: increaseLevel
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -264,13 +263,13 @@ void Vessel::increaseLevel()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetHP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER:
 --
--- PROGRAMMER: 
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::resetHP()
 --
@@ -287,7 +286,7 @@ void Vessel::resetHP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: increaseHP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -311,7 +310,7 @@ void Vessel::increaseHP( int hp )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: decreaseHP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -356,13 +355,13 @@ int Vessel::getHP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getMaxHP
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER:
 --
--- PROGRAMMER: 
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getMaxHP()
 --
@@ -378,13 +377,13 @@ int Vessel::getMaxHP()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetAttackPower
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: 
+-- DESIGNER:
 --
--- PROGRAMMER: 
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::resetAttackPower()
 --
@@ -400,11 +399,11 @@ void Vessel::resetAttackPower()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: attackPowerUp
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: 
+-- DESIGNER:
 --
 -- PROGRAMMER:
 --
@@ -423,13 +422,13 @@ void Vessel::attackPowerUp( int attackpower )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: attackPowerDown
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: 
+-- DESIGNER:
 --
--- PROGRAMMER: 
+-- PROGRAMMER:
 --
 -- INTERFACE: void Vessel::attackPowerDown( int attackpower )
 -- int attackpower: the amount of attack power to decrease by
@@ -446,13 +445,13 @@ void Vessel::attackPowerDown( int attackpower )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getAttackPower
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: 
+-- DESIGNER:
 --
--- PROGRAMMER: 
+-- PROGRAMMER:
 --
 -- INTERFACE: int Vessel::getAttackPower()
 --
@@ -468,7 +467,7 @@ int Vessel::getAttackPower()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getDefaultAttackPower
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -490,7 +489,7 @@ int Vessel::getDefaultAttackPower()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: resetSpeed
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -512,7 +511,7 @@ void Vessel::resetSpeed()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: speedUp
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -530,7 +529,7 @@ void Vessel::resetSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedUp( int speed )
 {
-	
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -554,7 +553,7 @@ void Vessel::speedUp( int speed )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedDown( int speed )
 {
-	
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -577,7 +576,7 @@ void Vessel::speedDown( int speed )
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getSpeed()
 {
-	
+    return travelSpeed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -600,13 +599,13 @@ int Vessel::getSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getDefaultSpeed()
 {
-	
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: checkDeath
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -623,13 +622,13 @@ int Vessel::getDefaultSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::checkDeath()
 {
-	
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: die
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -646,7 +645,7 @@ bool Vessel::checkDeath()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::die()
 {
-	
+
 }
 
 
@@ -670,7 +669,7 @@ void Vessel::die()
 --
 -- NOTES:
 -- This function moves the Vessel to a new (x, y) according to direction and speed. Will probably call SetPosition.
--- The movement may fail because something is blocking the Vessel, or the Vessel is attempting to move off the 
+-- The movement may fail because something is blocking the Vessel, or the Vessel is attempting to move off the
 -- edge of the map. If there's an upgrade/downgrade item on the target x, y and the Vessel successfully moved,
 -- then the effect of the upgrade/downgrade item is applied to the Vessel.
 --
@@ -680,35 +679,35 @@ void Vessel::die()
 void Vessel::move( sf::Event::KeyEvent keypress )
 {
 	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
-	
+
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		moving = true;
-		ySpeed = -1;
-		setPosition( getXPosition(), getYPosition() - 1 );
+		ySpeed = -travelSpeed;
+		setPosition( getXPosition(), getYPosition() - travelSpeed );
 	}
-	
+
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		moving = true;
-		ySpeed = 1;
-		setPosition( getXPosition(), getYPosition() + 1 );
+		ySpeed = travelSpeed;
+		setPosition( getXPosition(), getYPosition() + travelSpeed );
 	}
-	
+
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		moving = true;
-		xSpeed = -1;
+		xSpeed = -travelSpeed;
 		direction = 0;	//signal to animate left facing sprite
-		setPosition( getXPosition() - 1 , getYPosition() );
+		setPosition( getXPosition() - travelSpeed , getYPosition() );
 	}
-	
+
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		moving = true;
-		xSpeed = 1;
+		xSpeed = travelSpeed;
 		direction = 1; //signal to animate right facing sprite
-		setPosition( getXPosition() + 1, getYPosition());
+		setPosition( getXPosition() + travelSpeed, getYPosition());
 	}
 }
 
@@ -726,7 +725,7 @@ void Vessel::stop()
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: normalAttack
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --
@@ -740,7 +739,7 @@ void Vessel::stop()
 -- RETURNS: nothing
 --
 -- NOTES:
--- This function attempts to launch a normal attack at the target coordinate. Depending on normal weapon type, the 
+-- This function attempts to launch a normal attack at the target coordinate. Depending on normal weapon type, the
 -- attack may fail because the target is out of range.
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::normalAttack( int x, int y )
@@ -751,7 +750,7 @@ void Vessel::normalAttack( int x, int y )
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: useAbility
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: (Date and Description)
 --

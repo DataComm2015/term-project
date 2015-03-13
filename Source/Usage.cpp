@@ -17,7 +17,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  I will also use this as an alpha testing ground for our API
-//  to see if there are anything missing or 
+//  to see if there are anything missing or
 //  if something's not working the way it should.
 //
 //  Here's the awesome TODO list:
@@ -121,10 +121,10 @@ public:
 	// Update callback, do logical stuff here
 	void update(sf::Time t) override
 	{
-		/* This code moves the background but keeps the vessel centered */
+		/* This code moves the background but keeps the vessel centered*/
 		view_main.move(v->getXSpeed(), v->getYSpeed());
 		sgo().setPosition(view_main.getCenter()); //*/
-		
+
 		/* This code moves the vessel around but keeps the screen centered
 		sgo().setPosition(v->getXPosition(), v->getYPosition());
 		//*/
@@ -144,7 +144,7 @@ public:
 		renderer.states.blendMode = sf::BlendAdd; // pointless in this case, but useful in others
 
 		renderer.draw(background);
-		
+
 		renderer.end(); // always end when you're done rendering or want to start fresh again
 
 		renderer.begin();
@@ -172,7 +172,7 @@ private:
 
 	SGO sgo;
 	Vessel* v;
-	
+
 	sf::Font font;
 	TGO welcomeText;
 };
