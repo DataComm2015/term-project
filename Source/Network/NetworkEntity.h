@@ -34,7 +34,7 @@ namespace Networking
          *
          * @param message message used when calling onUpdate on the other side
          */
-        int
+        void
         update( Message message );
 
         /**
@@ -52,7 +52,7 @@ namespace Networking
          * @param session session to register with this entity
          * @param message message used when calling onRegister on the other side
          */
-        int
+        void
         registerSession( Session * session, Message message );
 
         /**
@@ -73,7 +73,7 @@ namespace Networking
          * @param message message used when calling onUnregister
          *                on the other side
          */
-        int
+        void
         unregisterSession( Session * session, Message message );
 
         /**

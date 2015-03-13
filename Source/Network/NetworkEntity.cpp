@@ -86,7 +86,7 @@ Networking::NetworkEntity::~NetworkEntity()
 -- NOTES:           a message to send across the network, will call on update on receiving
                     side.
 -----------------------------------------------------------------------------------------------*/
-int Networking::NetworkEntity::update( Message message )
+void Networking::NetworkEntity::update( Message message )
 {
     #ifdef DEBUG
     printf("NetworkEntity#%d::update(\"",id);
@@ -96,7 +96,8 @@ int Networking::NetworkEntity::update( Message message )
     }
     printf("\")\n");
     #endif
-    return mux->update(id, registeredSessions, message);
+
+    mux->update(id, registeredSessions, message);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -141,7 +142,7 @@ void Networking::NetworkEntity::onUpdate( Message message )
 -- NOTES:           registers a session so the NetworkEntity can send and recieve
                     to and from the session.
 -----------------------------------------------------------------------------------------------*/
-int Networking::NetworkEntity::registerSession( Session * session, Message message )
+void Networking::NetworkEntity::registerSession( Session * session, Message message )
 {
     #ifdef DEBUG
     printf("NetworkEntity#%d::registerSession(Session%p,\"",id,session);
@@ -151,8 +152,9 @@ int Networking::NetworkEntity::registerSession( Session * session, Message messa
     }
     printf("\")\n");
     #endif
+
     silentRegister(session);
-    return mux->registerSession(id, type, session, message);
+    mux->registerSession(id, type, session, message);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -198,7 +200,7 @@ void Networking::NetworkEntity::onRegister( int type, Session * session, Message
 --
 -- NOTES:           unregisters this session from this entity
 -----------------------------------------------------------------------------------------------*/
-int Networking::NetworkEntity::unregisterSession( Session * session, Message message )
+void Networking::NetworkEntity::unregisterSession( Session * session, Message message )
 {
     #ifdef DEBUG
     printf("NetworkEntity#%d::unregisterSession(Session%p,\"",id,session);
@@ -208,8 +210,9 @@ int Networking::NetworkEntity::unregisterSession( Session * session, Message mes
     }
     printf("\")\n");
     #endif
+
     silentUnregister(session);
-    return mux->unregisterSession(id, session, message);
+    mux->unregisterSession(id, session, message);
 }
 
 /**

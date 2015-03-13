@@ -20,15 +20,15 @@ namespace Networking
     friend class NetworkEntity;
     public:
         static NetworkEntityMultiplexer* getInstance();
-        int onMessage(Session* session, Message msg);
+        void onMessage(Session* session, Message msg);
     protected:
         virtual NetworkEntity* onRegister(int id, int entityType, Session* session, Message msg);
     private:
         NetworkEntityMultiplexer();
         virtual ~NetworkEntityMultiplexer();
-        int update(int id, std::set<Session*>& sessions, Message msg);
-        int registerSession(int id, int type, Session* session, Message msg);
-        int unregisterSession(int id, Session* session, Message msg);
+        void update(int id, std::set<Session*>& sessions, Message msg);
+        void registerSession(int id, int type, Session* session, Message msg);
+        void unregisterSession(int id, Session* session, Message msg);
         void onUpdate(int id, Message msg);
         void onUnregister(int id, Session* session, Message msg);
         static NetworkEntityMultiplexer* instance;

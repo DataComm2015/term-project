@@ -105,7 +105,7 @@ NetworkEntityMultiplexer::~NetworkEntityMultiplexer()
  *
  * @return integer indicating the outcome of the operation
  */
-int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
+void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
 {
     int* intPtr = (int*) msg.data;
     Message logicMsg = msg;
@@ -160,7 +160,7 @@ int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         #endif
         break;
     case MSG_TYPE_WARNING:
-        printf("REMOTE %s\n",msg.data);
+        printf("REMOTE %s\n",(char*)msg.data);
         break;
     }
 }
@@ -190,7 +190,7 @@ int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
  *
  * @return     integer indicating the result of the operation
  */
-int NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Message msg)
+void NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Message msg)
 {
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
@@ -247,7 +247,7 @@ int NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Messa
  *
  * @return     integer indicating the result of the operation
  */
-int NetworkEntityMultiplexer::registerSession(int id, int type, Session* session, Message msg)
+void NetworkEntityMultiplexer::registerSession(int id, int type, Session* session, Message msg)
 {
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int)*2;
@@ -301,7 +301,7 @@ int NetworkEntityMultiplexer::registerSession(int id, int type, Session* session
  *
  * @return     integer indicating the result of the operation
  */
-int NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Message msg)
+void NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Message msg)
 {
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
