@@ -14,7 +14,7 @@ FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameSc
 
 FILES_NETWORK=		
 
-FILE_MAIN=			Usage.cpp
+FILE_MAIN=			MovementTest.cpp
 
 ##
 
