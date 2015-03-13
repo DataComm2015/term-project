@@ -33,6 +33,11 @@ namespace Networking
          * thread id for the thread that runs the serverRoutine.
          */
         pthread_t serverThread;
+
+        /**
+         * maps sockets to sessions.
+         */
+        std::map<int,Session*> sessions;
     };
 }
 

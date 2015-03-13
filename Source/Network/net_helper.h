@@ -1,3 +1,6 @@
+#ifndef _NET_HELPER_H_
+#define _NET_HELPER_H_
+
 #include <stdio.h>
 #include <unistd.h>
 #include <netdb.h>
@@ -31,3 +34,5 @@ int make_tcp_server_socket(short port);
 int make_tcp_client_socket(char* remoteName, long remoteAddr, short remotePort, short localPort);
 struct sockaddr make_sockaddr(char* hostName, long hostAddr, short hostPort);
 int read_socket(int socket, void* bufferPointer, int bytesToRead);
+
+#endif

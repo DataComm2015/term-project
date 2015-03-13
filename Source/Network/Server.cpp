@@ -19,10 +19,6 @@
 #include <signal.h>
 #include <vector>
 
-
-#define DEBUG
-// < -- NEED MECHANISM FOR REMOVING STALE SESSIONS -- >
-
 using namespace Networking;
 
 // forward declarations
@@ -104,7 +100,7 @@ void Server::onConnect(int socket)
 #ifdef DEBUG
     printf("server: socket %d connected\n",socket);
 #endif
-    // sessions[socket] = new Session();
+    sessions[socket] = new Session();
 }
 
 void Server::onMessage(int socket, char* data, int len)
@@ -117,11 +113,11 @@ void Server::onMessage(int socket, char* data, int len)
     }
     printf("\n");
 #endif
-    // Message msg;
-    // msg.type = *(int*)data;
-    // msg.data = ((int*)data)+1;
-    // msg.len  = len-sizeof(int);
-    // sessions[socket]->onMessageReceived(&msg);
+    Message msg;
+    msg.type = *(int*)data;
+    msg.data = ((int*)data)+1;
+    msg.len  = len-sizeof(int);
+    sessions[socket]->onMessage(&msg);
 }
 
 void Server::onDisconnect(int socket, int remote)
@@ -129,9 +125,9 @@ void Server::onDisconnect(int socket, int remote)
 #ifdef DEBUG
     printf("server: socket %d disconnected by %s host\n",socket,remote?"remote":"local");
 #endif
-    // sessions[socket]->onDisconnect(remote);
-    // free(sessions[socket]);
-    // sessions.erase(socket);
+    sessions[socket]->onDisconnect(remote);
+    free(sessions[socket]);
+    sessions.erase(socket);
 }
 
 /**
