@@ -57,8 +57,8 @@
 ----------------------------------------------------------------------------------------------------------------------*/
 #include <SFML/Graphics.hpp>
 
-#define Weapon char
-#define Ability char
+typedef char Weapon;
+typedef char Abilitys;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT } job_class;
 
@@ -75,7 +75,7 @@ class Vessel
 		int yPosition;
 		int xSpeed;
 		int ySpeed;
-		int direction;	//0 = right, 1 = left
+		int direction;	//0 = right, 1 = left //why not a bool?
 		bool moving;
 		Weapon* weapon;
 		Ability* abilities;	//3 abilities for each Vessel
