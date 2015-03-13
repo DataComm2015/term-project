@@ -52,10 +52,17 @@ using namespace Marx;
 --     Map constructor
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Map::Map(const uint height, const uint width) : width_(width), height_(height), cells_(std::vector<Cell>(width * height))
+Map::Map(const uint height, const uint width) : width_(width), height_(height), cells_(std::vector<Cell*>(width * height))
 {
 
 }
+
+
+Map::~Map()
+{
+	// Empty for now
+}
+
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: setCell
@@ -82,7 +89,7 @@ Map::Map(const uint height, const uint width) : width_(width), height_(height), 
 --     Sets cell(x, y) in map
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-void Map::setCell(const uint x, const uint y,const Cell& cell)
+void Map::setCell(const uint x, const uint y, Cell* cell)
 {
     uint index = x * width_ + y;
     cells_[index] = cell;
@@ -113,7 +120,7 @@ void Map::setCell(const uint x, const uint y,const Cell& cell)
 --     Gets the cell specified by the index (x * width + y) of the Map
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Cell Map::getCell(const uint x, const uint y) const
+Cell* Map::getCell(const uint x, const uint y) const
 {
     uint index = x * width_ + y;
     return cells_[index];

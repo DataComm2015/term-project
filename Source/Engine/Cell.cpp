@@ -33,62 +33,6 @@
 using namespace Marx;
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: setId
---
--- DATE: February 16, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Marc Rafanan
---
--- PROGRAMMER: Marc Rafanan
---
--- INTERFACE: void setId(string id)
---
--- PARAMETERS:
---     id    -    id for the cell
---
--- RETURNS:
---     void
---
--- NOTES:
---     Sets the ID for the cell
---
-----------------------------------------------------------------------------------------------------------------------*/
-void Cell::setId(std::string id)
-{
-        cell_id_ = id;
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getId
---
--- DATE: February 16, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Marc Rafanan
---
--- PROGRAMMER: Marc Rafanan
---
--- INTERFACE: std::string getId()
---
--- PARAMETERS:
---     void
---
--- RETURNS:
---     std::string    -    ID of the cell
---
--- NOTES:
---     Gets the ID of the cell
---
-----------------------------------------------------------------------------------------------------------------------*/
-std::string Cell::getId() const
-{
-    return cell_id_;
-}
-
-/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: setTileId
 --
 -- DATE: February 20, 2015
@@ -313,3 +257,31 @@ bool Cell::operator==(const Cell& cell)
 {
     return (xcoord_ == cell.xcoord_ && ycoord_ == cell.ycoord_) ? true : false;
 }
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getEntity
+--
+-- DATE: February 16, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: getEntity()
+--
+-- PARAMETERS:
+--     cell    -    cell to compare
+--
+-- RETURNS:
+--     std::set<Entity> - set of all the entities currently located inside this cell, stored as pointers in a set.
+--
+-- NOTES:
+--     Returns a list of all the cells in the area.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+std::set<Entity*> Cell::getEntity()
+{
+	return entity;
+}	

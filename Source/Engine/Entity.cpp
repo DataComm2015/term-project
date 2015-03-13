@@ -18,15 +18,17 @@
 --
 -- REVISIONS:
 --
--- DESIGNER: Marx-Engine
+-- DESIGNER: Marc Vouve
 --
 -- PROGRAMMER: Michael Chimick
+--			   Marc Vouve
 --
 -- NOTES:
 --        This file implements the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 #include "Entity.h"
+#include "Map.h"
 
 using namespace Marx;
 
@@ -37,9 +39,10 @@ using namespace Marx;
 --
 -- REVISIONS:
 --
--- DESIGNER: Marx-Engine
+-- DESIGNER: Marc Vouve
 --
 -- PROGRAMMER: Michael Chimick
+--             Marc Vouve
 --
 -- INTERFACE: Entity::Entity(Controller ctrl)
 --
@@ -49,11 +52,11 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(Controller ctrl)
+Entity::Entity(float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
+    sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
-	controller = ctrl;
     onCreate();
-}
+}   
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Entity::~Entity
@@ -99,7 +102,6 @@ Entity::~Entity()
 ----------------------------------------------------------------------------------------------------------------------*/
 void  Entity::turn()
 {
-    std::set<Event> events;
     // process events
 }
 
@@ -111,68 +113,62 @@ void  Entity::turn()
 --
 -- REVISIONS:
 --
--- DESIGNER: Marx-Engine
+-- DESIGNER: Marc Vouve
 --
--- PROGRAMMER:
+-- PROGRAMMER: Marc Vouve
 --
--- INTERFACE:
+-- INTERFACE: move(float x, float y, bool force)
+--					float x: left corner of the entity.
+--					float y: top corner of the entity.
+--					bool force: if this is true the entity will move even if it will collide with another entity.
 --
--- RETURNS:
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
 --
--- NOTES:
+-- NOTES: 
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-/* Leaving this for marc
- *
-// This is a bit codey for pseudo-code, but it's done very particular
-// this function returns the entity collided with on failure and NULL on success.
-Entity move(float x, float y, bool force = false)
+Entity * Entity::move(float x, float y, bool force = false)
 {
-    if( entity is 1 cell in size )
-    {
-		Store all cells in the entities range in an std::set without duplicates
-        if( !force )	// This argument is passed to check if bounds checking is required
-        {
-            Check if any entities are overlapping.
-			if( entities overlap )
-				return other entity
-        }
-       
-       assign collection of cells to this as its cells
-        
-        // remove from current.
-        Remove Entity From Previous Location
-        
-		Assign Location and bounding location
-    }
-}*/
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: Entity::checkCollision
---
--- DATE: February 20, 2015
---
--- REVISIONS:
---
--- DESIGNER: 	Marc Vouve
---
--- PROGRAMMER: 	Marc Vouve
---
--- INTERFACE: bool Entity::checkCollision( Entity entity )
---
--- RETURNS: bool
---
--- NOTES:
---        Returns true if the entities are in the same cells, else false
---
-----------------------------------------------------------------------------------------------------------------------*/
-bool Entity::checkCollision( Entity entity )
-{
-    return false;
+    std::set<Cell*> tempCell;
+	// loop through collecting all cells that this entity will be contained in.
+    for(int i = floor(x); i < width + floor(x); i++)
+    {
+        for(int j = floor(y); j < height + floor(y); j)
+        {
+            tempCell.emplace(map->getCell(floor(i),floor(j)));
+        }
+    }
+	
+
+	// loop through all cells in the temporary array. looping for 
+    for(Cell *c : tempCell)
+	{
+		std::set<Entity*> entities = c->getEntity();
+		for( Entity * e : entities )
+		{
+			if( intersects(*e) )
+			{
+				if( force )
+				{
+					occupiedCells = tempCell;
+				}
+				
+				return e;
+			}
+		}
+	}
+	
+	occupiedCells = tempCell;
+	
+	return nullptr;
 }
 
+
+
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: Entity::getCells
+-- FUNCTION: Entity::getCell
 --
 -- DATE: February 19, 2015
 --
@@ -182,15 +178,15 @@ bool Entity::checkCollision( Entity entity )
 --
 -- PROGRAMMER: Michael Chimick
 --
--- INTERFACE: std::set<Marx::Cell> Entity::getCells()
+-- INTERFACE: std::set<Cell> Entity::getCell()
 --
--- RETURNS: std::set<Marx::Cell>
+-- RETURNS: std::set<Cell>
 --
 -- NOTES:
 --        Returns the occupiedCells of the Entity object
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-std::set<Cell> Entity::getCells()
+std::set<Cell*> Entity::getCell()
 {
     return occupiedCells;
 }
@@ -288,48 +284,3 @@ void Entity::onUpdate()
 	// logic team
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: Entity::getRekt
---
--- DATE: February 20, 2015
---
--- REVISIONS: 
---
--- DESIGNER: Marc Vouve
---
--- PROGRAMMER: Marc Vouve
---
--- INTERFACE: void Entity::getRekt()
---
--- RETURNS: sf::FloatRect
---
--- NOTES: Gets the location of the entity on the map. 
---
-----------------------------------------------------------------------------------------------------------------------*/
-sf::FloatRect getRekt()
-{
-    return location;
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: Entity::setRekt
---
--- DATE: February 20, 2015
---
--- REVISIONS: 
---
--- DESIGNER: Marc Vouve
---
--- PROGRAMMER: Marc Vouve
---
--- INTERFACE: void Entity::setRekt()
---
--- RETURNS: void
---
--- NOTES: Gets the location of the entity on the map. 
---
-----------------------------------------------------------------------------------------------------------------------*/
-void setRekt(sf::FloatRect l)
-{
-    location = l;
-}
