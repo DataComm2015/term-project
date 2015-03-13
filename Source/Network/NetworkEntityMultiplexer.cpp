@@ -3,6 +3,7 @@
 #include "Session.h"
 #include "NetworkEntity.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,9 +37,38 @@ NetworkEntityMultiplexer* NetworkEntityMultiplexer::getInstance()
 {
     if(instance == 0)
     {
-        instance = new NetworkEntityMultiplexer();
+        printf("instance not set yet. must call "
+            "NetworkEntityMultiplexer::setInstance(), passing it a instance of "
+            "a subclass of NetworkEntityMultiplexer before calling "
+            "NetworkEntityMultiplexer::getInstance()\n");
+        exit(1);
     }
     return instance;
+}
+/**
+ * sets the instance returned by getInstance.
+ *
+ * @function   NetworkEntityMultiplexer::setInstance
+ *
+ * @date       2015-03-13
+ *
+ * @revision   none
+ *
+ * @designer   EricTsang
+ *
+ * @programmer EricTsang
+ *
+ * @note       none
+ *
+ * @signature  void
+ *   NetworkEntityMultiplexer::setInstance(NetworkEntityMultiplexer* mux)
+ *
+ * @param      mux pointer to an instance of the NetworkEntityMultiplexer class,
+ *   or subclass.
+ */
+void NetworkEntityMultiplexer::setInstance(NetworkEntityMultiplexer* mux)
+{
+    instance = mux;
 }
 /**
  * instantiates a NetworkEntityMultiplexer.
