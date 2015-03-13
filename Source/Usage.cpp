@@ -39,6 +39,7 @@
 #include "Multimedia/graphics/object/BGO.h"
 #include "Multimedia/graphics/object/SGO.h"
 #include "Multimedia/graphics/object/TGO.h"
+#include "Logic/Champion/vessel.h"
 
 class StartScreen : public Marx::Scene
 {
@@ -52,8 +53,15 @@ public:
 			Manager::TextureManager::load("Multimedia/Assets/Art/Misc/placeholder.png")
 			);
 
+		texture_2 = Manager::TextureManager::store(
+			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Idle/vessel-idle.png")
+			);
+
 		// configure the sprite
 		background().setTexture(*Manager::TextureManager::get(texture_1));
+		sgo().setTexture(*Manager::TextureManager::get(texture_2));
+
+		v = new Vessel(0,NULL,0,0);
 
 		// might want to have another resource manager for fonts...
 		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
@@ -86,7 +94,13 @@ public:
 		// YESS so many switch case statements!!
 		switch (event.type)
 		{
+
+		case sf::Event::KeyPressed:
+			v->move(event.key);
+			break;
+
 		case sf::Event::KeyReleased:
+			v->stop();
 			switch (event.key.code)
 			{
 			case sf::Keyboard::Escape:
@@ -109,9 +123,14 @@ public:
 	// Update callback, do logical stuff here
 	void update(sf::Time t) override
 	{
-		// slowly slides the main view to the left, ooohhh
-		// which effects everything drawn when the AppWindow's view is set to view_main
-		view_main.move(-1, 0);
+
+		/* This code moves the background but keeps the vessel centered */
+		view_main.move(v->getXSpeed(), v->getYSpeed());
+		sgo().setPosition(view_main.getCenter()); //*/
+		
+		/* This code moves the vessel around but keeps the screen centered
+		sgo().setPosition(v->getXPosition(), v->getYPosition());
+		//*/
 	}
 
 	// Render callback, render stuff here
@@ -129,7 +148,12 @@ public:
 
 		renderer.draw(background);
 
+		
 		renderer.end(); // always end when you're done rendering or want to start fresh again
+
+		renderer.begin();
+		renderer.draw(sgo);
+		renderer.end();
 
 		AppWindow::getInstance().setView(view_hud); // change view to view_hud for HUD stuff
 
@@ -147,9 +171,13 @@ private:
 
 	Renderer renderer;
 
-	id_resource texture_1;
+
+	id_resource texture_1, texture_2;
 	SGO background;
 
+	SGO sgo;
+	Vessel* v;
+	
 	sf::Font font;
 	TGO welcomeText;
 };
