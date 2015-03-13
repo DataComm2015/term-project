@@ -38,7 +38,7 @@ void Session::disconnect()
 
 void Session::onMessage(Message* msg)
 {
-    printf("session %p: ",this);
+    printf("session %p: %d:",this,msg->type);
     for(int i = 0; i < msg->len; ++i)
     {
         printf("%c",*(((char*)msg->data)+i));

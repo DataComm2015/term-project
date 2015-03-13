@@ -2,10 +2,10 @@
 
 #include "Client.h"
 
+using namespace Networking;
+
 int main(void)
 {
-    using Networking::Client;
-
     Client* clnt = new Client();
 
     clnt->connect("localhost",7000);

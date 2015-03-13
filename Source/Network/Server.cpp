@@ -68,6 +68,11 @@ int Server::startServer(short port)
     return pthread_create(&serverThread,0,serverRoutine,this);
 }
 
+Session* Server::getSession(int socket)
+{
+    return sessions[socket];
+}
+
 /**
  * stops server, and closes all connections connected with the server.
  *

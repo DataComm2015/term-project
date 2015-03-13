@@ -21,7 +21,7 @@ namespace Networking
          * @param id the id used when multiplexing and demiltiplexing
          * @param type denotes which sub class of NetworkEntity this entity is
          */
-        NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type );
+        NetworkEntity( int id, int type );
 
         /**
          * Send an update to the other side
@@ -57,7 +57,7 @@ namespace Networking
          * @param message message that sent from the other side
          */
         virtual void
-        onRegister( Session * session, Message message );
+        onRegister( int type, Session * session, Message message );
 
         /**
          * Unregisters the session from the entity so it will no longer be able

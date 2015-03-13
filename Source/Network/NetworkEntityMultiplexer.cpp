@@ -106,20 +106,21 @@ NetworkEntityMultiplexer::~NetworkEntityMultiplexer()
  */
 int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
 {
-    printf("MUX::onMessage\n");
     int* intPtr = (int*) msg.data;
+    Message logicMsg = msg;
     switch(msg.type)
     {
         case MSG_TYPE_UPDATE:
-            networkEntities[*intPtr]->onUpdate(msg);
+            networkEntities[intPtr[0]]->onUpdate(logicMsg);
             break;
         case MSG_TYPE_REGISTER:
-            networkEntities[*intPtr]->silentRegister(session);
-            networkEntities[*intPtr] = onRegister(*intPtr, *(intPtr+1), session, msg);
+            logicMsg.data = ((int*)logicMsg.data)+2;
+            networkEntities[intPtr[0]] = onRegister(intPtr[0],intPtr[1],session,logicMsg);
+            networkEntities[intPtr[0]]->silentRegister(session);
             break;
         case MSG_TYPE_UNREGISTER:
-            networkEntities[*intPtr]->onUnregister(session, msg);
-            networkEntities[*intPtr]->silentUnregister(session);
+            networkEntities[intPtr[0]]->onUnregister(session, logicMsg);
+            networkEntities[intPtr[0]]->silentUnregister(session);
             networkEntities.erase(*intPtr);
             break;
     }
@@ -152,17 +153,17 @@ int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
  */
 int NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Message msg)
 {
-    printf("MUX::update\n");
+    printf("MUX::update(%d)\n",sessions.size());
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
     char* data = (char*)malloc(datalen);
 
     // inject header information
-    int* intPtr = (int*) &data[0];
-    *intPtr = id;
+    int* intPtr = (int*) data;
+    intPtr[0] = id;
 
     // inject payload information
-    memcpy(&data[sizeof(int)], msg.data, msg.len);
+    memcpy(&data[datalen-msg.len],msg.data,msg.len);
 
     // create message structure
     Message wireMsg;
@@ -216,12 +217,12 @@ int NetworkEntityMultiplexer::registerSession(int id, int type, Session* session
     char* data = (char*)malloc(datalen);
 
     // inject header information
-    int* intPtr = (int*) &data[0];
-    *intPtr = id;
-    *(intPtr+1) = type;
+    int* intPtr = (int*) data;
+    intPtr[0] = id;
+    intPtr[1] = type;
 
     // inject payload information
-    memcpy(&data[sizeof(int)*2], msg.data, msg.len);
+    memcpy(&data[datalen-msg.len],msg.data,msg.len);
 
     // create message structure
     Message wireMsg;
@@ -271,11 +272,11 @@ int NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Messag
     char* data = (char*)malloc(datalen);
 
     // inject header information
-    int* payloadId = (int*) &data[0];
-    *payloadId = id;
+    int* intptr = (int*) data;
+    intptr[0] = id;
 
     // inject payload information
-    memcpy(&data[sizeof(int)], msg.data, msg.len);
+    memcpy(&data[datalen-msg.len],msg.data,msg.len);
 
     // create message structure
     Message wireMsg;
@@ -319,7 +320,8 @@ void NetworkEntityMultiplexer::onUpdate(int id, Message msg)
 }
 NetworkEntity* NetworkEntityMultiplexer::onRegister(int id, int entityType, Session* session, Message msg)
 {
-    return new NetworkEntity(this,id,entityType);
+    printf("MUX::onRegister\n");
+    return new NetworkEntity(id,entityType);
 }
 /**
  * should only be called from within the Networking library. it calls

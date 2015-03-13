@@ -24,11 +24,11 @@ using namespace std;
 --
 -- NOTES:           Creates a NetworkEntity object
 -----------------------------------------------------------------------------------------------*/
-Networking::NetworkEntity::NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type )
+Networking::NetworkEntity::NetworkEntity( int id, int type )
 {
     this->id = id;
     this->type = type;
-    this->mux = mux;
+    this->mux = NetworkEntityMultiplexer::getInstance();
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ int Networking::NetworkEntity::registerSession( Session * session, Message messa
 -- NOTES:           Meant to be overwritten by user. Called when the associated entity on
 --                  the other side calls the register method. MUST CALL silentRegister();
 -----------------------------------------------------------------------------------------------*/
-void Networking::NetworkEntity::onRegister( Session * session, Message message )
+void Networking::NetworkEntity::onRegister( int type, Session * session, Message message )
 {
 }
 

@@ -15,11 +15,12 @@ namespace Networking
         virtual ~Server();
         int startServer(short port);
         int stopServer();
-
-    private:
+    protected:
+        Session* getSession(int socket);
         virtual void onConnect(int socket);
         virtual void onMessage(int socket, char* data, int len);
         virtual void onDisconnect(int socket, int remote);
+    private:
         static void* serverRoutine(void* params);
 
         /**
