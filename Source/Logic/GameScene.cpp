@@ -23,11 +23,18 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	}
 
 	gMap = new GameMap(cMap);
+	v = new Vessel(0,NULL,0,0);
 
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
+	championSprite = Manager::TextureManager::store(
+			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Idle/vessel-idle-example.png")
+			);
+
+
 
 	cMap->setTexture(tilemap);
+	championSGO().setTexture(*Manager::TextureManager::get(championSprite));
 
 	// Generate the game map
 	if (!gMap->generateMap())
@@ -69,6 +76,11 @@ GameScene::~GameScene()
 void GameScene::update(sf::Time)
 {
 	//printf("Update Run Scene\n");
+	//championSGO().setPosition(viewMain.getCenter());
+
+	//viewMain.move(v->getXSpeed(), v->getYSpeed());
+	v->move();
+	championSGO().setPosition(v->getXPosition(), v->getYPosition());
 	
 	return;
 }
@@ -81,6 +93,8 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if( e.type == sf::Event::KeyPressed )
 	{
+		v->detectMove();
+		
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch(e.key.code)
 		{
@@ -129,6 +143,10 @@ void GameScene::processEvents(sf::Event& e)
 			}
 		}
 	}
+	else if( e.type == sf::Event::KeyReleased )
+	{
+		v->stop(e.key.code);
+	}
 }
 
 void GameScene::draw()
@@ -151,6 +169,10 @@ void GameScene::draw()
 	renderer.draw(*cMap);
 
 	renderer.end();
+
+	renderer.begin();
+	renderer.draw(championSGO);
+	renderer.end();
 	
 	window.display();
 }
@@ -161,7 +183,7 @@ void GameScene::generateWater()
 	// Setup the wave shader
 	phase = 0.0;
 	waveShader.loadFromFile("Multimedia/Assets/Shaders/wave.vert", sf::Shader::Vertex);
-	waveShader.setParameter("wave_amplitude", sf::Vector2f(5.0, 5.0));
+	waveShader.setParameter("wave_amplitude", sf::Vector2f(WAVE_X, WAVE_Y));
 	waveShader.setParameter("wave_phase", phase);
 
 	// Create the water map
