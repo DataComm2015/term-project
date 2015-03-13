@@ -23,7 +23,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	}
 
 	gMap = new GameMap(cMap);
-	v = new Vessel(0,NULL,0,0);
+	v = new Vessel(WARRIOR,NULL,0,0);
 
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");

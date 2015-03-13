@@ -4,7 +4,7 @@
 -- PROGRAM: 4981 game project
 --
 -- FUNCTIONS:
---     Vessel( int jobclass, GameMap gmap, int x, int y );
+--     Vessel( job_class jobclass, GameMap gmap, int x, int y );
 --     ~Vessel();
 --     
 --     void setPosition( int x, int y );
@@ -60,10 +60,12 @@
 #define Weapon char
 #define Ability char
 
+typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT } job_class;
+
 class Vessel
 {
 	protected:
-		int jobClass;		//0 = warrior, 1 = shaman, 2 = hunter, 3 = scout;
+		job_class jobClass;		//0 = warrior, 1 = shaman, 2 = hunter, 3 = scout;
 		int currentHealth;
 		int maxHealth;
 		int currentEXP;
@@ -80,7 +82,7 @@ class Vessel
 		//TO DO: pointer to the game map needed in the future
 
 	public:
-		Vessel( int jobClass, Ability* abilityList, int x, int y );
+		Vessel( job_class jobClass, Ability* abilityList, int x, int y );
 		~Vessel();
 
 		void setPosition( int x, int y );
@@ -99,7 +101,7 @@ class Vessel
 		int  getLevel();
 		void increaseLevel();
 
-		int  getJobClass();
+		job_class getJobClass();
 
 		void resetHP();
 		void increaseHP( int hp );
