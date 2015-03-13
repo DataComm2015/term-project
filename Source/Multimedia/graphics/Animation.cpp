@@ -1,10 +1,12 @@
 #include "Animation.h"
 
-Animation::Animation(SGO* s, sf::IntRect *frames, short len)
+Animation::Animation(SGO* s, sf::IntRect *f, short len, short sk)
 {
 	length = len;
 	sprite = s;
 	position = 0;
+	frames = f;
+	skip = sk;
 	running = loop = false;
 }
 
@@ -34,9 +36,16 @@ void Animation::restart(bool l)
 
 short Animation::step(short by)
 {
-	increment(by);
-	running = false;
-	sprite->operator()().setTextureRect(frames[position]);
+	static short i = 0;
+	
+	if(i >= skip)
+	{
+		increment(by);
+		sprite->operator()().setTextureRect(frames[position]);
+		i = 0;
+	}
+	else
+		i++;
 	
 	return position;
 }
@@ -55,8 +64,7 @@ void Animation::update(sf::Time& t)
 {
 	if(running)
 	{
-		increment();
-		sprite->operator()().setTextureRect(frames[position]);
+		step();
 	}
 }
 

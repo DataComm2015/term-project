@@ -24,7 +24,7 @@ Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
 {
 	xPosition = x;
 	yPosition = y;
-	direction = 0;
+	direction = 1; //start facing right
 
 	xSpeed = 0;
 	ySpeed = 0;

@@ -58,14 +58,14 @@
 #include <SFML/Graphics.hpp>
 
 typedef char Weapon;
-typedef char Abilitys;
+typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT } job_class;
 
 class Vessel
 {
 	protected:
-		job_class jobClass;		//0 = warrior, 1 = shaman, 2 = hunter, 3 = scout;
+		job_class jobClass;
 		int currentHealth;
 		int maxHealth;
 		int currentEXP;
@@ -83,7 +83,7 @@ class Vessel
 
 	public:
 		Vessel( job_class jobClass, Ability* abilityList, int x, int y );
-		~Vessel();
+		~Vessel(); //not virtual?
 
 		void setPosition( int x, int y );
 		int getXPosition();

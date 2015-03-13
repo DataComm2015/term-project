@@ -6,6 +6,9 @@ using std::cerr;
 using std::endl;
 using namespace Marx;
 
+sf::IntRect runFrames[8];
+Animation *runAnim;
+
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 {
 	// Create the cell map
@@ -28,14 +31,25 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
 	championSprite = Manager::TextureManager::store(
-			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Idle/vessel-idle-example.png")
+			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Body/vessel-run-sheet-right.png")
 			);
 
-
-
+	runFrames[0] = sf::IntRect(5, 4, 20, 27);
+	runFrames[1] = sf::IntRect(40, 4, 20, 27);
+	runFrames[2] = sf::IntRect(74, 4, 20, 27);
+	runFrames[3] = sf::IntRect(105, 4, 20, 27);
+	runFrames[4] = sf::IntRect(134, 4, 20, 27);
+	runFrames[5] = sf::IntRect(168, 4, 20, 27);
+	runFrames[6] = sf::IntRect(202, 4, 20, 27);
+	runFrames[7] = sf::IntRect(232, 4, 20, 27);
+	runAnim = new Animation(&championSGO, runFrames, 8, 7);
+	//runAnim->run(true);
+	
 	cMap->setTexture(tilemap);
 	championSGO().setTexture(*Manager::TextureManager::get(championSprite));
-
+	championSGO().setTextureRect(runFrames[0]);
+	championSGO().setScale(2, 2);
+	
 	// Generate the game map
 	if (!gMap->generateMap())
 	{
@@ -73,14 +87,29 @@ GameScene::~GameScene()
 	delete waterMap;
 }
 
-void GameScene::update(sf::Time)
+void GameScene::update(sf::Time t)
 {
 	//printf("Update Run Scene\n");
 	//championSGO().setPosition(viewMain.getCenter());
 
 	//viewMain.move(v->getXSpeed(), v->getYSpeed());
 	v->move();
-	championSGO().setPosition(v->getXPosition(), v->getYPosition());
+	
+	if(v->getXSpeed() != 0 || v->getYSpeed() != 0)
+		runAnim->run(true);
+	else
+		runAnim->pause(true);
+	
+	//flip the sprite if facing left
+	if(v->getDirection() == 0)
+		championSGO().setScale(-2, 2);
+	else
+		championSGO().setScale(2, 2);
+	
+	//the 20 is to offset the size of the sprite, since it scales around the left hand of the sprite... pretty hackey but only temporary. ask lewis if you don't get it
+	championSGO().setPosition(v->getXPosition() + (v->getDirection()?0:20), v->getYPosition());
+	
+	runAnim->update(t);
 	
 	return;
 }

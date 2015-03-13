@@ -3,7 +3,7 @@
 class Animation
 {
 	public:
-		Animation(SGO*, sf::IntRect*, short);
+		Animation(SGO*, sf::IntRect*, short, short = 0);
 		virtual ~Animation();
 		void run(bool = false);
 		void pause(bool = false);
@@ -17,6 +17,6 @@ class Animation
 	
 		SGO* sprite;
 		sf::IntRect *frames;
-		short position, length;
+		short position, length, skip;
 		bool running, loop;
 };
