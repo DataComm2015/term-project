@@ -1,44 +1,69 @@
 #include "Session.h"
-
-#include "ReceiveProcess"
-#include "SendProcess"
-#include "NetworkEntityMultiplexer.h"
 #include "Message.h"
+#include "NetworkEntity.h"
+#include "NetworkEntityMultiplexer.h"
 
+#include <stdio.h>
 #include <sys/socket.h>
+#include <unistd.h>
+#include <string.h>
 
-Networking::Session::Session(unsigned int socket, ReadProcess *readProcess, SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux)
-	: socket(socket), readProcess(readProcess), sendProcess(sendProcess), entityMux(entityMux)
+// #define DEBUG
+
+using namespace Networking;
+
+Session::Session(int socket)
 {
-	// Nothing to do
+    #ifdef DEBUG
+    printf("session %p connected\n",this);
+    #endif
+    // initialize instance variables
+    this->socket    = socket;
+    this->entityMux = NetworkEntityMultiplexer::getInstance();
 }
 
-Networking::Session::~Session()
+Session::~Session()
 {
-	disconnect();
+    disconnect();
 }
 
-unsigned int Networking::Session::getSocket()
+void Session::send(Message* msg)
 {
-	return socket;
+    int packetlen = msg->len+sizeof(msg->len)+sizeof(msg->type);
+    write(socket,&packetlen,sizeof(packetlen));
+    write(socket,&msg->type,sizeof(msg->type));
+    write(socket,&msg->len,sizeof(msg->len));
+    write(socket,msg->data,msg->len);
 }
 
-void Networking::Session::send(Message *message)
+void Session::disconnect()
 {
-	sendProcess->send(message);
+    close(socket);
 }
 
-void Networking::Session::disconnect()
+void Session::onMessage(Message* msg)
 {
-	close(socket);
+    #ifdef DEBUG
+    printf("session %p: %d:",this,msg->type);
+    for(int i = 0; i < msg->len; ++i)
+    {
+        printf("%c",*(((char*)msg->data)+i));
+    }
+    printf("\n");
+    #endif
+    entityMux->onMessage(this,*msg);
 }
 
-void onMessageReceived(Message *message)
+void Session::onDisconnect(int remote)
 {
-	entityMux->onMessage(this, message);
-}
-
-void onConnectionClosedByRemote()
-{
-	// Handle Closed Connections
+    #ifdef DEBUG
+    printf("session %p disconnected by %s host\n",this,remote?"remote":"local");
+    #endif
+    for(auto entity = registeredEntities.begin();
+        entity != registeredEntities.end(); ++entity)
+    {
+        printf("WARNING: Session@%p was disconnected before "
+            "NetworkEntity@%p was unregistered\n",this,*entity);
+        (*entity)->silentUnregister(this);
+    }
 }

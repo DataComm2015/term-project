@@ -3,38 +3,37 @@
 
 #include "Session.h"
 
+#include <pthread.h>
+#include <map>
+
 namespace Networking
 {
     class Client
     {
     public:
-        /**
-         * constructs a new {Client}.
-         */
         Client();
-        ~Client();
+        virtual ~Client();
+        int connect(char* remoteName, short remotePort);
+    private:
+        virtual void onConnect(int socket);
+        virtual void onMessage(int socket, char* data, int len);
+        virtual void onDisconnect(int socket, int remote);
+        static void* clientRoutine(void* params);
+
         /**
-         * attempts to connect the client to a server using parameters
-         *
-         * @param  address IP address to connect to
-		 * @param  port to connect to
-         *
-         * @return integer indicating the outcome of the operation
+         * pipe used to communicate with the clientThread.
          */
-        int connect(unsigned long address, short port);
-		/**
-         * function to be overriden by children
-         *
-         * @param  session
+        int ctrlPipe[2];
+
+        /**
+         * thread id for the thread that runs the clientRoutine.
          */
-		virtual void onConnect(Session* session) = 0;
-		
-	private:
-        Session                  * session;
-        ReceiveProcess           * readProcess;
-        SendProcess              * sendProcess;
-        NetworkEntityMultiplexer * entityMux;
-    
+        pthread_t clientThread;
+
+        /**
+         * maps sockets to sessions.
+         */
+        std::map<int,Session*> sessions;
     };
 }
 
