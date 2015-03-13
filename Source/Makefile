@@ -1,18 +1,19 @@
 CXX=g++
 CPPFLAGS=-std=c++11
-EXE=app
+CLIENT_EXE=app
+SERVER_EXE=serv
 
 ## FILES
 
 FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engine/Map.o \
-					Engine/TextureManager.o Engine/TileManager.o
+					Engine/TextureManager.o Engine/TileManager.o Engine/ServerGameScene.o
 
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
 					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o
 
 FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o
 
-FILES_NETWORK=		
+FILES_NETWORK=		Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
 
 FILE_MAIN=			ClientDriver.cpp
 FILE_CLIENT=			Client.cpp
@@ -37,4 +38,4 @@ server: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FI
 
 clean:
 	find . -name "*.o" -type f -delete
-	rm -f $(EXE)
+	rm -f $(CLIENT_EXE) $(SERVER_EXE)
