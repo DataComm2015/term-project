@@ -1,6 +1,6 @@
 #include "Session.h"
 #include "Message.h"
-// #include "NetworkEntityMultiplexer.h"
+#include "NetworkEntityMultiplexer.h"
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -13,12 +13,8 @@ Session::Session(int socket)
     printf("session %p connected\n",this);
 
     // initialize instance variables
-    this->socket = socket;
-    // this->recvProcess = ReceiveProcess::getInstance();
-    // SendProcess* sendProcess
-    // NetworkEntityMultiplexer* entityMux
-
-    // recvProcess->addSession(this);
+    this->socket    = socket;
+    this->entityMux = NetworkEntityMultiplexer::getInstance();
 }
 
 Session::~Session()
@@ -48,6 +44,7 @@ void Session::onMessage(Message* msg)
         printf("%c",*(((char*)msg->data)+i));
     }
     printf("\n");
+    this->entityMux->onMessage(this,*msg);
 }
 
 void Session::onDisconnect(int remote)

@@ -51,14 +51,6 @@ void Client::onConnect(int socket)
     printf("client: socket %d connected\n",socket);
 #endif
     sessions[socket] = new Session(socket);
-    Message msg;
-    msg.type = 0;
-    char* buffer = (char*) malloc(1000);
-    msg.data = buffer;
-    sprintf(buffer,"hey i am the client");
-    msg.len = strlen(buffer);
-    sessions[socket]->send(&msg);
-    free(buffer);
 }
 
 void Client::onMessage(int socket, char* data, int len)

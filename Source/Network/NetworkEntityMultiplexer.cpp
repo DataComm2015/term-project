@@ -1,5 +1,84 @@
 #include "NetworkEntityMultiplexer.h"
+#include "Message.h"
+#include "Session.h"
+#include "NetworkEntity.h"
 
+#include <stdlib.h>
+#include <string.h>
+
+using namespace Networking;
+
+NetworkEntityMultiplexer* NetworkEntityMultiplexer::instance = 0;
+
+/**
+ * returns the singleton instance of the NetworkEntityMultiplexer, and
+ *   instantiates it if needed.
+ *
+ * @function   NetworkEntityMultiplexer::getInstance
+ *
+ * @date       2015-03-12
+ *
+ * @revision   none
+ *
+ * @designer   Networking Team
+ *
+ * @programmer Eric Tsang
+ *
+ * @note       none
+ *
+ * @signature  NetworkEntityMultiplexer* NetworkEntityMultiplexer::getInstance()
+ *
+ * @return     the singleton instance of the NetworkEntityMultiplexer
+ */
+NetworkEntityMultiplexer* NetworkEntityMultiplexer::getInstance()
+{
+    printf("MUX::getInstance\n");
+    if(instance == 0)
+    {
+        instance = new NetworkEntityMultiplexer();
+    }
+    return instance;
+}
+/**
+ * instantiates a NetworkEntityMultiplexer.
+ *
+ * @function   NetworkEntityMultiplexer::NetworkEntityMultiplexer
+ *
+ * @date       2015-03-12
+ *
+ * @revision   none
+ *
+ * @designer   EricTsang
+ *
+ * @programmer EricTsang
+ *
+ * @note       none
+ *
+ * @signature  NetworkEntityMultiplexer::NetworkEntityMultiplexer()
+ */
+NetworkEntityMultiplexer::NetworkEntityMultiplexer()
+{
+}
+/**
+ * destructs a NetworkEntityMultiplexer.
+ *
+ * @function   NetworkEntityMultiplexer::~NetworkEntityMultiplexer
+ *
+ * @date       2015-03-12
+ *
+ * @revision   none
+ *
+ * @designer   EricTsang
+ *
+ * @programmer EricTsang
+ *
+ * @note       none
+ *
+ * @signature  NetworkEntityMultiplexer::~NetworkEntityMultiplexer()
+ */
+NetworkEntityMultiplexer::~NetworkEntityMultiplexer()
+{
+}
 /**
  * method with the same signature as the Session::onMessage. this
  *   function should be invoked within the session's onMessage method
@@ -25,8 +104,9 @@
  *
  * @return integer indicating the outcome of the operation
  */
-int Networking::NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
+int NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
 {
+    printf("MUX::onMessage\n");
     int* intPtr = (int*) msg.data;
     switch(msg.type)
     {
@@ -70,8 +150,9 @@ int Networking::NetworkEntityMultiplexer::onMessage(Session* session, Message ms
  *
  * @return     integer indicating the result of the operation
  */
-int Networking::NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Message msg)
+int NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Message msg)
 {
+    printf("MUX::update\n");
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
     char* data = (char*)malloc(datalen);
@@ -127,8 +208,9 @@ int Networking::NetworkEntityMultiplexer::update(int id, std::set<Session*>& ses
  *
  * @return     integer indicating the result of the operation
  */
-int Networking::NetworkEntityMultiplexer::registerSession(int id, int type, Session* session, Message msg)
+int NetworkEntityMultiplexer::registerSession(int id, int type, Session* session, Message msg)
 {
+    printf("MUX::registerSession\n");
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int)*2;
     char* data = (char*)malloc(datalen);
@@ -181,8 +263,9 @@ int Networking::NetworkEntityMultiplexer::registerSession(int id, int type, Sess
  *
  * @return     integer indicating the result of the operation
  */
-int Networking::NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Message msg)
+int NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Message msg)
 {
+    printf("MUX::unregisterSession\n");
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
     char* data = (char*)malloc(datalen);
@@ -229,9 +312,14 @@ int Networking::NetworkEntityMultiplexer::unregisterSession(int id, Session* ses
  * @param      msg describes the message to send over the wire. this
  *   message is only sent to the {session}.
  */
-void Networking::NetworkEntityMultiplexer::onUpdate(int id, Message msg)
+void NetworkEntityMultiplexer::onUpdate(int id, Message msg)
 {
+    printf("MUX::onUpdate\n");
     networkEntities[id]->onUpdate(msg);
+}
+NetworkEntity* NetworkEntityMultiplexer::onRegister(int id, int entityType, Session* session, Message msg)
+{
+    return new NetworkEntity(this,id,entityType);
 }
 /**
  * should only be called from within the Networking library. it calls
@@ -257,7 +345,8 @@ void Networking::NetworkEntityMultiplexer::onUpdate(int id, Message msg)
  * @param      msg describes the message to send over the wire. this message
  *   is only sent to the {session}.
  */
-void Networking::NetworkEntityMultiplexer::onUnregister(int id, Session* session, Message msg)
+void NetworkEntityMultiplexer::onUnregister(int id, Session* session, Message msg)
 {
+    printf("MUX::onUnregister\n");
     networkEntities[id]->onUnregister(session,msg);
 }

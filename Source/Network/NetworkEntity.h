@@ -3,16 +3,16 @@
 
 #include <set>
 
-#include "Message.h"
-
 namespace Networking
 {
-	class Session;
+    class NetworkEntityMultiplexer;
+    class Session;
+    class Message;
 
     class NetworkEntity
     {
+    friend class NetworkEntityMultiplexer;
     public:
-    friend class NetworkEntityMultipler;
         /**
          * Constructs a new NetworkEntity.
          *

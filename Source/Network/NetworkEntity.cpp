@@ -1,5 +1,6 @@
 #include "NetworkEntity.h"
 #include "NetworkEntityMultiplexer.h"
+#include "Message.h"
 
 using namespace std;
 
@@ -72,7 +73,7 @@ int Networking::NetworkEntity::update( Message message )
 --
 -- NOTES:           Meant to be overwritten by user to handle an incoming update
 -----------------------------------------------------------------------------------------------*/
-virtual void Networking::NetworkEntity::onUpdate( Message message )
+void Networking::NetworkEntity::onUpdate( Message message )
 {
 }
 
@@ -122,7 +123,7 @@ int Networking::NetworkEntity::registerSession( Session * session, Message messa
 -- NOTES:           Meant to be overwritten by user. Called when the associated entity on
 --                  the other side calls the register method. MUST CALL silentRegister();
 -----------------------------------------------------------------------------------------------*/
-virtual void void Networking::NetworkEntity::onRegister( Session * session, Message message )
+void Networking::NetworkEntity::onRegister( Session * session, Message message )
 {
 }
 
@@ -178,7 +179,7 @@ int Networking::NetworkEntity::unregisterSession( Session * session, Message mes
 --                  entity on the other side calls the unregister method.
 --                  MUST CALL silentUnregister();
 -----------------------------------------------------------------------------------------------*/
-virtual void Networking::NetworkEntity::onUnregister( Session * session, Message message )
+void Networking::NetworkEntity::onUnregister( Session * session, Message message )
 {
 }
 

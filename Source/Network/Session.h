@@ -24,9 +24,7 @@
 
 namespace Networking
 {
-    // class ReceiveProcess;
-    // class SendProcess;
-    // class NetworkEntityMultiplexer;
+    class NetworkEntityMultiplexer;
 
     struct Message;
 
@@ -44,9 +42,7 @@ namespace Networking
 
     private:
         int socket;
-        // ReceiveProcess* recvProcess;
-        // SendProcess* sendProcess;
-        // NetworkEntityMultiplexer* entityMux;
+        NetworkEntityMultiplexer* entityMux;
     };
 }
 
