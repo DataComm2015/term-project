@@ -20,6 +20,7 @@ namespace Networking
     friend class NetworkEntity;
     public:
         static NetworkEntityMultiplexer* getInstance();
+        static void setInstance(NetworkEntityMultiplexer* mux);
         void onMessage(Session* session, Message msg);
     protected:
         virtual NetworkEntity* onRegister(int id, int entityType, Session* session, Message msg);
