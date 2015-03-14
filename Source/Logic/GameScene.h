@@ -13,6 +13,7 @@
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
 #include "../Logic/Champion/Vessel.h"
+#include "../Multimedia/graphics/Animation.h"
 
 
 /* The water buffer around the island */
