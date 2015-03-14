@@ -9,7 +9,8 @@ FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engi
 					Engine/TextureManager.o Engine/TileManager.o Engine/ServerGameScene.o
 
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
-					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o
+					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o Multimedia/graphics/Animation.o \
+					Multimedia/gui/Label.o Multimedia/gui/Button.o Multimedia/gui/Container.o
 
 FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o
 
