@@ -1,0 +1,62 @@
+# Enemy Hierarchy Data File
+#
+# Designed and Developed by Chris Klassen
+
+# Entry format
+#
+# !Node_Parent [null/id]
+# Node_Name [id]
+# Node_Type [root/leaf]
+# (if leaf)
+#		Enemy_Name
+
+
+
+# ROOT #
+
+!null
+enemy
+root
+
+
+# GRASS #
+
+!enemy
+grass
+root
+
+	!grass
+	lost_grass
+	root
+
+		!lost_grass
+		ground_grass
+		root
+
+			!ground_grass
+			test_enemy1
+			leaf
+			Magic Man
+
+			!ground_grass
+			test_enemy2
+			leaf
+			Super Girl
+
+		!lost_grass
+		air_grass
+		root
+
+			!air_grass
+			test_enemy3
+			leaf
+			Hot Dog
+
+	!grass
+	guardian_grass
+	root
+
+		!guardian_grass
+		test_enemy4
+		leaf
+		Some Guy
