@@ -35,6 +35,8 @@ EnemyHierarchy* EnemyHierarchy::instance = nullptr;
 ******************************************************************************/
 EnemyHierarchy::EnemyHierarchy(ifstream *dataFile)
 {
+	state = TOP;
+
 	string line;
 
 	// While there is more data to read
@@ -86,9 +88,25 @@ void EnemyHierarchy::handleDataLine(std::string &line)
 		buffer >> word;
 
 		// If this is the start of a node
-		if (word[0] == NODE)
+		if (state == TOP)
 		{
-			
+			// Build the node
+			if (word.substr(1, word.length()).compare(NODE_TOP))
+			{
+				// If this is the top of the hierarchy
+				if (root != nullptr)
+				{
+					throw logic_error("Multiple top nodes defined.");
+				}
+
+				// Create the root
+				root = new EnemyNode;
+			}
+			else
+			{
+				// Not the top node
+				
+			}
 		}
 	}
 }

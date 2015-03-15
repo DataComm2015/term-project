@@ -5,16 +5,29 @@
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 /* The data file containing the enemy hierarchy details */
 #define SOURCE_FILE "enemy_hierarchy.hdata"
 
 /* The character indicating that a line is a comment */
-#define COMMENT "#"
+#define COMMENT '#'
 
 /* The character indicating the start of a node */
-#define NODE "!"
+#define NODE_START '!'
 
+/* The phrase defining the top of the hierarchy */
+#define NODE_TOP "null"
+
+/* The phrase defining a node as a root */
+#define NODE_ROOT "root"
+
+/* The phrase defining a node as a leaf */
+#define NODE_LEAF "leaf"
+
+/* An enum to represent all states of constructing from a file */
+enum ConstructState { TOP, PARENT, NAME, TYPE, ENEMY_NAME };
+typedef enum ConstructState ConstructState;
 
 /* An enum to represent the possible types of nodes */
 enum EnemyNodeType { ROOT, LEAF };
@@ -28,8 +41,9 @@ typedef enum EnemyNodeName EnemyNodeName;
 struct EnemyNode
 {
 	struct EnemyNode* parent;
+	std::vector<struct EnemyNode*>  children;
 	std::string name;
-	NodeType type;
+	EnemyNodeType type;
 	EnemyNodeName enemyName;
 };
 
@@ -48,7 +62,8 @@ class EnemyHierarchy
 		void handleDataLine(std::string &line);
 
 		static EnemyHierarchy *instance;
-		
+		EnemyNode *root;
+		ConstructState state;
 };
 
 
