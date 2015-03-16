@@ -34,21 +34,14 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Body/vessel-run-sheet-right.png")
 			);
 
-	runFrames[0] = sf::IntRect(5, 4, 20, 27);
-	runFrames[1] = sf::IntRect(40, 4, 20, 27);
-	runFrames[2] = sf::IntRect(74, 4, 20, 27);
-	runFrames[3] = sf::IntRect(105, 4, 20, 27);
-	runFrames[4] = sf::IntRect(134, 4, 20, 27);
-	runFrames[5] = sf::IntRect(168, 4, 20, 27);
-	runFrames[6] = sf::IntRect(202, 4, 20, 27);
-	runFrames[7] = sf::IntRect(232, 4, 20, 27);
-	runAnim = new Animation(&championSGO, runFrames, 8, 7);
-	//runAnim->run(true);
+	// an example, obviously...
+	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	
 	cMap->setTexture(tilemap);
 	championSGO().setTexture(*Manager::TextureManager::get(championSprite));
-	championSGO().setTextureRect(runFrames[0]);
+	championSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
 	championSGO().setScale(2, 2);
+	championSGO.middleAnchorPoint(true);
 	
 	// Generate the game map
 	if (!gMap->generateMap())
@@ -107,7 +100,7 @@ void GameScene::update(sf::Time t)
 		championSGO().setScale(2, 2);
 	
 	//the 20 is to offset the size of the sprite, since it scales around the left hand of the sprite... pretty hackey but only temporary. ask lewis if you don't get it
-	championSGO().setPosition(v->getXPosition() + (v->getDirection()?0:20), v->getYPosition());
+	championSGO().setPosition(v->getXPosition(), v->getYPosition());
 	
 	runAnim->update(t);
 	
