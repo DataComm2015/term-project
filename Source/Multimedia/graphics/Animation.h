@@ -1,9 +1,12 @@
+#ifndef ANIMATION_H
+#define ANIMATION_H
+
 #include "object/SGO.h"
 
 class Animation
 {
 	public:
-		Animation(SGO*, sf::IntRect*, short, short = 0);
+		Animation(SGO*, sf::Vector2i, short, short = 0);
 		virtual ~Animation();
 		void run(bool = false);
 		void pause(bool = false);
@@ -16,7 +19,9 @@ class Animation
 		void increment(short = false);
 	
 		SGO* sprite;
-		sf::IntRect *frames;
+		sf::Vector2i size;
 		short position, length, skip;
 		bool running, loop;
 };
+
+#endif
