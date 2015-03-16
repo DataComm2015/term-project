@@ -5,8 +5,35 @@ using namespace Marx;
 AppWindow& AppWindow::getInstance()
 {
 	static AppWindow app;
-	
+
 	return app;
+}
+
+/******************************************************************************
+*	FUNCTION: getCurrentView
+*
+*	DATE: March 10, 2015
+*
+*	DESIGNER: Melvin Loho
+*
+*	PROGRAMMER: Melvin Loho
+*
+*	INTERFACE: sf::View getCurrentView()
+*
+*	RETURNS:
+*		sf::View - the up to date view of the AppWindow
+*
+*	NOTES:
+*		Gets the up to date view of the AppWindow
+*
+******************************************************************************/
+sf::View AppWindow::getCurrentView() const
+{
+	sf::Vector2u size = getSize();
+	return sf::View(
+		sf::Vector2f(size.x * 0.5f, size.y * 0.5f),
+		sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y))
+		);
 }
 
 /******************************************************************************
@@ -26,18 +53,20 @@ AppWindow& AppWindow::getInstance()
 *
 *	PARAMETERS:
 *		scene	- scene to be added to the appwindow
-*				
+*
 *
 *	RETURNS:
 *		void
 *
 *	NOTES:
-*		Adds a scene to the app 
+*		Adds a scene to the app
 *
 ******************************************************************************/
 int AppWindow::addScene(Scene *scene)
 {
 	this->scene.emplace_back(scene);
+
+	this->scene.back()->onLoad();
 
 	return 0;
 }
@@ -63,7 +92,7 @@ int AppWindow::addScene(Scene *scene)
 *		index	- index of the scene to be removed
 *
 *	RETURNS:
-*		void 
+*		void
 *
 *	NOTES:
 *		Removes a scene from the scenes vector in the app window
@@ -71,7 +100,10 @@ int AppWindow::addScene(Scene *scene)
 ******************************************************************************/
 void AppWindow::removeScene(int id)
 {
-	this->scene.erase(this->scene.begin() + id);
+	auto removedScene =
+		this->scene.erase(this->scene.begin() + id);
+
+	(*removedScene)->unLoad();
 }
 
 /******************************************************************************
@@ -93,7 +125,7 @@ void AppWindow::removeScene(int id)
 *		index	- index of the scene to be removed
 *
 *	RETURNS:
-*		void 
+*		void
 *
 *	NOTES:
 *		Removes a scene from the scenes vector in the app window
@@ -101,55 +133,47 @@ void AppWindow::removeScene(int id)
 ******************************************************************************/
 void AppWindow::run()
 {
-	sf::Clock clock;
-	sf::Event event;
-	if(!isRunning)
+	if (!isRunning)
 	{
-		isRunning == true;
+		isRunning = true;
 
-		while(isOpen())
+		sf::Clock clock;
+		sf::Event event;
+
+		// LOOP
+		while (isOpen())
 		{
-			nextUpdate = clock.getElapsedTime() + timePerFrame;
-			// check window events
-			while(pollEvent(event))	// inherited from sf::RenderWindow
+			// TIME UPDATES
+			m_elapsedTime = clock.restart();
+			m_timeSinceLastUpdate += m_elapsedTime;
+
+			// CHECK FOR EVENTS
+			while (pollEvent(event))
 			{
-				// if the window is being closed deal with it here.
-				if (event.type == sf::Event::Closed)
-                	close();
 				scene.back()->processEvents(event);
 			}
-			while(clock.getElapsedTime() < nextUpdate)
+
+			// TIME PER FRAME CONTROLLED LOOP
+			while (m_timeSinceLastUpdate > m_timePerFrame)
 			{
-				for(std::vector<Scene*>::iterator it = scene.begin(); it != scene.end(); it++ )
-				{
-					(*it)->update(clock.getElapsedTime());
-				}
+				m_timeSinceLastUpdate -= m_timePerFrame;
+
+				for (Scene* s : scene)
+					s->update(m_timePerFrame);
 			}
 
-			for(std::vector<Scene*>::iterator it = scene.begin(); it != scene.end(); ++it )
-			{
-				(*it)->draw();
-			}
+			// RENDER
+			for (Scene* s : scene)
+				s->draw();
 		}
+
+		isRunning = false;
 	}
 }
 
-AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game") 
+AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game")
 {
 	Scene *s = new Scene;
 	scene.emplace_back(s);
-	timePerFrame = sf::milliseconds(16);
-}
-
-
-
-int main()
-{
-	AppWindow& window = Marx::AppWindow::getInstance();
-
-	window.addScene(new GameScene);
-
-	window.run();
-
-	return 0;
+	m_timePerFrame = sf::seconds(1.f / 60);
 }

@@ -44,6 +44,7 @@ class GameMap
 		void generateMiniBosses();
 		void generatePlayers();
 		void generatePlaceholderBlocks();
+		void generateTiles();
 		BlockType makeBlockType(BlockZone z, int rRoll);
 
 		Marx::Map *cellMap;
