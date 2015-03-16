@@ -26,7 +26,7 @@ Animation::Animation(SGO* s, sf::Vector2i si, short len, short sk)
 {
 	length = len;
 	sprite = s;
-	position = 0;
+	position = steps = 0;
 	size = si;
 	skip = sk;
 	running = loop = false;
@@ -121,16 +121,14 @@ void Animation::restart(bool l)
  */
 short Animation::step(short by)
 {
-	static short i = 0;
-	
-	if(i >= skip)
+	if(steps >= skip)
 	{
 		increment(by);
 		sprite->operator()().setTextureRect(sf::IntRect((size.x * position), 0, size.x, size.y));
-		i = 0;
+		steps = 0;
 	}
 	else
-		i++;
+		steps++;
 	
 	return position;
 }

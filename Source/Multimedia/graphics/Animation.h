@@ -20,7 +20,7 @@ class Animation
 	
 		SGO* sprite;
 		sf::Vector2i size;
-		short position, length, skip;
+		short position, length, skip, steps;
 		bool running, loop;
 };
 
