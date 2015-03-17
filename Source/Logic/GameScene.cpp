@@ -75,7 +75,13 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	wepSGO().setScale(2,2);
 	wepSGO.middleAnchorPoint(true);
 	
+	sf::Font *arial = new sf::Font();
+	arial->loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
+	
 	b1 = new GUI::Button(&championSGO, *Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
+	tb = new GUI::TextBox(NULL);
+	tb->toggleSelected(true);
+	tb->operator()().setFont(*arial);
 	
 	// Generate the game map
 	if (!gMap->generateMap())
@@ -186,6 +192,10 @@ void GameScene::processEvents(sf::Event& e)
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch(e.key.code)
 		{
+			case sf::Keyboard::Return:
+			{
+				break;
+			}
 			case sf::Keyboard::Left:
 			{
 				viewMain.move(-5, 0);
@@ -235,10 +245,12 @@ void GameScene::processEvents(sf::Event& e)
 	{
 		v->stop(e.key.code);
 	}
-	else if (e.type == sf::Event::Resized)
+	else if ( e.type == sf::Event::Resized )
 	{
 		updateMainView(viewMain);
 	}
+
+	tb->process(e);
 }
 
 void GameScene::draw()
@@ -261,6 +273,7 @@ void GameScene::draw()
 
 	// draw the objects
 	renderer.draw(*b1);
+	renderer.draw(*tb);
 	renderer.draw(championSGO);
 	renderer.draw(maskSGO);
 	renderer.draw(wepSGO);
@@ -301,7 +314,4 @@ void GameScene::generateWater()
 
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
-
-	// Re-adjust the water map location
-
 }
