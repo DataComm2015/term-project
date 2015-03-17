@@ -2,6 +2,7 @@
 #define GAMEMAP_H_
 
 #include "../../Engine/Map.h"
+#include "../../Engine/Entity.h"
 #include "Block.h"
 
 /* The number of human players in a round */
@@ -46,6 +47,8 @@ class GameMap
 		void generatePlaceholderBlocks();
 		void generateTiles();
 		BlockType makeBlockType(BlockZone z, int rRoll);
+
+		bool placeEntity(int x, int y, Entity* entity);
 
 		Marx::Map *cellMap;
 		Block** blockMap;
