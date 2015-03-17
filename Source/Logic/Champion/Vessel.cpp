@@ -1,4 +1,4 @@
-#include "vessel.h"
+#include "Vessel.h"
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel constructor
 --
@@ -10,8 +10,8 @@
 --
 -- PROGRAMMER: Sebastian Pelka, Sanders Lee
 --
--- INTERFACE: Vessel::Vessel( int jobclass, GameMap gmap, int x, int y )
--- int jobclass: the job class you wish to set up the Vessel as
+-- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
+-- job_class jobclass: the job class you wish to set up the Vessel as
 -- GameMap gmap: the game map the Vessel is on
 -- int x, int y: the coordinates of the Vessel on the map
 --
@@ -20,11 +20,11 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( int jobClass, Ability* abilityList, int x, int y )
+Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
 {
 	xPosition = x;
 	yPosition = y;
-	direction = 0;
+	direction = 1; //start facing right
 
 	xSpeed = 0;
 	ySpeed = 0;
@@ -32,28 +32,29 @@ Vessel::Vessel( int jobClass, Ability* abilityList, int x, int y )
 	abilities = abilityList;
 
 	//class-specific instantiation
-	if ( jobClass == 0 )			//warrior
+	if ( jobClass == WARRIOR )			//warrior
 	{
 		currentHealth = 150;
 		maxHealth = 150;
-		travelSpeed = 5;
+		travelSpeed = 2;
 		//Weapon = Spear;
 	}
-	else if ( jobClass == 1 )		//shaman
+	else if ( jobClass == SHAMAN )		//shaman
 	{
 		currentHealth = 75;
 		maxHealth = 75;
 		travelSpeed = 6;
 		//weapon = Fireball;
 	}
-	else if ( jobClass == 2 )		//Hunter
+
+	else if ( jobClass == HUNTER )		//Hunter
 	{
 		currentHealth = 100;
 		maxHealth = 100;
 		travelSpeed = 6;
 		//weapon = Javelin;
 	}
-	else if ( jobClass == 3 ) 		//Scout
+	else if ( jobClass == SCOUT ) 		//Scout
 	{
 		currentHealth = 125;
 		maxHealth = 125;
@@ -676,7 +677,7 @@ void Vessel::die()
 -- Bookmarks:
 -- http://en.sfml-dev.org/forums/index.php?topic=11539.0
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::move( sf::Event::KeyEvent keypress )
+void Vessel::detectMove()
 {
 	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
 
@@ -684,14 +685,12 @@ void Vessel::move( sf::Event::KeyEvent keypress )
 	{
 		moving = true;
 		ySpeed = -travelSpeed;
-		setPosition( getXPosition(), getYPosition() - travelSpeed );
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		moving = true;
 		ySpeed = travelSpeed;
-		setPosition( getXPosition(), getYPosition() + travelSpeed );
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -699,7 +698,6 @@ void Vessel::move( sf::Event::KeyEvent keypress )
 		moving = true;
 		xSpeed = -travelSpeed;
 		direction = 0;	//signal to animate left facing sprite
-		setPosition( getXPosition() - travelSpeed , getYPosition() );
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
@@ -707,7 +705,6 @@ void Vessel::move( sf::Event::KeyEvent keypress )
 		moving = true;
 		xSpeed = travelSpeed;
 		direction = 1; //signal to animate right facing sprite
-		setPosition( getXPosition() + travelSpeed, getYPosition());
 	}
 }
 
@@ -715,10 +712,21 @@ void Vessel::move( sf::Event::KeyEvent keypress )
 --
 --
 --*/
-void Vessel::stop()
+void Vessel::move()
 {
-	xSpeed = 0;
-	ySpeed = 0;
+	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed );
+}
+
+/*--
+--
+--
+--*/
+void Vessel::stop( int keyReleased )
+{
+	if( (keyReleased == sf::Keyboard::D) || (keyReleased == sf::Keyboard::A) )
+		xSpeed = 0;
+	if( (keyReleased == sf::Keyboard::W) || (keyReleased == sf::Keyboard::S) )
+		ySpeed = 0;
 	moving = false;
 }
 
@@ -833,7 +841,7 @@ int Vessel::getDirection()
 --
 --
 --*/
-int Vessel::getJobClass()
+job_class Vessel::getJobClass()
 {
 	return jobClass;
 }
