@@ -8,35 +8,43 @@
 --
 -- FUNCTIONS: N/A
 --
--- DATE: February 19, 2015
+-- DATE: March 15, 2015
 --
 -- REVISIONS:
 --
--- DESIGNER: Marc Vouve
+-- DESIGNER: Thomas Tallentire
 --
--- PROGRAMMER: Michael Chimick
+-- PROGRAMMER: Thomas Tallentire
 --
 -- NOTES:
 --        This file defines the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
+namespace Marx
+{
+	class Entity;
+}
+#include <functional>
 #include "Entity.h"
-#include "ProjectileManager.h"
+//#include "ProjectileManager.h"
 
-namespace Marx;
+namespace Marx
 {
 	class Projectile : public Entity
 	{
 		private:
 			float _speed;
-			ProjectileManager _manager;
+			std::function<void(Entity*)> onHit;
 		public:
-			Projectile(float, float, Controller *, float, float, ProjectileManager&);
-			~Projectile();
+			Projectile(float, float, Controller *, float, float);
 			
 			Entity * move(float, float, bool);
-			onHit();
 			void setSpeed(float);
-	}
+			void onCreate();
+			void onDestroy();
+			void onUpdate();
+	};
 }
+
+#endif
