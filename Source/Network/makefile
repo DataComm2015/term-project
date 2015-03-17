@@ -37,11 +37,11 @@ Server.o: Server.cpp Server.h
 Session.o: Session.cpp Session.h
 	$(CC) -c Session.cpp
 
-select_helper.o: select_helper.c select_helper.h
-	$(CC) -c select_helper.c
+select_helper.o: select_helper.cpp select_helper.h
+	$(CC) -c select_helper.cpp
 
-net_helper.o: net_helper.c net_helper.h
-	$(CC) -c net_helper.c
+net_helper.o: net_helper.cpp net_helper.h
+	$(CC) -c net_helper.cpp
 
 NetworkEntityMultiplexer.o: NetworkEntityMultiplexer.cpp NetworkEntityMultiplexer.h
 	$(CC) -c NetworkEntityMultiplexer.cpp
