@@ -54,6 +54,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	// Set the active view
 	AppWindow& window = AppWindow::getInstance();
 	viewMain = window.getView();
+	viewMain.zoom(0.66);
 }
 
 GameScene::~GameScene()
