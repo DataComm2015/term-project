@@ -34,7 +34,9 @@ namespace GUI
 		}
 		else if(selected && e.type == sf::Event::TextEntered)
 		{
-			setText(getText() + (char)e.text.unicode);
+			//So we don't get backspace chars in our text
+			if(e.text.unicode != 8)
+				setText(getText() + (char)e.text.unicode);
 		}
 	}
 	
