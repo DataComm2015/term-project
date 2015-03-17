@@ -69,7 +69,13 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	wepSGO().setScale(2,2);
 	wepSGO.middleAnchorPoint(true);
 	
+	sf::Font *arial = new sf::Font();
+	arial->loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
+	
 	b1 = new GUI::Button(&championSGO, *Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), onclick);
+	tb = new GUI::TextBox(NULL);
+	tb->toggleSelected(true);
+	tb->operator()().setFont(*arial);
 	
 	// Generate the game map
 	if (!gMap->generateMap())
@@ -175,6 +181,10 @@ void GameScene::processEvents(sf::Event& e)
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch(e.key.code)
 		{
+			case sf::Keyboard::Return:
+			{
+				break;
+			}
 			case sf::Keyboard::Left:
 			{
 				viewMain.move(-5, 0);
@@ -224,6 +234,8 @@ void GameScene::processEvents(sf::Event& e)
 	{
 		v->stop(e.key.code);
 	}
+	
+	tb->process(e);
 }
 
 void GameScene::draw()
@@ -249,6 +261,7 @@ void GameScene::draw()
 
 	renderer.begin();
 	renderer.draw(*b1);
+	renderer.draw(*tb);
 	renderer.draw(championSGO);
 	renderer.draw(maskSGO);
 	renderer.draw(wepSGO);

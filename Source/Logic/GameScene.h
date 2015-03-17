@@ -15,6 +15,7 @@
 #include "../Logic/Champion/Vessel.h"
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
+#include "../Multimedia/gui/TextBox.h"
 
 /* The water buffer around the island */
 #define WATER_BUFFER 10
@@ -57,6 +58,7 @@ class GameScene : public Scene
 		Vessel *v;
 		
 		GUI::Button *b1;
+		GUI::TextBox *tb;
     	
     	sf::Shader waveShader;
     	float phase;
