@@ -49,7 +49,7 @@ ServerGameScene::~ServerGameScene()
 
 void ServerGameScene::update(sf::Time)
 {
-	printf("Update Run Scene\n");
+	//printf("Update Run Scene\n");
 	
 	return;
 }
