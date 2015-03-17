@@ -23,10 +23,10 @@ namespace Networking
         static void setInstance(NetworkEntityMultiplexer* mux);
         void onMessage(Session* session, Message msg);
     protected:
-        virtual NetworkEntity* onRegister(int id, int entityType, Session* session, Message msg);
-    private:
         NetworkEntityMultiplexer();
         virtual ~NetworkEntityMultiplexer();
+        virtual NetworkEntity* onRegister(int id, int entityType, Session* session, Message msg);
+    private:
         void update(int id, std::set<Session*>& sessions, Message msg);
         void registerSession(int id, int type, Session* session, Message msg);
         void unregisterSession(int id, Session* session, Message msg);

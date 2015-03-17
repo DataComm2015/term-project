@@ -22,8 +22,11 @@ namespace GUI
 	{
 		parent->add(*this);
 		enabled = true;
+		tog = false;
 		size = si;
 		on_click = onClick;
+		hover_on = NULL;
+		hover_off = NULL;
 		disabled = sf::IntRect(0, 0, size.x, size.y);
 		normal = sf::IntRect(size.x, 0, size.x, size.y);
 		hover = sf::IntRect(size.x * 2, 0, size.x, size.y);
@@ -65,8 +68,6 @@ namespace GUI
 	*/
 	void Button::update(sf::Time& t)
 	{
-		static bool tog = false;
-
 		if(enabled) // button enabled
 		{
 			if(SGO::operator()().getLocalBounds().contains((sf::Vector2f)sf::Mouse::getPosition(AppWindow::getInstance()))) // mouse inside button
@@ -83,10 +84,19 @@ namespace GUI
 					}
 				}
 				else // mouse just hovering
+				{
 					SGO::operator()().setTextureRect(hover);
+				}
+				
+				if(hover_on != NULL)
+					hover_on();
 			}
 			else //mouse outside button
+			{
 				SGO::operator()().setTextureRect(normal);
+				if(hover_off != NULL)
+					hover_off();
+			}
 		}
 		else // button disabled
 			SGO::operator()().setTextureRect(disabled);
@@ -94,5 +104,11 @@ namespace GUI
 		// Reset the button if the mouse is released
 		if(!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			tog = false;
+	}
+	
+	void Button::setHoverCallbacks(std::function<void()> on, std::function<void()> off)
+	{
+		hover_on = on;
+		hover_off = off;
 	}
 }
