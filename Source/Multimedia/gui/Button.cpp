@@ -18,7 +18,7 @@ namespace GUI
 	*
 	* @return       initializer
 	*/
-	Button::Button(BGO* parent, const sf::Texture& texture, sf::Vector2f si, sf::View& v, std::function<void()> onClick) : SGO(texture), view(v)
+	Button::Button(BGO* parent, const sf::Texture& texture, sf::Vector2f si, std::function<void()> onClick) : SGO(texture)
 	{
 		parent->add(*this);
 		enabled = true;
@@ -66,11 +66,10 @@ namespace GUI
 	void Button::update(sf::Time& t)
 	{
 		static bool tog = false;
-		static AppWindow& appWindow = AppWindow::getInstance();
 
 		if(enabled) // button enabled
 		{
-			if(SGO::operator()().getLocalBounds().contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
+			if(SGO::operator()().getLocalBounds().contains((sf::Vector2f)sf::Mouse::getPosition(AppWindow::getInstance()))) // mouse inside button
 			{
 				if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) // mouse clicking button
 				{
