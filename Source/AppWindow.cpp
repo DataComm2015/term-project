@@ -37,6 +37,28 @@ sf::View AppWindow::getCurrentView() const
 }
 
 /******************************************************************************
+*	FUNCTION: getMousePositionRelativeToWindowAndView
+*
+*	DATE: March 10, 2015
+*
+*	DESIGNER: Melvin Loho
+*
+*	PROGRAMMER: Melvin Loho
+*
+*	INTERFACE: sf::Vector2f AppWindow::getMousePositionRelativeToWindowAndView(const sf::View &view) const
+*
+*	RETURNS:
+*		sf::Vector2f - the mouse position
+*
+*	NOTES:
+*		Gets the mouse position relative to the window and view
+*
+******************************************************************************/
+sf::Vector2f AppWindow::getMousePositionRelativeToWindowAndView(const sf::View &view) const {
+	return mapPixelToCoords(sf::Mouse::getPosition(*this), view);
+}
+
+/******************************************************************************
 *	FUNCTION: addScene
 *
 *	DATE: February 15, 2015

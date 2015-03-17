@@ -69,7 +69,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	wepSGO().setScale(2,2);
 	wepSGO.middleAnchorPoint(true);
 	
-	b1 = new GUI::Button(&championSGO, *Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), onclick);
+	b1 = new GUI::Button(&championSGO, *Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
 	
 	// Generate the game map
 	if (!gMap->generateMap())
@@ -79,9 +79,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 
 	generateWater();
 
-	// Set the active view
-	AppWindow& window = AppWindow::getInstance();
-	viewMain = window.getView();
+	// update main view
+	viewMain = AppWindow::getInstance().getCurrentView();
 }
 
 GameScene::~GameScene()
@@ -110,10 +109,6 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
-	//printf("Update Run Scene\n");
-	//championSGO().setPosition(viewMain.getCenter());
-
-	//viewMain.move(v->getXSpeed(), v->getYSpeed());
 	v->move();
 	
 	if(v->getXSpeed() != 0 || v->getYSpeed() != 0)
@@ -156,9 +151,17 @@ void GameScene::update(sf::Time t)
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
 	
-	
 	b1->update(t);
-	
+
+	mapStates.transform = sf::Transform::Identity;
+	mapStates.transform.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+
+	waterStates.shader = &waveShader;
+	waterStates.transform = sf::Transform::Identity;
+	waterStates.transform.translate(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
+
+	viewMain.setCenter(v->getXPosition(), v->getYPosition());
+
 	return;
 }
 
@@ -224,6 +227,11 @@ void GameScene::processEvents(sf::Event& e)
 	{
 		v->stop(e.key.code);
 	}
+	else if (e.type == sf::Event::Resized)
+	{
+		// update main view
+		viewMain = AppWindow::getInstance().getCurrentView();
+	}
 }
 
 void GameScene::draw()
@@ -242,8 +250,8 @@ void GameScene::draw()
 	waveShader.setParameter("wave_phase", phase);
 
 	// Draw the tile map
-	renderer.draw(*waterMap, &waveShader);
-	renderer.draw(*cMap);
+	renderer.draw(*waterMap, waterStates);
+	renderer.draw(*cMap, mapStates);
 
 	renderer.end();
 
@@ -291,5 +299,4 @@ void GameScene::generateWater()
 	waterMap->setTexture(tilemap);
 
 	// Re-adjust the water map location
-
 }
