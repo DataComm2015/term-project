@@ -1,25 +1,23 @@
 #ifndef LABEL
 #define LABEL
 
-/*
-BGO - Base Game Object
-SGO - Sprite Game Object
-TGO - Text Game Object
-*/
+#include "../graphics/object/TGO.h"
+#include "../graphics/object/SGO.h"
 
 
 namespace GUI
-
+{
 	class Label : TGO
 	{
 		public:
 			Label(BGO* parent, SGO* theBackground, std::string theText);
 			void toggleBackground(bool toggled);
 			void setOffset(sf::Vector2f theOffset);
+			void setText(std::string text);
 		private:
 			SGO* background;
 			sf::Vector2f offset;
-            bool theBackground;
+            bool back_enabled;
 	};
 }
 

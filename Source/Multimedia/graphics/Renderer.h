@@ -3,6 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../manager/ResourceManager.h"
+#include "../../Engine/TextureManager.h"
+#include "../../Engine/TileManager.h"
+
 #define SPRITE_VERTICES 6
 #define TILE_VERTICES 4
 #define RECT_POINTS 4

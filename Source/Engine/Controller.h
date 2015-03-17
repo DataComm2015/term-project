@@ -11,8 +11,7 @@ namespace Marx
 	*/
 	class Controller
 	{
-		private:
-
+		protected:
 			std::vector<Event> eventQueue;
 
 		public:
