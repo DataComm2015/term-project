@@ -1,5 +1,7 @@
 #include "Button.h"
 
+#include "../../AppWindow.h"
+
 namespace GUI
 {
 	/**
@@ -16,13 +18,17 @@ namespace GUI
 	*
 	* @return       initializer
 	*/
-	Button::Button(BGO* parent, const sf::Texture& texture, const struct buttonStates theStates, std::function<void()> onClick) : SGO(texture)
+	Button::Button(BGO* parent, const sf::Texture& texture, sf::Vector2f si, std::function<void()> onClick) : SGO(texture)
 	{
 		parent->add(*this);
 		enabled = true;
-		states = theStates;
+		size = si;
 		on_click = onClick;
-		SGO::operator()().setTextureRect(states.normal);
+		disabled = sf::IntRect(0, 0, size.x, size.y);
+		normal = sf::IntRect(size.x, 0, size.x, size.y);
+		hover = sf::IntRect(size.x * 2, 0, size.x, size.y);
+		clicked = sf::IntRect(size.x * 3, 0, size.x, size.y);
+		SGO::operator()().setTextureRect(normal);
 	}
 
 	/**
@@ -38,7 +44,7 @@ namespace GUI
 	*
 	* @return       void
 	*/
-	inline void Button::toggleEnabled(bool e)
+	void Button::toggleEnabled(bool e)
 	{
 		enabled = e;
 	}
@@ -63,11 +69,11 @@ namespace GUI
 
 		if(enabled) // button enabled
 		{
-			if(SGO::operator()().getLocalBounds().contains((sf::Vector2f)sf::Mouse::getPosition())) // mouse inside button
+			if(SGO::operator()().getLocalBounds().contains((sf::Vector2f)sf::Mouse::getPosition(AppWindow::getInstance()))) // mouse inside button
 			{
 				if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) // mouse clicking button
 				{
-					SGO::operator()().setTextureRect(states.clicked);
+					SGO::operator()().setTextureRect(clicked);
 					
 					// So that holding the mouse doesn't activate multiple times
 					if(!tog)
@@ -77,13 +83,13 @@ namespace GUI
 					}
 				}
 				else // mouse just hovering
-					SGO::operator()().setTextureRect(states.hover);
+					SGO::operator()().setTextureRect(hover);
 			}
 			else //mouse outside button
-				SGO::operator()().setTextureRect(states.normal);
+				SGO::operator()().setTextureRect(normal);
 		}
 		else // button disabled
-			SGO::operator()().setTextureRect(states.disabled);
+			SGO::operator()().setTextureRect(disabled);
 			
 		// Reset the button if the mouse is released
 		if(!sf::Mouse::isButtonPressed(sf::Mouse::Left))
