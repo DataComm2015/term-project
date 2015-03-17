@@ -20,9 +20,9 @@
 #define WATER_BUFFER 10
 
 /* Amount to add to wave phase per frame */
-#define WAVE_PHASE_CHANGE 0.007
-#define WAVE_X 2.0
-#define WAVE_Y 1.0
+#define WAVE_PHASE_CHANGE 0.005
+#define WAVE_X 5.0
+#define WAVE_Y 2.5
 
 /*
 *	This is the In-game Scene where all round-events occur.
@@ -44,6 +44,9 @@ class GameScene : public Scene
 
     	Renderer renderer;
     	sf::View viewMain;
+
+    	sf::RenderStates mapStates;
+    	sf::RenderStates waterStates;
 
     	id_resource tilemap;
     	id_resource championSprite;
