@@ -1,0 +1,131 @@
+Abilities
+---------
+
+class Ability
+{
+	variables:
+	Struct
+	{
+		String Name
+		Short ID
+		String Icon (contains a path to load the icon image)
+		String ToolTip
+		Short TargetType (possibly some enumerated type)
+		Int Cooldown
+		Int Duration
+		Effect (function pointer to the contents of the effect)
+		Some number of boolean flags
+	}
+
+	constructor
+	{
+		use initialize function to set up structure
+	}
+}
+
+Functions:
+
+Initialize Ability List function
+{
+	open ability list from file
+	error check
+		error (file not found or unreadable)
+		return
+		
+	allocate memory for ability structures 
+	error check
+		close file
+		error (unable to allocate memory)
+		return
+	
+	initialize ability structures with contents from file
+	
+	close file
+	
+	return pointer to array of ability structures
+}
+
+Use Ability function
+{
+	check target type
+	wait for mouse input
+	
+	on mouse input
+		check for invalid target
+			error (target invalid)
+		execute effect function for selected ability
+	
+	return
+}
+
+Deity Class
+-----------
+
+class Deity
+{
+	variables:
+		aspect1
+		aspect2
+		abilities
+		ability cooldowns
+		score	
+}
+
+Functions:
+
+Map Movement
+{
+	Behaviour inherited from parent
+}
+
+Send Message to Chat
+{
+	Behaviour inherited from parent
+}
+
+Use Ability
+{
+	check ID of ability
+	
+	check if ability is on cooldown
+		error (cooldown not ready)
+	
+	call use ability function of ability class
+	error check
+		return
+
+	call start cooldown function
+	
+	check for score event
+		call update score function
+		
+	return
+}
+
+Start Cooldown
+{
+	Get cooldown value for specified ability
+	
+	Set ability cooldown variable to not ready
+	Start a timer
+	
+	On timer end
+	Set ability cooldown variable to ready
+	
+	return
+}
+
+Update Score
+{
+	Behaviour inherited from parent
+}
+
+
+
+
+
+
+
+
+
+

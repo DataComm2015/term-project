@@ -1,0 +1,148 @@
+// ID's could be done the same way I'm doing it for GO's.. maybe...
+// (uint*)
+// If the above is done, then ID's are destroyable / need to be destroyed once it's no longer in use (see remove())
+
+ResMgr<T>
+{
+	T load(string path)
+	{
+		// empty
+	}
+
+	ID store(T)
+	{
+		create new ID;
+		put the new ID and the value T into the resource map;
+		return ID;
+	}
+
+	void store(T, ID)
+	{
+		if there is already a pair with that ID
+		{
+			call remove() on that ID;
+			put the ID and the value T into the resource map;
+		}
+	}
+
+	T get(ID key)
+	{
+		search resource map for key;
+		if found
+		{
+			return value;
+		}
+		else
+		{
+			return nothing;
+		}
+	}
+
+	T remove(ID key)
+	{
+		call get() with the key;
+
+		if something's found
+		{
+			delete it from the resource map;
+			destroy the key;
+			return the object found;
+		}
+		else
+		{
+			return nothing;
+		}
+	}
+
+	uint clear()
+	{
+		get count of resources;
+		clear resource map;
+		return count;
+	}
+}
+
+// template specifications:
+
+SndBuffMgr<sf::SoundBuffer>
+{
+	sf::SoundBuffer load(string path)
+	{
+		create new sf::SoundBuffer;
+		call sf::SoundBuffer's loadFromFile() with the path;
+		return the sf::SoundBuffer;
+	}
+}
+
+SndMgr<sf::Music>
+{
+	sf::Music load(string path)
+	{
+		create new sf::Music;
+		call sf::Music's openFromFile() with the path; // <!
+		return the sf::Music;
+	}
+}
+
+// other
+
+// besides the Music and SoundBuffer ResMgrs that AudioMgr has, it also has a Sound ResMgr which will link the buffer and the sound objects together
+
+AudioMgr
+{
+	bool loadSound(string path)
+	{
+		call load() on the SoundBuffer ResMgr with the path;
+		call store() on the SoundBuffer with the value from above;
+		use the return value from above to store a new Sound with the same ID;
+
+		if everything was successful
+			return true;
+		else
+			return false;
+	}
+
+	bool loadMusic(string path)
+	{
+		call load() on the SoundBuffer ResMgr with the path;
+		call store() on the SoundBuffer with the value from above;
+
+		if everything was successful
+			return true;
+		else
+			return false;
+	}
+
+	void removeSound(ID key)
+	{
+		make copy of key;
+		call remove() on the sound manager with the key;
+		call remove() on the sound buffer manager with the key;
+	}
+
+	void removeMusic(ID key)
+	{
+		call remove() on the music manager with the key;
+	}
+
+	void playSound(ID key, sf::Vector2f position)
+	{
+		find the sound with the ID;
+
+		if not found
+			return;
+
+		set position of sound;
+		play sound;
+	}
+
+	void playMusic(ID)
+	{
+		find the music with the ID;
+
+		if not found
+			return;
+
+		play music;
+	}
+}

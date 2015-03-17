@@ -7,17 +7,17 @@ EntityManager
 	{
 		add Entity to container
 	}
-	
+	\\\\\\\\
 	Remove( Entity e )
 	{
 		remove Entity from container
-        entity.onDestroy
+        call entity function for onDestroy.
 	}
 	
 	TakeTurn()
 	{
 		foreach entity
-			turn()
+			take turn
 				
 	}
 
@@ -47,46 +47,24 @@ Entity()
     
     // This is a bit codey for pseudo-code, but it's done very particular
     // this function returns the entity collided with on failure and NULL on success.
-    Entity move(float x, float y)
+    Entity move(float x, float y, bool force = false )
     {
         if( entity is 1 cell in size )
         {
-            // Store all cells moved to in a set. so as to not store any duplicates.
-            tempSet = Map->getCell( floor(x), floor(y) )
-            tempSet = Map->getCell( ceil(x),  ceil(y)  )
-            tempSet = Map->getCell( ceil(x),  floor(y) )
-            tempSet = Map->getCell( floor(x), ceil(y)  )
-            
-            // Check if any entities are overlapping.
-            // NOTE: if only one entity can be in a cell at a time this can be simplified.
-            foreach( tempSet t )
+			Store all cells in the entities range in an set without duplicates
+            if( !force )	// This argument is passed to check if bounds checking is required
             {
-                if( cell isn't empty )
-                {
-                    foreach( entity in cell e )
-                    {
-                        if( e.checkCollision( this ) )
-                            return e    // return entity blocking
-                    }
-                }
-           }
+                Check if any entities are overlapping.
+				if( entities overlap )
+					return other entity
+            }
            
-           foreach( tempSet t )
-           {
-                t->setEntity( this )
-           }
+           assign collection of cells to this as it's cells
             
             // remove from current.
-            Map->getCell( floor(this.x), floor(this.y) ).removeEntity( this )
-            Map->getCell(  ceil(this.x),  ceil(this.y) ).removeEntity( this )
-            Map->getCell(  ceil(this.x), floor(this.y) ).removeEntity( this )
-            Map->getCell( floor(this.x),  ceil(this.y) ).removeEntity( this )
+            Remove Entity From Previous Location
             
-            tempSet = cellSet;
-            this x = x
-            this y = y
-            xbound = x + 1;
-            ybound = y + 1;
+			Assign Location and bounding location
         }
     }
     
