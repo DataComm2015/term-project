@@ -2,6 +2,12 @@
 #include "AppWindow.h"
 #include "Usage.cpp"
 #include "Engine/ServerGameScene.h"
+#include "Network/Server.h"
+
+using Networking::Server;
+
+#define DEFAULT_PORT 7000
+#define DEBUG
 
 bool isRunning;
 sf::Time m_elapsedTime, m_timePerFrame, m_timeSinceLastUpdate;
@@ -10,8 +16,10 @@ Scene *scene;
 void run();
 
 
-int main()
+int main( int argc, char ** argv )
 {
+	Server server;
+	server.startServer( DEFAULT_PORT );
 	scene = new ServerGameScene();
 	run();
 	delete scene;
