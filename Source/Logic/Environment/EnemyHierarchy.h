@@ -33,10 +33,6 @@ typedef enum ConstructState ConstructState;
 enum EnemyNodeType { ROOT, LEAF };
 typedef enum EnemyNodeType EnemyNodeType;
 
-/* An enum to represent all enemies in the hierarchy */
-enum EnemyNodeName { TEST1, TEST2, TEST3, TEST4 };
-typedef enum EnemyNodeName EnemyNodeName;
-
 /* A node in the enemy hierarchy */
 struct EnemyNode
 {
@@ -44,7 +40,7 @@ struct EnemyNode
 	std::vector<struct EnemyNode*>  children;
 	std::string name;
 	EnemyNodeType type;
-	EnemyNodeName enemyName;
+	std::string enemyName;
 };
 
 typedef struct EnemyNode EnemyNode;
@@ -57,13 +53,18 @@ class EnemyHierarchy
 {
 	public:
 		EnemyHierarchy(std::ifstream *dataFile);
+		~EnemyHierarchy();
 		static EnemyHierarchy* getInstance();
 	private:
-		void handleDataLine(std::string &line);
+		void constructNode(std::ifstream *dataFile);
+		void getWordsFromLine(std::vector<std::string> *wordList, std::ifstream *dataFile);
+		int findNode(std::string nodeName);
 
 		static EnemyHierarchy *instance;
+		std::vector<EnemyNode *> nodeList;
 		EnemyNode *root;
 		ConstructState state;
+		bool hasRoot;
 };
 
 

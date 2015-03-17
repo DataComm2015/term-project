@@ -14,49 +14,49 @@
 
 # ROOT #
 
-!null
+null
 enemy
 root
 
 
 # GRASS #
 
-!enemy
+enemy
 grass
 root
 
-	!grass
+	grass
 	lost_grass
 	root
 
-		!lost_grass
+		lost_grass
 		ground_grass
 		root
 
-			!ground_grass
+			ground_grass
 			test_enemy1
 			leaf
 			Magic Man
 
-			!ground_grass
+			ground_grass
 			test_enemy2
 			leaf
 			Super Girl
 
-		!lost_grass
+		lost_grass
 		air_grass
 		root
 
-			!air_grass
+			air_grass
 			test_enemy3
 			leaf
 			Hot Dog
 
-	!grass
+	grass
 	guardian_grass
 	root
 
-		!guardian_grass
+		guardian_grass
 		test_enemy4
 		leaf
 		Some Guy
