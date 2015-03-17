@@ -9,9 +9,13 @@
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
 #include "../Multimedia/graphics/Renderer.h"
+#include "../Multimedia/gui/Button.h"
+#include "../graphics/object/BGO.h"
+
+using GUI::Button;
 
 /*
-*	This is the In-game Scene where all round-events occur.
+*	This is the Lobby scene.
 */
 class ServerLobbyScene : public Scene
 {
@@ -25,6 +29,17 @@ class ServerLobbyScene : public Scene
 	private:
 
     	sf::View viewMain;
+
+        BGO * parent;
+
+        Button * vesselOneBtn;
+        Button * vesselTwoBtn;
+
+        Button * aspectOneBtn;
+        Button * aspectTwoBtn;
+        Button * aspectThreeBtn;
+
+        Button * readyBtn;
 };
 
 #endif
