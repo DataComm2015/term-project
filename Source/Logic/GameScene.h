@@ -14,7 +14,7 @@
 #include "../Multimedia/graphics/object/TGO.h"
 #include "../Logic/Champion/Vessel.h"
 #include "../Multimedia/graphics/Animation.h"
-
+#include "../Multimedia/gui/Button.h"
 
 /* The water buffer around the island */
 #define WATER_BUFFER 10
@@ -47,9 +47,16 @@ class GameScene : public Scene
 
     	id_resource tilemap;
     	id_resource championSprite;
+    	id_resource maskSprite;
+    	id_resource wepSprite;
+    	id_resource butSprite;
 
     	SGO championSGO;
+    	SGO maskSGO;
+    	SGO wepSGO;
 		Vessel *v;
+		
+		GUI::Button *b1;
     	
     	sf::Shader waveShader;
     	float phase;
