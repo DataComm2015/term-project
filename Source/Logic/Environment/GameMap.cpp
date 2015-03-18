@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include "EnemyHierarchy.h"
 
 using std::max;
 using std::vector;
@@ -119,6 +120,7 @@ bool GameMap::generateMap()
 	generatePlaceholderBlocks();
 
 	// Generate enemies
+	generateEnemies();
 
 	// Generate miscellaneous objects
 
@@ -344,6 +346,34 @@ void GameMap::generatePlayers()
 		// Remove the selected player from the list of possible players
 		players.erase(players.begin() + nextPlayer);
 	}
+}
+
+
+/******************************************************************************
+*   FUNCTION: generateEnemies
+*   
+*   DATE: March 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: void generateEnemies();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       void
+*   
+*   NOTES:
+*     This function generates groupings of enemies for each enemy block in the
+*     game map.
+******************************************************************************/
+void GameMap::generateEnemies()
+{
+	// TODO
 }
 
 
