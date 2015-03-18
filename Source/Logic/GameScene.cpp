@@ -26,7 +26,7 @@ void updateMainView(sf::View& v)
 	v.zoom(0.66);
 }
 
-GameScene::GameScene() : renderer(AppWindow::getInstance(), 8500)
+GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
 	// Create the cell map
 	cMap = new Map(90, 90);
