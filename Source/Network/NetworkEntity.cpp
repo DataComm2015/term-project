@@ -29,7 +29,7 @@ using namespace std;
 --
 -- NOTES:           Creates a NetworkEntity object
 -----------------------------------------------------------------------------------------------*/
-Networking::NetworkEntity::NetworkEntity( int id, int type )
+Networking::NetworkEntity::NetworkEntity( int id, int type, NetworkEntityMultiplexer * mux )
 {
     this->id = id;
     this->type = type;
