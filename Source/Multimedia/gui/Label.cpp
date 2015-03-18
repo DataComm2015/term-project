@@ -8,17 +8,17 @@ namespace GUI
 	*
 	* @date         2015-02-27
 	*
-	* @revisions
+	* @revisions	2015-03-18 - Removed BGO parent from constructor
 	*
 	* @designer   
 	*
 	* @programmer   Jonathan Chu
+	*				Marc Rafanan
 	*
 	* @return       initializer
 	*/
-	Label::Label(BGO* parent, SGO* theBackground, std::string theText)
+	Label::Label(SGO* theBackground, std::string theText)
 	{
-		parent->add(*this);
 		back_enabled = true;
 		background = theBackground;
 		add(*background);
