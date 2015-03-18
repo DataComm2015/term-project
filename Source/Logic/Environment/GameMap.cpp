@@ -751,7 +751,69 @@ void GameMap::generateTiles()
 }
 
 
+/******************************************************************************
+*   FUNCTION: placeEntity
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: bool placeEntity(int x, int y, Entity* entity);
+*   
+*   PARAMETERS:
+*		x - the x coordinate of the target cell
+*		y - the y coordinate of the target cell
+*		entity - the entity to place
+*   
+*   RETURNS:
+*       bool - whether or not the entity can be successfully placed
+*   
+*   NOTES:
+*     This function assigns an entity to a specific cell of the Map.
+******************************************************************************/
+bool GameMap::placeEntity(int x, int y, Entity* entity)
+{
+	// If the specified location is not within the map
+	if (x < 0 || x > width || y < 0 || y > height)
+	{
+		return false;
+	}
 
+	// Move the entity to the correct location
+	//entity->move(x, y, true);
+
+	return true;
+}
+
+
+/******************************************************************************
+*   FUNCTION: placeEntity
+*   
+*   DATE: February 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: bool placeEntity(int x, int y, Entity* entity);
+*   
+*   PARAMETERS:
+*		x - the x coordinate of the target cell
+*		y - the y coordinate of the target cell
+*		entity - the entity to place
+*   
+*   RETURNS:
+*       bool - whether or not the entity can be successfully placed
+*   
+*   NOTES:
+*     This function assigns an entity to a specific cell of the Map.
+******************************************************************************/
 Map* GameMap::getCellMap()
 {
 	return cellMap;
