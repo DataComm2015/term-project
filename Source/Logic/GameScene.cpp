@@ -26,10 +26,10 @@ void updateMainView(sf::View& v)
 	v.zoom(0.66);
 }
 
-GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
+GameScene::GameScene() : renderer(AppWindow::getInstance(), 8500)
 {
 	// Create the cell map
-	cMap = new Map(25, 25);
+	cMap = new Map(90, 90);
 
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
@@ -194,41 +194,6 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			case sf::Keyboard::Return:
 			{
-				break;
-			}
-			case sf::Keyboard::Left:
-			{
-				viewMain.move(-5, 0);
-				break;
-			}
-
-			case sf::Keyboard::Right:
-			{
-				viewMain.move(5, 0);
-				break;
-			}
-
-			case sf::Keyboard::Up:
-			{
-				viewMain.move(0, -5);
-				break;
-			}
-
-			case sf::Keyboard::Down:
-			{
-				viewMain.move(0, 5);
-				break;
-			}
-
-			case sf::Keyboard::Dash:
-			{
-				viewMain.zoom(1.1);
-				break;
-			}
-
-			case sf::Keyboard::Equal:
-			{
-				viewMain.zoom(0.9);
 				break;
 			}
 

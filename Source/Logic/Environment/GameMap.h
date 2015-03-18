@@ -44,6 +44,7 @@ class GameMap
 		void generateZones();
 		void generateMiniBosses();
 		void generatePlayers();
+		void generateEnemies();
 		void generatePlaceholderBlocks();
 		void generateTiles();
 		BlockType makeBlockType(BlockZone z, int rRoll);
