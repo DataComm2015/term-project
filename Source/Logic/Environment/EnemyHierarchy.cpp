@@ -36,7 +36,6 @@ EnemyHierarchy* EnemyHierarchy::instance = nullptr;
 ******************************************************************************/
 EnemyHierarchy::EnemyHierarchy(ifstream *dataFile)
 {
-	state = TOP;
 	hasRoot = false;
 	string line;
 
@@ -48,11 +47,163 @@ EnemyHierarchy::EnemyHierarchy(ifstream *dataFile)
 }
 
 
+/******************************************************************************
+*	FUNCTION: ~EnemyHierarchy
+*
+*	DATE: March 17, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: ~EnemyHierarchy();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*
+*	NOTES:
+*		This function deletes the nodes created for the hierarchy.
+******************************************************************************/
 EnemyHierarchy::~EnemyHierarchy()
 {
-
+	for (int i = 0; i < (int) nodeList.size(); i++)
+	{
+		delete nodeList[i];
+	}
 }
 
+
+/******************************************************************************
+*	FUNCTION: getEnemy
+*
+*	DATE: March 17, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: string getEnemy(string *dest, string enemyPath, bool stepUp, float stepUpChance);
+*
+*	PARAMETERS:
+*		dest - the destination string for the retrieved enemy name
+*		enemyPath - the '/' delimited path of the node you want to retrieve from
+*		stepUp - whether or not to allow step-up operations (defaults to false)
+*		stepUpChance - the percent chance (0 to 100) of a step up occurring
+*
+*	RETURNS:
+*		bool - whether or not the query succeeded
+*
+*	NOTES:
+*		This function is the core of the EnemyHierarchy. It can be used in a variety of ways
+*		in order to retrieve an enemy from a sub-grouping of your choice. If you allow step-up
+*		operations, the selection has a chance of 'stepping up' to one higher level in the
+*		hierarchy in order to select an enemy from a slightly different path.
+*
+*		Example usages:
+*			"grass/lost_grass/air_grass", stepUp = true, stepUpChance = 5
+*				You will be given an enemy within the air_grass subgroup, with a 5% chance of an
+*				enemy from lost_grass being selected instead. This might result in a ground_grass
+*				enemy being chosen.
+*
+*			"stone/guardian_stone", stepUp = false
+*				You will be given a miniboss from the stone zone with no chance of anything else.
+******************************************************************************/
+bool EnemyHierarchy::getEnemy(string *dest, string enemyPath, bool stepUp, float stepUpChance)
+{
+	// Parse the query string into a vector of substrings
+	vector<string> query;
+
+	while (true)
+	{
+		int dLocation = enemyPath.find(QUERY_DELIMITER);
+
+		// If we are not yet at the last subsection
+		if (dLocation != string::npos)
+		{
+			if (dLocation == 0)
+			{
+				// The string starts with a delimiter; we cannot recover
+				return false;
+			}
+
+			if (enemyPath.size() > 1)
+			{
+				query.push_back(enemyPath.substr(0, dLocation));
+
+				if (dLocation == enemyPath.size() - 1)
+				{
+					// There is nothing after this
+					break;
+				}
+
+				enemyPath = enemyPath.substr(dLocation + 1, enemyPath.size());
+			}
+			else
+			{
+				// String ends with a delimiter; we can recover
+				break;
+			}
+		}
+		else
+		{
+			// This is our last query subsection
+			query.push_back(enemyPath.substr(0, enemyPath.size()));
+			break;	
+		}
+	}
+
+	EnemyNode *currentNode = root;
+
+	// Find the destination node
+	for (int i = 0; i < (int) query.size(); i++)
+	{
+		EnemyNode *iterationNode = currentNode;
+
+		for (int j = 0; j < (int) currentNode->children.size(); j++)
+		{
+			// If this node has a child with the queried name
+			if (currentNode->children[j]->name.compare(query[i]) == 0)
+			{
+				currentNode = currentNode->children[j];
+				break;
+			}
+		}
+
+		// If we have not advanced since the last iteration
+		if (iterationNode == currentNode)
+		{
+			return false;
+		}
+	}
+
+	// If we have a chance of step-up
+	if (stepUp)
+	{
+		int randChance = rand() % 100 + 1;
+		if (randChance < stepUpChance)
+		{
+			// Move up one directory
+			currentNode = currentNode->parent;
+		}
+	}
+
+	// Move down through the hierarchy until we reach an enemy node
+	while (currentNode->type != LEAF)
+	{
+		int randChild = rand() % currentNode->children.size();
+
+		currentNode = currentNode->children[randChild];
+	}
+
+	// Return the selected enemy
+	(*dest) = currentNode->enemyName;
+	return true;
+}
 
 /******************************************************************************
 *	FUNCTION: constructNode

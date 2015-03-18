@@ -16,6 +16,9 @@
 /* The character indicating the start of a node */
 #define NODE_START '!'
 
+/* The character that delimits a query string subsection */
+#define QUERY_DELIMITER '/'
+
 /* The phrase defining the top of the hierarchy */
 #define NODE_TOP "null"
 
@@ -25,9 +28,8 @@
 /* The phrase defining a node as a leaf */
 #define NODE_LEAF "leaf"
 
-/* An enum to represent all states of constructing from a file */
-enum ConstructState { TOP, PARENT, NAME, TYPE, ENEMY_NAME };
-typedef enum ConstructState ConstructState;
+/* The default percent chance that a step up action can occur when retrieving an enemy */
+#define STEP_UP_CHANCE 5
 
 /* An enum to represent the possible types of nodes */
 enum EnemyNodeType { ROOT, LEAF };
@@ -45,6 +47,7 @@ struct EnemyNode
 
 typedef struct EnemyNode EnemyNode;
 
+
 /*
 *	The EnemyHierarchy class is a singleton class containing functionality
 *	that allows for semi-random selection of an enemy from a pre-defined hierarchy.
@@ -54,6 +57,9 @@ class EnemyHierarchy
 	public:
 		EnemyHierarchy(std::ifstream *dataFile);
 		~EnemyHierarchy();
+
+		bool getEnemy(std::string *dest, std::string enemyPath, bool stepUp = false, float stepUpChance = STEP_UP_CHANCE);
+
 		static EnemyHierarchy* getInstance();
 	private:
 		void constructNode(std::ifstream *dataFile);
@@ -63,7 +69,6 @@ class EnemyHierarchy
 		static EnemyHierarchy *instance;
 		std::vector<EnemyNode *> nodeList;
 		EnemyNode *root;
-		ConstructState state;
 		bool hasRoot;
 };
 
