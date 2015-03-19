@@ -61,6 +61,8 @@
 #include <SFML/Graphics.hpp>
 #include "../../Engine/Entity.h"
 
+#define MAX_LEVEL 10;
+
 typedef char Weapon;
 typedef char Ability;
 
@@ -74,6 +76,8 @@ class Vessel : public Marx::Entity
 		int maxHealth;
 		int currentEXP;
 		int nextLevelEXP;
+		int currentLevel;
+		int defaultSpeed;
 		int travelSpeed;
 		float xPosition;
 		float yPosition;
@@ -100,10 +104,8 @@ class Vessel : public Marx::Entity
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
-        	int  getNextLevelEXP();
-
+    int  getNextLevelEXP();
 		int  getLevel();
-		void increaseLevel();
 
 		job_class getJobClass();
 
