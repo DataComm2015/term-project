@@ -52,11 +52,11 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
+Entity::Entity(float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
     sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
     onCreate();
-}   
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Entity::~Entity
@@ -125,14 +125,14 @@ void  Entity::turn()
 -- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
 --			entity would collide with.
 --
--- NOTES: 
+-- NOTES:
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::move(float x, float y, bool force = false)
 {
 
     std::set<Cell*> tempCell;
-	// loop through collecting all cells that this entity will be contained in.
+	  // loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i < width + floor(x); i++)
     {
         for(int j = floor(y); j < height + floor(y); j)
@@ -140,29 +140,29 @@ Entity * Entity::move(float x, float y, bool force = false)
             tempCell.emplace(map->getCell(floor(i),floor(j)));
         }
     }
-	
 
-	// loop through all cells in the temporary array. looping for 
+
+	  // loop through all cells in the temporary array. looping for
     for(Cell *c : tempCell)
-	{
-		std::set<Entity*> entities = c->getEntity();
-		for( Entity * e : entities )
-		{
-			if( intersects(*e) )
-			{
-				if( force )
-				{
-					occupiedCells = tempCell;
-				}
-				
-				return e;
-			}
-		}
-	}
-	
-	occupiedCells = tempCell;
-	
-	return nullptr;
+  	{
+  		std::set<Entity*> entities = c->getEntity();
+  		for( Entity * e : entities )
+  		{
+  			if( intersects(*e) )
+  			{
+  				if( force )
+  				{
+  					occupiedCells = tempCell;
+  				}
+
+  				return e;
+  			}
+  		}
+  	}
+
+  	occupiedCells = tempCell;
+
+  	return nullptr;
 }
 
 
@@ -283,4 +283,3 @@ void Entity::onUpdate()
 {
 	// logic team
 }
-

@@ -20,7 +20,8 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
+Vessel::Vessel(job_class jobClass, Ability* abilityList, float x, float y )
+			: Entity( x, y, NULL, 1.0, 1.0 )
 {
 	xPosition = x;
 	yPosition = y;
@@ -107,7 +108,7 @@ Vessel::~Vessel()
 -- NOTES:
 -- This function is used to directly position a Vessel on a map, can be used for teleportation.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::setPosition( int x, int y )
+void Vessel::setPosition( float x, float y )
 {
 	xPosition = x;
 	yPosition = y;
@@ -715,6 +716,7 @@ void Vessel::detectMove()
 void Vessel::move()
 {
 	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed );
+	//Entity::move( getXPosition(), getYPosition(), false );
 }
 
 /*--
@@ -784,7 +786,7 @@ void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Enti
 --
 --
 --*/
-int Vessel::getXPosition()
+float Vessel::getXPosition()
 {
 	return xPosition;
 }
@@ -794,7 +796,7 @@ int Vessel::getXPosition()
 --
 --
 --*/
-int Vessel::getYPosition()
+float Vessel::getYPosition()
 {
 	return yPosition;
 }

@@ -17,7 +17,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  I will also use this as an alpha testing ground for our API
-//  to see if there are anything missing or 
+//  to see if there are anything missing or
 //  if something's not working the way it should.
 //
 //  Here's the awesome TODO list:

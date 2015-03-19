@@ -55,14 +55,18 @@
 -- This class file provides the functions needed to set up and modify Vessel status.
 -- It also provides the functions to control a Vessel (movement and attack).
 ----------------------------------------------------------------------------------------------------------------------*/
+#ifndef VESSEL_H
+#define VESSEL_H
+
 #include <SFML/Graphics.hpp>
+#include "../../Engine/Entity.h"
 
 typedef char Weapon;
 typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT } job_class;
 
-class Vessel
+class Vessel : public Marx::Entity
 {
 	protected:
 		job_class jobClass;
@@ -71,8 +75,8 @@ class Vessel
 		int currentEXP;
 		int nextLevelEXP;
 		int travelSpeed;
-		int xPosition;
-		int yPosition;
+		float xPosition;
+		float yPosition;
 		int xSpeed;
 		int ySpeed;
 		int direction;	//0 = right, 1 = left //why not a bool?
@@ -82,12 +86,12 @@ class Vessel
 		//TO DO: pointer to the game map needed in the future
 
 	public:
-		Vessel( job_class jobClass, Ability* abilityList, int x, int y );
+		Vessel( job_class jobClass, Ability* abilityList, float x, float y );
 		~Vessel(); //not virtual?
 
-		void setPosition( int x, int y );
-		int getXPosition();
-		int getYPosition();
+		void setPosition( float x, float y );
+		float getXPosition();
+		float getYPosition();
 		int getXSpeed();
 		int getYSpeed();
 		bool isMoving();
@@ -131,3 +135,5 @@ class Vessel
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
 };
+
+#endif

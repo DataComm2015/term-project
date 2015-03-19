@@ -39,7 +39,7 @@ namespace Marx
 
             Controller * controller;
             std::set<Cell*> occupiedCells;
-			Map * map;
+			      Map * map;
         public:
             Entity(float, float, Controller *, float, float);
             ~Entity();
