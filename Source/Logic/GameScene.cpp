@@ -26,10 +26,10 @@ void updateMainView(sf::View& v)
 	v.zoom(0.66);
 }
 
-GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
+GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
 	// Create the cell map
-	cMap = new Map(25, 25);
+	cMap = new Map(90, 90);
 
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
@@ -48,10 +48,10 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 4000)
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
 	championSprite = Manager::TextureManager::store(
-			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Body/vessel-run-sheet-right.png")
+			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Body/vessel-run-sheet.png")
 			);
-	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Masks/vessel-run-sheet-mask01-right.png"));
-	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Weapons/staff-run-sheet-right.png"));
+	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
+	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
 	
 	// an example, obviously...
@@ -194,41 +194,6 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			case sf::Keyboard::Return:
 			{
-				break;
-			}
-			case sf::Keyboard::Left:
-			{
-				viewMain.move(-5, 0);
-				break;
-			}
-
-			case sf::Keyboard::Right:
-			{
-				viewMain.move(5, 0);
-				break;
-			}
-
-			case sf::Keyboard::Up:
-			{
-				viewMain.move(0, -5);
-				break;
-			}
-
-			case sf::Keyboard::Down:
-			{
-				viewMain.move(0, 5);
-				break;
-			}
-
-			case sf::Keyboard::Dash:
-			{
-				viewMain.zoom(1.1);
-				break;
-			}
-
-			case sf::Keyboard::Equal:
-			{
-				viewMain.zoom(0.9);
 				break;
 			}
 

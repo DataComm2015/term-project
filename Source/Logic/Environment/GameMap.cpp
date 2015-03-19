@@ -4,7 +4,11 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include "EnemyHierarchy.h"
 
+using std::cout;
+using std::endl;
+using std::string;
 using std::max;
 using std::vector;
 
@@ -119,6 +123,7 @@ bool GameMap::generateMap()
 	generatePlaceholderBlocks();
 
 	// Generate enemies
+	generateEnemies();
 
 	// Generate miscellaneous objects
 
@@ -343,6 +348,138 @@ void GameMap::generatePlayers()
 
 		// Remove the selected player from the list of possible players
 		players.erase(players.begin() + nextPlayer);
+	}
+}
+
+
+/******************************************************************************
+*   FUNCTION: generateEnemies
+*   
+*   DATE: March 17, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: void generateEnemies();
+*   
+*   PARAMETERS:
+*   
+*   RETURNS:
+*       void
+*   
+*   NOTES:
+*     This function generates groupings of enemies for each enemy block in the
+*     game map.
+******************************************************************************/
+void GameMap::generateEnemies()
+{
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			// If this block is an enemies block
+			if (blockMap[j][i].getType() == ENEMIES)
+			{
+				int size = (rand() % MAX_ENEMY_GROUP) + MIN_ENEMY_GROUP;
+				createEnemyGroup(&blockMap[j][i], blockMap[j][i].getZone(), size);
+			}
+		}
+	}
+}
+
+
+/******************************************************************************
+*   FUNCTION: createEnemyGroup
+*   
+*   DATE: March 18, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: void createEnemyGroup(Block *block, BlockZone z, int num);
+*   
+*   PARAMETERS:
+*		block - the block to create in
+*		z - the zone to use for creation
+*		num - the number of enemies to create
+*   
+*   RETURNS:
+*       void
+*   
+*   NOTES:
+*		This function uses the enemy hierarchy to create groupings of enemies
+*		based on the zone supplied.
+******************************************************************************/
+void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
+{
+	EnemyHierarchy *eh = EnemyHierarchy::getInstance();
+	string enemy;
+
+	switch(z)
+	{
+		case GRASS:
+		{
+			cout << "GRASS GROUP: " << endl << endl;
+
+			int grassChoices = 2;
+			int selection = rand() % grassChoices;
+
+			switch(selection)
+			{
+				case 0:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
+						cout << enemy << endl;
+					}
+
+					break;
+				}
+
+				case 1:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						eh->getEnemy(&enemy, "grass/lost_grass/air_grass", true, 5);
+						cout << enemy << endl;
+					}
+
+					break;
+				}
+			}
+
+			cout << endl;
+
+			break;
+		}
+
+		case STONE:
+		{
+			int stoneChoices = 2;
+			int selection = rand() % stoneChoices;
+
+			switch(selection)
+			{
+				case 0:
+				{
+					break;
+				}
+
+				case 1:
+				{
+					break;
+				}
+			}
+
+			break;
+		}
 	}
 }
 
