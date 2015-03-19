@@ -11,13 +11,10 @@ FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engi
 
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
 					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o Multimedia/graphics/Animation.o \
-					Multimedia/gui/Label.o Multimedia/gui/Button.o Multimedia/gui/Container.o
+					Multimedia/gui/Label.o Multimedia/gui/Button.o Multimedia/gui/Container.o Multimedia/gui/TextBox.o
 
-<<<<<<< HEAD
-FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/vessel.o
-=======
-FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o
->>>>>>> ecaa0356effef4351e334b0ec867fac311f3b5a2
+FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o \
+					Logic/Environment/EnemyHierarchy.o
 
 FILES_NETWORK=		Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
 
@@ -28,12 +25,6 @@ FILE_MAIN=			MovementTest.cpp
 
 ##
 
-<<<<<<< HEAD
-all: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
-	$(CXX) $(CPPFLAGS) \
-	-o $(EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
-	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
-=======
 all: client server
 
 client: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_CLIENT)
@@ -45,15 +36,10 @@ server: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FI
 	$(CXX) $(CPPFLAGS) \
 	-o $(SERVER_EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system -lpthread \
 	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_SERVER)
->>>>>>> ecaa0356effef4351e334b0ec867fac311f3b5a2
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 clean:
 	find . -name "*.o" -type f -delete
-<<<<<<< HEAD
-	rm -f $(EXE)
-=======
 	rm -f $(CLIENT_EXE) $(SERVER_EXE)
->>>>>>> ecaa0356effef4351e334b0ec867fac311f3b5a2
