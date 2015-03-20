@@ -1,4 +1,4 @@
-#include "ServerLobbyScene.h"
+#include "ClientLobbyScene.h"
 #include <iostream>
 
 using std::cout;
@@ -14,14 +14,14 @@ ServerLobbyScene::ServerLobbyScene() : renderer(AppWindow.getInstance(), 48400)
 
     /* Get texture assets */
     // as art assets are created for these, add them
-    vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
-    vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
+    vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
 
-    aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
-    aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
-    aspectThreeImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
+    aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
+    aspectThreeImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
 
-    readyImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    readyImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
 
     /* Initialize buttons */
     vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
