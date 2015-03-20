@@ -14,6 +14,8 @@
 
 using GUI::Button;
 
+#define BTN_SIZE 200
+
 /*
 *	This is the Lobby scene.
 */
@@ -25,12 +27,12 @@ class ServerLobbyScene : public Scene
 		virtual void processEvents(sf::Event&);
 		virtual void draw();
 		~ServerLobbyScene();
+        void onclick();
 
 	private:
 
     	sf::View viewMain;
-
-        BGO * parent;
+        Renderer renderer;
 
         Button * vesselOneBtn;
         Button * vesselTwoBtn;
@@ -40,6 +42,15 @@ class ServerLobbyScene : public Scene
         Button * aspectThreeBtn;
 
         Button * readyBtn;
+
+        id_resource vesselOneImg;
+        id_resource vesselTwoImg;
+
+        id_resource aspectOneImg;
+        id_resource aspectTwoImg;
+        id_resource aspectThreeImg;
+
+        id_resource readyImg;
 };
 
 #endif
