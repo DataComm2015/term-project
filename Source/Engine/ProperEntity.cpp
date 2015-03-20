@@ -6,11 +6,7 @@ ProperEntity::ProperEntity( Map * map, float x, float y, ProperController * ctrl
 
 }
 
-void turn()
-{
-}
-
-void onUpdate()
+void ProperEntity::onUpdate()
 {
     std::vector< Event > * eventQueue = controller->getEvents();
 

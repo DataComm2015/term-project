@@ -7,8 +7,6 @@ class ProperEntity : public Marx::Entity
 {
     public:
         ProperEntity( Map *, float, float, ProperController *, float, float );
-        ~ProperEntity();
-        virtual void turn();
         virtual void onUpdate();
     private:
          ProperController * controller;
