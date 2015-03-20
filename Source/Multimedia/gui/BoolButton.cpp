@@ -5,17 +5,17 @@
 *
 * @date         2015-02-28
 *
-* @revisions
+* @revisions	2015-03-18 - Removed BGO parent from constructor
 *
 * @designer   
 *
 * @programmer   Jonathan Chu
+*				Marc Rafanan
 *
 * @return       initializer
 */
-BoolButton::BoolButton(BGO* parent, sf::IntRect* theStates, std::function onClick, SGO* toCheck, bool theState)
+BoolButton::BoolButton(sf::IntRect* theStates, std::function onClick, SGO* toCheck, bool theState)
 {
-    parent.add(this);
     states = theStates;
     on_click = onClick;
     check = toCheck;
