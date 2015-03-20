@@ -52,19 +52,19 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(Map * map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
+Entity::Entity(Map * map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
     sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
 	occupiedCells = std::set<Cell*>();
-	
-    for(int i = floor(x); i < width + floor(x); i++)
-    {
-        for(int j = floor(y); j < height + floor(y); j)
-        {
-            occupiedCells.emplace(map->getCell(floor(i),floor(j)));
-        }
-    }
-}   
+
+  for(int i = floor(x); i < width + floor(x); i++)
+  {
+      for(int j = floor(y); j < height + floor(y); j++)
+      {
+          occupiedCells.emplace(map->getCell(floor(i),floor(j)));
+      }
+  }
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Entity::~Entity
@@ -143,7 +143,7 @@ Entity * Entity::move(float x, float y, bool force = false)
 	  // loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i < width + floor(x); i++)
     {
-        for(int j = floor(y); j < height + floor(y); j)
+        for(int j = floor(y); j < height + floor(y); j++)
         {
             tempCell.emplace(map->getCell(floor(i),floor(j)));
         }

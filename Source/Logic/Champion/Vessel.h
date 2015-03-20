@@ -59,6 +59,7 @@
 #define VESSEL_H
 
 #include <SFML/Graphics.hpp>
+#include "../../Engine/Map.h"
 #include "../../Engine/Entity.h"
 
 #define MAX_LEVEL 10;
@@ -90,7 +91,7 @@ class Vessel : public Marx::Entity
 		//TO DO: pointer to the game map needed in the future
 
 	public:
-		Vessel( job_class jobClass, Ability* abilityList, float x, float y );
+		Vessel( Marx::Map *gmap, job_class jobClass, Ability* abilityList, float x, float y );
 		~Vessel(); //not virtual?
 
 		void setPosition( float x, float y );

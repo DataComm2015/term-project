@@ -31,8 +31,9 @@
 
 //> In a separate scene file
 // Note that a scene made for content can just be a header file
-
+#include <iostream>
 #include "AppWindow.h"
+#include "Engine/Map.h"
 #include "Engine/Scene.h"
 #include "Engine/TextureManager.h"
 #include "Multimedia/graphics/Renderer.h"
@@ -60,7 +61,8 @@ public:
 		background().setTexture(*Manager::TextureManager::get(texture_1));
 		sgo().setTexture(*Manager::TextureManager::get(texture_2));
 
-		v = new Vessel(WARRIOR,NULL,0,0);
+		Marx::Map *gmap = new Marx::Map(100,100);
+		v = new Vessel(gmap, WARRIOR,NULL,0,0);
 
 		// might want to have another resource manager for fonts...
 		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
@@ -93,28 +95,29 @@ public:
 		// YESS so many switch case statements!!
 		switch (event.type)
 		{
-		case sf::Event::KeyPressed:
-			v->detectMove();
-			break;
-
-		case sf::Event::KeyReleased:
-			v->stop(event.key.code);
-			switch (event.key.code)
-			{
-			case sf::Keyboard::Escape:
-				// TODO Can't suicide yet...
-				// getWindow().removeScene(this->getID()); // SUICIDE
+			case sf::Event::KeyPressed:
+				v->detectMove();
+				//std::cout << event.key.code << std::endl;
 				break;
-			}
-			break;
 
-		case sf::Event::Closed:
-			AppWindow::getInstance().close();
-			break;
+			case sf::Event::KeyReleased:
+				v->stop(event.key.code);
+				switch (event.key.code)
+				{
+				case sf::Keyboard::Escape:
+					// TODO Can't suicide yet...
+					// getWindow().removeScene(this->getID()); // SUICIDE
+					break;
+				}
+				break;
 
-		case sf::Event::Resized:
-			view_hud = view_main = AppWindow::getInstance().getCurrentView();
-			break;
+			case sf::Event::Closed:
+				AppWindow::getInstance().close();
+				break;
+
+			case sf::Event::Resized:
+				view_hud = view_main = AppWindow::getInstance().getCurrentView();
+				break;
 		}
 	}
 
