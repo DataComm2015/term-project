@@ -3,8 +3,8 @@
 #include "Usage.cpp"
 #include "Engine/ServerGameScene.h"
 #include "Network/Server.h"
-
-using Networking::Server;
+#include "Network/Session.h"
+#include "Network/NetworkEntityMultiplexer.h"
 
 #define DEFAULT_PORT 7000
 #define DEBUG
@@ -15,11 +15,39 @@ Scene *scene;
 
 void run();
 
+class mux : public Networking::NetworkEntityMultiplexer
+{
+public:
+	mux() {};
+	virtual ~mux() {};
+};
+
+class MyServer : public Networking::Server
+{
+public:
+	MyServer()
+	{
+	}
+	virtual void onConnect(Networking::Session* session)
+	{
+		printf("new connection\n");
+	}
+	virtual void onMessage(Networking::Session* session, char* data, int len)
+	{
+		printf("message\n");
+	}
+	virtual void onDisconnect(Networking::Session* session, int remote)
+	{
+		printf("disconnection\n");
+	}
+private:
+};
 
 int main( int argc, char ** argv )
 {
-	Server server;
-	server.startServer( DEFAULT_PORT );
+	Networking::NetworkEntityMultiplexer::setInstance(new mux());
+	MyServer server;
+	server.startServer(atoi(argv[1]));
 	scene = new ServerGameScene();
 	run();
 	delete scene;
