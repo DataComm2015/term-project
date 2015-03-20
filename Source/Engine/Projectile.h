@@ -37,7 +37,7 @@ namespace Marx
 			float _speed;
 			std::function<void(Entity*)> onHit;
 		public:
-			Projectile(float, float, Controller *, float, float);
+			Projectile(Map*, float, float, Controller *, float, float);
 			
 			Entity * move(float, float, bool);
 			void setSpeed(float);
