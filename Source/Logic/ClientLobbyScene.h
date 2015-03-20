@@ -9,23 +9,26 @@
 #include "../Engine/TextureManager.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/gui/Button.h"
-#include "../graphics/object/BGO.h"
-#include "../graphics/object/SGO.h"
+#include "../Multimedia/graphics/object/BGO.h"
+#include "../Multimedia/graphics/object/SGO.h"
 
 #define BTN_SIZE 200
 
 /*
 *	This is the Lobby scene.
 */
-class ServerLobbyScene : public Scene
+class ClientLobbyScene : public Scene
 {
 	public:
-		ServerLobbyScene();
+
+		ClientLobbyScene();
 		virtual void update(sf::Time);
 		virtual void processEvents(sf::Event&);
-		virtual void draw();
-		~ServerLobbyScene();
-        void onclick();
+        virtual void draw();
+		virtual void onLoad();
+		~ClientLobbyScene();
+        
+        void updateMainView(sf::View& v);
 
 	private:
 
