@@ -12,8 +12,6 @@
 #include "../Multimedia/gui/Button.h"
 #include "../graphics/object/BGO.h"
 
-using GUI::Button;
-
 #define BTN_SIZE 200
 
 /*
@@ -34,14 +32,17 @@ class ServerLobbyScene : public Scene
     	sf::View viewMain;
         Renderer renderer;
 
-        Button * vesselOneBtn;
-        Button * vesselTwoBtn;
+        SGO background;
+        id_resource backgroundImg;
 
-        Button * aspectOneBtn;
-        Button * aspectTwoBtn;
-        Button * aspectThreeBtn;
+        GUI::Button * vesselOneBtn;
+        GUI::Button * vesselTwoBtn;
 
-        Button * readyBtn;
+        GUI::Button * aspectOneBtn;
+        GUI::Button * aspectTwoBtn;
+        GUI::Button * aspectThreeBtn;
+        
+        GUI::Button * readyBtn;
 
         id_resource vesselOneImg;
         id_resource vesselTwoImg;

@@ -8,6 +8,10 @@ using namespace Marx;
 
 ServerLobbyScene::ServerLobbyScene() : renderer(AppWindow.getInstance(), 48400)
 {
+    // trying to create a background
+    // backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    // background = new SGO(*Manager::TextureManager::get(backgroundImg));
+
     /* Get texture assets */
     // as art assets are created for these, add them
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
@@ -69,14 +73,12 @@ void ServerLobbyScene::onLoad()
 
 void ServerLobbyScene::update(sf::Time)
 {
-	//printf("Update Run Scene\n");
-	
-	return;
+	//
 }
 
 void ServerLobbyScene::processEvents(sf::Event& e)
 {
-	
+	//
 }
 
 void ServerLobbyScene::draw()
