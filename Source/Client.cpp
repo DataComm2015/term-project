@@ -1,15 +1,34 @@
 //> In the main file
 #include "AppWindow.h"
 #include "Logic/GameScene.h"
+#include "Network/Client.h"
+#include "Network/NetworkEntityMultiplexer.h"
 // include the separate scene file
+using namespace Networking;
 
-int main()
+class mux : public NetworkEntityMultiplexer
 {
-	GameScene scene1;
+public:
+    mux() {};
+    virtual ~mux() {};
+};
 
-	AppWindow::getInstance().addScene(&scene1);
+int main(int argc, char* argv[])
+{
+    GameScene scene1;
 
-	AppWindow::getInstance().run();
+    NetworkEntityMultiplexer::setInstance(new mux());
 
-	return 0;
+    AppWindow::getInstance().addScene(&scene1);
+
+    Client* client = new Client();
+
+    short port = atoi(argv[2]);
+    client->connect(argv[1], port);
+
+    AppWindow::getInstance().run();
+
+    delete client;
+
+    return 0;
 }
