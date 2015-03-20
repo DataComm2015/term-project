@@ -2,8 +2,8 @@
 
 using namespace Marx;
 
-Projectile::Projectile(float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
-	Entity(x, y, ctrl, h, w)
+Projectile::Projectile(Map *map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
+	Entity(map, x, y, ctrl, h, w)
 {
 	_speed = 0;
 }
