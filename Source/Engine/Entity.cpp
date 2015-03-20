@@ -55,7 +55,7 @@ using namespace Marx;
 Entity::Entity(Map * map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
     sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
-	occupiedCells = std::set();
+	occupiedCells = std::set<Cell*>();
 	
     for(int i = floor(x); i < width + floor(x); i++)
     {
