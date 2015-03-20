@@ -52,6 +52,7 @@ namespace Marx
 
             bool joinBlock_;
     };
+
 } /* namespace Marx */
 
 #endif /* LOBBY_H_ */

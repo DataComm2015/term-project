@@ -182,6 +182,7 @@ private:
 	TGO welcomeText;
 };
 
+/*
 //> In the main file
 #include "AppWindow.h"
 // include the separate scene file
@@ -195,4 +196,4 @@ int main()
 	AppWindow::getInstance().run();
 
 	return 0;
-}
+}*/
