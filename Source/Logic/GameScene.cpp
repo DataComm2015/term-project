@@ -78,7 +78,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
 	
-	b1 = new GUI::Button(&championSGO, *Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
+	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
 	tb = new GUI::TextBox(NULL);
 	tb->toggleSelected(true);
 	tb->operator()().setFont(*arial);
