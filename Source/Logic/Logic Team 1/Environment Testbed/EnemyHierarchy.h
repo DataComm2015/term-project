@@ -8,7 +8,7 @@
 #include <vector>
 
 /* The data file containing the enemy hierarchy details */
-#define SOURCE_FILE "./Logic/enemy_hierarchy.hdata"
+#define SOURCE_FILE "enemy_hierarchy.hdata"
 
 /* The character indicating that a line is a comment */
 #define COMMENT '#'

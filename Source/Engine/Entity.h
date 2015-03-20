@@ -41,7 +41,7 @@ namespace Marx
             std::set<Cell*> occupiedCells;
 			Map * map;
         public:
-            Entity(float, float, Controller *, float, float);
+            Entity(Map *, float, float, Controller *, float, float);
             ~Entity();
             virtual void turn();
             Entity * move(float, float, bool);

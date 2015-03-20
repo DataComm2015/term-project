@@ -18,7 +18,7 @@
 #include "../Multimedia/gui/TextBox.h"
 
 /* The water buffer around the island */
-#define WATER_BUFFER 10
+#define WATER_BUFFER 20
 
 /* Amount to add to wave phase per frame */
 #define WAVE_PHASE_CHANGE 0.005
