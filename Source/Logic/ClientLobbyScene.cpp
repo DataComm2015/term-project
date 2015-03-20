@@ -1,4 +1,4 @@
-#include "ServerLobbyScene.h"
+#include "ClientLobbyScene.h"
 #include <iostream>
 
 using std::cout;
@@ -6,8 +6,12 @@ using std::cerr;
 using std::endl;
 using namespace Marx;
 
-ServerLobbyScene::ServerLobbyScene() : renderer(AppWindow.getInstance(), 48400)
+ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 {
+    // trying to create a background
+    // backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    // background = new SGO(*Manager::TextureManager::get(backgroundImg));
+
     /* Get texture assets */
     // as art assets are created for these, add them
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
@@ -30,10 +34,10 @@ ServerLobbyScene::ServerLobbyScene() : renderer(AppWindow.getInstance(), 48400)
     readyBtn = new GUI::Button(*Manager::TextureManager::get(readyImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
 }
 
-ServerLobbyScene::~ServerLobbyScene()
+ClientLobbyScene::~ClientLobbyScene()
 {
     delete vesselOneBtn;
-	delete vesselTwoBtn;
+    delete vesselTwoBtn;
 
     delete aspectOneBtn;
     delete aspectTwoBtn;
@@ -42,44 +46,42 @@ ServerLobbyScene::~ServerLobbyScene()
     delete readyBtn;
 }
 
-void ServerLobbyScene::onLoad()
+void ClientLobbyScene::onLoad()
 {
     /* Set button positions */
-    vesselOneBtn().setPosition(0, 0);
-    vesselTwoBtn().setPosition(1 + BTN_SIZE, 0);
+    vesselOneBtn->operator()().setPosition(0, 0);
+    vesselTwoBtn->operator()().setPosition(1 + BTN_SIZE, 0);
     
-    aspectOneBtn().setPosition(0, 1 + BTN_SIZE);
-    aspectTwoBtn().setPosition(1 + BTN_SIZE, 1 + BTN_SIZE);
-    aspectThreeBtn().setPosition(2 + BTN_SIZE, 1 + BTN_SIZE);
+    aspectOneBtn->operator()().setPosition(0, 1 + BTN_SIZE);
+    aspectTwoBtn->operator()().setPosition(1 + BTN_SIZE, 1 + BTN_SIZE);
+    aspectThreeBtn->operator()().setPosition(2 + BTN_SIZE, 1 + BTN_SIZE);
 
-    readyBtn().setPosition(0, 2 + BTN_SIZE + BTN_SIZE);
+    readyBtn->operator()().setPosition(0, 2 + BTN_SIZE + BTN_SIZE);
 
-    vesselOneBtn.toggleEnabled(true);
-    vesselTwoBtn.toggleEnabled(false);
+    vesselOneBtn->toggleEnabled(true);
+    vesselTwoBtn->toggleEnabled(false);
 
-    aspectOneBtn.toggleEnabled(true);
-    aspectTwoBtn.toggleEnabled(false);
-    aspectThreeBtn.toggleEnabled(false);
+    aspectOneBtn->toggleEnabled(true);
+    aspectTwoBtn->toggleEnabled(false);
+    aspectThreeBtn->toggleEnabled(false);
 
-    readyBtn.toggleEnabled(false);
+    readyBtn->toggleEnabled(false);
 
     /* Set the active view */
     updateMainView(viewMain);
 }
 
-void ServerLobbyScene::update(sf::Time)
+void ClientLobbyScene::update(sf::Time)
 {
-	//printf("Update Run Scene\n");
-	
-	return;
+    //
 }
 
-void ServerLobbyScene::processEvents(sf::Event& e)
+void ClientLobbyScene::processEvents(sf::Event& e)
 {
-	
+    //
 }
 
-void ServerLobbyScene::draw()
+void ClientLobbyScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
     
@@ -97,11 +99,18 @@ void ServerLobbyScene::draw()
     renderer.draw(*aspectThreeBtn);
     renderer.draw(*readyBtn);
 
-    renderer.end();    
+    renderer.end();
+
+    window.display();
 }
 
-void onclick()
+void ClientLobbyScene::onclick()
 {
     // temp onclick function
     cout << "Button clicked" << endl;
+}
+
+void ClientLobbyScene::updateMainView(sf::View& v)
+{
+    v = AppWindow::getInstance().getCurrentView();
 }
