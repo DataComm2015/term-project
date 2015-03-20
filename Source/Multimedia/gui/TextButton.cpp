@@ -5,17 +5,17 @@
 *
 * @date         2015-02-27
 *
-* @revisions
+* @revisions	2015-03-18 - Removed BGO parent from constructor
 *
 * @designer   
 *
 * @programmer   Jonathan Chu
+*				Marc Rafanan
 *
 * @return       initializer
 */
-TextButton(BGO* parent, sf::IntRect* theStates, std::function onClick, std::string theText)
+TextButton(sf::IntRect* theStates, std::function onClick, std::string theText)
 {
-    parent.add(this);
     states = theStates
     on_click = onClick;
     text = theText;
