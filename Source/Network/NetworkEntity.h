@@ -17,8 +17,6 @@ namespace Networking
         /**
          * Constructs a new NetworkEntity.
          *
-         * @param mux the NetworkEntityMultiplexer that this entity is to
-         *            receive messages from and send messages to.
          * @param id the id used when multiplexing and demiltiplexing
          * @param type denotes which sub class of NetworkEntity this entity is
          */
@@ -86,6 +84,25 @@ namespace Networking
          */
         virtual void
         onUnregister( Session * session, Message message );
+
+    protected:
+	/**
+         * Invoked after NetworkEntityMultiplexer::onRegister() callback
+         * is invoked
+         *
+         * @param session session to be registered with this entity
+         */
+        void
+        silentRegister( Session* session );
+
+        /**
+         * Invoked before NetworkEntity::onUnregister() callback is invoked
+         *
+         * @param session session to be unregistered from this entity
+         */
+        void
+        silentUnregister( Session* session );
+
     private:
         /**
          * The id of the entity. Used for multiplexig purposes.
@@ -108,22 +125,6 @@ namespace Networking
          */
         std::set< Session * > registeredSessions;
 
-        /**
-         * Invoked after NetworkEntityMultiplexer::onRegister() callback
-         * is invoked
-         *
-         * @param session session to be registered with this entity
-         */
-        void
-        silentRegister( Session* session );
-
-        /**
-         * Invoked before NetworkEntity::onUnregister() callback is invoked
-         *
-         * @param session session to be unregistered from this entity
-         */
-        void
-        silentUnregister( Session* session );
     };
 }
 
