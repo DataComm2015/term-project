@@ -418,6 +418,7 @@ void GameMap::generateEnemies()
 ******************************************************************************/
 void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 {
+/*
 	EnemyHierarchy *eh = EnemyHierarchy::getInstance();
 	string enemy;
 
@@ -481,6 +482,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 			break;
 		}
 	}
+*/
 }
 
 
