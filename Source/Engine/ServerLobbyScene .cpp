@@ -28,9 +28,6 @@ ServerLobbyScene::ServerLobbyScene() : renderer(AppWindow.getInstance(), 48400)
     aspectThreeBtn = new GUI::Button(*Manager::TextureManager::get(aspectThreeImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
 
     readyBtn = new GUI::Button(*Manager::TextureManager::get(readyImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
-
-    /* Set the active view */
-    updateMainView(viewMain);
 }
 
 ServerLobbyScene::~ServerLobbyScene()
@@ -43,6 +40,31 @@ ServerLobbyScene::~ServerLobbyScene()
     delete aspectThreeBtn;
 
     delete readyBtn;
+}
+
+void ServerLobbyScene::onLoad()
+{
+    /* Set button positions */
+    vesselOneBtn().setPosition(0, 0);
+    vesselTwoBtn().setPosition(1 + BTN_SIZE, 0);
+    
+    aspectOneBtn().setPosition(0, 1 + BTN_SIZE);
+    aspectTwoBtn().setPosition(1 + BTN_SIZE, 1 + BTN_SIZE);
+    aspectThreeBtn().setPosition(2 + BTN_SIZE, 1 + BTN_SIZE);
+
+    readyBtn().setPosition(0, 2 + BTN_SIZE + BTN_SIZE);
+
+    vesselOneBtn.toggleEnabled(true);
+    vesselTwoBtn.toggleEnabled(false);
+
+    aspectOneBtn.toggleEnabled(true);
+    aspectTwoBtn.toggleEnabled(false);
+    aspectThreeBtn.toggleEnabled(false);
+
+    readyBtn.toggleEnabled(false);
+
+    /* Set the active view */
+    updateMainView(viewMain);
 }
 
 void ServerLobbyScene::update(sf::Time)
@@ -81,4 +103,5 @@ void ServerLobbyScene::draw()
 void onclick()
 {
     // temp onclick function
+    cout << "Button clicked" << endl;
 }
