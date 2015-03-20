@@ -33,7 +33,6 @@ Vessel::Vessel(job_class jobClass, Ability* abilityList, float x, float y )
 	ySpeed = 0;
 	moving = false;
 	abilities = abilityList;
-
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -250,7 +249,35 @@ int Vessel::getNextLevelEXP()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getLevel()
 {
+<<<<<<< HEAD
 	return currentLevel;
+=======
+
+}
+
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: increaseLevel
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE: void Vessel::increaseLevel()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function increments the Vessel's current level.
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::increaseLevel()
+{
+
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 }
 
 
@@ -263,7 +290,11 @@ int Vessel::getLevel()
 --
 -- DESIGNER:	Sanders Lee
 --
+<<<<<<< HEAD
 -- PROGRAMMER:	Sanders Lee
+=======
+-- PROGRAMMER:
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 --
 -- INTERFACE: void Vessel::resetHP()
 --
@@ -364,7 +395,11 @@ int Vessel::getHP()
 --
 -- DESIGNER:	Sanders Lee
 --
+<<<<<<< HEAD
 -- PROGRAMMER:	Sanders Lee
+=======
+-- PROGRAMMER:
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 --
 -- INTERFACE: int Vessel::getMaxHP()
 --
@@ -387,7 +422,11 @@ int Vessel::getMaxHP()
 --
 -- DESIGNER:	Sanders Lee
 --
+<<<<<<< HEAD
 -- PROGRAMMER:	Sanders Lee
+=======
+-- PROGRAMMER:
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 --
 -- INTERFACE: void Vessel::resetAttackPower()
 --
@@ -407,7 +446,11 @@ void Vessel::resetAttackPower()
 --
 -- REVISIONS: (Date and Description)
 --
+<<<<<<< HEAD
 -- DESIGNER:	Sanders Lee
+=======
+-- DESIGNER:
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 --
 -- PROGRAMMER:	Sanders Lee
 --
@@ -432,7 +475,11 @@ void Vessel::attackPowerUp( int attackpower )
 --
 -- DESIGNER:	Sanders Lee
 --
+<<<<<<< HEAD
 -- PROGRAMMER:	Sanders Lee
+=======
+-- PROGRAMMER:
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 --
 -- INTERFACE: void Vessel::attackPowerDown( int attackpower )
 -- int attackpower: the amount of attack power to decrease by
@@ -455,7 +502,11 @@ void Vessel::attackPowerDown( int attackpower )
 --
 -- DESIGNER:	Sanders Lee
 --
+<<<<<<< HEAD
 -- PROGRAMMER:	Sanders Lee
+=======
+-- PROGRAMMER:
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 --
 -- INTERFACE: int Vessel::getAttackPower()
 --
@@ -534,7 +585,11 @@ void Vessel::resetSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedUp( int speed )
 {
+<<<<<<< HEAD
 	travelSpeed++;
+=======
+
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -558,8 +613,12 @@ void Vessel::speedUp( int speed )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedDown( int speed )
 {
+<<<<<<< HEAD
 	if( travelSpeed > 1 )
 		speed--;
+=======
+
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -605,7 +664,11 @@ int Vessel::getSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getDefaultSpeed()
 {
+<<<<<<< HEAD
 	return defaultSpeed;
+=======
+
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -731,7 +794,10 @@ void Vessel::detectMove()
 void Vessel::move()
 {
 	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed );
+<<<<<<< HEAD
 	//Entity::move( getXPosition(), getYPosition(), false );
+=======
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -739,6 +805,7 @@ void Vessel::move()
 --
 -- DATE: February 27, 2015
 --
+<<<<<<< HEAD
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER: Sanders Lee
@@ -753,6 +820,9 @@ void Vessel::move()
 -- NOTES:
 -- Stops moving in a particular direction depending on the direction key released.
 ----------------------------------------------------------------------------------------------------------------------*/
+=======
+--*/
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 void Vessel::stop( int keyReleased )
 {
 	if( (keyReleased == sf::Keyboard::D) || (keyReleased == sf::Keyboard::A) )
@@ -959,6 +1029,7 @@ int Vessel::getDirection()
 --
 -- DATE: February 27, 2015
 --
+<<<<<<< HEAD
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER: Sanders Lee
@@ -972,6 +1043,9 @@ int Vessel::getDirection()
 -- NOTES:
 -- Returns the job class of the vessel.
 ----------------------------------------------------------------------------------------------------------------------*/
+=======
+--*/
+>>>>>>> 28d502940810f76c0c6758fd967e46c061cbd6c5
 job_class Vessel::getJobClass()
 {
 	return jobClass;

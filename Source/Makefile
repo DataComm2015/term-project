@@ -1,6 +1,5 @@
 CXX=g++
 CPPFLAGS=-std=c++11
-
 CLIENT_EXE=app
 SERVER_EXE=serv
 
@@ -20,8 +19,6 @@ FILES_NETWORK=		Network/Server.o Network/Session.o Network/select_helper.o Netwo
 
 FILE_CLIENT=			Client.cpp
 FILE_SERVER=			Server.cpp
-
-FILE_MAIN=			MovementTest.cpp
 
 ##
 

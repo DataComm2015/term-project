@@ -96,6 +96,7 @@ class Vessel : public Marx::Entity
 		void setPosition( float x, float y );
 		float getXPosition();
 		float getYPosition();
+
 		int getXSpeed();
 		int getYSpeed();
 		bool isMoving();

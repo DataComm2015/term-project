@@ -7,7 +7,7 @@ namespace GUI
 	class ValueButton : BGO
 	{
 		public:
-			ValueButton(BGO* parent, sf::IntRect* decButton, Button* incButton, Button*, Label* theLabel, std::function theFunc, std::string theText, int theValue, int modBy);
+			ValueButton(sf::IntRect* decButton, Button* incButton, Button*, Label* theLabel, std::function theFunc, std::string theText, int theValue, int modBy);
 			~ValueButton();
 			void setFormat(int, bool, sf::Color);
 			int getValue();

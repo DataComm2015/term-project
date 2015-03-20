@@ -11,7 +11,7 @@ namespace GUI
 	class Button : public SGO
 	{
 		public:
-            Button(BGO* parent, const sf::Texture& texture, sf::Vector2f si, sf::View& v, std::function<void()> onClick);
+            Button(const sf::Texture& texture, sf::Vector2f si, sf::View& v, std::function<void()> onClick);
 			void toggleEnabled(bool e);
 			void update(sf::Time& t);
 		private:
