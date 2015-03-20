@@ -8,6 +8,7 @@
 #include "Environment/GameMap.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
+#include "../Multimedia/manager/MusicManager.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -54,6 +55,7 @@ class GameScene : public Scene
     	id_resource maskSprite;
     	id_resource wepSprite;
     	id_resource butSprite;
+    	id_resource scat_music;
 
     	SGO championSGO;
     	SGO maskSGO;
