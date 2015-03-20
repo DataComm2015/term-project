@@ -20,16 +20,15 @@ using namespace std;
 --
 -- PROGRAMMER:      Jeff Bayntun
 --
--- INTERFACE:       NetworkEntity::NetworkEntity( NetworkEntityMultiplexer * mux, int id, int type )
+-- INTERFACE:       NetworkEntity::NetworkEntity( int id, int type )
 --                  id: the id of this network entity
                     type: they type of this network entity
-                    mux: the multiplexer for this network entity
 
 -- RETURNS:         void
 --
 -- NOTES:           Creates a NetworkEntity object
 -----------------------------------------------------------------------------------------------*/
-Networking::NetworkEntity::NetworkEntity( int id, int type, NetworkEntityMultiplexer * mux )
+Networking::NetworkEntity::NetworkEntity( int id, int type )
 {
     this->id = id;
     this->type = type;

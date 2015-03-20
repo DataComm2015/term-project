@@ -17,12 +17,10 @@ namespace Networking
         /**
          * Constructs a new NetworkEntity.
          *
-         * @param mux the NetworkEntityMultiplexer that this entity is to
-         *            receive messages from and send messages to.
          * @param id the id used when multiplexing and demiltiplexing
          * @param type denotes which sub class of NetworkEntity this entity is
          */
-        NetworkEntity( int id, int type, NetworkEntityMultiplexer * mux );
+        NetworkEntity( int id, int type );
 
         /**
          * Destructs a NetwrokEntity.
