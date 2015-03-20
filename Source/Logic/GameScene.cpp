@@ -98,9 +98,36 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	generateWater();
 
+	generateUI();
+}
+
+void GameScene::onLoad()
+{
 	// Set the active view
 	updateMainView(viewMain);
+	
+	// UI view	
+	viewUI = AppWindow::getInstance().getCurrentView();
+			
+	b1->toggleEnabled(true);
+	b2->toggleEnabled(true);
+
+	sf::Vector2f windowSize = viewUI.getSize();
+	
+	b1->operator()().setPosition((windowSize.x / 2) - 600, windowSize.y * 0.75f);
+	b2->operator()().setPosition((windowSize.x / 2) - 400, windowSize.y * 0.75f);
+	b3->operator()().setPosition(100, 400);
+	b4->operator()().setPosition(100, 400);
+	b5->operator()().setPosition(100, 400);
+	b6->operator()().setPosition(100, 400);
 }
+
+void GameScene::unLoad()
+{
+	b1->toggleEnabled(false);
+	b2->toggleEnabled(false);
+}
+
 
 GameScene::~GameScene()
 {
@@ -152,14 +179,14 @@ void GameScene::update(sf::Time t)
 		championSGO().setScale(-2, 2);
 		maskSGO().setScale(-2,2);
 		wepSGO().setScale(-2,2);
-		b1->toggleEnabled(true);
+		//b1->toggleEnabled(true);
 	}
 	else
 	{
 		championSGO().setScale(2, 2);
 		maskSGO().setScale(2,2);
 		wepSGO().setScale(2,2);
-		b1->toggleEnabled(false);
+		//b1->toggleEnabled(false);
 	}
 	
 	championSGO().setPosition(v->getXPosition(), v->getYPosition());
@@ -171,6 +198,7 @@ void GameScene::update(sf::Time t)
 	runAnim_wep->update(t);
 	
 	b1->update(t);
+	b2->update(t);
 
 	mapStates.transform = sf::Transform::Identity;
 	mapStates.transform.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
@@ -244,14 +272,22 @@ void GameScene::draw()
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(*b1);
 	renderer.draw(*tb);
 	renderer.draw(championSGO);
 	renderer.draw(maskSGO);
 	renderer.draw(wepSGO);
 
 	renderer.end();
+
+	// Draw UI
+	window.setView(viewUI);
 	
+	renderer.begin();
+	renderer.draw(*b1);
+	renderer.draw(*b2);
+	
+	renderer.end();
+		
 	window.display();
 }
 
@@ -286,4 +322,16 @@ void GameScene::generateWater()
 
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
+}
+
+void GameScene::generateUI()
+{
+
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 }
