@@ -8,20 +8,20 @@ namespace GUI
 	*
 	* @date         2015-02-26
 	*
-	* @revisions
+	* @revisions	2015-03-18 - Removed BGO parent from constructor
 	*
 	* @designer   
 	*
 	* @programmer   Jonathan Chu
+	*				Marc Rafanan
 	*
 	* @return       initializer
 	*/
-	Container::Container(BGO* parent, SGO* firstSGO, SGO* secondSGO, sf::Vector2f theScale, orientation theOrientation)
+	Container::Container(SGO* firstSGO, SGO* secondSGO, sf::Vector2f theSize, orientation theOrientation)
 	{
-		parent->add(*this);
 		A = firstSGO;
 		B = secondSGO;
-		scale = theScale;
+		size = theSize;
 		orient = theOrientation;
 		ratio = 0.5f;
 		separator = NULL;
@@ -123,7 +123,7 @@ namespace GUI
 		if(separator != NULL)
 			sep_size = side?separator->operator()().getScale().x:separator->operator()().getScale().y;
 		
-		float total = (side?scale.x:scale.y) - sep_size;
+		float total = (side?size.x:size.y) - sep_size;
 		float side_size = total*(ratio);
 		
 		// Scale and position A
@@ -143,4 +143,24 @@ namespace GUI
 		B->operator()().setScale(size_b);
 		B->operator()().setPosition(offset);
 	}
+
+	/**
+	* Gets the size of the container
+	*
+	* @date         2015-03-18
+	*
+	* @revisions
+	*
+	* @designer   	Melvin Loho
+	*				Marc Rafanan
+	*
+	* @programmer   Marc Rafanan
+	*
+	* @return       void
+	*/	
+	sf::Vector2f Container::getSize()
+	{
+		return size;
+	}
+	
 }

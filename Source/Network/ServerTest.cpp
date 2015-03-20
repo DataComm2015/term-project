@@ -12,8 +12,8 @@
 
 using namespace Networking;
 
-NetworkEntity* entity0 = new NetworkEntity(0,0);
-NetworkEntity* entity1 = new NetworkEntity(1,0);
+NetworkEntity* entity0;
+NetworkEntity* entity1;
 Message registerMsg;
 Message unregisterMsg;
 Message updateMsg;
@@ -42,8 +42,20 @@ public:
 private:
 };
 
+class mux : public NetworkEntityMultiplexer
+{
+public:
+    mux() {};
+    virtual ~mux() {};
+};
+
 int main(void)
 {
+    NetworkEntityMultiplexer::setInstance(new mux());
+
+    entity0 = new NetworkEntity(0,0);
+    entity1 = new NetworkEntity(1,0);
+
     registerMsg.type = 0;
     registerMsg.data = (void*) "registering123";
     registerMsg.len  = strlen((char*)registerMsg.data);
