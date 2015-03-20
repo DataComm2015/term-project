@@ -6,8 +6,6 @@ using std::cerr;
 using std::endl;
 using namespace Marx;
 
-void onclick();
-
 ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 {
     // trying to create a background
@@ -16,14 +14,14 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     /* Get texture assets */
     // as art assets are created for these, add them
-    vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
-    vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
+    vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
 
-    aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
-    aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
-    aspectThreeImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
+    aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+    aspectThreeImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
 
-    readyImg = Manager::TextureManager::store(Manager::TextureManager::load("../Multimedia/Assets/button.png"));
+    readyImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
 
     /* Initialize buttons */
     vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
@@ -39,7 +37,7 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 ClientLobbyScene::~ClientLobbyScene()
 {
     delete vesselOneBtn;
-	delete vesselTwoBtn;
+    delete vesselTwoBtn;
 
     delete aspectOneBtn;
     delete aspectTwoBtn;
@@ -75,12 +73,12 @@ void ClientLobbyScene::onLoad()
 
 void ClientLobbyScene::update(sf::Time)
 {
-	//
+    //
 }
 
 void ClientLobbyScene::processEvents(sf::Event& e)
 {
-	//
+    //
 }
 
 void ClientLobbyScene::draw()
@@ -101,16 +99,18 @@ void ClientLobbyScene::draw()
     renderer.draw(*aspectThreeBtn);
     renderer.draw(*readyBtn);
 
-    renderer.end();    
+    renderer.end();
+
+    window.display();
 }
 
-void onclick()
+void ClientLobbyScene::onclick()
 {
     // temp onclick function
     cout << "Button clicked" << endl;
 }
 
-void updateMainView(sf::View& v)
+void ClientLobbyScene::updateMainView(sf::View& v)
 {
     v = AppWindow::getInstance().getCurrentView();
 }

@@ -15,24 +15,25 @@
 #define BTN_SIZE 200
 
 /*
-*	This is the Lobby scene.
+*   This is the Lobby scene.
 */
 class ClientLobbyScene : public Scene
 {
-	public:
+    public:
 
-		ClientLobbyScene();
-		virtual void update(sf::Time);
-		virtual void processEvents(sf::Event&);
+        ClientLobbyScene();
+        virtual void update(sf::Time);
+        virtual void processEvents(sf::Event&);
         virtual void draw();
-		virtual void onLoad();
-		~ClientLobbyScene();
-        
+        virtual void onLoad();
+        ~ClientLobbyScene();
+
+        void onClick();
         void updateMainView(sf::View& v);
 
-	private:
+    private:
 
-    	sf::View viewMain;
+        sf::View viewMain;
         Renderer renderer;
 
         SGO background;
