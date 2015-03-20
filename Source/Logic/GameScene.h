@@ -8,6 +8,7 @@
 #include "Environment/GameMap.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
+#include "../Engine/ProjectileManager.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -57,8 +58,10 @@ class GameScene : public Scene
 
     	SGO championSGO;
     	SGO maskSGO;
+		//SGO projectileSGO;
     	SGO wepSGO;
 		Vessel *v;
+		//Projectile *p;
 		
 		GUI::Button *b1;
 		GUI::TextBox *tb;
