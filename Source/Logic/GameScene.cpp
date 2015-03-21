@@ -54,7 +54,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
 	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
-	
+	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Multimedia/Assets/Sound/music.ogg"));
+	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Multimedia/Assets/Sound/sound.wav"));
+
 	// an example, obviously...
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32,32),8,7);
@@ -89,6 +91,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	tb = new GUI::TextBox(NULL);
 	tb->toggleSelected(true);
 	tb->operator()().setFont(*arial);
+
+	Manager::MusicManager::get(scat_music)->setVolume(60);
+	Manager::MusicManager::get(scat_music)->play();
 	
 	// Generate the game map
 	if (!gMap->generateMap())
@@ -188,6 +193,8 @@ void GameScene::update(sf::Time t)
 		wepSGO().setScale(2,2);
 		//b1->toggleEnabled(false);
 	}
+
+	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
 	
 	championSGO().setPosition(v->getXPosition(), v->getYPosition());
 	maskSGO().setPosition(v->getXPosition(), v->getYPosition());
@@ -236,7 +243,6 @@ void GameScene::processEvents(sf::Event& e)
 			{
 				// Generate the game map
 				gMap->generateMap();
-
 				break;
 			}
 		}
@@ -248,6 +254,14 @@ void GameScene::processEvents(sf::Event& e)
 	else if ( e.type == sf::Event::Resized )
 	{
 		updateMainView(viewMain);
+	}
+	else if(e.type == sf::Event::MouseButtonPressed)
+	{
+		if(e.mouseButton.button == sf::Mouse::Left)
+		{
+			current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+			current.play();
+		}
 	}
 
 	tb->process(e);
