@@ -31,6 +31,7 @@ client: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FI
 	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_CLIENT) \
 	-o $(CLIENT_EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system -lpthread -lsfml-audio
 
+
 server: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_SERVER)
 	$(CXX) $(CPPFLAGS) \
 	-o $(SERVER_EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system -lpthread -lsfml-audio \
