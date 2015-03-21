@@ -29,7 +29,11 @@ all: client server
 client: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_CLIENT)
 	$(CXX) $(CPPFLAGS) \
 	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_CLIENT) \
+<<<<<<< HEAD
 	-o $(CLIENT_EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system -lpthread -lsfml-audio
+=======
+	-o $(CLIENT_EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system -lpthread -g
+>>>>>>> 707d79fddcf8846e34c2a39f274df9bd5c5a3707
 
 server: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_SERVER)
 	$(CXX) $(CPPFLAGS) \

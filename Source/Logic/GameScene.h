@@ -62,10 +62,8 @@ class GameScene : public Scene
 
     	SGO championSGO;
     	SGO maskSGO;
-		//SGO projectileSGO;
     	SGO wepSGO;
 		Vessel *v;
-		//Projectile *p;
 		
 		// UI
 		GUI::Button *b1;

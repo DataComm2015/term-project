@@ -44,7 +44,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	gMap = new GameMap(cMap);
 	v = new Vessel(WARRIOR,NULL,0,0);
-	//p = Manager::ProjectileManager::getProjectile(100,100);
 
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
@@ -73,11 +72,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	maskSGO().setTextureRect(sf::IntRect(0,0,32,32));
 	maskSGO().setScale(2,2);
 	maskSGO.middleAnchorPoint(true);
-
-	/*projectileSGO().setTexture(*Manager::TextureManager::get(maskSprite));
-	projectileSGO().setTextureRect(sf::IntRect(0,0,32,32));
-	projectileSGO().setScale(2,2);
-	projectileSGO.middleAnchorPoint(true);*/
 	
 	wepSGO().setTexture(*Manager::TextureManager::get(wepSprite));
 	wepSGO().setTextureRect(sf::IntRect(0,0,32,32));

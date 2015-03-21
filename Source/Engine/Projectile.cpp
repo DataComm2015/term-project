@@ -1,4 +1,5 @@
 #include "Projectile.h"
+#include <iostream>
 
 using namespace Marx;
 
@@ -16,13 +17,12 @@ setSpeed(float speed)
 
 Entity * Projectile::move(float x, float y, bool force = false)
 {
-
     Entity *entity;
 
 	entity = Entity::move(x, y, force);
 
 	if (entity != nullptr)
-		onHit(entity);
+		//onHit(entity);
 	
 	return entity;
 }
