@@ -15,6 +15,7 @@ class Animation
 		bool isRunning();
 		bool isLooping();
 		void update(sf::Time& t);
+		void setFrameSkip(short i);
 	private:
 		void increment(short = false);
 	
