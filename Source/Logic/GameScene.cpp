@@ -44,6 +44,20 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	gMap = new GameMap(cMap);
 	v = new Vessel(WARRIOR,NULL,0,0);
+	
+	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
+	p = new Projectile(cMap, 10, 10, NULL, 1, 1 );
+	//				   map, x, y, controller, height, width
+	
+	// Entities all extend sf::Rect so you can get their x, y by checking the top left.
+	// As a side note, both entities and cells are FloatRects so are view ports intersect can be used to
+	// see if an entity or cell should be visible on the map.
+	// this should be useful for figuring out what needs to be rendered down the road.
+	p->move(p->top + 10, p->left + 10, false);
+	
+	delete p;
+	/* END SAMPLE CREATION */
+	
 
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
@@ -155,6 +169,7 @@ GameScene::~GameScene()
 void GameScene::update(sf::Time t)
 {
 	v->move();
+	
 	
 	if(v->getXSpeed() != 0 || v->getYSpeed() != 0)
 	{

@@ -49,6 +49,8 @@ class GameScene : public Scene
 	private:
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
+	
+		Marx::Projectile * p;
 		GameMap *gMap;
 
     	Renderer renderer;
