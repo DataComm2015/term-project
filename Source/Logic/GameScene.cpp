@@ -44,6 +44,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	gMap = new GameMap(cMap);
 	v = new Vessel(WARRIOR,NULL,0,0);
+	//p = Manager::ProjectileManager::getProjectile(100,100);
 
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
@@ -59,6 +60,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32,32),8,7);
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32,32),8,7);
 	
+	
 	cMap->setTexture(tilemap);
 	championSGO().setTexture(*Manager::TextureManager::get(championSprite));
 	championSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -69,6 +71,11 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	maskSGO().setTextureRect(sf::IntRect(0,0,32,32));
 	maskSGO().setScale(2,2);
 	maskSGO.middleAnchorPoint(true);
+
+	/*projectileSGO().setTexture(*Manager::TextureManager::get(maskSprite));
+	projectileSGO().setTextureRect(sf::IntRect(0,0,32,32));
+	projectileSGO().setScale(2,2);
+	projectileSGO.middleAnchorPoint(true);*/
 	
 	wepSGO().setTexture(*Manager::TextureManager::get(wepSprite));
 	wepSGO().setTextureRect(sf::IntRect(0,0,32,32));
@@ -78,8 +85,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
 	
-	b1 = new GUI::Button(&championSGO, *Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
-	tb = new GUI::TextBox(nullptr);
+	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
+	tb = new GUI::TextBox(NULL);
 	tb->toggleSelected(true);
 	tb->operator()().setFont(*arial);
 	
@@ -91,9 +98,36 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	generateWater();
 
+	generateUI();
+}
+
+void GameScene::onLoad()
+{
 	// Set the active view
 	updateMainView(viewMain);
+	
+	// UI view	
+	viewUI = AppWindow::getInstance().getCurrentView();
+			
+	b1->toggleEnabled(true);
+	b2->toggleEnabled(true);
+
+	sf::Vector2f windowSize = viewUI.getSize();
+	
+	b1->operator()().setPosition((windowSize.x / 2) - 600, windowSize.y * 0.75f);
+	b2->operator()().setPosition((windowSize.x / 2) - 400, windowSize.y * 0.75f);
+	b3->operator()().setPosition(100, 400);
+	b4->operator()().setPosition(100, 400);
+	b5->operator()().setPosition(100, 400);
+	b6->operator()().setPosition(100, 400);
 }
+
+void GameScene::unLoad()
+{
+	b1->toggleEnabled(false);
+	b2->toggleEnabled(false);
+}
+
 
 GameScene::~GameScene()
 {
@@ -145,14 +179,14 @@ void GameScene::update(sf::Time t)
 		championSGO().setScale(-2, 2);
 		maskSGO().setScale(-2,2);
 		wepSGO().setScale(-2,2);
-		b1->toggleEnabled(true);
+		//b1->toggleEnabled(true);
 	}
 	else
 	{
 		championSGO().setScale(2, 2);
 		maskSGO().setScale(2,2);
 		wepSGO().setScale(2,2);
-		b1->toggleEnabled(false);
+		//b1->toggleEnabled(false);
 	}
 	
 	championSGO().setPosition(v->getXPosition(), v->getYPosition());
@@ -164,6 +198,7 @@ void GameScene::update(sf::Time t)
 	runAnim_wep->update(t);
 	
 	b1->update(t);
+	b2->update(t);
 
 	mapStates.transform = sf::Transform::Identity;
 	mapStates.transform.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
@@ -237,14 +272,22 @@ void GameScene::draw()
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(*b1);
 	renderer.draw(*tb);
 	renderer.draw(championSGO);
 	renderer.draw(maskSGO);
 	renderer.draw(wepSGO);
 
 	renderer.end();
+
+	// Draw UI
+	window.setView(viewUI);
 	
+	renderer.begin();
+	renderer.draw(*b1);
+	renderer.draw(*b2);
+	
+	renderer.end();
+		
 	window.display();
 }
 
@@ -279,4 +322,16 @@ void GameScene::generateWater()
 
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
+}
+
+void GameScene::generateUI()
+{
+
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 }

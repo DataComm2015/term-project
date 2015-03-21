@@ -8,6 +8,7 @@
 #include "Environment/GameMap.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
+#include "../Engine/ProjectileManager.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -35,9 +36,12 @@ class GameScene : public Scene
 		virtual void update(sf::Time);
 		virtual void processEvents(sf::Event&);
 		virtual void draw();
+		void onLoad();
+		void unLoad();
 		~GameScene();
 
 		void generateWater();
+		void generateUI();
 	private:
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
@@ -45,6 +49,7 @@ class GameScene : public Scene
 
     	Renderer renderer;
     	sf::View viewMain;
+    	sf::View viewUI;
 
     	sf::RenderStates mapStates;
     	sf::RenderStates waterStates;
@@ -57,10 +62,19 @@ class GameScene : public Scene
 
     	SGO championSGO;
     	SGO maskSGO;
+		//SGO projectileSGO;
     	SGO wepSGO;
 		Vessel *v;
+		//Projectile *p;
 		
+		// UI
 		GUI::Button *b1;
+		GUI::Button *b2;
+		GUI::Button *b3;
+		GUI::Button *b4;
+		GUI::Button *b5;
+		GUI::Button *b6;
+
 		GUI::TextBox *tb;
     	
     	sf::Shader waveShader;

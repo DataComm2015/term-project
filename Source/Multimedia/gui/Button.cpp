@@ -9,18 +9,18 @@ namespace GUI
 	*
 	* @date         2015-02-27
 	*
-	* @revisions
+	* @revisions	2015-03-18 - Removed BGO parent from constructor
 	*
 	* @designer   
 	*
 	* @programmer   Jonathan Chu
 	*				Lewis Scott
+	*				Marc Rafanan
 	*
 	* @return       initializer
 	*/
-	Button::Button(BGO* parent, const sf::Texture& texture, sf::Vector2f si, sf::View& v, std::function<void()> onClick) : SGO(texture), view(v)
+	Button::Button(const sf::Texture& texture, sf::Vector2f si, sf::View& v, std::function<void()> onClick) : SGO(texture), view(v)
 	{
-		parent->add(*this);
 		enabled = true;
 		size = si;
 		on_click = onClick;
@@ -70,7 +70,7 @@ namespace GUI
 
 		if(enabled) // button enabled
 		{
-			if(SGO::operator()().getLocalBounds().contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
+			if(SGO::operator()().getGlobalBounds().contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
 			{
 				if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) // mouse clicking button
 				{
