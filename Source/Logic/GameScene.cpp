@@ -46,6 +46,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	v = new Vessel(WARRIOR,NULL,0,0);
 	
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
+	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
 	p = new Projectile(cMap, 10, 10, NULL, 1, 1 );
 	//				   map, x, y, controller, height, width
 	
