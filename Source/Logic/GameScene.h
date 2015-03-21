@@ -36,9 +36,12 @@ class GameScene : public Scene
 		virtual void update(sf::Time);
 		virtual void processEvents(sf::Event&);
 		virtual void draw();
+		void onLoad();
+		void unLoad();
 		~GameScene();
 
 		void generateWater();
+		void generateUI();
 	private:
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
@@ -46,6 +49,7 @@ class GameScene : public Scene
 
     	Renderer renderer;
     	sf::View viewMain;
+    	sf::View viewUI;
 
     	sf::RenderStates mapStates;
     	sf::RenderStates waterStates;
@@ -61,7 +65,14 @@ class GameScene : public Scene
     	SGO wepSGO;
 		Vessel *v;
 		
+		// UI
 		GUI::Button *b1;
+		GUI::Button *b2;
+		GUI::Button *b3;
+		GUI::Button *b4;
+		GUI::Button *b5;
+		GUI::Button *b6;
+
 		GUI::TextBox *tb;
     	
     	sf::Shader waveShader;

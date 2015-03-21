@@ -53,7 +53,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
 	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
-	
+	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Multimedia/Assets/Sound/music.ogg"));
+	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Multimedia/Assets/Sound/sound.wav"));
+
 	// an example, obviously...
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32,32),8,7);
@@ -83,6 +85,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	tb = new GUI::TextBox(NULL);
 	tb->toggleSelected(true);
 	tb->operator()().setFont(*arial);
+
+	Manager::MusicManager::get(scat_music)->setVolume(60);
+	Manager::MusicManager::get(scat_music)->play();
 	
 	// Generate the game map
 	if (!gMap->generateMap())
@@ -92,9 +97,36 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	generateWater();
 
+	generateUI();
+}
+
+void GameScene::onLoad()
+{
 	// Set the active view
 	updateMainView(viewMain);
+	
+	// UI view	
+	viewUI = AppWindow::getInstance().getCurrentView();
+			
+	b1->toggleEnabled(true);
+	b2->toggleEnabled(true);
+
+	sf::Vector2f windowSize = viewUI.getSize();
+	
+	b1->operator()().setPosition((windowSize.x / 2) - 600, windowSize.y * 0.75f);
+	b2->operator()().setPosition((windowSize.x / 2) - 400, windowSize.y * 0.75f);
+	b3->operator()().setPosition(100, 400);
+	b4->operator()().setPosition(100, 400);
+	b5->operator()().setPosition(100, 400);
+	b6->operator()().setPosition(100, 400);
 }
+
+void GameScene::unLoad()
+{
+	b1->toggleEnabled(false);
+	b2->toggleEnabled(false);
+}
+
 
 GameScene::~GameScene()
 {
@@ -146,15 +178,17 @@ void GameScene::update(sf::Time t)
 		championSGO().setScale(-2, 2);
 		maskSGO().setScale(-2,2);
 		wepSGO().setScale(-2,2);
-		b1->toggleEnabled(true);
+		//b1->toggleEnabled(true);
 	}
 	else
 	{
 		championSGO().setScale(2, 2);
 		maskSGO().setScale(2,2);
 		wepSGO().setScale(2,2);
-		b1->toggleEnabled(false);
+		//b1->toggleEnabled(false);
 	}
+
+	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
 	
 	championSGO().setPosition(v->getXPosition(), v->getYPosition());
 	maskSGO().setPosition(v->getXPosition(), v->getYPosition());
@@ -165,6 +199,7 @@ void GameScene::update(sf::Time t)
 	runAnim_wep->update(t);
 	
 	b1->update(t);
+	b2->update(t);
 
 	mapStates.transform = sf::Transform::Identity;
 	mapStates.transform.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
@@ -202,7 +237,6 @@ void GameScene::processEvents(sf::Event& e)
 			{
 				// Generate the game map
 				gMap->generateMap();
-
 				break;
 			}
 		}
@@ -214,6 +248,14 @@ void GameScene::processEvents(sf::Event& e)
 	else if ( e.type == sf::Event::Resized )
 	{
 		updateMainView(viewMain);
+	}
+	else if(e.type == sf::Event::MouseButtonPressed)
+	{
+		if(e.mouseButton.button == sf::Mouse::Left)
+		{
+			current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+			current.play();
+		}
 	}
 
 	tb->process(e);
@@ -238,14 +280,22 @@ void GameScene::draw()
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(*b1);
 	renderer.draw(*tb);
 	renderer.draw(championSGO);
 	renderer.draw(maskSGO);
 	renderer.draw(wepSGO);
 
 	renderer.end();
+
+	// Draw UI
+	window.setView(viewUI);
 	
+	renderer.begin();
+	renderer.draw(*b1);
+	renderer.draw(*b2);
+	
+	renderer.end();
+		
 	window.display();
 }
 
@@ -280,4 +330,16 @@ void GameScene::generateWater()
 
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
+}
+
+void GameScene::generateUI()
+{
+
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 }
