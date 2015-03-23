@@ -46,15 +46,26 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	v = new Vessel(WARRIOR,NULL,0,0);
 	
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
-	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE forTHIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
+	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
+	
+	std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
+	
 	p = new Projectile(cMap, 10, 10, NULL, 1, 1 );
 	//				   map, x, y, controller, height, width
+	Projectile p2 = Projectile(cMap, 20, 20, NULL, 1, 1 );
 	
+	std::cout << "projectile 1 " << p << std::endl;
+	std::cout << "projectile 2 " << &p2 << std::endl;
+	
+	// move the second projectile to collide with the first.
+	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
 	// Entities all extend sf::Rect so you can get their x, y by checking the top left.
 	// As a side note, both entities and cells are FloatRects so are view ports intersect can be used to
 	// see if an entity or cell should be visible on the map.
 	// this should be useful for figuring out what needs to be rendered down the road.
-	p->move(p->top + 10, p->left + 10, false);
+	std::cout << "Projectile 1 hit: " << p->move(p->top + 10, p->left + 10, false) << std::endl;
+	std::cout << "Projectile 1 hit: " << p->move(p->top + 20, p->left + 10, false) << std::endl;
+	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
 	
 	delete p;
 	/* END SAMPLE CREATION */
