@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../Engine/Scene.h"
 #include "Environment/GameMap.h"
 #include "../AppWindow.h"
@@ -17,6 +18,9 @@
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
+
+#include "../Multimedia/manager/SoundManager.h"
+#include "../Multimedia/manager/MusicManager.h"
 
 /* The water buffer around the island */
 #define WATER_BUFFER 20
@@ -45,6 +49,8 @@ class GameScene : public Scene
 	private:
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
+	
+		Marx::Projectile * p;
 		GameMap *gMap;
 
     	Renderer renderer;
@@ -54,18 +60,20 @@ class GameScene : public Scene
     	sf::RenderStates mapStates;
     	sf::RenderStates waterStates;
 
+	    sf::Sound current;
+
     	id_resource tilemap;
     	id_resource championSprite;
     	id_resource maskSprite;
     	id_resource wepSprite;
     	id_resource butSprite;
+        id_resource scat_music;
+        id_resource chick_sound;
 
     	SGO championSGO;
     	SGO maskSGO;
-		//SGO projectileSGO;
     	SGO wepSGO;
 		Vessel *v;
-		//Projectile *p;
 		
 		// UI
 		GUI::Button *b1;
