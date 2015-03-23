@@ -27,13 +27,14 @@ namespace Marx
 }
 #include "Cell.h"
 #include "Controller.h"
+#include "../Multimedia/graphics/object/BGO.h"
 
 #include <set>
 #include <cmath>
 
 namespace Marx
 {
-    class Entity : public sf::FloatRect
+    class Entity : public sf::FloatRect, public BGO
     {
         private:
 
