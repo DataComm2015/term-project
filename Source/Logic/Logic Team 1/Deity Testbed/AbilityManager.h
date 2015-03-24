@@ -2,6 +2,7 @@
 #define ABILITY_MANAGER_H_
 
 #include "../../../Engine/Map.h"
+#include "../../../Engine/Entity.h"
 
 using namespace Marx;
 
@@ -18,13 +19,18 @@ const char* names[] = { "Test 1", "Test 2" };
 /* An array of descriptions for the abilities */
 const char* descriptions[] = { "This is a test", "This is also a test" };
 
+/* An array of file paths for the ability images */
+const char* images[] = { "./images/test1", "./images/test2" };
+
+
 /* A struct containing the information for a specific Ability */
 struct Ability
 {
 	AbilityId id;
 	int cooldown;
-	char* name;
-	char* description;
+	const char* name;
+	const char* description;
+	const char* image;
 };
 
 typedef struct Ability Ability;
@@ -42,11 +48,12 @@ class AbilityManager
 
 		Ability getAbilityDetails(AbilityId id);
 		bool castAbility(int x, int y, AbilityId id);
+		bool castAbility(Entity *e, AbilityId id);
 
 		static AbilityManager* getInstance(Map *m = NULL);
 	private:
-		Map *map;
-		AbilityManager *instance;
+		Map *cMap;
+		static AbilityManager *instance;
 };
 
 #endif
