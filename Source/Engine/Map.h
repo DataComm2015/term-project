@@ -31,16 +31,17 @@ namespace Marx
 #include <vector>
 #include <stdexcept> 
 #include "Cell.h"
+#include "../Multimedia/graphics/object/BGO.h"
 
 
-namespace Marx
+namespace Marx 
 {
     typedef unsigned int uint;
     /* 
     *    Map base class
     *   
     */
-    class Map
+    class Map : public BGO
     {
         public:
             Map(const uint height, const uint width);

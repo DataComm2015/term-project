@@ -27,13 +27,13 @@ namespace Marx
     {
         EventType type;
         float x;
-	float y;
-	bool forced;
+        float y;
+        bool forced;
     };
 /*
 * Event Class
 */
-	class MoveEvent: Event
+    class MoveEvent: public Event
 	{
 		public:
 			MoveEvent(float _x, float _y, bool f=false);

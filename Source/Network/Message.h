@@ -4,6 +4,11 @@
 namespace Networking
 {
 
+    enum NetworkMessageType
+    {
+        EVENT
+    };
+
     struct Message
     {
         int type;
