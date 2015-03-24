@@ -70,7 +70,7 @@ namespace GUI
 
 		if(enabled) // button enabled
 		{
-			if(SGO::operator()().getLocalBounds().contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
+			if(SGO::operator()().getGlobalBounds().contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
 			{
 				if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) // mouse clicking button
 				{

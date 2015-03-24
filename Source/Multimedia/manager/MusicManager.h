@@ -13,16 +13,17 @@ namespace Manager
 	 * 
 	 * @author Lewis Scott
 	 */
-	class Music
+	class MusicManager
 	{
 		public:
+			static ResourceManager<sf::Music*> rm;
 			/**
 			* Loads music from the specified file.
 			*
 			* @param - std::string path - a qualified path to the desired resource
 			* @return - sf::Music* - The music that was loaded
 			*/
-			sf::Music* load(const std::string);
+			static sf::Music* load(const std::string);
 		
 			/**
 			* Wrapper functions
@@ -36,15 +37,15 @@ namespace Manager
 			/**
 			* Destructor.
 			*/
-			~Music(){ clear(); }
+			~MusicManager(){ clear(); }
 		
 		private:
 			/**
 			* Private constructor (static class)
 			*/
-			Music(){}
-		
-			static ResourceManager<sf::Music*> rm;
+			MusicManager(){}
+
+
 	};
 }
 

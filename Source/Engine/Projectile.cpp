@@ -1,9 +1,10 @@
 #include "Projectile.h"
+#include <iostream>
 
 using namespace Marx;
 
-Projectile::Projectile(float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
-	Entity(x, y, ctrl, h, w)
+Projectile::Projectile(Map *map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
+	Entity(map, x, y, ctrl, h, w)
 {
 	_speed = 0;
 }
@@ -16,13 +17,12 @@ setSpeed(float speed)
 
 Entity * Projectile::move(float x, float y, bool force = false)
 {
-
     Entity *entity;
 
 	entity = Entity::move(x, y, force);
 
 	if (entity != nullptr)
-		onHit(entity);
+		//onHit(entity);
 	
 	return entity;
 }
