@@ -8,10 +8,14 @@ Not finished yet, barebones implementation
 #include "Message.h"
 #include "Session.h"
 #include "NetworkEntityMultiplexer.h"
-#include "../Engine/Event.h"
+#include "../Engine/MoveEvent.h"
 
 namespace Networking
 {
+
+    using ::Marx::ATTACK;
+    using ::Marx::MOVE;
+    using ::Marx::MoveMessage;
 
 	/*------------------------------------------------------------------------------
 	-- FUNCTION:        NetworkController::onUpdate
@@ -106,17 +110,60 @@ namespace Networking
 	---------------------------------------------------------------------------------*/
 	void Networking::NetworkController::parseMessage( Message& message )
 	{
-		switch(message.type)
+        // probably need a better way of figuring out the type, wont
+        // know it's a move message here...
+        MoveMessage* mm;
+        mm = (MoveMessage*) message.data;
+
+        switch(mm->type)
 		{
-		case 1:
-			//neet to translate the message into an event.. however that will work
-			eventQueue.push_back(new Event());
+        case MOVE:
+            addMoveEvent(mm->x, mm->y, mm->forced);
 			break;
+        case ATTACK:
+            //attack stuff
+            break;
 		default:
 			break;
 		}	
 		
 	}
+
+    /*------------------------------------------------------------------------------
+    -- FUNCTION:        NetworkController::sendMoveUpdate
+    --
+    -- DATE:            March 17, 2015
+    --
+    -- REVISIONS:       (Date and Description)
+    --
+    -- DESIGNER:        Jeff Bayntun
+    --
+    -- PROGRAMMER:      Jeff Bayntun
+    --
+    -- INTERFACE:       void NetworkController::sendMoveUpdate(float x, float y, bool forced)
+    --                  x: x position moved to
+                        y: y position moved to
+                        forced: if move is forced
+
+    -- RETURNS:         void
+    --
+    -- NOTES:           prepares message to be sent across the network
+    ----------------------------------------------------------------------------------*/
+    void Networking::NetworkController::sendMoveUpdate(float x, float y, bool forced)
+    {
+        MoveMessage mm;
+        mm.x = x;
+        mm.y = y;
+        mm.forced = forced;
+        mm.type = MOVE;
+
+        Message message;
+        message.data = &mm;
+        message.len = sizeof(mm);
+        message.type = EVENT;
+
+        update(message);
+    }
 
 }
 

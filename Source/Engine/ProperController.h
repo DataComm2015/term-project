@@ -11,9 +11,10 @@ namespace Marx
     {
 
     public:
-	// takes move params and puts it in queue as proper event
 	void addMoveEvent(float x, float y, bool forced);
-	// network will override and do shiznit
+    /**
+     * To be overridden by children, specifically to send over the network
+     */
 	virtual void sendMoveUpdate(float x, float y, bool forced) = 0;
 
     };
