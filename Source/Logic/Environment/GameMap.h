@@ -20,6 +20,12 @@
 /* The percent of structure stone zone blocks */
 #define MAX_STONE_STRUCTURES 5
 
+/* The minimum size of an enemy group */
+#define MIN_ENEMY_GROUP 2
+
+/* The maximum size of an enemy group */
+#define MAX_ENEMY_GROUP 10
+
 
 /* 
 *	The GameMap class contains a list of cells, blocks, and functions
@@ -45,6 +51,7 @@ class GameMap
 		void generateMiniBosses();
 		void generatePlayers();
 		void generateEnemies();
+		void createEnemyGroup(Block *block, BlockZone z, int num);
 		void generatePlaceholderBlocks();
 		void generateTiles();
 		BlockType makeBlockType(BlockZone z, int rRoll);

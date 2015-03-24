@@ -6,6 +6,9 @@
 #include <iostream>
 #include "EnemyHierarchy.h"
 
+using std::cout;
+using std::endl;
+using std::string;
 using std::max;
 using std::vector;
 
@@ -373,7 +376,111 @@ void GameMap::generatePlayers()
 ******************************************************************************/
 void GameMap::generateEnemies()
 {
-	// TODO
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			// If this block is an enemies block
+			if (blockMap[j][i].getType() == ENEMIES)
+			{
+				int size = (rand() % MAX_ENEMY_GROUP) + MIN_ENEMY_GROUP;
+				createEnemyGroup(&blockMap[j][i], blockMap[j][i].getZone(), size);
+			}
+		}
+	}
+}
+
+
+/******************************************************************************
+*   FUNCTION: createEnemyGroup
+*   
+*   DATE: March 18, 2015
+*   
+*   REVISIONS: (Date and Description)
+*   
+*   DESIGNER: Chris Klassen
+*   
+*   PROGRAMMER: Chris Klassen
+*   
+*   INTERFACE: void createEnemyGroup(Block *block, BlockZone z, int num);
+*   
+*   PARAMETERS:
+*		block - the block to create in
+*		z - the zone to use for creation
+*		num - the number of enemies to create
+*   
+*   RETURNS:
+*       void
+*   
+*   NOTES:
+*		This function uses the enemy hierarchy to create groupings of enemies
+*		based on the zone supplied.
+******************************************************************************/
+void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
+{
+	EnemyHierarchy *eh = EnemyHierarchy::getInstance();
+	string enemy;
+
+	switch(z)
+	{
+		case GRASS:
+		{
+			cout << "GRASS GROUP: " << endl << endl;
+
+			int grassChoices = 2;
+			int selection = rand() % grassChoices;
+
+			switch(selection)
+			{
+				case 0:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
+						cout << enemy << endl;
+					}
+
+					break;
+				}
+
+				case 1:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						eh->getEnemy(&enemy, "grass/lost_grass/air_grass", true, 5);
+						cout << enemy << endl;
+					}
+
+					break;
+				}
+			}
+
+			cout << endl;
+
+			break;
+		}
+
+		case STONE:
+		{
+			int stoneChoices = 2;
+			int selection = rand() % stoneChoices;
+
+			switch(selection)
+			{
+				case 0:
+				{
+					break;
+				}
+
+				case 1:
+				{
+					break;
+				}
+			}
+
+			break;
+		}
+	}
 }
 
 
