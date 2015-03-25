@@ -109,36 +109,40 @@ void Vessel::resetEXP()
 	currentEXP = 0;
 	nextLevelEXP = 100;
 	currentLevel = 1;
+	currentAttackCoolDown = 0;
 
-	//class-specific instantiation
-	if ( jobClass == WARRIOR )			//warrior
+	// class-specific instantiation
+	if ( jobClass == WARRIOR )
 	{
 		currentHealth = 150;
 		maxHealth = 150;
-		defaultSpeed = travelSpeed = 2;
-		//Weapon = Spear;
+		defaultSpeed = travelSpeed = 5;
+		defaultAttackPower = currentAttackPower = 30;
+		maxAttackCooldown = 0.75;
 	}
-	else if ( jobClass == SHAMAN )		//shaman
+	else if ( jobClass == SHAMAN )
 	{
 		currentHealth = 75;
 		maxHealth = 75;
 		defaultSpeed = travelSpeed = 6;
-		//weapon = Fireball;
+		defaultAttackPower = currentAttackPower = 40;
+		maxAttackCooldown = 1.25;
 	}
-
-	else if ( jobClass == HUNTER )		//Hunter
+	else if ( jobClass == HUNTER )
 	{
 		currentHealth = 100;
 		maxHealth = 100;
 		defaultSpeed = travelSpeed = 6;
-		//weapon = Javelin;
+		defaultAttackPower = currentAttackPower = 25;
+		maxAttackCooldown = 0.75;
 	}
-	else if ( jobClass == SCOUT ) 		//Scout
+	else if ( jobClass == SCOUT )
 	{
 		currentHealth = 125;
 		maxHealth = 125;
 		defaultSpeed = travelSpeed = 7;
-		//weapon = Sword;
+		defaultAttackPower = currentAttackPower = 25;
+		maxAttackCooldown = 0.5;
 	}
 }
 
@@ -171,14 +175,49 @@ void Vessel::increaseEXP( int exp )
 
 	if( currentLevel < 10 )
 	{
-		if( currentEXP >= nextLevelEXP )
+		if( currentEXP >= nextLevelEXP ) // level up
 		{
 			currentLevel++;
 			if( currentLevel == 10 )
 				nextLevelEXP *= 2.5;
-			maxHealth *= 1.5;
-			defaultSpeed++;
-			travelSpeed++;
+
+			// class-specific upgrades
+			if ( jobClass == WARRIOR )
+			{
+				maxHealth += 25;
+				currentHealth += 25;
+				defaultSpeed += 0.25;
+				travelSpeed += 0.25;
+				defaultAttackPower += 5;
+				currentAttackPower += 5;
+			}
+			else if ( jobClass == SHAMAN )
+			{
+				maxHealth += 10;
+				currentHealth += 10;
+				defaultSpeed += 0.3;
+				travelSpeed += 0.3;
+				defaultAttackPower += 7;
+				currentAttackPower += 7;
+			}
+			else if ( jobClass == HUNTER )
+			{
+				maxHealth += 15;
+				currentHealth += 15;
+				defaultSpeed += 0.4;
+				travelSpeed += 0.4;
+				defaultAttackPower += 3;
+				currentAttackPower += 3;
+			}
+			else if ( jobClass == SCOUT )
+			{
+				maxHealth += 20;
+				currentHealth += 20;
+				defaultSpeed += 0.5;
+				travelSpeed += 0.5;
+				defaultAttackPower += 3;
+				currentAttackPower += 3;
+			}
 		}
 	}
 }
@@ -397,6 +436,7 @@ int Vessel::getMaxHP()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::resetAttackPower()
 {
+	attackPower = defaultAttackPower;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -418,8 +458,9 @@ void Vessel::resetAttackPower()
 -- NOTES:
 -- This function increases the Vessel's attack power. Used as a power up function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::attackPowerUp( int attackpower )
+void Vessel::attackPowerUp( int attackPower )
 {
+	currentAttackPower += attackPower;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -441,8 +482,10 @@ void Vessel::attackPowerUp( int attackpower )
 -- NOTES:
 -- This function decreases the Vessel's attack power, but not below 0.. Used as a power down function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::attackPowerDown( int attackpower )
+void Vessel::attackPowerDown( int attackPower )
 {
+	if(currentAttackPower > 1)
+		currentAttackPower -= attackPower;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -465,6 +508,7 @@ void Vessel::attackPowerDown( int attackpower )
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getAttackPower()
 {
+	return currentAttackPower;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -487,6 +531,7 @@ int Vessel::getAttackPower()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getDefaultAttackPower()
 {
+	return defaultAttackPower();
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -523,17 +568,17 @@ void Vessel::resetSpeed()
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: void Vessel::speedUp( int speed )
--- int speed: the amount of speed to increase by
+-- INTERFACE: void Vessel::speedUp( float speed )
+-- float speed: the amount of speed to increase by
 --
 -- RETURNS: nothing
 --
 -- NOTES:
 -- This function increases the Vessel's speed. Used as a power up function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::speedUp( int speed )
+void Vessel::speedUp( float speed )
 {
-	travelSpeed++;
+	travelSpeed += speed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -547,18 +592,18 @@ void Vessel::speedUp( int speed )
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: void Vessel::speedDown( int speed )
--- int speed: the amount of speed to decrease by
+-- INTERFACE: void Vessel::speedDown( float speed )
+-- float speed: the amount of speed to decrease by
 --
 -- RETURNS: nothing
 --
 -- NOTES:
 -- This function decreases the Vessel's speed, but not below 0. Used as a power down function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::speedDown( int speed )
+void Vessel::speedDown( float speed )
 {
 	if( travelSpeed > 1 )
-		speed--;
+		travelSpeed -= speed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -572,14 +617,14 @@ void Vessel::speedDown( int speed )
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: int Vessel::getSpeed()
+-- INTERFACE: float Vessel::getSpeed()
 --
 -- RETURNS: current speed as an integer
 --
 -- NOTES:
 -- This function returns the current speed the Vessel has
 ----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getSpeed()
+float Vessel::getSpeed()
 {
     return travelSpeed;
 }
@@ -595,14 +640,14 @@ int Vessel::getSpeed()
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: int Vessel::getDefaultSpeed()
+-- INTERFACE: float Vessel::getDefaultSpeed()
 --
 -- RETURNS: default speed for the level as an integer
 --
 -- NOTES:
 -- This function returns the default speed for the current level
 ----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getDefaultSpeed()
+float Vessel::getDefaultSpeed()
 {
 	return defaultSpeed;
 }
@@ -768,21 +813,32 @@ void Vessel::stop( int keyReleased )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:  Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:  Sanders Lee
 --
--- INTERFACE: void Vessel::normalAttack( int x, int y )
--- int x, int y: the target position of the attack
+-- INTERFACE: void Vessel::normalAttack( float x, float y )
+-- float x, float y: the target position of the attack
 --
 -- RETURNS: nothing
 --
 -- NOTES:
--- This function attempts to launch a normal attack at the target coordinate. Depending on normal weapon type, the
--- attack may fail because the target is out of range.
+-- This function attempts to launch a normal attack at the target coordinate.
+-- The attack may not necessarily hit the target if too far away.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::normalAttack( int x, int y )
+void Vessel::normalAttack( float x, float y )
 {
+	float delta_x = x - xPosition;
+	float delta_y = y - yPosition;
+
+	if (!(currentAttackCoolDown > 0.0))
+	{
+		// get projectile p
+		// p.setVelocity(attackSpeed, delta_x, delta_y);
+		// p.setAttackPower(attackPower);
+		// p.setTimeToLive(ttl);
+		currentAttackCooldown = maxAttackCooldown;
+	}
 }
 
 
@@ -797,19 +853,46 @@ void Vessel::normalAttack( int x, int y )
 --
 -- PROGRAMMER:
 --
--- INTERFACE: void useAbility( int abilityNum, int x, int y )
+-- INTERFACE: void useAbility( int abilityNum, float x, float y )
 -- abilityNum: the position of the ability in the Vessel's ability array
--- int x, int y: the target position of the attack
+-- float x, float y: the target position of the attack
 --
 -- RETURNS: nothing
 --
 -- NOTES:
 -- This function attempts use an ability on the designated X, Y coordinates.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Entity parameter for abilities that target an entity, such as healing
+void Vessel::useAbility( int abilityNum, float x, float y )		//possibly need an Entity parameter for abilities that target an entity, such as healing
 {
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: normalAttack
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:  Sanders Lee
+--
+-- PROGRAMMER:  Sanders Lee
+--
+-- INTERFACE: void Vessel::coolDownAttack( float delta_t )
+-- float delta_t: the time passed since last frame
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- This function cools down your attacks
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::coolDownAttack( float delta_t )
+{
+	if (currentAttackCoolDown > 0.0)
+		currentAttackCoolDown -= delta_t;
+
+	if (currentAttackCoolDown < 0.0)
+		currentAttackCoolDown = 0;
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getXPosition
@@ -870,14 +953,14 @@ float Vessel::getYPosition()
 --
 -- PROGRAMMER: Sanders Lee
 --
--- INTERFACE: int Vessel::getXSpeed()
+-- INTERFACE: float Vessel::getXSpeed()
 --
 -- RETURNS: x velocity as integer
 --
 -- NOTES:
 -- Returns the x velocity of the vessel.
 ----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getXSpeed()
+float Vessel::getXSpeed()
 {
 	return xSpeed;
 }
@@ -892,16 +975,16 @@ int Vessel::getXSpeed()
 --
 -- DESIGNER: Sanders Lee
 --
--- PROGRAMMER: Sanders Lee
+-- PROGRAMMER: Sanders Lee//why not a bool?
 --
--- INTERFACE: int Vessel::getYSpeed()
+-- INTERFACE: float Vessel::getYSpeed()
 --
 -- RETURNS: y velocity as integer
 --
 -- NOTES:
 -- Returns the y velocity of the vessel.
 ----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getYSpeed()
+float Vessel::getYSpeed()
 {
 	return ySpeed;
 }

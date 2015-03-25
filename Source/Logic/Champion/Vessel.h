@@ -73,20 +73,23 @@ class Vessel : public Marx::Entity
 {
 	protected:
 		job_class jobClass;
-		int currentHealth;
-		int maxHealth;
 		int currentEXP;
 		int nextLevelEXP;
 		int currentLevel;
-		int defaultSpeed;
-		int travelSpeed;
 		float xPosition;
 		float yPosition;
-		int xSpeed;
-		int ySpeed;
-		int direction;	//0 = right, 1 = left //why not a bool?
+		int currentHealth;
+		int maxHealth;
+		float travelSpeed;
+		float defaultSpeed;
+		float xSpeed;
+		float ySpeed;
+		int currentAttackPower;
+		int defaultAttackPower;
+		float currentAttackCoolDown;
+		float maxAttackCooldown;
+		int direction;	//0 = right, 1 = left
 		bool moving;
-		Weapon* weapon;
 		Ability* abilities;	//3 abilities for each Vessel
 		//TO DO: pointer to the game map needed in the future
 
@@ -94,22 +97,17 @@ class Vessel : public Marx::Entity
 		Vessel( Marx::Map *gmap, job_class jobClass, Ability* abilityList, float x, float y );
 		~Vessel(); //not virtual?
 
-		void setPosition( float x, float y );
+		job_class getJobClass();
+
+		void  setPosition( float x, float y );
 		float getXPosition();
 		float getYPosition();
-
-		int getXSpeed();
-		int getYSpeed();
-		bool isMoving();
-		int getDirection();
 
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
     int  getNextLevelEXP();
 		int  getLevel();
-
-		job_class getJobClass();
 
 		void resetHP();
 		void increaseHP( int hp );
@@ -118,26 +116,32 @@ class Vessel : public Marx::Entity
 		int  getMaxHP();
 
 		void resetAttackPower();
-		void attackPowerUp( int attackpower );
-		void attackPowerDown( int attackpower );
+		void attackPowerUp( int attackPower );
+		void attackPowerDown( int attackPower );
 		int  getAttackPower();
 		int  getDefaultAttackPower();
 
-		void resetSpeed();
-		void speedUp( int speed );
-		void speedDown( int speed );
-		int  getSpeed();
-		int  getDefaultSpeed();
+		void  resetSpeed();
+		void  speedUp( float speed );
+		void  speedDown( float speed );
+		float getSpeed();
+		float getDefaultSpeed();
+
+		float getXSpeed();
+		float getYSpeed();
+		bool  isMoving();
+		int   getDirection();
 
 		bool checkDeath();
 		void die();
 
 		void detectMove();
 		void move();
-		void stop(int key);
+		void stop( int key );
 
-		void normalAttack( int x, int y );
-		void useAbility( int abilityNum, int x, int y );
+		void normalAttack( float x, float y );
+		void useAbility( int abilityNum, float x, float y );
+		void coolDownAttack( float delta_t );
 };
 
 #endif
