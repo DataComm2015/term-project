@@ -44,7 +44,6 @@ class GameScene : public Scene
 		virtual void update(sf::Time);
 		virtual void processEvents(sf::Event&);
 		virtual void draw();
-		Marx::Map* getcMap() { return cMap; }
 		void onLoad();
 		void unLoad();
 		~GameScene();
@@ -71,7 +70,14 @@ class GameScene : public Scene
 		sf::View viewMain;
 		sf::View viewUI;
 
+<<<<<<< HEAD
+		sf::RenderStates mapStates;
+		sf::RenderStates waterStates;
+
 		sf::Sound current;
+=======
+	    sf::Sound current;
+>>>>>>> 5dd9a6721438a7df507b4f7487e35081c5841aad
 
 		id_resource tilemap;
 		id_resource championSprite;
