@@ -3,7 +3,10 @@
  *
  * @date       2015-02-25
  *
- * @revisions
+ * @revisions  2015-03-24
+ *             Game objects are now sf::Transformable.
+ *             Render states objects are non longer passed around when drawing.
+ *             Use the renderer's public render states member variable instead.
  *
  * @designer   Melvin Loho
  *
@@ -108,10 +111,12 @@ BGO* BGO::getParent() const
  */
 void BGO::add(BGO& gO)
 {
-	if (gO.m_id == m_id) {
-		throw std::string("Are you crazy!? You just tried to add a graphic object to itself!");
+	if (gO.m_id == m_id)
+	{
+		throw "Are you crazy!? You just tried to add a graphic object to itself!";
 	}
-	else {
+	else
+	{
 		if (gO.m_parent) gO.m_parent->rem(gO);
 		gO.m_parent = this;
 		m_children.push_back(&gO);
@@ -137,8 +142,10 @@ bool BGO::rem(const BGO& gO)
 {
 	for (std::vector<BGO*>::iterator iter = m_children.begin();
 		iter != m_children.end();
-		++iter) {
-		if (*iter == &gO) {
+		++iter)
+	{
+		if (*iter == &gO)
+		{
 			m_children.erase(iter);
 			return true;
 		}
@@ -165,8 +172,10 @@ bool BGO::rem(id_go id)
 {
 	for (std::vector<BGO*>::iterator iter = m_children.begin();
 		iter != m_children.end();
-		++iter) {
-		if ((*iter)->m_id == id) {
+		++iter)
+	{
+		if ((*iter)->m_id == id)
+		{
 			m_children.erase(iter);
 			return true;
 		}
@@ -209,24 +218,6 @@ bool BGO::hasChildren() const
 void BGO::ignoreChildren(bool arg)
 {
 	m_ignoringChildren = arg;
-}
-
-/**
- * Gets the local transformation matrix belonging to the object that is represented by this game object.
- *
- * @date       2015-02-25
- *
- * @revisions
- *
- * @designer   Melvin Loho
- *
- * @programmer Melvin Loho
- *
- * @return     The transformation matrix
- */
-const sf::Transform& BGO::getLocalTransform() const
-{
-	return sf::Transform::Identity;
 }
 
 /**
@@ -283,25 +274,26 @@ void BGO::update(const sf::Time& t)
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
- * @param      states   The render states
  */
-void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
+void BGO::drawSG(Renderer& renderer)
 {
 	// Draw children
 	if (hasChildren())
 	{
-		// Combine transformations (parent's + current's)
-		sf::RenderStates combinedStates = states;
-		combinedStates.transform.combine(getLocalTransform());
-
-		for (const BGO* go : m_children)
+		for (BGO* go : m_children)
 		{
-			go->drawSG(renderer, combinedStates);
+			// Combine transformations (child's + mine)
+			go->move(getPosition());
+			go->rotate(getRotation());
+			go->scale(getScale());
+
+			// Recurrrsion!!
+			go->drawSG(renderer);
 		}
 	}
 
 	// Draw self
-	draw(renderer, states);
+	draw(renderer);
 }
 
 /**
@@ -316,7 +308,6 @@ void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
- * @param      states   The render states
  */
-void BGO::draw(Renderer& renderer, sf::RenderStates states) const
+void BGO::draw(Renderer& renderer) const
 {}

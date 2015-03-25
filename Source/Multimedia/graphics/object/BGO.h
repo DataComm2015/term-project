@@ -8,7 +8,7 @@ class Renderer;
 
 typedef unsigned int id_go;
 
-class BGO
+class BGO : public sf::Transformable
 {
 public:
 	BGO();
@@ -25,16 +25,14 @@ public:
 	bool hasChildren() const;
 	void ignoreChildren(bool arg);
 
-	virtual const sf::Transform& getLocalTransform() const;
-
 	void updateSG(const sf::Time& t);
 	virtual void update(const sf::Time& t);
 
 protected:
 	friend class Renderer;
 
-	void drawSG(Renderer& renderer, sf::RenderStates states) const;
-	virtual void draw(Renderer& renderer, sf::RenderStates states) const;
+	void drawSG(Renderer& renderer);
+	virtual void draw(Renderer& renderer) const;
 
 private:
 	static id_go ID_GO;

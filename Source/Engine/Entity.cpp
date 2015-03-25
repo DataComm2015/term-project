@@ -29,6 +29,7 @@
 ----------------------------------------------------------------------------------------------------------------------*/
 #include "Entity.h"
 #include "Map.h"
+#include <iostream>
 
 using namespace Marx;
 
@@ -52,16 +53,17 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(Map * map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
-    sf::FloatRect(x, y, h, w ), controller(ctrl)
+Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
+    map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
 	occupiedCells = std::set<Cell*>();
 	
     for(int i = floor(x); i < width + floor(x); i++)
     {
-        for(int j = floor(y); j < height + floor(y); j)
+        for(int j = floor(y); j < height + floor(y); j++)
         {
             occupiedCells.emplace(map->getCell(floor(i),floor(j)));
+			map->getCell(floor(i),floor(j))->addEntity(this);
         }
     }
 }   
@@ -119,7 +121,7 @@ void  Entity::turn()
 --
 -- DATE: February 19, 2015
 --
--- REVISIONS:
+-- REVISIONS: March 23, 2015 - Added map interaction
 --
 -- DESIGNER: Marc Vouve
 --
@@ -138,17 +140,19 @@ void  Entity::turn()
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::move(float x, float y, bool force = false)
 {
-
     std::set<Cell*> tempCell;
+	int temp_x = left;
+	int temp_y = top;
+	top = x;
+	left = y;
 	// loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i < width + floor(x); i++)
     {
-        for(int j = floor(y); j < height + floor(y); j)
+        for(int j = floor(y); j < height + floor(y); j++)
         {
-            tempCell.emplace(map->getCell(floor(i),floor(j)));
-        }
+            tempCell.emplace(map->getCell(i, j));
+		}
     }
-	
 
 	// loop through all cells in the temporary array. looping for 
     for(Cell *c : tempCell)
@@ -156,16 +160,33 @@ Entity * Entity::move(float x, float y, bool force = false)
 		std::set<Entity*> entities = c->getEntity();
 		for( Entity * e : entities )
 		{
+			
 			if( intersects(*e) )
 			{
 				if( force )
 				{
 					occupiedCells = tempCell;
 				}
+				else
+				{
+					left = temp_x;
+					top = temp_y;
+				}
+				
 				
 				return e;
 			}
 		}
+	}
+	
+	for(Cell * c: occupiedCells )
+	{
+		c->removeEntity(this);
+	}
+	
+	for(Cell * c : tempCell )
+	{
+		c->addEntity(this);
 	}
 	
 	occupiedCells = tempCell;
