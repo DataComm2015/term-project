@@ -69,7 +69,7 @@ void NetworkController::onUnregister( Session * session, Message message )
 --
 -- DESIGNER:        Jeff Bayntun
 --
--- PROGRAMMER:      Jeff Bayntun
+-- PROGRAMMER:      Jeff Bayntun, Eric Tsang
 --
 -- INTERFACE:       void NetworkController::parseEventMessage( Message& message )
             message - reference to the message
@@ -109,7 +109,7 @@ void NetworkController::parseEventMessage( Message& message )
 --
 -- DESIGNER:        Jeff Bayntun
 --
--- PROGRAMMER:      Jeff Bayntun
+-- PROGRAMMER:      Jeff Bayntun, Eric Tsang
 --
 -- INTERFACE:       void NetworkController::sendMoveUpdate(float x, float y, bool forced)
 --                  x: x position moved to

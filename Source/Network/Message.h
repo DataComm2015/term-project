@@ -3,16 +3,10 @@
 
 namespace Networking
 {
-
-    enum NetworkMessageType
-    {
-        EVENT
-    };
-
     struct Message
     {
         int type;
-        void * data;
+        void* data;
         int len;
     };
 }
