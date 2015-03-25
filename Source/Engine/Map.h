@@ -29,17 +29,19 @@ namespace Marx
 }
 
 #include <vector>
+#include <stdexcept> 
 #include "Cell.h"
+#include "../Multimedia/graphics/object/BGO.h"
 
 
-namespace Marx
+namespace Marx 
 {
     typedef unsigned int uint;
     /* 
     *    Map base class
     *   
     */
-    class Map
+    class Map : public BGO
     {
         public:
             Map(const uint height, const uint width);
@@ -52,9 +54,9 @@ namespace Marx
             uint getTexture() const;
             
         private:
-            uint width_;
-            uint height_;
-            uint texture_id_;
+            unsigned int width_;
+            unsigned int height_;
+            unsigned int texture_id_;
             std::vector<Cell*> cells_;
     };
 } /* namespace Marx */
