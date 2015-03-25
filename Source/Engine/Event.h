@@ -12,13 +12,11 @@
 --
 -- DESIGNER: Marc Rafanan
 --           Marc Vouve
---           Jeff Bayntun
---           Eric Tsang
 --
 -- PROGRAMMER: Marc Rafanan
 --             Marc Vouve
---           Jeff Bayntun
---           Eric Tsang
+--             Jeff Bayntun
+--             Eric Tsang
 --
 -- NOTES:
 -- This file defines the Event class members

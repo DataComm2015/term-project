@@ -59,50 +59,50 @@ protected:
         {
         case MSG_T_PLAYER_COMMAND_START_MV_LEFT_COMMAND:
         {
-            MoveEvent ev(-1,0,0);
-            serverController->addEvent(ev);
+            MoveEvent event(-1,0,0);
+            serverController->addEvent(event);
             break;
         }
         case MSG_T_PLAYER_COMMAND_START_MV_RIGHT_COMMAND:
         {
-            MoveEvent ev(1,0,0);
-            serverController->addEvent(ev);
+            MoveEvent event(1,0,0);
+            serverController->addEvent(event);
             break;
         }
         case MSG_T_PLAYER_COMMAND_START_MV_UP_COMMAND:
         {
-            MoveEvent ev(0,-1,0);
-            serverController->addEvent(ev);
+            MoveEvent event(0,-1,0);
+            serverController->addEvent(event);
             break;
         }
         case MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND:
         {
-            MoveEvent ev(0,1,0);
-            serverController->addEvent(ev);
+            MoveEvent event(0,1,0);
+            serverController->addEvent(event);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_LEFT_COMMAND:
         {
-            MoveEvent ev(0,0,0);
-            serverController->addEvent(ev);
+            MoveEvent event(0,0,0);
+            serverController->addEvent(event);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_RIGHT_COMMAND:
         {
-            MoveEvent ev(0,0,0);
-            serverController->addEvent(ev);
+            MoveEvent event(0,0,0);
+            serverController->addEvent(event);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_UP_COMMAND:
         {
-            MoveEvent ev(0,0,0);
-            serverController->addEvent(ev);
+            MoveEvent event(0,0,0);
+            serverController->addEvent(event);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND:
         {
-            MoveEvent ev(0,0,0);
-            serverController->addEvent(ev);
+            MoveEvent event(0,0,0);
+            serverController->addEvent(event);
             break;
         }
         }
@@ -125,15 +125,51 @@ public:
         :NetworkEntity(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
     {
     }
-    virtual void update(Message msg)
+    virtual ~ServerController()
     {
-        Networking::NetworkEntity::update(msg);
+    }
+    virtual void addEvent(Event event)
+    {
+        Controller::addEvent(event);
+        sendEventMessage(event);
+    }
+    void sendEventMessage(Event event)
+    {
+        // create network message from event
+        switch(event.type)
+        {
+        case ::Marx::MOVE:
+        {
+            // cast event to event subclass
+            MoveEvent* me = (MoveEvent*) &event;
+
+            // parse move event into move message
+            MoveMessage mm;
+            mm.x      = me->getX();
+            mm.y      = me->getY();
+            mm.forced = me->forced();
+
+            // message to be sent over the network
+            Message message;
+            message.data = &mm;
+            message.len  = sizeof(mm);
+            message.type = ::Marx::MOVE;
+
+            // send the network event
+            update(message);
+            break;
+        }
+        default:
+            printf("WARNING: NetworkController::sendEventMessage received an "
+                "unknown event type. please add new case to switch statement");
+            fflush(stdout);
+            break;
+        }
+    }
+    virtual void onUnregister(Session* session, Message message)
+    {
     }
     virtual void onUpdate(Message msg)
-    {
-        Networking::NetworkEntity::onUpdate(msg);
-    }
-    virtual ~ServerController()
     {
     }
 };

@@ -57,6 +57,10 @@ protected:
         case sf::Keyboard::Down:
             command = MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND;
             break;
+
+        // bail out if we don't recognize the command
+        default:
+            return;
         }
 
         // put the command into a message to be sent over the network
@@ -86,6 +90,10 @@ protected:
         case sf::Keyboard::Down:
             command = MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND;
             break;
+
+        // bail out if we don't recognize the command
+        default:
+            return;
         }
 
         // put the command into a message to be sent over the network
@@ -129,60 +137,26 @@ public:
 private:
     void parseEventMessage(Message& message)
     {
-        printf("NetworkController::parseEventMessage()\n");
-        // switch(message.type)
-        // {
-        // case ::Marx::MOVE:
-        // {
-        //     // case message payload
-        //     MoveMessage* mm = (MoveMessage*) message.data;
+        switch(message.type)
+        {
+        case ::Marx::MOVE:
+        {
+            // case message payload
+            MoveMessage* mm = (MoveMessage*) message.data;
 
-        //     // create event from message data
-        //     MoveEvent ev(mm->x, mm->y, mm->forced);
+            // create event from message data
+            MoveEvent ev(mm->x, mm->y, mm->forced);
 
-        //     // add event to event queue
-        //     addEvent(ev);
-        //     break;
-        // }
-        // default:
-        //     printf("WARNING: NetworkController::parseEventMessage received an "
-        //         "unknown event type. please add new case to switch statement");
-        //     fflush(stdout);
-        //     break;
-        // }
-    }
-    void sendEventMessage(Event ev)
-    {
-        printf("NetworkController::sendEventMessage()\n");
-        // // create network message from event
-        // switch(ev.type)
-        // {
-        // case ::Marx::MOVE:
-        // {
-        //     // cast event to event subclass
-        //     MoveEvent* me = (MoveEvent*) &ev;
-
-        //     // parse move event into move message
-        //     MoveMessage mm;
-        //     mm.x      = me->getX();
-        //     mm.y      = me->getY();
-        //     mm.forced = me->forced();
-
-        //     // message to be sent over the network
-        //     Message message;
-        //     message.data = &mm;
-        //     message.len  = sizeof(mm);
-        //     message.type = ::Marx::MOVE;
-
-        //     // send the network event
-        //     update(message);
-        // }
-        // default:
-        //     printf("WARNING: NetworkController::sendEventMessage received an "
-        //         "unknown event type. please add new case to switch statement");
-        //     fflush(stdout);
-        //     break;
-        // }
+            // add event to event queue
+            addEvent(ev);
+            break;
+        }
+        default:
+            printf("WARNING: NetworkController::parseEventMessage received an "
+                "unknown event type. please add new case to switch statement");
+            fflush(stdout);
+            break;
+        }
     }
 };
 
