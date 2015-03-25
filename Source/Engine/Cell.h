@@ -51,7 +51,9 @@ namespace Marx
             // Getters and setters for coords
             void    setX(const int& x);
             void    setY(const int& y);
-            void    setCoord(const int& x, const int& y);
+            void    setCoord(const int& x, const int& y); 
+			void	addEntity(Entity *);
+			void	removeEntity(Entity *);
             int     getX() const;
             int     getY() const;
             std::set<Entity*> getEntity();
