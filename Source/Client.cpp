@@ -186,8 +186,8 @@ public:
             break;
         case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
             ret = new NetworkController(id);
-            // Marx::Map* cMap = ((GameScene*)scene)->getcMap();
-            // new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+            Marx::Map* cMap = ((GameScene*)scene)->getcMap();
+            new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
             break;
         }
 
