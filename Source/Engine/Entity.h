@@ -52,5 +52,5 @@ namespace Marx
             virtual void onUpdate();
             virtual bool operator==(const Entity&);
     };
-}
+};
 #endif

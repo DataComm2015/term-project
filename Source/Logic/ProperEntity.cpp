@@ -1,3 +1,4 @@
+#include "ProperEntity.h"
 
 ProperEntity::ProperEntity( Map * map, float x, float y,
     ProperController * ctrl = NULL, float h = 1.0, float w = 1.0  )
