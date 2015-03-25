@@ -9,6 +9,13 @@
 
 using namespace std;
 
+int Networking::NetworkEntity::nextId = 0;
+
+Networking::NetworkEntity::NetworkEntity( int type )
+    :NetworkEntity(nextId++,type)
+{
+}
+
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        NetworkEntity::NetworkEntity
 --
@@ -154,30 +161,6 @@ void Networking::NetworkEntity::registerSession( Session * session, Message mess
 
     silentRegister(session);
     mux->registerSession(id, type, session, message);
-}
-
-/*----------------------------------------------------------------------------------------------
--- FUNCTION:        NetworkEntity::onRegister
---
--- DATE:            February 27, 2015
---
--- REVISIONS:       (Date and Description)
---
--- DESIGNER:        Networking Teams
---
--- PROGRAMMER:      Eric Tsang
---
--- INTERFACE:       NetworkEntity::onRegister( Session * session, Message message )
---                  session: session that has been registered to the entity
---                  message: message that sent from the other side
---
--- RETURNS:         void
---
--- NOTES:           Meant to be overwritten by user. Called when the associated entity on
---                  the other side calls the register method. MUST CALL silentRegister();
------------------------------------------------------------------------------------------------*/
-void Networking::NetworkEntity::onRegister( int type, Session * session, Message message )
-{
 }
 
 /*----------------------------------------------------------------------------------------------

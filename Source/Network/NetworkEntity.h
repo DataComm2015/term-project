@@ -3,6 +3,12 @@
 
 #include <set>
 
+/**
+ * network entity subclass type identifiers.
+ */
+#define CLIENT_INPUT_CLASS 0
+#define NET_CONTROLER_CLASS 1
+
 namespace Networking
 {
     class NetworkEntityMultiplexer;
@@ -23,6 +29,14 @@ namespace Networking
         NetworkEntity( int id, int type );
 
         /**
+         * Constructs a new NetworkEntity.
+         *
+         * @param id the id used when multiplexing and demiltiplexing
+         * @param type denotes which sub class of NetworkEntity this entity is
+         */
+        NetworkEntity( int type );
+
+        /**
          * Destructs a NetwrokEntity.
          */
         ~NetworkEntity();
@@ -36,14 +50,6 @@ namespace Networking
         update( Message message );
 
         /**
-         * Meant to be overwritten by user to handle an incoming update
-         *
-         * @param message message sent from the other side
-         */
-        virtual void
-        onUpdate( Message message );
-
-        /**
          * Method used to register a session so the entity can send and receive
          * to and from the session.
          *
@@ -52,16 +58,6 @@ namespace Networking
          */
         void
         registerSession( Session * session, Message message );
-
-        /**
-         * Meant to be overwritten by user. Called when the associated entity on
-         * the other side calls the register method. MUST CALL silentRegister();
-         *
-         * @param session session that has been registered to the entity
-         * @param message message that sent from the other side
-         */
-        virtual void
-        onRegister( int type, Session * session, Message message );
 
         /**
          * Unregisters the session from the entity so it will no longer be able
@@ -74,10 +70,10 @@ namespace Networking
         void
         unregisterSession( Session * session, Message message );
 
+    protected:
         /**
          * Meant to be overwritten by the user. Called when the associated
          * entity on the other side calls the unregister method.
-         * MUST CALL silentUnregister();
          *
          * @param session session that has been unregistered from the entity
          * @param message message that sent from the other side
@@ -85,8 +81,16 @@ namespace Networking
         virtual void
         onUnregister( Session * session, Message message );
 
-    protected:
-	/**
+        /**
+         * Meant to be overwritten by user to handle an incoming update
+         *
+         * @param message message sent from the other side
+         */
+        virtual void
+        onUpdate( Message message );
+
+    private:
+    /**
          * Invoked after NetworkEntityMultiplexer::onRegister() callback
          * is invoked
          *
@@ -103,7 +107,17 @@ namespace Networking
         void
         silentUnregister( Session* session );
 
-    private:
+        /**
+         * keeps track of the next id to assign to a new NetworkEntiry. whenever
+         *   a new NetworkEntity is created using the constructor without the id
+         *   parameter, this id is assigned as the new NetwrokEntity's id, and
+         *   then is incremented.
+         *
+         * the constructor without the id parameter should only be used on the
+         *   server side.
+         */
+        static int nextId;
+
         /**
          * The id of the entity. Used for multiplexig purposes.
          */
