@@ -5,11 +5,11 @@
 
 class ProperEntity : public Marx::Entity
 {
-    public:
-        ProperEntity( Map *, float, float, ProperController *, float, float );
-        virtual void onUpdate();
-    private:
-         ProperController * controller;
+public:
+    ProperEntity(Map*,float,float,Controller*,float,float);
+    virtual void onUpdate();
+private:
+     Controller* controller;
 };
 
 #endif
