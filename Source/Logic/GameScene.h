@@ -9,6 +9,7 @@
 #include "Environment/GameMap.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
+#include "../Engine/TileManager.h"
 #include "../Engine/ProjectileManager.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/graphics/object/BGO.h"
@@ -56,9 +57,6 @@ class GameScene : public Scene
     	Renderer renderer;
     	sf::View viewMain;
     	sf::View viewUI;
-
-    	sf::RenderStates mapStates;
-    	sf::RenderStates waterStates;
 
 	    sf::Sound current;
 
