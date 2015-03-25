@@ -3,23 +3,62 @@
 #include "Logic/GameScene.h"
 #include "Network/Client.h"
 #include "Network/NetworkEntityMultiplexer.h"
-// include the separate scene file
-using namespace Networking;
+#include "Network/NetworkEntity.h"
+#include "Engine/ClientInput.h"
+#include "Network/Session.h"
+#include "Network/Message.h"
+#include "Engine/ProperEntity.h"
+#include "Engine/Controller.h"
+#include "Network/NetworkController.h"
 
-class mux : public NetworkEntityMultiplexer
+// include the separate scene file
+using Networking::NetworkEntityMultiplexer;
+using Networking::NetworkEntity;
+using Networking::Message;
+using Networking::Session;
+
+GameScene* scene;
+
+class Mux : public NetworkEntityMultiplexer
 {
 public:
-    mux() {};
-    virtual ~mux() {};
+    Mux()
+    {
+    }
+    virtual ~Mux()
+    {
+    }
+    virtual NetworkEntity* onRegister(int id, int entityType, Session* session,
+        Message msg)
+    {
+        NetworkEntity* ret;
+
+        switch(entityType)
+        {
+        case CLIENT_INPUT_CLASS:
+            ret = new ClientInput(id);
+            break;
+        case NET_CONTROLER_CLASS:
+            ret = new NetworkController(id);
+            Marx::Map* cMap = ((GameScene*)scene)->getcMap();
+            new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+            break;
+        }
+
+        return ret;
+    };
 };
 
 int main(int argc, char* argv[])
 {
-    GameScene scene1;
+    printf("USAGE: %s [REMOTE_IP] [REMOTE_PORT]\n",argv[0]);
+    fflush(stdout);
 
-    NetworkEntityMultiplexer::setInstance(new mux());
+    scene = new GameScene();
 
-    AppWindow::getInstance().addScene(&scene1);
+    NetworkEntityMultiplexer::setInstance(new Mux());
+
+    AppWindow::getInstance().addScene(scene);
 
     Client* client = new Client();
 
