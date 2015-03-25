@@ -305,7 +305,9 @@ void GameScene::draw()
 	renderer.begin();
 
 	// Draw the maps
+	renderer.states.shader = &waveShader;
 	renderer.draw(*waterMap);
+	renderer.states.shader = nullptr;
 	renderer.draw(*cMap);
 
 	renderer.end();
