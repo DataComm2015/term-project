@@ -5,23 +5,22 @@ SERVER_EXE=serv
 
 ## FILES
 
-FILES_ENGINE=       AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engine/Map.o \
-					Engine/TextureManager.o Engine/TileManager.o \
-					Engine/Entity.o Engine/ProjectileManager.o Engine/Projectile.o
+FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engine/Map.o \
+					Engine/TextureManager.o Engine/TileManager.o Engine/ServerGameScene.o \
+					Engine/Entity.o Engine/ProjectileManager.o Engine/Projectile.o Engine/VEntity.o
 
-FILES_MULTIMEDIA=   Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
+FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
 					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o Multimedia/graphics/Animation.o \
 					Multimedia/gui/Label.o Multimedia/gui/Button.o Multimedia/gui/Container.o Multimedia/gui/TextBox.o	\
 					Multimedia/manager/ResourceManager.o Multimedia/manager/MusicManager.o Multimedia/manager/SoundManager.o
 
+FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o \
+					Logic/Environment/EnemyHierarchy.o Logic/ServerGameScene.o Logic/ClientLobbyScene.o
 
-FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o Logic/ClientLobbyScene.o \
-					Logic/Environment/EnemyHierarchy.o Logic/ServerGameScene.o
+FILES_NETWORK=		Network/Client.o Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
 
-FILES_NETWORK=	    Network/Client.o Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
-
-FILE_CLIENT=            Client.cpp
-FILE_SERVER=            Server.cpp
+FILE_CLIENT=			Client.cpp
+FILE_SERVER=			Server.cpp
 
 ##
 
