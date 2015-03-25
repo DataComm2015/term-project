@@ -2,28 +2,21 @@
 #define NETWORK_CONTROLLER_H
 
 #include "NetworkEntity.h"
-#include "../Engine/ProperController.h"
+#include "../Engine/Controller.h"
 namespace Networking
 {
 
-    class NetworkController : public ::Marx::ProperController, public NetworkEntity
+    class NetworkController : public ::Marx::Controller, public NetworkEntity
     {
     public:
-        NetworkController( int id, int type):NetworkEntity(id, type){}
+        NetworkController(int id, int type):NetworkEntity(id,type){}
+        NetworkController(int type):NetworkEntity(type){}
         ~NetworkController();
-        virtual void
-        onUpdate( Message message );
-        virtual void
-        onRegister( int type, Session * session, Message message );
-        virtual void
-        onUnregister( Session * session, Message message );
-        virtual void
-        sendMoveUpdate(float x, float y, bool forced);
-
+        virtual void onUpdate( Message message );
+        virtual void onUnregister( Session * session, Message message );
     private:
-	void 
-	parseMessage(Message& message);
-
+        void parseEventMessage(Message& message);
+        void sendEventMessage(Event ev);
     };
 }
 

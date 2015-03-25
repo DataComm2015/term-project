@@ -248,6 +248,11 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
+		for(auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		{
+			(*l)->onKeyPressed(e.key.code);
+		}
+
 		v->detectMove();
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
@@ -268,6 +273,11 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if (e.type == sf::Event::KeyReleased)
 	{
+		for(auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		{
+			(*l)->onKeyReleased(e.key.code);
+		}
+
 		v->stop(e.key.code);
 	}
 	else if (e.type == sf::Event::Resized)
@@ -324,6 +334,16 @@ void GameScene::draw()
 	renderer.end();
 
 	window.display();
+}
+
+void GameScene::addKeyListener(KeyListener* listener)
+{
+	keyListeners.insert(listener);
+}
+
+void GameScene::rmKeyListener(KeyListener* listener)
+{
+	keyListeners.erase(listener);
 }
 
 void GameScene::generateWater()
