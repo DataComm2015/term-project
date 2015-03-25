@@ -25,7 +25,7 @@ class ServerGameScene : public Scene
         virtual void update(sf::Time);
         virtual void processEvents(sf::Event&);
         virtual void draw();
-        Marx::Map* getcMap() { return cMap; }
+        Marx::Map* getcMap() { return cMap; };
         ~ServerGameScene();
 
     private:

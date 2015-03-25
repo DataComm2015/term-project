@@ -14,6 +14,8 @@
 #include "Network/NetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
+#include "Logic/ClientLobbyScene.h"
+
 using Networking::NetworkEntityMultiplexer;
 using Networking::NetworkEntity;
 using Networking::Message;
@@ -21,6 +23,7 @@ using Networking::Session;
 using Networking::Client;
 
 GameScene* scene;
+ClientLobbyScene *lobbyScene;
 
 /////////////
 // Command //
@@ -120,10 +123,13 @@ int main(int argc, char* argv[])
     printf("USAGE: %s [REMOTE_IP] [REMOTE_PORT]\n",argv[0]);
     fflush(stdout);
 
-    scene = new GameScene();
+    /*scene = new GameScene();*/
+    lobbyScene = new ClientLobbyScene();
 
+/*
     NetworkEntityMultiplexer::setInstance(new Mux());
 
+    //AppWindow::getInstance().addScene(scene);
     AppWindow::getInstance().addScene(scene);
 
     Client* client = new Client();
@@ -131,9 +137,10 @@ int main(int argc, char* argv[])
     short port = atoi(argv[2]);
     client->connect(argv[1], port);
 
-    AppWindow::getInstance().run();
-
     delete client;
+*/
+    AppWindow::getInstance().addScene(lobbyScene);
+    AppWindow::getInstance().run();
 
     return 0;
 }

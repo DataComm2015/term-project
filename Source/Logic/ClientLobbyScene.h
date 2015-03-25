@@ -28,7 +28,7 @@ class ClientLobbyScene : public Scene
         virtual void onLoad();
         ~ClientLobbyScene();
 
-        void onClick();
+        static void onClick();
         void updateMainView(sf::View& v);
 
     private:

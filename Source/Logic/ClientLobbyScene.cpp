@@ -24,14 +24,14 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     readyImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
 
     /* Initialize buttons */
-    vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
-    vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
+    vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
+    vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
 
-    aspectOneBtn = new GUI::Button(*Manager::TextureManager::get(aspectOneImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
-    aspectTwoBtn = new GUI::Button(*Manager::TextureManager::get(aspectTwoImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
-    aspectThreeBtn = new GUI::Button(*Manager::TextureManager::get(aspectThreeImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
+    aspectOneBtn = new GUI::Button(*Manager::TextureManager::get(aspectOneImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
+    aspectTwoBtn = new GUI::Button(*Manager::TextureManager::get(aspectTwoImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
+    aspectThreeBtn = new GUI::Button(*Manager::TextureManager::get(aspectThreeImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
 
-    readyBtn = new GUI::Button(*Manager::TextureManager::get(readyImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onclick);
+    readyBtn = new GUI::Button(*Manager::TextureManager::get(readyImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
 }
 
 ClientLobbyScene::~ClientLobbyScene()
@@ -71,9 +71,10 @@ void ClientLobbyScene::onLoad()
     updateMainView(viewMain);
 }
 
-void ClientLobbyScene::update(sf::Time)
+void ClientLobbyScene::update(sf::Time t)
 {
     //
+    vesselOneBtn->update(t);
 }
 
 void ClientLobbyScene::processEvents(sf::Event& e)
@@ -104,7 +105,7 @@ void ClientLobbyScene::draw()
     window.display();
 }
 
-void ClientLobbyScene::onclick()
+void ClientLobbyScene::onClick()
 {
     // temp onclick function
     cout << "Button clicked" << endl;
