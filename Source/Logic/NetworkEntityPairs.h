@@ -27,7 +27,7 @@
  * a {PlayerController} instance on the server side is connected to a {Command}
  *   instance on the client side.
  */
-#define NET_ENT_PAIR_PLAYERCONTROLLER_NETCONTROLLER 1
+#define NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER 1
 
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {Player} {NetworkEntity} and a {Command} //

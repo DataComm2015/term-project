@@ -40,10 +40,10 @@ namespace Marx
 
             Controller * controller;
             std::set<Cell*> occupiedCells;
-			Map * map;
+            Map * map;
         public:
             Entity(Map *, float, float, Controller *, float, float);
-            ~Entity();
+            virtual ~Entity();
             virtual void turn();
             Entity * move(float, float, bool);
             virtual std::set<Cell*> getCell();

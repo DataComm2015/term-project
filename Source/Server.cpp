@@ -2,11 +2,11 @@
 #include "AppWindow.h"
 #include "Usage.cpp"
 
-#include "Logic/NetworkEntityPairs.h"
-#include "Logic/ServerGameScene.h"
 #include "Logic/Event.h"
+#include "Logic/ProperEntity.h"
+#include "Logic/ServerGameScene.h"
+#include "Logic/NetworkEntityPairs.h"
 
-#include "Engine/ProperEntity.h"
 #include "Engine/Controller.h"
 
 #include "Network/Server.h"
@@ -41,10 +41,10 @@ void run();
 class Player : public NetworkEntity
 {
 public:
-    Player(Controller* playerController)
+    Player(Controller* serverController)
         :NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
     {
-        this->playerController = playerController;
+        this->serverController = serverController;
     }
     virtual ~Player()
     {
@@ -60,49 +60,49 @@ protected:
         case MSG_T_PLAYER_COMMAND_START_MV_LEFT_COMMAND:
         {
             MoveEvent ev(-1,0,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         case MSG_T_PLAYER_COMMAND_START_MV_RIGHT_COMMAND:
         {
             MoveEvent ev(1,0,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         case MSG_T_PLAYER_COMMAND_START_MV_UP_COMMAND:
         {
             MoveEvent ev(0,-1,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         case MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND:
         {
             MoveEvent ev(0,1,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_LEFT_COMMAND:
         {
             MoveEvent ev(0,0,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_RIGHT_COMMAND:
         {
             MoveEvent ev(0,0,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_UP_COMMAND:
         {
             MoveEvent ev(0,0,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         case MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND:
         {
             MoveEvent ev(0,0,0);
-            playerController->addEvent(ev);
+            serverController->addEvent(ev);
             break;
         }
         }
@@ -111,24 +111,31 @@ private:
     /**
      * controller used to control a player in the game.
      */
-    Controller* playerController;
+    Controller* serverController;
 };
 
 //////////////////////
-// PlayerController //
+// ServerController //
 //////////////////////
 
-class PlayerController : public Controller, public Networking::NetworkEntity
+class ServerController : public Controller, public Networking::NetworkEntity
 {
 public:
-    PlayerController()
-        :NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
+    ServerController()
+        :NetworkEntity(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
     {
     }
-    virtual ~PlayerController()
+    virtual void update(Message msg)
+    {
+        Networking::NetworkEntity::update(msg);
+    }
+    virtual void onUpdate(Message msg)
+    {
+        Networking::NetworkEntity::onUpdate(msg);
+    }
+    virtual ~ServerController()
     {
     }
-
 };
 
 //////////////////////////////
@@ -158,7 +165,7 @@ public:
 
         // create an entity that the new connection can use to communicate
         // commands to the server
-        PlayerController* ctrlr = new PlayerController();
+        ServerController* ctrlr = new ServerController();
         Player* player = new Player(ctrlr);
 
         // create an entity that the client is supposed to control

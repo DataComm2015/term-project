@@ -31,7 +31,6 @@ class ServerGameScene : public Scene
     private:
         Marx::Map *cMap;
         GameMap *gMap;
-
         sf::View viewMain;
 };
 

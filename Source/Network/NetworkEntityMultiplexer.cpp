@@ -222,6 +222,16 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
  */
 void NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Message msg)
 {
+    // print debug message
+    #ifdef DEBUG
+    printf("NetworkEntity#%d::update(\"",id);
+    for(int i = 0; i < msg.len; ++i)
+    {
+        printf("%c",((char*)msg.data)[i]);
+    }
+    printf("\")\n");
+    #endif
+
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
     char* data = (char*)malloc(datalen);
@@ -279,6 +289,16 @@ void NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Mess
  */
 void NetworkEntityMultiplexer::registerSession(int id, int type, Session* session, Message msg)
 {
+    // print debug message
+    #ifdef DEBUG
+    printf("NetworkEntity#%d::registerSession(Session%p\"",id,session);
+    for(int i = 0; i < msg.len; ++i)
+    {
+        printf("%c",((char*)msg.data)[i]);
+    }
+    printf("\")\n");
+    #endif
+
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int)*2;
     char* data = (char*)malloc(datalen);
@@ -333,6 +353,16 @@ void NetworkEntityMultiplexer::registerSession(int id, int type, Session* sessio
  */
 void NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Message msg)
 {
+    // print debug message
+    #ifdef DEBUG
+    printf("NetworkEntity#%d::unregisterSession(Session%p\"",id,session);
+    for(int i = 0; i < msg.len; ++i)
+    {
+        printf("%c",((char*)msg.data)[i]);
+    }
+    printf("\")\n");
+    #endif
+
     // allocate enough memory to hold message header, and payload
     int datalen = msg.len+sizeof(int);
     char* data = (char*)malloc(datalen);

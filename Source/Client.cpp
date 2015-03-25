@@ -1,17 +1,17 @@
 //> In the main file
 #include "AppWindow.h"
 
+#include "Logic/Event.h"
 #include "Logic/KeyListener.h"
+#include "Logic/ProperEntity.h"
 #include "Logic/NetworkEntityPairs.h"
 
 #include "Engine/Controller.h"
-#include "Engine/ProperEntity.h"
 
 #include "Network/Client.h"
 #include "Network/Session.h"
 #include "Network/Message.h"
 #include "Network/NetworkEntity.h"
-#include "Network/NetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
 using Networking::NetworkEntityMultiplexer;
@@ -108,7 +108,83 @@ protected:
 ///////////////////////
 // NetworkController //
 ///////////////////////
+class NetworkController : public ::Marx::Controller, public NetworkEntity
+{
+public:
+    NetworkController(int id)
+        :NetworkEntity(id,NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
+    {
+    }
+    ~NetworkController()
+    {
+    }
+    virtual void onUpdate( Message message )
+    {
+        parseEventMessage(message);
+    }
+    virtual void onUnregister( Session * session, Message message )
+    {
+        parseEventMessage(message);
+    }
+private:
+    void parseEventMessage(Message& message)
+    {
+        printf("NetworkController::parseEventMessage()\n");
+        // switch(message.type)
+        // {
+        // case ::Marx::MOVE:
+        // {
+        //     // case message payload
+        //     MoveMessage* mm = (MoveMessage*) message.data;
 
+        //     // create event from message data
+        //     MoveEvent ev(mm->x, mm->y, mm->forced);
+
+        //     // add event to event queue
+        //     addEvent(ev);
+        //     break;
+        // }
+        // default:
+        //     printf("WARNING: NetworkController::parseEventMessage received an "
+        //         "unknown event type. please add new case to switch statement");
+        //     fflush(stdout);
+        //     break;
+        // }
+    }
+    void sendEventMessage(Event ev)
+    {
+        printf("NetworkController::sendEventMessage()\n");
+        // // create network message from event
+        // switch(ev.type)
+        // {
+        // case ::Marx::MOVE:
+        // {
+        //     // cast event to event subclass
+        //     MoveEvent* me = (MoveEvent*) &ev;
+
+        //     // parse move event into move message
+        //     MoveMessage mm;
+        //     mm.x      = me->getX();
+        //     mm.y      = me->getY();
+        //     mm.forced = me->forced();
+
+        //     // message to be sent over the network
+        //     Message message;
+        //     message.data = &mm;
+        //     message.len  = sizeof(mm);
+        //     message.type = ::Marx::MOVE;
+
+        //     // send the network event
+        //     update(message);
+        // }
+        // default:
+        //     printf("WARNING: NetworkController::sendEventMessage received an "
+        //         "unknown event type. please add new case to switch statement");
+        //     fflush(stdout);
+        //     break;
+        // }
+    }
+};
 
 
 //////////////////////////////
@@ -134,11 +210,11 @@ public:
         case NET_ENT_PAIR_PLAYER_COMMAND:
             ret = new Command(id);
             break;
-        // case NET_ENT_PAIR_PLAYERCONTROLLER_NETCONTROLLER:
-        //     ret = new NetworkController(id);
-        //     Marx::Map* cMap = ((GameScene*)scene)->getcMap();
-        //     new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
-        //     break;
+        case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
+            ret = new NetworkController(id);
+            // Marx::Map* cMap = ((GameScene*)scene)->getcMap();
+            // new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+            break;
         }
 
         return ret;
