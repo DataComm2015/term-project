@@ -226,12 +226,8 @@ void GameScene::update(sf::Time t)
 	b1->update(t);
 	b2->update(t);
 
-	mapStates.transform = sf::Transform::Identity;
-	mapStates.transform.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
-
-	waterStates.shader = &waveShader;
-	waterStates.transform = sf::Transform::Identity;
-	waterStates.transform.translate(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
+	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+	waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
 	viewMain.setCenter(v->getXPosition(), v->getYPosition());
 
@@ -309,8 +305,8 @@ void GameScene::draw()
 	renderer.begin();
 
 	// Draw the maps
-	renderer.draw(*waterMap, waterStates);
-	renderer.draw(*cMap, mapStates);
+	renderer.draw(*waterMap);
+	renderer.draw(*cMap);
 
 	renderer.end();
 
