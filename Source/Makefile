@@ -15,9 +15,9 @@ FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SG
 					Multimedia/manager/ResourceManager.o Multimedia/manager/MusicManager.o Multimedia/manager/SoundManager.o
 
 FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o \
-					Logic/Environment/EnemyHierarchy.o
+					Logic/Environment/EnemyHierarchy.o Logic/ServerGameScene.o
 
-FILES_NETWORK=		Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
+FILES_NETWORK=		Network/Client.o Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
 
 FILE_CLIENT=			Client.cpp
 FILE_SERVER=			Server.cpp
