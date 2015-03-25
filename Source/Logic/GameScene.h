@@ -4,10 +4,13 @@
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../Engine/Scene.h"
 #include "Environment/GameMap.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
+#include "../Engine/TileManager.h"
+#include "../Engine/ProjectileManager.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -16,6 +19,9 @@
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
+
+#include "../Multimedia/manager/SoundManager.h"
+#include "../Multimedia/manager/MusicManager.h"
 
 /* The water buffer around the island */
 #define WATER_BUFFER 20
@@ -35,32 +41,46 @@ class GameScene : public Scene
 		virtual void update(sf::Time);
 		virtual void processEvents(sf::Event&);
 		virtual void draw();
+		void onLoad();
+		void unLoad();
 		~GameScene();
 
 		void generateWater();
+		void generateUI();
 	private:
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
+	
+		Marx::Projectile * p;
 		GameMap *gMap;
 
     	Renderer renderer;
     	sf::View viewMain;
+    	sf::View viewUI;
 
-    	sf::RenderStates mapStates;
-    	sf::RenderStates waterStates;
+	    sf::Sound current;
 
     	id_resource tilemap;
     	id_resource championSprite;
     	id_resource maskSprite;
     	id_resource wepSprite;
     	id_resource butSprite;
+        id_resource scat_music;
+        id_resource chick_sound;
 
     	SGO championSGO;
     	SGO maskSGO;
     	SGO wepSGO;
 		Vessel *v;
 		
+		// UI
 		GUI::Button *b1;
+		GUI::Button *b2;
+		GUI::Button *b3;
+		GUI::Button *b4;
+		GUI::Button *b5;
+		GUI::Button *b6;
+
 		GUI::TextBox *tb;
     	
     	sf::Shader waveShader;

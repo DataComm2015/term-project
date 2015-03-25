@@ -15,12 +15,12 @@ public:
 	sf::Text& operator()();
 	const sf::Text& operator()() const;
 
-	const sf::Transform& getLocalTransform() const override;
+	const sf::Transform& getLocalTransform() const;
 
 	void middleAnchorPoint(bool arg);
 
 protected:
-	void draw(Renderer& renderer, sf::RenderStates states) const override;
+	void draw(Renderer& renderer) const override;
 
 private:
 	sf::Text data;
