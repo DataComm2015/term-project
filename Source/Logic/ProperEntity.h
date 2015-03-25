@@ -9,7 +9,7 @@ public:
     ProperEntity(Marx::Map*,float,float,Marx::Controller*,float,float);
     virtual void onUpdate();
 private:
-     Controller* controller;
+     Marx::Controller* controller;
 };
 
 #endif
