@@ -4,20 +4,22 @@
 #include "Network/Client.h"
 #include "Network/NetworkEntityMultiplexer.h"
 #include "Network/NetworkEntity.h"
-#include "Engine/ClientInput.h"
 #include "Network/Session.h"
 #include "Network/Message.h"
 #include "Engine/ProperEntity.h"
 #include "Engine/Controller.h"
 #include "Network/NetworkController.h"
 
-// include the separate scene file
 using Networking::NetworkEntityMultiplexer;
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
 
 GameScene* scene;
+
+//////////////////////////////
+// NetworkEntityMultiplexer //
+//////////////////////////////
 
 class Mux : public NetworkEntityMultiplexer
 {
