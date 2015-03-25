@@ -5,7 +5,7 @@ std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
 using namespace Manager;
 
 Marx::Projectile* ProjectileManager::
-getProjectile(Marx::Map *map, float x, float y, Marx::Controller * ctrl = nullptr, float h = 1.0, float w = 1.0)
+getProjectile(Marx::Map *map, float x, float y, Marx::Controller * ctrl = NULL, float h = 1.0, float w = 1.0)
 {
 	Marx::Projectile *temp;
 	if (projectile_pool.size() <= 0)

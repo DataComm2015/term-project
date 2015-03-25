@@ -192,6 +192,11 @@ void Animation::update(sf::Time& t)
 	}
 }
 
+void Animation::setFrameSkip(short i)
+{
+	skip = i;
+}
+
 /**
  * Increments the animation by the given number of frames
  *
