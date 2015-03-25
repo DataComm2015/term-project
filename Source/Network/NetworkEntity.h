@@ -20,123 +20,22 @@ namespace Networking
     friend class Session;
     friend class NetworkEntityMultiplexer;
     public:
-        /**
-         * Constructs a new NetworkEntity.
-         *
-         * @param id the id used when multiplexing and demiltiplexing
-         * @param type denotes which sub class of NetworkEntity this entity is
-         */
-        NetworkEntity( int id, int type );
-
-        /**
-         * Constructs a new NetworkEntity.
-         *
-         * @param id the id used when multiplexing and demiltiplexing
-         * @param type denotes which sub class of NetworkEntity this entity is
-         */
-        NetworkEntity( int type );
-
-        /**
-         * Destructs a NetwrokEntity.
-         */
+        NetworkEntity(int id, int type);
+        NetworkEntity(int type);
         ~NetworkEntity();
-
-        /**
-         * Send an update to the other side
-         *
-         * @param message message used when calling onUpdate on the other side
-         */
-        void
-        update( Message message );
-
-        /**
-         * Method used to register a session so the entity can send and receive
-         * to and from the session.
-         *
-         * @param session session to register with this entity
-         * @param message message used when calling onRegister on the other side
-         */
-        void
-        registerSession( Session * session, Message message );
-
-        /**
-         * Unregisters the session from the entity so it will no longer be able
-         * to send or receive updates.
-         *
-         * @param session session to unregister from this entity
-         * @param message message used when calling onUnregister
-         *                on the other side
-         */
-        void
-        unregisterSession( Session * session, Message message );
-
+        void update(Message message);
+        void registerSession(Session * session, Message message);
+        void unregisterSession(Session * session, Message message);
     protected:
-        /**
-         * Meant to be overwritten by the user. Called when the associated
-         * entity on the other side calls the unregister method.
-         *
-         * @param session session that has been unregistered from the entity
-         * @param message message that sent from the other side
-         */
-        virtual void
-        onUnregister( Session * session, Message message );
-
-        /**
-         * Meant to be overwritten by user to handle an incoming update
-         *
-         * @param message message sent from the other side
-         */
-        virtual void
-        onUpdate( Message message );
-
+        virtual void onUnregister(Session * session, Message message);
+        virtual void onUpdate(Message message);
     private:
-    /**
-         * Invoked after NetworkEntityMultiplexer::onRegister() callback
-         * is invoked
-         *
-         * @param session session to be registered with this entity
-         */
-        void
-        silentRegister( Session* session );
-
-        /**
-         * Invoked before NetworkEntity::onUnregister() callback is invoked
-         *
-         * @param session session to be unregistered from this entity
-         */
-        void
-        silentUnregister( Session* session );
-
-        /**
-         * keeps track of the next id to assign to a new NetworkEntiry. whenever
-         *   a new NetworkEntity is created using the constructor without the id
-         *   parameter, this id is assigned as the new NetwrokEntity's id, and
-         *   then is incremented.
-         *
-         * the constructor without the id parameter should only be used on the
-         *   server side.
-         */
+        void silentRegister(Session* session);
+        void silentUnregister(Session* session);
         static int nextId;
-
-        /**
-         * The id of the entity. Used for multiplexig purposes.
-         */
         int id;
-
-        /**
-         * An int representing a sub class of NetworkEntity.
-         * Used for instantiation.
-         */
         int type;
-
-        /**
-         * The multiplexer that this entity sends to and receives from.
-         */
         NetworkEntityMultiplexer* mux;
-
-        /**
-         * The set containing all the sessions registerd with this entity
-         */
         std::set< Session * > registeredSessions;
 
     };

@@ -41,11 +41,27 @@ public:
 protected:
     virtual void onKeyPressed(int key)
     {
-        printf("Command::onKeyPressed: %d\n",key);
+        // should do some processing here to convert a keystroke into an actual
+        // move event  a move event would be something like "move up", "move
+        // down", "stop moving up", "stop moving down"...and others... i hope
+        // you get the point
+        Message msg;
+        msg.type = MSG_T_PLAYER_COMMAND_MOVE_COMMAND;
+        msg.data = &key;
+        msg.len  = sizeof(key);
+        update(msg);
     }
     virtual void onKeyReleased(int key)
     {
-        printf("Command::onKeyReleased: %d\n",key);
+        // should do some processing here to convert a keystroke into an actual
+        // move event  a move event would be something like "move up", "move
+        // down", "stop moving up", "stop moving down"...and others... i hope
+        // you get the point
+        Message msg;
+        msg.type = MSG_T_PLAYER_COMMAND_MOVE_COMMAND;
+        msg.data = &key;
+        msg.len  = sizeof(key);
+        update(msg);
     }
     virtual void onUnregister(Session* session, Message message)
     {
