@@ -70,7 +70,14 @@ class GameScene : public Scene
 		sf::View viewMain;
 		sf::View viewUI;
 
+<<<<<<< HEAD
+		sf::RenderStates mapStates;
+		sf::RenderStates waterStates;
+
 		sf::Sound current;
+=======
+	    sf::Sound current;
+>>>>>>> 5dd9a6721438a7df507b4f7487e35081c5841aad
 
 		id_resource tilemap;
 		id_resource championSprite;
