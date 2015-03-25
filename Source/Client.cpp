@@ -1,21 +1,65 @@
 //> In the main file
 #include "AppWindow.h"
-#include "Logic/GameScene.h"
+
+#include "Logic/KeyListener.h"
+#include "Logic/NetworkEntityPairs.h"
+
+#include "Engine/Controller.h"
+#include "Engine/ProperEntity.h"
+
 #include "Network/Client.h"
-#include "Network/NetworkEntityMultiplexer.h"
-#include "Network/NetworkEntity.h"
 #include "Network/Session.h"
 #include "Network/Message.h"
-#include "Engine/ProperEntity.h"
-#include "Engine/Controller.h"
+#include "Network/NetworkEntity.h"
 #include "Network/NetworkController.h"
+#include "Network/NetworkEntityMultiplexer.h"
 
 using Networking::NetworkEntityMultiplexer;
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
+using Networking::Client;
 
 GameScene* scene;
+
+/////////////
+// Command //
+/////////////
+
+class Command : public NetworkEntity, public KeyListener
+{
+public:
+    Command(int id)
+        :NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND)
+    {
+        scene->addKeyListener(this);
+    }
+    ~Command()
+    {
+        scene->rmKeyListener(this);
+    }
+protected:
+    virtual void onKeyPressed(int key)
+    {
+        printf("Command::onKeyPressed: %d\n",key);
+    }
+    virtual void onKeyReleased(int key)
+    {
+        printf("Command::onKeyReleased: %d\n",key);
+    }
+    virtual void onUnregister(Session* session, Message message)
+    {
+    }
+    virtual void onUpdate(Message message)
+    {
+    }
+};
+
+///////////////////////
+// NetworkController //
+///////////////////////
+
+
 
 //////////////////////////////
 // NetworkEntityMultiplexer //
@@ -37,19 +81,23 @@ public:
 
         switch(entityType)
         {
-        case CLIENT_INPUT_CLASS:
-            ret = new ClientInput(id);
+        case NET_ENT_PAIR_PLAYER_COMMAND:
+            ret = new Command(id);
             break;
-        case NET_CONTROLER_CLASS:
-            ret = new NetworkController(id);
-            Marx::Map* cMap = ((GameScene*)scene)->getcMap();
-            new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
-            break;
+        // case NET_ENT_PAIR_PLAYERCONTROLLER_NETCONTROLLER:
+        //     ret = new NetworkController(id);
+        //     Marx::Map* cMap = ((GameScene*)scene)->getcMap();
+        //     new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+        //     break;
         }
 
         return ret;
     };
 };
+
+//////////
+// Main //
+//////////
 
 int main(int argc, char* argv[])
 {

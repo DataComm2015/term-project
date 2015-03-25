@@ -1,14 +1,18 @@
 //> In the main file
 #include "AppWindow.h"
 #include "Usage.cpp"
-#include "Engine/ServerGameScene.h"
-#include "Network/Server.h"
-#include "Network/Session.h"
-#include "Network/NetworkEntityMultiplexer.h"
-#include "Network/Message.h"
+
+#include "Logic/NetworkEntityPairs.h"
+#include "Logic/ServerGameScene.h"
+
 #include "Engine/ProperEntity.h"
 #include "Engine/Controller.h"
+
+#include "Network/Server.h"
+#include "Network/Session.h"
+#include "Network/Message.h"
 #include "Network/NetworkController.h"
+#include "Network/NetworkEntityMultiplexer.h"
 
 #include <string.h>
 
@@ -28,6 +32,35 @@ sf::Time m_timeSinceLastUpdate;
 Scene *scene;
 
 void run();
+
+////////////
+// Player //
+////////////
+
+class Player : public NetworkEntity
+{
+public:
+    Player()
+        :NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
+    {
+    }
+    virtual ~Player()
+    {
+    }
+protected:
+    virtual void onUnregister(Session* session, Message message)
+    {
+    }
+    virtual void onUpdate(Message message)
+    {
+    }
+};
+
+//////////////////////
+// PlayerController //
+//////////////////////
+
+
 
 //////////////////////////////
 // NetworkEntityMultiplexer //
@@ -56,20 +89,20 @@ public:
 
         // create an entity that the new connection can use to communicate
         // commands to the server
-        ClientInput* clientInput = new ClientInput();
-        NetworkController* netCont = new NetworkController();
+        Player* player = new Player();
+        // NetworkController* netCont = new NetworkController();
 
-        // create an entity that the client is supposed to control
-        Marx::Map* cMap = ((GameScene*)scene)->getcMap();
-        new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)netCont,1.0,1.0);
+        // // create an entity that the client is supposed to control
+        // Marx::Map* cMap = ((GameScene*)scene)->getcMap();
+        // new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)netCont,1.0,1.0);
 
         // create an empty message because we need one
         Message msg;
         memset(&msg,0,sizeof(msg));
 
         // register the client with the player object, and player controller
-        clientInput->registerSession(session,msg);
-        netCont->registerSession(session,msg);
+        player->registerSession(session,msg);
+        // netCont->registerSession(session,msg);
     }
     virtual void onMessage(Session* session, char* data, int len)
     {

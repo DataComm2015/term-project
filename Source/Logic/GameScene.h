@@ -1,6 +1,7 @@
 #ifndef GAME_SCENE_H_
 #define GAME_SCENE_H_
 
+#include <set>
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
@@ -21,6 +22,8 @@
 
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
+
+#include "KeyListener.h"
 
 /* The water buffer around the island */
 #define WATER_BUFFER 20
@@ -44,37 +47,46 @@ class GameScene : public Scene
 		void unLoad();
 		~GameScene();
 
+		void addKeyListener(KeyListener* listener);
+		void rmKeyListener(KeyListener* listener);
+
 		void generateWater();
 		void generateUI();
 	private:
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
-	
+
+		/**
+		 * set of registered key listeners that should be notified whenever a
+		 *   keyboard event occurs.
+		 */
+		std::set<KeyListener*> keyListeners;
+
 		Marx::Projectile * p;
 		GameMap *gMap;
 
-    	Renderer renderer;
-    	sf::View viewMain;
-    	sf::View viewUI;
+		Renderer renderer;
+		sf::View viewMain;
+		sf::View viewUI;
 
-    	sf::RenderStates mapStates;
-    	sf::RenderStates waterStates;
+		sf::RenderStates mapStates;
+		sf::RenderStates waterStates;
 
-	    sf::Sound current;
+		sf::Sound current;
 
-    	id_resource tilemap;
-    	id_resource championSprite;
-    	id_resource maskSprite;
-    	id_resource wepSprite;
-    	id_resource butSprite;
-        id_resource scat_music;
-        id_resource chick_sound;
+		id_resource tilemap;
+		id_resource championSprite;
+		id_resource maskSprite;
+		id_resource wepSprite;
+		id_resource butSprite;
+		id_resource scat_music;
+		id_resource chick_sound;
 
-    	SGO championSGO;
-    	SGO maskSGO;
-    	SGO wepSGO;
+		SGO championSGO;
+		SGO maskSGO;
+		SGO wepSGO;
 		Vessel *v;
-		
+
 		// UI
 		GUI::Button *b1;
 		GUI::Button *b2;
@@ -84,9 +96,9 @@ class GameScene : public Scene
 		GUI::Button *b6;
 
 		GUI::TextBox *tb;
-    	
-    	sf::Shader waveShader;
-    	float phase;
+
+		sf::Shader waveShader;
+		float phase;
 };
 
 #endif
