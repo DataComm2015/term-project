@@ -3,10 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../manager/ResourceManager.h"
-#include "../../Engine/TextureManager.h"
-#include "../../Engine/TileManager.h"
-
 #define SPRITE_VERTICES 6
 #define TILE_VERTICES 4
 #define RECT_POINTS 4
@@ -17,9 +13,8 @@ class TGO;
 namespace Marx
 {
 	class Map;
+	class Entity;
 }
-
-// @TODO : Make Renderer have a dynamic buffer
 
 class Renderer
 {
@@ -39,15 +34,15 @@ public:
 	void end();
 	void resetStats();
 
-	void draw(const BGO& bgo, bool scenegraph, sf::RenderStates states = sf::RenderStates::Default);
-	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
-	void draw(const TGO& tgo, sf::RenderStates states = sf::RenderStates::Default);
-	void draw(const Marx::Map& map, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(BGO& bgo, bool scenegraph);
+	void draw(const SGO& sgo);
+	void draw(const TGO& tgo);
+	void draw(const Marx::Map& map);
+	void drawEntities(const Marx::Map& map);
 
 	sf::RenderStates states;
 
 private:
-	void mergeRenderStates(sf::RenderStates& toMerge) const;
 	unsigned int prepareSpriteDrawing(const sf::Texture &texture);
 	void batchSprite(const sf::Texture &texture, const sf::Vertex *vertices);
 	void flushSprites();
