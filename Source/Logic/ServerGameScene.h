@@ -16,22 +16,23 @@
 
 
 /*
-*	This is the In-game Scene where all round-events occur.
+*   This is the In-game Scene where all round-events occur.
 */
 class ServerGameScene : public Scene
 {
-	public:
-		ServerGameScene();
-		virtual void update(sf::Time);
-		virtual void processEvents(sf::Event&);
-		virtual void draw();
-		~ServerGameScene();
+    public:
+        ServerGameScene();
+        virtual void update(sf::Time);
+        virtual void processEvents(sf::Event&);
+        virtual void draw();
+        Marx::Map* getcMap() { return cMap; }
+        ~ServerGameScene();
 
-	private:
-		Marx::Map *cMap;
-		GameMap *gMap;
+    private:
+        Marx::Map *cMap;
+        GameMap *gMap;
 
-    	sf::View viewMain;
+        sf::View viewMain;
 };
 
 #endif

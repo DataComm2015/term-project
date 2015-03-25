@@ -6,18 +6,17 @@
 
 namespace Marx
 {
-	/*
-	* Controller class. Holds controller event queue
-	*/
-	class Controller
-	{
-		protected:
-			std::vector<Event> eventQueue;
-
-		public:
-		
-			std::vector<Event> getEvents();
-	};
+    /*
+    * Controller class. Holds controller event queue
+    */
+    class Controller
+    {
+    protected:
+        std::vector<Event> eventQueue;
+    public:
+        std::vector<Event> getEvents();
+        virtual void addEvent(Event ev);
+    };
 }
 
 #endif /* CONTROLLER_H_ */
