@@ -26,6 +26,14 @@ GameScene* scene;
 // Command //
 /////////////
 
+/**
+ * the {Player} is resides the server, and is logically mapped to the {Command}
+ *   class over the network, which is on the client side.
+ *
+ * the client sends command using {Command::update} such as move commands or
+ *   others like choosing their character to the Server. such commands are
+ *   handled in the {Player::onUpdate} method. and sent using the.
+ */
 class Command : public NetworkEntity, public KeyListener
 {
 public:
@@ -116,6 +124,21 @@ protected:
 ///////////////////////
 // NetworkController //
 ///////////////////////
+
+/**
+ * the {ServerController} class on the server is logically mapped to a
+ *   {NetworkController} on the client. other controllers such as AI controllers
+ *   should inherit from the {ServerController} class, and get their entity to
+ *   do stuff by using the addEvent method.
+ *
+ * whenever the {ServerController::addEvent} function is called, it will get its
+ *   entity to do stuff. if the event should be received on the client side as
+ *   well, then the event should be converted into a Networking::Message in the
+ *   {ServerController::sendEventMessage} method. the same message will be
+ *   received in the {NetworkController::onUpdate} function, where it needs to
+ *   be handled, and converted from a message back into an event, then added to
+ *   the {NetworkController's} event queue.
+ */
 class NetworkController : public ::Marx::Controller, public NetworkEntity
 {
 public:
@@ -165,6 +188,14 @@ private:
 // NetworkEntityMultiplexer //
 //////////////////////////////
 
+/**
+ * the client's implementation of the {NetworkEntityMultiplexer}. this thing is
+ *   going to need more work.
+ *
+ * when the server registers the {ServerController} and {Player} instances with
+ *   the client, {Mux::onRegister} will be triggered which. it should create a
+ *   {NetworkController} and {Command} instances respectively.
+ */
 class Mux : public NetworkEntityMultiplexer
 {
 public:
@@ -184,6 +215,9 @@ public:
         case NET_ENT_PAIR_PLAYER_COMMAND:
             ret = new Command(id);
             break;
+
+        // later, should parse the message to figure out what kind of game
+        // entity to create that is being controlled by the NetworkController.
         case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
             ret = new NetworkController(id);
             Marx::Map* cMap = ((GameScene*)scene)->getcMap();
