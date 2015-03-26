@@ -27,13 +27,14 @@ namespace Marx
 }
 #include "Cell.h"
 #include "Controller.h"
+#include "../Multimedia/graphics/object/BGO.h"
 
 #include <set>
 #include <cmath>
 
 namespace Marx
 {
-    class Entity : public sf::FloatRect
+    class Entity : public sf::FloatRect, public BGO
     {
         private:
 
@@ -41,7 +42,7 @@ namespace Marx
             std::set<Cell*> occupiedCells;
 			Map * map;
         public:
-            Entity(float, float, Controller *, float, float);
+            Entity(Map * _map, float x, float y, Controller * ctrl, float h, float w);
             ~Entity();
             virtual void turn();
             Entity * move(float, float, bool);

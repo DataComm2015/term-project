@@ -3,7 +3,12 @@
  *
  * @date       2015-02-25
  *
- * @revisions
+ * @revisions  2015-03-17
+ *             Made the renderer more generic by counting vertices instead of sprites.
+ *
+ *             2015-03-24
+ *             All drawcalls no longer take in a render states object.
+ *             Use the renderer's public render states member variable instead.
  *
  * @designer   Melvin Loho
  *
@@ -20,13 +25,13 @@
 #include "object/BGO.h"
 #include "object/SGO.h"
 #include "object/TGO.h"
-
 #include "../manager/ResourceManager.h"
 #include "../../Engine/TextureManager.h"
 #include "../../Engine/TileManager.h"
 #include "../../Engine/Map.h"
+#include "../../Engine/Entity.h"
 
- #include <iostream>
+#include <iostream>
 
 /**
  * Constructor.
@@ -39,17 +44,17 @@
  *
  * @programmer Melvin Loho
  *
- * @param      renderer   The render target (e.g. a window / a texture)
- * @param      maxSprites The maximum number of sprites the batcher can hold before it has to render them
+ * @param      renderer    The render target (e.g. a window / a texture)
+ * @param      maxVertices The maximum number of vertices the batcher can hold before it has to render them
  */
-Renderer::Renderer(sf::RenderTarget &renderer, unsigned int maxSprites) :
+Renderer::Renderer(sf::RenderTarget &renderer, unsigned int maxVertices) :
 renderer(renderer),
-vertices(new sf::Vertex[maxSprites * SPRITE_VERTICES]),
-maxCount(maxSprites), count(0),
-count_drawcalls(0), count_sprites(0),
+vertices(new sf::Vertex[maxVertices]),
+maxCount(maxVertices), count(0),
+count_drawcalls(0), count_cumulative(0),
 active(false)
 {
-	for (unsigned int v = 0; v < maxSprites * SPRITE_VERTICES; ++v)
+	for (unsigned int v = 0; v < maxVertices; ++v)
 	{
 		vertices[v] = sf::Vertex();
 	}
@@ -127,7 +132,7 @@ unsigned Renderer::getDrawCallCount() const
  */
 unsigned Renderer::getSpriteCount() const
 {
-	return count_sprites;
+	return count_cumulative / SPRITE_VERTICES;
 }
 
 /**
@@ -144,7 +149,7 @@ unsigned Renderer::getSpriteCount() const
  */
 void Renderer::begin()
 {
-	if (active) throw std::string("Renderer is already active.");
+	if (active) throw "Renderer is already active.";
 
 	count = 0;
 	states = sf::RenderStates::Default;
@@ -166,7 +171,7 @@ void Renderer::begin()
  */
 void Renderer::end()
 {
-	if (!active) throw std::string("Renderer is not active.");
+	if (!active) throw "Renderer is not active.";
 
 	flushSprites();
 	active = false;
@@ -185,7 +190,7 @@ void Renderer::end()
 */
 void Renderer::resetStats()
 {
-	count_drawcalls = count_sprites = 0;
+	count_drawcalls = count_cumulative = 0;
 }
 
 /**
@@ -201,15 +206,12 @@ void Renderer::resetStats()
  *
  * @param      go         The game object to draw
  * @param      scenegraph Whether to draw the whole hierarchy or just the specified game object
- * @param      states     The render states
  */
-void Renderer::draw(const BGO &go, bool scenegraph, sf::RenderStates states)
+void Renderer::draw(BGO &go, bool scenegraph)
 {
-	if (!active) throw std::string("Renderer is not active.");
+	if (!active) throw "Renderer is not active.";
 
-	mergeRenderStates(states);
-
-	scenegraph ? go.drawSG(*this, states) : go.draw(*this, states);
+	scenegraph ? go.drawSG(*this) : go.draw(*this);
 }
 
 /**
@@ -224,25 +226,27 @@ void Renderer::draw(const BGO &go, bool scenegraph, sf::RenderStates states)
  * @programmer Melvin Loho
  *
  * @param      sgo    The specified SGO
- * @param      states The render states
  */
-void Renderer::draw(const SGO &sgo, sf::RenderStates states)
+void Renderer::draw(const SGO &sgo)
 {
-	if (!active) throw std::string("Renderer is not active.");
+	if (!active) throw "Renderer is not active.";
 
-	// Combine transformations with this sprite's
+	// Combine transformations
 
-	states.transform.combine(sgo().getTransform());
+	sf::Transform trans =
+		states.transform
+		* sgo.getTransform()
+		* sgo().getTransform();
 
 	// Store transformed vertices positions
 
 	sf::Vector2f vPos[RECT_POINTS];
 	sf::FloatRect sgoLB = sgo().getLocalBounds();
 
-	vPos[0] = states.transform.transformPoint(sgoLB.left, sgoLB.top);
-	vPos[1] = states.transform.transformPoint(sgoLB.left, sgoLB.top + sgoLB.height);
-	vPos[2] = states.transform.transformPoint(sgoLB.left + sgoLB.width, sgoLB.top);
-	vPos[3] = states.transform.transformPoint(sgoLB.left + sgoLB.width, sgoLB.top + sgoLB.height);
+	vPos[0] = trans.transformPoint(sgoLB.left, sgoLB.top);
+	vPos[1] = trans.transformPoint(sgoLB.left, sgoLB.top + sgoLB.height);
+	vPos[2] = trans.transformPoint(sgoLB.left + sgoLB.width, sgoLB.top);
+	vPos[3] = trans.transformPoint(sgoLB.left + sgoLB.width, sgoLB.top + sgoLB.height);
 
 	// Create appropriate vertices
 
@@ -279,15 +283,17 @@ void Renderer::draw(const SGO &sgo, sf::RenderStates states)
  * @programmer Melvin Loho
  *
  * @param      tgo    The specified TGO
- * @param      states The render states
  */
-void Renderer::draw(const TGO &tgo, sf::RenderStates states)
+void Renderer::draw(const TGO &tgo)
 {
-	if (!active) throw std::string("Renderer is not active.");
+	if (!active) throw "Renderer is not active.";
 
 	flushSprites();
 
-	sf_draw(tgo(), states);
+	sf::RenderStates newstates = states;
+	newstates.transform *= tgo.getTransform() * tgo().getTransform();
+
+	sf_draw(tgo(), newstates);
 }
 
 /**
@@ -302,19 +308,16 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
  * @programmer Melvin Loho
  *
  * @param      map    The specified Map
- * @param      states The render states
  */
-void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
+void Renderer::draw(const Marx::Map& map)
 {
-	if (!active) throw std::string("Renderer is not active.");
+	if (!active) throw "Renderer is not active.";
 
 	flushSprites();
 
-	mergeRenderStates(states);
 	states.texture = Manager::TextureManager::get(map.getTexture());
-
-	unsigned
-		currVertex = 0;
+	sf::RenderStates newstates = states;
+	newstates.transform.combine(map.getTransform());
 
 	const unsigned
 		mapWidth = map.getWidth(),
@@ -338,7 +341,7 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 			vpos[0] = { x * mapTileSize.x, y * mapTileSize.y };
 			vpos[1] = vpos[0]; 		vpos[1].y += mapTileSize.y;
 			vpos[2] = vpos[0]; 		vpos[2].x += mapTileSize.x;
-			vpos[3].y = vpos[1].y; 	vpos[3].x  = vpos[2].x;
+			vpos[3].y = vpos[1].y; 	vpos[3].x = vpos[2].x;
 
 			vert[0].position = vpos[0]; vert[2].position = vpos[2];
 			vert[1].position = vpos[1]; vert[3].position = vpos[3];
@@ -349,7 +352,7 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 			vert[3].texCoords = { tile->left + tile->width, tile->top + tile->height };
 
 			for (unsigned int i = 0; i < TILE_VERTICES; ++i)
-				vertices[currVertex++] = vert[i];
+				vertices[count++] = vert[i];
 		}
 
 		if (++y == mapHeight) break; // Odd number of rows!! :(
@@ -367,10 +370,10 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 		{
 			tile = Manager::TileManager::get(tempTileIDs.at(x));
 
-			vpos[0] = {( x * mapTileSize.x ) + mapTileSize.x, y * mapTileSize.y };
+			vpos[0] = { x * mapTileSize.x + mapTileSize.x, y * mapTileSize.y };
 			vpos[1] = vpos[0]; 		vpos[1].y += mapTileSize.y;
 			vpos[2] = vpos[0]; 		vpos[2].x -= mapTileSize.x;
-			vpos[3].y = vpos[1].y; 	vpos[3].x  = vpos[2].x;
+			vpos[3].y = vpos[1].y; 	vpos[3].x = vpos[2].x;
 
 			vert[0].position = vpos[0]; vert[2].position = vpos[2];
 			vert[1].position = vpos[1]; vert[3].position = vpos[3];
@@ -381,35 +384,18 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 			vert[1].texCoords = { tile->left + tile->width, tile->top + tile->height };
 
 			for (unsigned int i = 0; i < TILE_VERTICES; ++i)
-				vertices[currVertex++] = vert[i];
+				vertices[count++] = vert[i];
 		}
 	}
 
-	sf_draw(vertices, mapWidth * mapHeight * TILE_VERTICES, sf::TrianglesStrip, states);
+	sf_draw(vertices, mapWidth * mapHeight * TILE_VERTICES, sf::TrianglesStrip, newstates);
+
+	count = 0;
 }
 
-/**
- * Merges "toMerge" with this renderer's RenderStates.
- *
- * @date       2015-02-28
- *
- * @revisions
- *
- * @designer   Melvin Loho
- *
- * @programmer Melvin Loho
- *
- * @param      toMerge The RenderStates to merge
- */
-void Renderer::mergeRenderStates(sf::RenderStates& toMerge) const
+void Renderer::drawEntities(const Marx::Map& map)
 {
-	if (toMerge.blendMode == sf::RenderStates::Default.blendMode)
-		toMerge.blendMode = this->states.blendMode;
-	//if (toMerge.transform == sf::Transform::Identity)
-	if (toMerge.texture == sf::RenderStates::Default.texture)
-		toMerge.texture = this->states.texture;
-	if (toMerge.shader == sf::RenderStates::Default.shader)
-		toMerge.shader = this->states.shader;
+
 }
 
 /**
@@ -429,19 +415,22 @@ void Renderer::mergeRenderStates(sf::RenderStates& toMerge) const
  */
 unsigned int Renderer::prepareSpriteDrawing(const sf::Texture &texture)
 {
-	if (!active) throw std::string("Renderer is not active.");
+	if (!active) throw "Renderer is not active.";
 
 	if (&texture != this->states.texture)
 	{
 		flushSprites();
 		this->states.texture = &texture;
 	}
-	else if (count >= maxCount)
+	else if (count + SPRITE_VERTICES > maxCount)
 	{
 		flushSprites();
 	}
 
-	return count++ * SPRITE_VERTICES;
+	unsigned int oldCount = count;
+	count += SPRITE_VERTICES;
+
+	return oldCount;
 }
 
 /**
@@ -485,11 +474,11 @@ void Renderer::batchSprite(const sf::Texture &texture, const sf::Vertex *vertice
 void Renderer::flushSprites()
 {
 	if (count == 0) return;
-	count_sprites += count;
+	count_cumulative += count;
 
 	sf_draw(
 		vertices,
-		count * SPRITE_VERTICES,
+		count,
 		sf::PrimitiveType::Triangles,
 		states
 		);
