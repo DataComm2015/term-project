@@ -253,3 +253,7 @@ uint Map::getTexture() const
     return texture_id_;
 }
 
+void Map::draw(Renderer& renderer, sf::RenderStates states) const
+{
+	renderer.draw(*this, states);
+}

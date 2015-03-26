@@ -43,7 +43,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	}
 
 	gMap = new GameMap(cMap);
-	v = new Vessel(WARRIOR, NULL, 0, 0);
+	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
+	v = new Vessel(TEGUH, NULL, 0, 0);
 
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
@@ -81,12 +82,14 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
 	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Multimedia/Assets/Sound/music.ogg"));
 	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Multimedia/Assets/Sound/sound.wav"));
+	placeholderSprite = Manager::TextureManager::store(
+		Manager::TextureManager::load("Multimedia/Assets/Art/Misc/placeholder.png")
+		);
 
 	// an example, obviously...
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
-
 
 	cMap->setTexture(tilemap);
 	championSGO().setTexture(*Manager::TextureManager::get(championSprite));
@@ -103,6 +106,13 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	wepSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
 	wepSGO().setScale(2, 2);
 	wepSGO.middleAnchorPoint(true);
+
+	placeHolderSGO().setTexture(*Manager::TextureManager::get(placeholderSprite));
+	placeHolderSGO().setScale(2, 2);
+	placeHolderSGO.middleAnchorPoint(true);
+
+	ventitee = new VEntity(placeHolderSGO, cMap, 0, 0, nullptr, 1, 1);
+	cMap->add(*ventitee);
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
@@ -137,12 +147,12 @@ void GameScene::onLoad()
 
 	sf::Vector2f windowSize = viewUI.getSize();
 
-	b1->operator()().setPosition((windowSize.x / 2) - 600, windowSize.y * 0.75f);
-	b2->operator()().setPosition((windowSize.x / 2) - 400, windowSize.y * 0.75f);
-	b3->operator()().setPosition(100, 400);
-	b4->operator()().setPosition(100, 400);
-	b5->operator()().setPosition(100, 400);
-	b6->operator()().setPosition(100, 400);
+	b1->setPosition((windowSize.x / 2) - 600, windowSize.y * 0.75f);
+	b2->setPosition((windowSize.x / 2) - 400, windowSize.y * 0.75f);
+	b3->setPosition(100, 400);
+	b4->setPosition(100, 400);
+	b5->setPosition(100, 400);
+	b6->setPosition(100, 400);
 }
 
 void GameScene::unLoad()
@@ -179,7 +189,6 @@ GameScene::~GameScene()
 void GameScene::update(sf::Time t)
 {
 	v->move();
-
 
 	if (v->getXSpeed() != 0 || v->getYSpeed() != 0)
 	{
@@ -223,6 +232,8 @@ void GameScene::update(sf::Time t)
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
 
+	ventitee->update(t);
+
 	b1->update(t);
 	b2->update(t);
 
@@ -244,7 +255,7 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
-		for(auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
 		{
 			(*l)->onKeyPressed(e.key.code);
 		}
@@ -263,13 +274,14 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			// Generate the game map
 			gMap->generateMap();
+			generateWater();
 			break;
 		}
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
 	{
-		for(auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
 		{
 			(*l)->onKeyReleased(e.key.code);
 		}
@@ -298,7 +310,7 @@ void GameScene::draw()
 {
 	AppWindow& window = AppWindow::getInstance();
 
-	window.clear();
+	window.clear(sf::Color::Blue);
 
 	window.setView(viewMain);
 
@@ -306,19 +318,19 @@ void GameScene::draw()
 
 	// Draw the maps
 	renderer.states.shader = &waveShader;
-	renderer.draw(*waterMap);
+	renderer.draw(waterMap);
 	renderer.states.shader = nullptr;
-	renderer.draw(*cMap);
+	renderer.draw(cMap);
 
 	renderer.end();
 
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(*tb);
-	renderer.draw(championSGO);
-	renderer.draw(maskSGO);
-	renderer.draw(wepSGO);
+	renderer.draw(tb);
+	renderer.draw(&championSGO);
+	renderer.draw(&maskSGO);
+	renderer.draw(&wepSGO);
 
 	renderer.end();
 
@@ -326,8 +338,9 @@ void GameScene::draw()
 	window.setView(viewUI);
 
 	renderer.begin();
-	renderer.draw(*b1);
-	renderer.draw(*b2);
+
+	renderer.draw(b1);
+	renderer.draw(b2);
 
 	renderer.end();
 
@@ -352,9 +365,6 @@ void GameScene::generateWater()
 	waveShader.setParameter("wave_amplitude", sf::Vector2f(WAVE_X, WAVE_Y));
 	waveShader.setParameter("wave_phase", phase);
 
-	// Create the water map
-	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
-
 	// Set the water map tiles
 	int randomWater;
 	vector<CellTile> waterTiles({ WATER_1, WATER_2 });
@@ -363,6 +373,9 @@ void GameScene::generateWater()
 	{
 		for (int j = 0; j < waterMap->getWidth(); j++)
 		{
+			Cell* oldCell = waterMap->getCell(j, i);
+			if (oldCell) delete oldCell;
+
 			Cell *tempCell = new Cell();
 
 			randomWater = rand() % 2;

@@ -9,13 +9,26 @@ using namespace Marx;
 
 
 
-	class VEntity : public Entity
+class VEntity : public Entity
+{
+public:
+	VEntity(SGO &_sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w) :
+		sprite(_sprite), Entity(_map, x, y, ctrl, h, w){};
+
+	void update(const sf::Time& t) override
 	{
-		public:
-			VEntity(SGO &_sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w ) :
-			sprite(_sprite), Entity(_map, x, y, ctrl, h, w){};
-		protected:
-			SGO sprite;
-	};
+		static unsigned counter = 0;
+
+		if (++counter % 50 == 0)
+		{
+			move(counter / 50, counter / 50, rand() % 2);
+		}
+	}
+
+protected:
+	void draw(Renderer& renderer, sf::RenderStates states) const override;
+
+	SGO& sprite;
+};
 
 #endif
