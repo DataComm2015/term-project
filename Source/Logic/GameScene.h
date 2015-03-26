@@ -44,6 +44,7 @@ class GameScene : public Scene
 		virtual void update(sf::Time);
 		virtual void processEvents(sf::Event&);
 		virtual void draw();
+		Marx::Map* getcMap() { return cMap; }
 		void onLoad();
 		void unLoad();
 		~GameScene();
