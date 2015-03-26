@@ -1,6 +1,8 @@
 #ifndef LOGIC_EVENT_H_
 #define LOGIC_EVENT_H_
 
+#include "../Engine/Event.h"
+
 /*
  * move event message used to send move events over network
  */
