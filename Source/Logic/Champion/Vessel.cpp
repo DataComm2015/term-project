@@ -60,6 +60,13 @@ Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
 		travelSpeed = 7;
 		//weapon = Sword;
 	}
+	else if (jobClass == TEGUH) 		//TEGUH
+	{
+		currentHealth = 4242;
+		maxHealth = 424242;
+		travelSpeed = 42;
+		//weapon = BOWL_OF_LAKSA;
+	}
 }
 
 /*------------------------------------------------------------------------------------------------------------------

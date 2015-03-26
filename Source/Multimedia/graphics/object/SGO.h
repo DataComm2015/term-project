@@ -22,7 +22,7 @@ public:
 	void middleAnchorPoint(bool arg);
 
 protected:
-	void draw(Renderer& renderer) const override;
+	void draw(Renderer& renderer, sf::RenderStates states) const override;
 
 private:
 	sf::Sprite data;

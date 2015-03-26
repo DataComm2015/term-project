@@ -32,6 +32,7 @@ namespace Marx
 #include <stdexcept> 
 #include "Cell.h"
 #include "../Multimedia/graphics/object/BGO.h"
+#include "../Multimedia/graphics/Renderer.h"
 
 
 namespace Marx 
@@ -53,6 +54,9 @@ namespace Marx
             void setTexture(const uint texture_id);
             uint getTexture() const;
             
+	protected:
+		void draw(Renderer& renderer, sf::RenderStates states) const override;
+
         private:
             unsigned int width_;
             unsigned int height_;

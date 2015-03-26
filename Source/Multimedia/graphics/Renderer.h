@@ -13,8 +13,9 @@ class TGO;
 namespace Marx
 {
 	class Map;
-	class Entity;
 }
+
+// @TODO : Make Renderer have a dynamic buffer
 
 class Renderer
 {
@@ -34,15 +35,15 @@ public:
 	void end();
 	void resetStats();
 
-	void draw(BGO& bgo, bool scenegraph);
-	void draw(const SGO& sgo);
-	void draw(const TGO& tgo);
-	void draw(const Marx::Map& map);
-	void drawEntities(const Marx::Map& map);
+	void draw(const BGO* bgo, bool scenegraph = true, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const TGO& tgo, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const Marx::Map& map, sf::RenderStates states = sf::RenderStates::Default);
 
 	sf::RenderStates states;
 
 private:
+	void mergeRenderStates(sf::RenderStates& toMerge) const;
 	unsigned int prepareSpriteDrawing(const sf::Texture &texture);
 	void batchSprite(const sf::Texture &texture, const sf::Vertex *vertices);
 	void flushSprites();
