@@ -38,6 +38,14 @@ void run();
 // Player //
 ////////////
 
+/**
+ * the {Player} is resides the server, and is logically mapped to the {Command}
+ *   class over the network, which is on the client side.
+ *
+ * the client sends command using {Command::update} such as move commands or
+ *   others like choosing their character to the Server. such commands are
+ *   handled in the {Player::onUpdate} method. and sent using the.
+ */
 class Player : public NetworkEntity
 {
 public:
@@ -118,6 +126,20 @@ private:
 // ServerController //
 //////////////////////
 
+/**
+ * the {ServerController} class on the server is logically mapped to a
+ *   {NetworkController} on the client. other controllers such as AI controllers
+ *   should inherit from the {ServerController} class, and get their entity to
+ *   do stuff by using the addEvent method.
+ *
+ * whenever the {ServerController::addEvent} function is called, it will get its
+ *   entity to do stuff. if the event should be received on the client side as
+ *   well, then the event should be converted into a Networking::Message in the
+ *   {ServerController::sendEventMessage} method. the same message will be
+ *   received in the {NetworkController::onUpdate} function, where it needs to
+ *   be handled, and converted from a message back into an event, then added to
+ *   the {NetworkController's} event queue.
+ */
 class ServerController : public Controller, public Networking::NetworkEntity
 {
 public:
@@ -178,6 +200,10 @@ public:
 // NetworkEntityMultiplexer //
 //////////////////////////////
 
+/**
+ * the server's implementation of the {NetworkEntityMultiplexer}...nothing
+ *   special to do here.
+ */
 class Mux : public NetworkEntityMultiplexer
 {
 public:
@@ -189,6 +215,15 @@ public:
 // Server //
 ////////////
 
+/**
+ * the server's implementation of the server. this thing is going to need more
+ *   work.
+ *
+ * at the moment, it is just hard coded to create a {Player}, {ProperEntity},
+ *   and {ServerController}, and register the {ServerController} and {Player}
+ *   instances with the client, which will cause the client to create a
+ *   {NetworkController} and {Command} instances respectively.
+ */
 class Svr : public Server
 {
 public:
@@ -243,6 +278,9 @@ int main( int argc, char ** argv )
     return 0;
 }
 
+/**
+ * the game loop.
+ */
 void run()
 {
     if (!isRunning)
