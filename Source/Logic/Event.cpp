@@ -1,3 +1,5 @@
+#include "../Engine/Event.h"
+#include "Event.h"
 
 /**
  * constructs a new move event
@@ -6,7 +8,7 @@
  * @param _y new y position that the entity should move to
  * @param f whatever forced means
  */
-void Marx::MoveEvent::MoveEvent(float _x, float _y, bool f=false)
+MoveEvent::MoveEvent(float _x, float _y, bool f)
 {
     x     = _x;
     y     = _y;
@@ -18,7 +20,7 @@ void Marx::MoveEvent::MoveEvent(float _x, float _y, bool f=false)
  *
  * @return   x property of the move event.
  */
-float Marx::MoveEvent::getX()
+float MoveEvent::getX()
 {
     return x;
 }
@@ -28,7 +30,7 @@ float Marx::MoveEvent::getX()
  *
  * @return   y property of the move event.
  */
-float Marx::MoveEvent::getY()
+float MoveEvent::getY()
 {
     return y;
 }
@@ -38,7 +40,7 @@ float Marx::MoveEvent::getY()
  *
  * @return   force property of the move event.
  */
-bool Marx::MoveEvent::forced()
+bool MoveEvent::forced()
 {
     return force;
 }

@@ -40,10 +40,10 @@ namespace Marx
 
             Controller * controller;
             std::set<Cell*> occupiedCells;
-			Map * map;
+            Map * map;
         public:
             Entity(Map * _map, float x, float y, Controller * ctrl, float h, float w);
-            ~Entity();
+            virtual ~Entity();
             virtual void turn();
             Entity * move(float, float, bool);
             virtual std::set<Cell*> getCell();
@@ -52,5 +52,5 @@ namespace Marx
             virtual void onUpdate();
             virtual bool operator==(const Entity&);
     };
-}
+};
 #endif
