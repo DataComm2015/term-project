@@ -1,17 +1,17 @@
 //> In the main file
 #include "AppWindow.h"
 
+#include "Logic/Event.h"
 #include "Logic/KeyListener.h"
+#include "Logic/ProperEntity.h"
 #include "Logic/NetworkEntityPairs.h"
 
 #include "Engine/Controller.h"
-#include "Engine/ProperEntity.h"
 
 #include "Network/Client.h"
 #include "Network/Session.h"
 #include "Network/Message.h"
 #include "Network/NetworkEntity.h"
-#include "Network/NetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
 using Networking::NetworkEntityMultiplexer;
@@ -41,26 +41,68 @@ public:
 protected:
     virtual void onKeyPressed(int key)
     {
-        // should do some processing here to convert a keystroke into an actual
-        // move event  a move event would be something like "move up", "move
-        // down", "stop moving up", "stop moving down"...and others... i hope
-        // you get the point
+        // convert keystroke into command
+        int command;
+        switch(key)
+        {
+        case sf::Keyboard::Left:
+            command = MSG_T_PLAYER_COMMAND_START_MV_LEFT_COMMAND;
+            break;
+        case sf::Keyboard::Right:
+            command = MSG_T_PLAYER_COMMAND_START_MV_RIGHT_COMMAND;
+            break;
+        case sf::Keyboard::Up:
+            command = MSG_T_PLAYER_COMMAND_START_MV_UP_COMMAND;
+            break;
+        case sf::Keyboard::Down:
+            command = MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND;
+            break;
+
+        // bail out if we don't recognize the command
+        default:
+            return;
+        }
+
+        // put the command into a message to be sent over the network
         Message msg;
-        msg.type = MSG_T_PLAYER_COMMAND_MOVE_COMMAND;
-        msg.data = &key;
-        msg.len  = sizeof(key);
+        msg.type = 0;
+        msg.data = &command;
+        msg.len  = sizeof(command);
+
+        // send the command over the network
         update(msg);
     }
     virtual void onKeyReleased(int key)
     {
-        // should do some processing here to convert a keystroke into an actual
-        // move event  a move event would be something like "move up", "move
-        // down", "stop moving up", "stop moving down"...and others... i hope
-        // you get the point
+        // convert keystroke into command
+        int command;
+        switch(key)
+        {
+        case sf::Keyboard::Left:
+            command = MSG_T_PLAYER_COMMAND_STOP_MV_LEFT_COMMAND;
+            break;
+        case sf::Keyboard::Right:
+            command = MSG_T_PLAYER_COMMAND_STOP_MV_RIGHT_COMMAND;
+            break;
+        case sf::Keyboard::Up:
+            command = MSG_T_PLAYER_COMMAND_STOP_MV_UP_COMMAND;
+            break;
+        case sf::Keyboard::Down:
+            command = MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND;
+            break;
+
+        // bail out if we don't recognize the command
+        default:
+            return;
+        }
+
+        // put the command into a message to be sent over the network
         Message msg;
-        msg.type = MSG_T_PLAYER_COMMAND_MOVE_COMMAND;
-        msg.data = &key;
-        msg.len  = sizeof(key);
+        msg.type = 0;
+        msg.data = &command;
+        msg.len  = sizeof(command);
+
+        // send the command over the network
         update(msg);
     }
     virtual void onUnregister(Session* session, Message message)
@@ -74,7 +116,49 @@ protected:
 ///////////////////////
 // NetworkController //
 ///////////////////////
+class NetworkController : public ::Marx::Controller, public NetworkEntity
+{
+public:
+    NetworkController(int id)
+        :NetworkEntity(id,NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
+    {
+    }
+    ~NetworkController()
+    {
+    }
+    virtual void onUpdate( Message message )
+    {
+        parseEventMessage(message);
+    }
+    virtual void onUnregister( Session * session, Message message )
+    {
+        parseEventMessage(message);
+    }
+private:
+    void parseEventMessage(Message& message)
+    {
+        switch(message.type)
+        {
+        case ::Marx::MOVE:
+        {
+            // case message payload
+            MoveMessage* mm = (MoveMessage*) message.data;
 
+            // create event from message data
+            MoveEvent ev(mm->x, mm->y, mm->forced);
+
+            // add event to event queue
+            addEvent(ev);
+            break;
+        }
+        default:
+            printf("WARNING: NetworkController::parseEventMessage received an "
+                "unknown event type. please add new case to switch statement");
+            fflush(stdout);
+            break;
+        }
+    }
+};
 
 
 //////////////////////////////
@@ -100,11 +184,11 @@ public:
         case NET_ENT_PAIR_PLAYER_COMMAND:
             ret = new Command(id);
             break;
-        // case NET_ENT_PAIR_PLAYERCONTROLLER_NETCONTROLLER:
-        //     ret = new NetworkController(id);
-        //     Marx::Map* cMap = ((GameScene*)scene)->getcMap();
-        //     new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
-        //     break;
+        case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
+            ret = new NetworkController(id);
+            Marx::Map* cMap = ((GameScene*)scene)->getcMap();
+            new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+            break;
         }
 
         return ret;

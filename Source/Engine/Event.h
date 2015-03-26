@@ -12,13 +12,11 @@
 --
 -- DESIGNER: Marc Rafanan
 --           Marc Vouve
---           Jeff Bayntun
---           Eric Tsang
 --
 -- PROGRAMMER: Marc Rafanan
 --             Marc Vouve
---           Jeff Bayntun
---           Eric Tsang
+--             Jeff Bayntun
+--             Eric Tsang
 --
 -- NOTES:
 -- This file defines the Event class members
@@ -44,32 +42,6 @@ namespace Marx
     {
     public:
         EventType type;
-    };
-
-    /*
-     * move event message used to send move events over network
-     */
-    struct MoveMessage
-    {
-        float x;
-        float y;
-        bool forced;
-    };
-
-    /*
-     * Move Event Class
-     */
-    class MoveEvent: public Event
-    {
-    public:
-        MoveEvent(float _x, float _y, bool f=false);
-        float getX();
-        float getY();
-        bool forced();
-    private:
-        float x;
-        float y;
-        bool force;
     };
 }
 
