@@ -274,26 +274,24 @@ void BGO::update(const sf::Time& t)
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
+ * @param      states   The render states
  */
-void BGO::drawSG(Renderer& renderer)
+void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
 {
+	// Combine transformations (caller's + mine)
+	states.transform *= getTransform();
+
+	// Draw self
+	draw(renderer, states);
+
 	// Draw children
 	if (hasChildren())
 	{
-		for (BGO* go : m_children)
+		for (const BGO* go : m_children)
 		{
-			// Combine transformations (child's + mine)
-			go->move(getPosition());
-			go->rotate(getRotation());
-			go->scale(getScale());
-
-			// Recurrrsion!!
-			go->drawSG(renderer);
+			go->drawSG(renderer, states);
 		}
 	}
-
-	// Draw self
-	draw(renderer);
 }
 
 /**
@@ -308,6 +306,7 @@ void BGO::drawSG(Renderer& renderer)
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
+ * @param      states   The render states
  */
-void BGO::draw(Renderer& renderer) const
+void BGO::draw(Renderer& renderer, sf::RenderStates states) const
 {}
