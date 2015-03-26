@@ -14,7 +14,7 @@
 ***********************************************************************************/
 #include "GateKeeper.h"
 
-class MiniBoss : public GateKeeper
+class Minion : public GateKeeper
 {
 	public:
 		Minion(GKstruct *gk) : GateKeeper(*gk);
