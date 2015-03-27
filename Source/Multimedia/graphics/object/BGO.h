@@ -31,8 +31,8 @@ public:
 protected:
 	friend class Renderer;
 
-	void drawSG(Renderer& renderer);
-	virtual void draw(Renderer& renderer) const;
+	void drawSG(Renderer& renderer, sf::RenderStates states) const;
+	virtual void draw(Renderer& renderer, sf::RenderStates states) const;
 
 private:
 	static id_go ID_GO;

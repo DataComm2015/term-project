@@ -60,7 +60,7 @@
 typedef char Weapon;
 typedef char Ability;
 
-typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT } job_class;
+typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
 class Vessel
 {

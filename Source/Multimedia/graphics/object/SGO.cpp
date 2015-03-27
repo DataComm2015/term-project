@@ -138,8 +138,9 @@ void SGO::middleAnchorPoint(bool arg)
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
+ * @param      states   The render states
  */
-void SGO::draw(Renderer& renderer) const
+void SGO::draw(Renderer& renderer, sf::RenderStates states) const
 {
-	renderer.draw(*this);
+	renderer.draw(*this, states);
 }
