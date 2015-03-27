@@ -24,30 +24,30 @@ void ServerCommandEntity::sendEventMessage(Event event)
     // create network message from event
     switch(event.type)
     {
-    case ::Marx::MOVE:
-    {
-        // cast event to event subclass
-        MoveEvent* me = (MoveEvent*) &event;
+        case ::Marx::MOVE:
+        {
+            // cast event to event subclass
+            MoveEvent* me = (MoveEvent*) &event;
 
-        // parse move event into move message
-        MoveMessage mm;
-        mm.x      = me->getX();
-        mm.y      = me->getY();
-        mm.forced = me->forced();
+            // parse move event into move message
+            MoveMessage mm;
+            mm.x      = me->getX();
+            mm.y      = me->getY();
+            mm.forced = me->forced();
 
-        // message to be sent over the network
-        Message message;
-        message.data = &mm;
-        message.len  = sizeof(mm);
-        message.type = ::Marx::MOVE;
+            // message to be sent over the network
+            Message message;
+            message.data = &mm;
+            message.len  = sizeof(mm);
+            message.type = ::Marx::MOVE;
 
-        // send the network event
-        update(message);
-        break;
+            // send the network event
+            update(message);
+            break;
     }
     default:
-        printf("WARNING: NetworkController::sendEventMessage received an "
-            "unknown event type. please add new case to switch statement");
+        printf("\r\nWARNING: NetworkController::sendEventMessage received an "
+            "unknown event type. please add new case to switch statement\r\n");
         fflush(stdout);
         break;
     }
