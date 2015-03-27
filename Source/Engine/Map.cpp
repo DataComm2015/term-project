@@ -64,6 +64,22 @@ Map::~Map()
 }
 
 
+std::set<Entity*> Map::getEntities() const
+{
+	std::set<Entity *> entity;
+	std::set<Entity *>::iterator it; 
+
+	for( Cell * c : cells_ )
+	{
+		for(Entity * e : c->getEntity())
+		{
+			entity.emplace(e);
+		}
+	}
+	
+	return entity;
+}
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: setCell
 --
@@ -251,6 +267,11 @@ void Map::setTexture(const uint texture_id)
 uint Map::getTexture() const
 {
     return texture_id_;
+}
+
+const sf::Transform& Map::getLocalTransform() const
+{
+	return trans;
 }
 
 void Map::draw(Renderer& renderer, sf::RenderStates states) const

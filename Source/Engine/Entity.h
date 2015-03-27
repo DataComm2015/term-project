@@ -11,7 +11,8 @@
 --
 -- DESIGNER: Marc Vouve
 --
--- PROGRAMMER: Michael Chimick
+-- PROGRAMMER:  Marc Vouve
+--				Michael Chimick
 --
 -- NOTES:
 --        This file defines the Entity class members
@@ -36,6 +37,8 @@ namespace Marx
 {
 	class Entity : public sf::FloatRect, public BGO
 	{
+	private:
+		bool move__;
 	protected:
 		Controller * controller;
 		std::set<Cell*> occupiedCells;

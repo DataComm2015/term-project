@@ -53,6 +53,9 @@ namespace Marx
             Cell* getCell(const uint x, const uint y) const;
             void setTexture(const uint texture_id);
             uint getTexture() const;
+			std::set<Entity*> getEntities() const;
+			const sf::Transform& getLocalTransform() const override;
+			sf::Transform trans;
             
 	protected:
 		void draw(Renderer& renderer, sf::RenderStates states) const override;

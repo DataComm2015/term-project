@@ -23,6 +23,7 @@
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
 #include "../Engine/VEntity.h"
+#include "../Engine/EGTheSpinner.h"
 
 #include "KeyListener.h"
 
@@ -93,7 +94,8 @@ class GameScene : public Scene
 		SGO wepSGO;
 		SGO placeHolderSGO;
 		Vessel *v;
-		VEntity *ventitee;
+		TheSpinner *s;
+		TheSpinner *s2;
 
 		// UI
 		GUI::Button *b1;

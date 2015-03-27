@@ -8,13 +8,13 @@
 
 #include "Engine/Controller.h"
 
+#ifdef __linux__
+
 #include "Network/Client.h"
 #include "Network/Session.h"
 #include "Network/Message.h"
 #include "Network/NetworkEntity.h"
 #include "Network/NetworkEntityMultiplexer.h"
-
-#include "Logic/ClientLobbyScene.h"
 
 using Networking::NetworkEntityMultiplexer;
 using Networking::NetworkEntity;
@@ -22,8 +22,11 @@ using Networking::Message;
 using Networking::Session;
 using Networking::Client;
 
+#endif // __linux__
+
 GameScene* scene;
-ClientLobbyScene *lobbyScene;
+
+#ifdef __linux__
 
 /////////////
 // Command //
@@ -232,6 +235,8 @@ public:
     };
 };
 
+#endif // __linux__
+
 //////////
 // Main //
 //////////
@@ -241,24 +246,24 @@ int main(int argc, char* argv[])
     printf("USAGE: %s [REMOTE_IP] [REMOTE_PORT]\n",argv[0]);
     fflush(stdout);
 
-    /*scene = new GameScene();*/
-    lobbyScene = new ClientLobbyScene();
+	AppWindow::getInstance().setVerticalSyncEnabled(true);
 
-/*
+    scene = new GameScene();
+
+#ifdef __linux__
+
     NetworkEntityMultiplexer::setInstance(new Mux());
-
-    //AppWindow::getInstance().addScene(scene);
-    AppWindow::getInstance().addScene(scene);
 
     Client* client = new Client();
 
     short port = atoi(argv[2]);
     client->connect(argv[1], port);
 
-    delete client;
-*/
-    AppWindow::getInstance().addScene(lobbyScene);
+#endif // __linux__
+
+	AppWindow::getInstance().addScene(scene);
+
     AppWindow::getInstance().run();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
