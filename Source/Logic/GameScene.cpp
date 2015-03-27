@@ -5,11 +5,12 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using namespace Marx;
-
+/*
+//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 Animation *runAnim;
 Animation *runAnim_mask;
 Animation *runAnim_wep;
-
+*/
 void onclick()
 {
 	static int i = 0;
@@ -84,11 +85,13 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 		);
 
 	// an example, obviously...
+	/*
 	v = new Vessel(SHAMAN, nullptr, 0, 0);
 
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
+	*/
 
 	cMap->setTexture(tilemap);
 	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
@@ -196,6 +199,8 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
+	/*
 	v->move();
 
 	if (v->getXSpeed() != 0 || v->getYSpeed() != 0)
@@ -229,9 +234,12 @@ void GameScene::update(sf::Time t)
 		wepSGO.sprite().setScale(2, 2);
 		//b1->toggleEnabled(false);
 	}
+	*/
 
 	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
 
+	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
+	/*
 	championSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 	maskSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 	wepSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
@@ -239,6 +247,7 @@ void GameScene::update(sf::Time t)
 	runAnim->update(t);
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
+	*/
 
 	s2->update(t);
 	s->update(t);
@@ -249,7 +258,7 @@ void GameScene::update(sf::Time t)
 	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	viewMain.setCenter(v->getXPosition(), v->getYPosition());
+	//viewMain.setCenter(v->getXPosition(), v->getYPosition());
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
@@ -269,7 +278,7 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyPressed(e.key.code);
 		}
 
-		v->detectMove();
+		// v->detectMove();
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch (e.key.code)
@@ -295,7 +304,7 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyReleased(e.key.code);
 		}
 
-		v->stop(e.key.code);
+		// v->stop(e.key.code);
 	}
 	else if (e.type == sf::Event::Resized)
 	{

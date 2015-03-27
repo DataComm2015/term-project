@@ -1,4 +1,6 @@
+#include <iostream>
 #include "Vessel.h"
+#include "../Event.h"
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel constructor
 --
@@ -20,11 +22,13 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
+Vessel::Vessel( Marx::Map * gmap, Marx::Controller* controller, job_class jobClass, Ability* abilityList, float x, float y )
+			: Marx::Entity( gmap, x, y, NULL, 1.0, 1.0 )
+			,_controller(controller)
 {
-	xPosition = x;
-	yPosition = y;
 	direction = 1; //start facing right
+
+	resetEXP();
 
 	xSpeed = 0;
 	ySpeed = 0;
@@ -67,6 +71,61 @@ Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
 		travelSpeed = 42;
 		//weapon = BOWL_OF_LAKSA;
 	}
+	std::cout << "Vessel constructed successfully!" << std::endl;
+}
+
+/*-------------------------------------------
+--
+--
+-- Called every game loop. dequeus all events from the entity's
+-- controller and proceses those events
+---------------------------------------------*/
+void Vessel::onUpdate()
+{
+	std::vector< Marx::Event > eventQueue = controller->getEvents();
+
+	for( std::vector< Marx::Event >::iterator it = eventQueue.begin()
+		; it != eventQueue.end()
+		; ++it )
+	{
+			// switch on type
+			switch(it->type)
+			{
+			case ::Marx::MOVE:
+					MoveEvent* ev = (MoveEvent*) (&*it);
+					printf( "move: x:%f y:%f force:%d\n",
+							ev->getX(), ev->getY(), ev->forced() );
+					//move( ev->getX(), ev->getY(), ev->forced() );
+					break;
+			}
+	}
+	eventQueue.clear();
+}
+
+void Vessel::turn()
+{
+
+}
+
+Marx::Entity* Vessel::move(float, float, bool)
+{
+
+}
+
+std::set<Marx::Cell*> Vessel::getCell()
+{
+
+}
+
+void Vessel::onCreate()
+{
+
+}
+
+
+void Vessel::onDestroy()
+{
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -76,9 +135,9 @@ Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: Vessel::~Vessel( )
 --
@@ -89,7 +148,8 @@ Vessel::Vessel(job_class jobClass, Ability* abilityList, int x, int y )
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::~Vessel()
 {
-
+	if( abilities != NULL )
+		delete[] abilities;
 }
 
 
@@ -113,7 +173,7 @@ Vessel::~Vessel()
 -- NOTES:
 -- This function is used to directly position a Vessel on a map, can be used for teleportation.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::setPosition( int x, int y )
+void Vessel::setPosition( float x, float y )
 {
 	xPosition = x;
 	yPosition = y;
@@ -126,9 +186,9 @@ void Vessel::setPosition( int x, int y )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::resetEXP()
 --
@@ -139,7 +199,40 @@ void Vessel::setPosition( int x, int y )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::resetEXP()
 {
+	currentEXP = 0;
+	nextLevelEXP = 100;
+	currentLevel = 1;
 
+	//class-specific instantiation
+	if ( jobClass == WARRIOR )			//warrior
+	{
+		currentHealth = 150;
+		maxHealth = 150;
+		defaultSpeed = travelSpeed = 2;
+		//Weapon = Spear;
+	}
+	else if ( jobClass == SHAMAN )		//shaman
+	{
+		currentHealth = 75;
+		maxHealth = 75;
+		defaultSpeed = travelSpeed = 6;
+		//weapon = Fireball;
+	}
+
+	else if ( jobClass == HUNTER )		//Hunter
+	{
+		currentHealth = 100;
+		maxHealth = 100;
+		defaultSpeed = travelSpeed = 6;
+		//weapon = Javelin;
+	}
+	else if ( jobClass == SCOUT ) 		//Scout
+	{
+		currentHealth = 125;
+		maxHealth = 125;
+		defaultSpeed = travelSpeed = 7;
+		//weapon = Sword;
+	}
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -149,9 +242,9 @@ void Vessel::resetEXP()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::increaseEXP( int exp )
 -- int exp: the amount of exp increase by
@@ -160,10 +253,27 @@ void Vessel::resetEXP()
 --
 -- NOTES:
 -- This function adds the given EXP to current EXP count.
+-- If current EXP >= total next level EXP, increase level by one,
+-- increase total next level EXP by a multiplication factor,
+-- increase max health by a a multiplication factor,
+-- increase speed by 1;
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::increaseEXP( int exp )
 {
+	currentEXP += exp;
 
+	if( currentLevel < 10 )
+	{
+		if( currentEXP >= nextLevelEXP )
+		{
+			currentLevel++;
+			if( currentLevel == 10 )
+				nextLevelEXP *= 2.5;
+			maxHealth *= 1.5;
+			defaultSpeed++;
+			travelSpeed++;
+		}
+	}
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -173,9 +283,9 @@ void Vessel::increaseEXP( int exp )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getEXP()
 --
@@ -186,7 +296,7 @@ void Vessel::increaseEXP( int exp )
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getEXP()
 {
-	return 0;
+	return currentEXP;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -196,26 +306,21 @@ int Vessel::getEXP()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getNextLevelEXP()
 --
 -- RETURNS: EXP in integer format
 --
 -- NOTES:
--- This function returns the next experience point total needed to level up.
+-- This function returns the next TOTAL experience points needed to level up.
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getNextLevelEXP()
 {
-	return 0;
+	return nextLevelEXP;
 }
-
-
-
-
-
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getLevel
@@ -224,9 +329,9 @@ int Vessel::getNextLevelEXP()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getLevel()
 --
@@ -237,7 +342,7 @@ int Vessel::getNextLevelEXP()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getLevel()
 {
-	return 0;
+	return currentLevel;
 }
 
 
@@ -261,10 +366,8 @@ int Vessel::getLevel()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::increaseLevel()
 {
-
+		currentLevel++;
 }
-
-
 
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -274,9 +377,9 @@ void Vessel::increaseLevel()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::resetHP()
 --
@@ -287,7 +390,7 @@ void Vessel::increaseLevel()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::resetHP()
 {
-
+	currentHealth = maxHealth;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -297,9 +400,9 @@ void Vessel::resetHP()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::increaseHP( int hp )
 -- int hp: the amount of HP to increase by
@@ -311,7 +414,9 @@ void Vessel::resetHP()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::increaseHP( int hp )
 {
-
+	currentHealth += hp;
+	if( currentHealth > maxHealth )
+		currentHealth = maxHealth;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -321,9 +426,9 @@ void Vessel::increaseHP( int hp )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::decreaseHP( int hp )
 -- int hp: the amount of HP to decrease by
@@ -335,6 +440,12 @@ void Vessel::increaseHP( int hp )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::decreaseHP( int hp )
 {
+	currentHealth -= hp;
+	if( currentHealth < 0 )
+	{
+		currentHealth = 0;
+		die();
+	}
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -344,9 +455,9 @@ void Vessel::decreaseHP( int hp )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getHP()
 --
@@ -357,7 +468,7 @@ void Vessel::decreaseHP( int hp )
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getHP()
 {
-	return 0;
+	return currentHealth;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -367,9 +478,9 @@ int Vessel::getHP()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getMaxHP()
 --
@@ -380,7 +491,7 @@ int Vessel::getHP()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getMaxHP()
 {
-	return 0;
+	return maxHealth;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -390,9 +501,9 @@ int Vessel::getMaxHP()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::resetAttackPower()
 --
@@ -412,9 +523,9 @@ void Vessel::resetAttackPower()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::attackPowerUp( int attackpower )
 -- int attackpower: the amount of attack power to increase by
@@ -435,9 +546,9 @@ void Vessel::attackPowerUp( int attackpower )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::attackPowerDown( int attackpower )
 -- int attackpower: the amount of attack power to decrease by
@@ -458,9 +569,9 @@ void Vessel::attackPowerDown( int attackpower )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getAttackPower()
 --
@@ -481,9 +592,9 @@ int Vessel::getAttackPower()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getDefaultAttackPower()
 --
@@ -504,9 +615,9 @@ int Vessel::getDefaultAttackPower()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::resetSpeed()
 --
@@ -517,6 +628,7 @@ int Vessel::getDefaultAttackPower()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::resetSpeed()
 {
+		travelSpeed = defaultSpeed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -526,9 +638,9 @@ void Vessel::resetSpeed()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::speedUp( int speed )
 -- int speed: the amount of speed to increase by
@@ -540,7 +652,7 @@ void Vessel::resetSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedUp( int speed )
 {
-
+	travelSpeed++;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -550,9 +662,9 @@ void Vessel::speedUp( int speed )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::speedDown( int speed )
 -- int speed: the amount of speed to decrease by
@@ -564,7 +676,8 @@ void Vessel::speedUp( int speed )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::speedDown( int speed )
 {
-
+	if( travelSpeed > 1 )
+		speed--;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -574,9 +687,9 @@ void Vessel::speedDown( int speed )
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getSpeed()
 --
@@ -597,9 +710,9 @@ int Vessel::getSpeed()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: int Vessel::getDefaultSpeed()
 --
@@ -610,7 +723,7 @@ int Vessel::getSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getDefaultSpeed()
 {
-	return 0;
+	return defaultSpeed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -620,9 +733,9 @@ int Vessel::getDefaultSpeed()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: bool Vessel::checkDeath()
 --
@@ -643,9 +756,9 @@ bool Vessel::checkDeath()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:
+-- DESIGNER:	Sanders Lee
 --
--- PROGRAMMER:
+-- PROGRAMMER:	Sanders Lee
 --
 -- INTERFACE: void Vessel::die()
 --
@@ -663,7 +776,7 @@ void Vessel::die()
 
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: move
+-- FUNCTION: detectMove
 --
 -- DATE: February 27, 2015
 --
@@ -673,16 +786,13 @@ void Vessel::die()
 --
 -- PROGRAMMER: Sanders Lee, Sebastian Pelka
 --
--- INTERFACE: void Vessel::move( int direction )
--- int direction: the value of the direction to move in (0 to 7)
+-- INTERFACE: void Vessel::detectMove()
 --
 -- RETURNS: nothing
 --
 -- NOTES:
--- This function moves the Vessel to a new (x, y) according to direction and speed. Will probably call SetPosition.
--- The movement may fail because something is blocking the Vessel, or the Vessel is attempting to move off the
--- edge of the map. If there's an upgrade/downgrade item on the target x, y and the Vessel successfully moved,
--- then the effect of the upgrade/downgrade item is applied to the Vessel.
+-- This function sets the vessel to a moving state and changes velocity
+-- according to key presses.
 --
 -- Bookmarks:
 -- http://en.sfml-dev.org/forums/index.php?topic=11539.0
@@ -718,19 +828,49 @@ void Vessel::detectMove()
 	}
 }
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: move
 --
+-- DATE: February 27, 2015
 --
---*/
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: void Vessel::move()
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- Moves the vessel's coordinates according to velocity.
+----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::move()
 {
-	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed );
+	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed ); //updates internal positioning
+	//Entity::move( getXPosition(), getYPosition(), false ); //updates position on Map
 }
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: stop
 --
+-- DATE: February 27, 2015
 --
---*/
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: void Vessel::stop( int keyReleased )
+-- int keyReleased: the key code for the key that was released
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- Stops moving in a particular direction depending on the direction key released.
+----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::stop( int keyReleased )
 {
 	if( (keyReleased == sf::Keyboard::D) || (keyReleased == sf::Keyboard::A) )
@@ -790,67 +930,166 @@ void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Enti
 }
 
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getXPosition
 --
+-- DATE: February 27, 2015
 --
---*/
-int Vessel::getXPosition()
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: float Vessel::getXPosition()
+--
+-- RETURNS: x positon as float
+--
+-- NOTES:
+-- Returns the x position of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
+float Vessel::getXPosition()
 {
 	return xPosition;
 }
 
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getYPosition
 --
+-- DATE: February 27, 2015
 --
---*/
-int Vessel::getYPosition()
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: float Vessel::getYPosition()
+--
+-- RETURNS: y position as float
+--
+-- NOTES:
+-- Returns the y position of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
+float Vessel::getYPosition()
 {
 	return yPosition;
 }
 
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getXSpeed
 --
+-- DATE: February 27, 2015
 --
---*/
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: int Vessel::getXSpeed()
+--
+-- RETURNS: x velocity as integer
+--
+-- NOTES:
+-- Returns the x velocity of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getXSpeed()
 {
 	return xSpeed;
 }
 
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getYSpeed
 --
+-- DATE: February 27, 2015
 --
---*/
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: int Vessel::getYSpeed()
+--
+-- RETURNS: y velocity as integer
+--
+-- NOTES:
+-- Returns the y velocity of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getYSpeed()
 {
 	return ySpeed;
 }
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: isMoving
 --
+-- DATE: February 27, 2015
 --
---*/
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: bool Vessel::isMoving()
+--
+-- RETURNS: moving state as boolean
+--
+-- NOTES:
+-- Returns whether the vessel is moving or not as a boolean.
+----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::isMoving()
 {
 	return moving;
 }
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getDirection
 --
+-- DATE: February 27, 2015
 --
---*/
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: int Vessel::getDirection()
+--
+-- RETURNS: current direction as integer
+--
+-- NOTES:
+-- Returns the direction the vessel is facing.
+-- 0 = left, 1 = right
+----------------------------------------------------------------------------------------------------------------------*/
 int Vessel::getDirection()
 {
 	return direction;
 }
 
-/*--
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getJobClass
 --
+-- DATE: February 27, 2015
 --
---*/
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Sanders Lee
+--
+-- PROGRAMMER: Sanders Lee
+--
+-- INTERFACE: job_class Vessel::getJobClass()
+--
+-- RETURNS: job class as enum value
+--
+-- NOTES:
+-- Returns the job class of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
 job_class Vessel::getJobClass()
 {
 	return jobClass;
