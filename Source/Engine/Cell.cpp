@@ -284,4 +284,60 @@ bool Cell::operator==(const Cell& cell)
 std::set<Entity*> Cell::getEntity()
 {
 	return entity;
-}	
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getEntity
+--
+-- DATE: March 23, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: addEntity(Entity *)
+--
+-- PARAMETERS:
+--     Entity * e - the entity to be added to the cell.
+--
+-- RETURNS:
+--     void
+--
+-- NOTES:
+--     Adds an entity to the cell.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Cell::addEntity(Entity * e)
+{
+	entity.emplace(e);	
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getEntity
+--
+-- DATE: March 23, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: removeEntity(Entity *)
+--
+-- PARAMETERS:
+--     entity * the entity curently in the cell to be removed.
+--
+-- RETURNS:
+--     void
+--
+-- NOTES:
+--     Adds an entity to the cell.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Cell::removeEntity(Entity * e)
+{
+	entity.erase(e);
+}

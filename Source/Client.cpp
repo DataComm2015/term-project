@@ -1,15 +1,34 @@
 //> In the main file
 #include "AppWindow.h"
-#include "Logic/GameScene.h"
-// include the separate scene file
 
-int main()
+#include "Network/Client.h"
+#include "Logic/Entities/ClientMux.h"
+
+using Networking::NetworkEntityMultiplexer;
+using Networking::Client;
+
+//////////
+// Main //
+//////////
+
+int main(int argc, char* argv[])
 {
-	GameScene scene1;
+    // Print Launch Instructions
+    printf("USAGE: %s [REMOTE_IP] [REMOTE_PORT]\n",argv[0]);
+    fflush(stdout);
 
-	AppWindow::getInstance().addScene(&scene1);
+    GameScene *scene = new GameScene();
 
-	AppWindow::getInstance().run();
+    // Initialize a Client Entity Multiplexer
+    NetworkEntityMultiplexer::setInstance(new ClientMux(scene));
+    
+    Client* client = new Client();
+    short port = atoi(argv[2]);
+    client->connect(argv[1], port);
 
-	return 0;
+    AppWindow::getInstance().setVerticalSyncEnabled(true);
+	AppWindow::getInstance().addScene(scene);
+    AppWindow::getInstance().run();
+
+    return EXIT_SUCCESS;
 }

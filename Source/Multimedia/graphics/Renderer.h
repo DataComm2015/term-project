@@ -3,10 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../manager/ResourceManager.h"
-#include "../../Engine/TextureManager.h"
-#include "../../Engine/TileManager.h"
-
 #define SPRITE_VERTICES 6
 #define TILE_VERTICES 4
 #define RECT_POINTS 4
@@ -24,7 +20,7 @@ namespace Marx
 class Renderer
 {
 public:
-	Renderer(sf::RenderTarget& renderTarget, unsigned int maxSprites = 1000);
+	Renderer(sf::RenderTarget& renderTarget, unsigned int maxVertices = 1000 * SPRITE_VERTICES);
 
 	~Renderer();
 
@@ -39,7 +35,7 @@ public:
 	void end();
 	void resetStats();
 
-	void draw(const BGO& bgo, bool scenegraph, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const BGO* bgo, bool scenegraph = false, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const TGO& tgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const Marx::Map& map, sf::RenderStates states = sf::RenderStates::Default);
@@ -55,7 +51,7 @@ private:
 	sf::RenderTarget &renderer;
 	sf::Vertex *vertices;
 	unsigned int maxCount, count;
-	unsigned int count_drawcalls, count_sprites;
+	unsigned int count_drawcalls, count_cumulative;
 	bool active;
 };
 

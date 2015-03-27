@@ -8,22 +8,22 @@ namespace GUI
 	*
 	* @date         2015-02-27
 	*
-	* @revisions
+	* @revisions	2015-03-18 - Removed BGO parent from constructor
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
+	*				Marc Rafanan
 	*
 	* @return       initializer
 	*/
-	Label::Label(BGO* parent, SGO* theBackground, std::string theText)
+	Label::Label(SGO* theBackground, std::string theText)
 	{
-		parent->add(*this);
 		back_enabled = true;
 		background = theBackground;
 		add(*background);
-		
-		TGO::operator()().setString(theText);
+
+		text().setString(theText);
 	}
 
 	/**
@@ -33,7 +33,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*
@@ -51,7 +51,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*
@@ -60,11 +60,11 @@ namespace GUI
 	void Label::setOffset(sf::Vector2f theOffset)
 	{
 		offset = theOffset;
-		background->operator()().move(offset);
+		background->sprite().move(offset);
 	}
-	
+
 	void Label::setText(std::string text)
 	{
-		TGO::operator()().setString(text);
+		this->text().setString(text);
 	}
 }

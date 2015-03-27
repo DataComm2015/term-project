@@ -2,6 +2,7 @@
 #define TEXTBOX
 
 #include <string>
+#include <functional>
 #include "../graphics/object/TGO.h"
 
 namespace GUI
@@ -9,7 +10,7 @@ namespace GUI
 	class TextBox : public TGO
 	{
 		public:
-			TextBox();
+			TextBox(std::function<void()> c);
 			virtual ~TextBox();
 			void toggleSelected(bool s);
 			void process(sf::Event& e);
@@ -17,6 +18,7 @@ namespace GUI
 			void setText(std::string s);
 		private:
 			bool selected;
+			std::function<void()> complete;
 	};
 }
 

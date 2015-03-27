@@ -8,10 +8,10 @@ using std::vector;
 using namespace Marx;
 
 /* The width of a block in terms of number of cells */
-#define BLOCK_WIDTH 5
+#define BLOCK_WIDTH 10
 
 /* The height of a block in terms of number of cells */
-#define BLOCK_HEIGHT 5
+#define BLOCK_HEIGHT 10
 
 /* The percent of decorative grass tiles */
 #define GRASS_DECO_CHANCE 5

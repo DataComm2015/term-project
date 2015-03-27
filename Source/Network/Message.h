@@ -3,11 +3,10 @@
 
 namespace Networking
 {
-
     struct Message
     {
         int type;
-        void * data;
+        void* data;
         int len;
     };
 }

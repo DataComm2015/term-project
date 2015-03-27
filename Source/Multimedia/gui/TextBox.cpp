@@ -2,9 +2,10 @@
 
 namespace GUI
 {
-	TextBox::TextBox()
+	TextBox::TextBox(std::function<void()> c)
 	{
 		selected = false;
+		complete = c;
 	}
 	
 	TextBox::~TextBox(){}
@@ -18,17 +19,34 @@ namespace GUI
 	{
 		if(selected && e.type == sf::Event::KeyPressed)
 		{
-			setText(getText() + "g");
+			if(e.key.code == sf::Keyboard::BackSpace && !getText().empty())
+			{
+				std::string temp = getText();
+				temp.erase(temp.end()-1);
+				setText(temp);
+			}
+			else if(e.key.code == sf::Keyboard::Return)
+			{
+				selected = false;
+				if(complete != NULL)
+					complete();
+			}
+		}
+		else if(selected && e.type == sf::Event::TextEntered)
+		{
+			//So we don't get backspace chars in our text
+			if(e.text.unicode != 8)
+				setText(getText() + (char)e.text.unicode);
 		}
 	}
 	
 	std::string TextBox::getText()
 	{
-		return this->operator()().getString();
+		return this->text().getString();
 	}
 	
 	void TextBox::setText(std::string s)
 	{
-		this->operator()().setString(s);
+		this->text().setString(s);
 	}
 }
