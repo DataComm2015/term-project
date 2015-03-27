@@ -59,12 +59,11 @@ public:
 
 		// configure the sprite
 
-		background().setTexture(*Manager::TextureManager::get(texture_1));
+		//background().setTexture(*Manager::TextureManager::get(texture_1));
 		sgo().setTexture(*Manager::TextureManager::get(texture_2));
 
 		v = new Vessel(0,NULL,0,0);
 
-		//background().setTexture(*Manager::TextureManager::get(texture_1));
 
 
 		// might want to have another resource manager for fonts...

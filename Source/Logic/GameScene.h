@@ -16,7 +16,6 @@
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
-#include "../Logic/Champion/Vessel.h"
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
@@ -93,7 +92,6 @@ class GameScene : public Scene
 		SGO maskSGO;
 		SGO wepSGO;
 		SGO placeHolderSGO;
-		Vessel *v;
 		TheSpinner *s;
 		TheSpinner *s2;
 
