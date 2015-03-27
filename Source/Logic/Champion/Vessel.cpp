@@ -23,7 +23,7 @@
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::Vessel( Marx::Map * gmap, Marx::Controller* controller, job_class jobClass, Ability* abilityList, float x, float y )
-			: Marx::Entity( gmap, x, y, NULL, 1.0, 1.0 )
+			: Marx::VEntity( gmap, x, y, NULL, 1.0, 1.0 )
 			,_controller(controller)
 {
 	direction = 1; //start facing right
@@ -107,7 +107,7 @@ void Vessel::turn()
 
 }
 
-Marx::Entity* Vessel::move(float, float, bool)
+Marx::VEntity* Vessel::move(float, float, bool)
 {
 
 }

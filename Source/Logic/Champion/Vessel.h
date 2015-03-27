@@ -60,7 +60,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "../../Engine/Map.h"
-#include "../../Engine/Entity.h"
+#include "../../Engine/VEntity.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
 
@@ -71,7 +71,7 @@ typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
-class Vessel : public Marx::Entity
+class Vessel : public Marx::VEntity
 {
 	protected:
 		job_class jobClass;
@@ -99,7 +99,7 @@ class Vessel : public Marx::Entity
 		virtual ~Vessel();
 		virtual void onUpdate();
 		virtual void turn();
-		virtual Marx::Entity* move(float, float, bool);
+		virtual Marx::VEntity* move(float, float, bool);
 		virtual std::set<Marx::Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
