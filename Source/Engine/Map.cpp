@@ -269,6 +269,11 @@ uint Map::getTexture() const
     return texture_id_;
 }
 
+const sf::Transform& Map::getLocalTransform() const
+{
+	return trans;
+}
+
 void Map::draw(Renderer& renderer, sf::RenderStates states) const
 {
 	renderer.draw(*this, states);
