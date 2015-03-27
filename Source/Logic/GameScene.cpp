@@ -109,7 +109,14 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
 
+<<<<<<< HEAD
+	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
+	cMap->add(*s);
+	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
+	cMap->add(*s2);
+=======
 	ventitee = new VEntity(placeHolderSGO, cMap, 25, 25, nullptr, 1, 1);
+>>>>>>> 48555fa1e8f6526f04ee47e8f6bf562ca4abb16a
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
@@ -238,7 +245,8 @@ void GameScene::update(sf::Time t)
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
 
-	ventitee->update(t);
+	s2->update(t);
+	s->update(t);
 
 	b1->update(t);
 	b2->update(t);
