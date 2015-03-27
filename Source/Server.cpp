@@ -16,6 +16,7 @@
 #include "Network/NetworkEntityMultiplexer.h"
 
 #include <string.h>
+#include <stdio.h>
 
 // namespace
 using Networking::NetworkEntityMultiplexer;
@@ -26,10 +27,6 @@ using Networking::Session;
 using Networking::Server;
 
 // globals
-bool isRunning;
-sf::Time m_elapsedTime;
-sf::Time m_timePerFrame;
-sf::Time m_timeSinceLastUpdate;
 Scene *scene;
 
 void run();
@@ -283,6 +280,15 @@ int main( int argc, char ** argv )
  */
 void run()
 {
+    bool isRunning;
+    sf::Time m_elapsedTime;
+    sf::Time m_timePerFrame;
+    sf::Time m_timeSinceLastUpdate;
+    sf::Time m_sleepTime;
+
+    m_sleepTime = sf::second(1.0/75);
+    m_timePerFrame = sf::seconds(1.0/60);
+
     if (!isRunning)
     {
         isRunning = true;
@@ -301,11 +307,13 @@ void run()
             while (m_timeSinceLastUpdate > m_timePerFrame)
             {
                 m_timeSinceLastUpdate -= m_timePerFrame;
-
                 scene->update(m_timePerFrame);
+
+                sf::sleep(m_sleepTime);
             }
         }
 
+        
         isRunning = false;
     }
 }
