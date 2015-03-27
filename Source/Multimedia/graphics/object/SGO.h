@@ -14,15 +14,15 @@ public:
 
 	virtual ~SGO();
 
-	sf::Sprite& operator()();
-	const sf::Sprite& operator()() const;
+	sf::Sprite& sprite();
+	const sf::Sprite& sprite() const;
 
-	const sf::Transform& getLocalTransform() const;
+	const sf::Transform& getLocalTransform() const override;
 
 	void middleAnchorPoint(bool arg);
 
 protected:
-	void draw(Renderer& renderer) const override;
+	void draw(Renderer& renderer, sf::RenderStates states) const override;
 
 private:
 	sf::Sprite data;

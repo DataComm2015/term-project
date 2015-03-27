@@ -12,15 +12,15 @@ public:
 
 	virtual ~TGO();
 
-	sf::Text& operator()();
-	const sf::Text& operator()() const;
+	sf::Text& text();
+	const sf::Text& text() const;
 
-	const sf::Transform& getLocalTransform() const;
+	const sf::Transform& getLocalTransform() const override;
 
 	void middleAnchorPoint(bool arg);
 
 protected:
-	void draw(Renderer& renderer) const override;
+	void draw(Renderer& renderer, sf::RenderStates states) const override;
 
 private:
 	sf::Text data;

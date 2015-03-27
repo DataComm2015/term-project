@@ -124,7 +124,7 @@ short Animation::step(short by)
 	if(steps >= skip)
 	{
 		increment(by);
-		sprite->operator()().setTextureRect(sf::IntRect((size.x * position), 0, size.x, size.y));
+		sprite->sprite().setTextureRect(sf::IntRect((size.x * position), 0, size.x, size.y));
 		steps = 0;
 	}
 	else

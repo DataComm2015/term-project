@@ -20,9 +20,10 @@
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
-
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
+#include "../Engine/VEntity.h"
+#include "../Engine/EGTheSpinner.h"
 
 #include "KeyListener.h"
 
@@ -55,19 +56,16 @@ class GameScene : public Scene
 		void generateWater();
 		void generateUI();
 	private:
-		Marx::Map *cMap;
-		Marx::Map *waterMap;
-
 		/**
 		 * set of registered key listeners that should be notified whenever a
 		 *   keyboard event occurs.
 		 */
 		std::set<KeyListener*> keyListeners;
 
-		Marx::Projectile * p;
 		GameMap *gMap;
 
 		Renderer renderer;
+
 		sf::View viewMain;
 		sf::View viewUI;
 
@@ -80,11 +78,24 @@ class GameScene : public Scene
 		id_resource butSprite;
 		id_resource scat_music;
 		id_resource chick_sound;
+		id_resource placeholderSprite;
+
+		sf::Shader waveShader;
+		float phase;
+
+		// Game Objects
+
+		Marx::Map *cMap;
+		Marx::Map *waterMap;
+		Marx::Projectile * p;
 
 		SGO championSGO;
 		SGO maskSGO;
 		SGO wepSGO;
+		SGO placeHolderSGO;
 		Vessel *v;
+		TheSpinner *s;
+		TheSpinner *s2;
 
 		// UI
 		GUI::Button *b1;
@@ -93,11 +104,7 @@ class GameScene : public Scene
 		GUI::Button *b4;
 		GUI::Button *b5;
 		GUI::Button *b6;
-
 		GUI::TextBox *tb;
-
-		sf::Shader waveShader;
-		float phase;
 };
 
 #endif

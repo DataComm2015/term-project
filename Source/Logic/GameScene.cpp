@@ -28,9 +28,8 @@ void updateMainView(sf::View& v)
 
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
-	// Create the cell map
+	// Create the maps
 	cMap = new Map(90, 90);
-
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
@@ -41,9 +40,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 			cMap->setCell(j, i, tempCell);
 		}
 	}
-
 	gMap = new GameMap(cMap);
-	v = new Vessel(WARRIOR, NULL, 0, 0);
+	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
 
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
@@ -68,61 +66,86 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
 
 	delete p;
+
 	/* END SAMPLE CREATION */
 
-
 	// Load the tileset
-	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
+	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
 	championSprite = Manager::TextureManager::store(
-		Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Body/vessel-run-sheet.png")
+		Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
 		);
-	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
-	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
-	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
-	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Multimedia/Assets/Sound/music.ogg"));
-	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Multimedia/Assets/Sound/sound.wav"));
+	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
+	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
+	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
+	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
+	placeholderSprite = Manager::TextureManager::store(
+		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
+		);
 
 	// an example, obviously...
+	v = new Vessel(SHAMAN, nullptr, 0, 0);
+
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
 
-
 	cMap->setTexture(tilemap);
-	championSGO().setTexture(*Manager::TextureManager::get(championSprite));
-	championSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO().setScale(2, 2);
+	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
+	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	championSGO.sprite().setScale(2, 2);
 	championSGO.middleAnchorPoint(true);
 
-	maskSGO().setTexture(*Manager::TextureManager::get(maskSprite));
-	maskSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	maskSGO().setScale(2, 2);
+	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
+	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	maskSGO.sprite().setScale(2, 2);
 	maskSGO.middleAnchorPoint(true);
 
-	wepSGO().setTexture(*Manager::TextureManager::get(wepSprite));
-	wepSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	wepSGO().setScale(2, 2);
+	wepSGO.sprite().setTexture(*Manager::TextureManager::get(wepSprite));
+	wepSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	wepSGO.sprite().setScale(2, 2);
 	wepSGO.middleAnchorPoint(true);
 
+	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
+	placeHolderSGO.sprite().setScale(1, 1);
+
+<<<<<<< HEAD
+	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
+	cMap->add(*s);
+	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
+	cMap->add(*s2);
+=======
+	ventitee = new VEntity(placeHolderSGO, cMap, 25, 25, nullptr, 1, 1);
+>>>>>>> 48555fa1e8f6526f04ee47e8f6bf562ca4abb16a
+
 	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
+	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
 	tb = new GUI::TextBox(nullptr);
+	tb->text().setScale(0.5, 0.5);
+	tb->text().move(0, -5);
 	tb->toggleSelected(true);
-	tb->operator()().setFont(*arial);
+	tb->text().setFont(*arial);
 
 	Manager::MusicManager::get(scat_music)->setVolume(60);
 	Manager::MusicManager::get(scat_music)->play();
 
-	// Generate the game map
+	// Link game objects (not everything is linked, for example purposes only)
+	// as of now, the hierarchy system is barely used in this example
+	cMap->add(*ventitee);
+	maskSGO.add(*tb);
+
+	// Generate stuff
+
+	// center the cell map
+	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+
 	if (!gMap->generateMap())
 	{
 		cerr << "Invalid map dimensions." << endl;
 	}
-
 	generateWater();
-
 	generateUI();
 }
 
@@ -135,14 +158,14 @@ void GameScene::onLoad()
 	b1->toggleEnabled(true);
 	b2->toggleEnabled(true);
 
-	sf::Vector2f windowSize = viewUI.getSize();
+	sf::Vector2u windowSize = AppWindow::getInstance().getSize();
 
-	b1->operator()().setPosition((windowSize.x / 2) - 600, windowSize.y * 0.75f);
-	b2->operator()().setPosition((windowSize.x / 2) - 400, windowSize.y * 0.75f);
-	b3->operator()().setPosition(100, 400);
-	b4->operator()().setPosition(100, 400);
-	b5->operator()().setPosition(100, 400);
-	b6->operator()().setPosition(100, 400);
+	b1->sprite().setPosition((windowSize.x / 2.0) - 600, windowSize.y * 0.75f);
+	b2->sprite().setPosition((windowSize.x / 2.0) - 400, windowSize.y * 0.75f);
+	b3->sprite().setPosition(100, 400);
+	b4->sprite().setPosition(100, 400);
+	b5->sprite().setPosition(100, 400);
+	b6->sprite().setPosition(100, 400);
 }
 
 void GameScene::unLoad()
@@ -180,7 +203,6 @@ void GameScene::update(sf::Time t)
 {
 	v->move();
 
-
 	if (v->getXSpeed() != 0 || v->getYSpeed() != 0)
 	{
 		runAnim->run(true);
@@ -200,34 +222,37 @@ void GameScene::update(sf::Time t)
 	//flip the sprite if facing left
 	if (v->getDirection() == 0)
 	{
-		championSGO().setScale(-2, 2);
-		maskSGO().setScale(-2, 2);
-		wepSGO().setScale(-2, 2);
+		championSGO.sprite().setScale(-2, 2);
+		maskSGO.sprite().setScale(-2, 2);
+		wepSGO.sprite().setScale(-2, 2);
 		//b1->toggleEnabled(true);
 	}
 	else
 	{
-		championSGO().setScale(2, 2);
-		maskSGO().setScale(2, 2);
-		wepSGO().setScale(2, 2);
+		championSGO.sprite().setScale(2, 2);
+		maskSGO.sprite().setScale(2, 2);
+		wepSGO.sprite().setScale(2, 2);
 		//b1->toggleEnabled(false);
 	}
 
 	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
 
-	championSGO().setPosition(v->getXPosition(), v->getYPosition());
-	maskSGO().setPosition(v->getXPosition(), v->getYPosition());
-	wepSGO().setPosition(v->getXPosition(), v->getYPosition());
+	championSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
+	maskSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
+	wepSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 
 	runAnim->update(t);
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
 
+	s2->update(t);
+	s->update(t);
+
 	b1->update(t);
 	b2->update(t);
 
-	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
-	waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
+	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
 	viewMain.setCenter(v->getXPosition(), v->getYPosition());
 
@@ -244,7 +269,7 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
-		for(auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
 		{
 			(*l)->onKeyPressed(e.key.code);
 		}
@@ -263,13 +288,14 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			// Generate the game map
 			gMap->generateMap();
+			generateWater();
 			break;
 		}
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
 	{
-		for(auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
 		{
 			(*l)->onKeyReleased(e.key.code);
 		}
@@ -306,18 +332,17 @@ void GameScene::draw()
 
 	// Draw the maps
 	renderer.states.shader = &waveShader;
-	renderer.draw(*waterMap);
+	renderer.draw(waterMap);
 	renderer.states.shader = nullptr;
-	renderer.draw(*cMap);
+	renderer.draw(cMap, true);
 
 	renderer.end();
 
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(*tb);
 	renderer.draw(championSGO);
-	renderer.draw(maskSGO);
+	renderer.draw(&maskSGO, true);
 	renderer.draw(wepSGO);
 
 	renderer.end();
@@ -326,8 +351,9 @@ void GameScene::draw()
 	window.setView(viewUI);
 
 	renderer.begin();
-	renderer.draw(*b1);
-	renderer.draw(*b2);
+
+	renderer.draw(b1);
+	renderer.draw(b2);
 
 	renderer.end();
 
@@ -348,12 +374,9 @@ void GameScene::generateWater()
 {
 	// Setup the wave shader
 	phase = 0.0;
-	waveShader.loadFromFile("Multimedia/Assets/Shaders/wave.vert", sf::Shader::Vertex);
+	waveShader.loadFromFile("Assets/Shaders/wave.vert", sf::Shader::Vertex);
 	waveShader.setParameter("wave_amplitude", sf::Vector2f(WAVE_X, WAVE_Y));
 	waveShader.setParameter("wave_phase", phase);
-
-	// Create the water map
-	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
 
 	// Set the water map tiles
 	int randomWater;
@@ -363,6 +386,9 @@ void GameScene::generateWater()
 	{
 		for (int j = 0; j < waterMap->getWidth(); j++)
 		{
+			Cell* oldCell = waterMap->getCell(j, i);
+			if (oldCell) delete oldCell;
+
 			Cell *tempCell = new Cell();
 
 			randomWater = rand() % 2;
@@ -375,12 +401,15 @@ void GameScene::generateWater()
 
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
+
+	// Center the map
+	waterMap->trans = sf::Transform::Identity;
+	waterMap->trans.translate(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 }
 
 void GameScene::generateUI()
 {
-
-	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);

@@ -42,11 +42,11 @@ namespace GUI
 	
 	std::string TextBox::getText()
 	{
-		return this->operator()().getString();
+		return this->text().getString();
 	}
 	
 	void TextBox::setText(std::string s)
 	{
-		this->operator()().setString(s);
+		this->text().setString(s);
 	}
 }

@@ -58,7 +58,7 @@ public:
 			);
 
 		// configure the sprite
-		background().setTexture(*Manager::TextureManager::get(texture_1));
+		//background().setTexture(*Manager::TextureManager::get(texture_1));
 		sgo().setTexture(*Manager::TextureManager::get(texture_2));
 
 		v = new Vessel(0,NULL,0,0);
@@ -66,10 +66,10 @@ public:
 		// might want to have another resource manager for fonts...
 		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
 
-		// configure the text
-		welcomeText().setFont(font);
-		welcomeText().setCharacterSize(30);
-		welcomeText().setString("Welcome to Spectre");
+		// configure the text this doesn't compile :/
+		//welcomeText().setFont(font);
+		//welcomeText().setCharacterSize(30);
+		//welcomeText().setString("Welcome to Spectre");
 	}
 
 	// Destructors are... obvious
