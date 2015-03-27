@@ -73,17 +73,17 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 
 	// Load the tileset
-	tilemap = Manager::TileManager::load("Logic/Environment/map.tset");
+	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
 	championSprite = Manager::TextureManager::store(
-		Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Body/vessel-run-sheet.png")
+		Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
 		);
-	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
-	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
-	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
-	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Multimedia/Assets/Sound/music.ogg"));
-	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Multimedia/Assets/Sound/sound.wav"));
+	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
+	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
+	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
+	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
 	placeholderSprite = Manager::TextureManager::store(
-		Manager::TextureManager::load("Multimedia/Assets/Art/Misc/placeholder.png")
+		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
 		);
 
 	// an example, obviously...
@@ -108,14 +108,13 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	wepSGO.middleAnchorPoint(true);
 
 	placeHolderSGO().setTexture(*Manager::TextureManager::get(placeholderSprite));
-	placeHolderSGO().setScale(2, 2);
-	placeHolderSGO.middleAnchorPoint(true);
+	placeHolderSGO().setScale(1, 1);
 
 	ventitee = new VEntity(placeHolderSGO, cMap, 0, 0, nullptr, 1, 1);
 	cMap->add(*ventitee);
 
 	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
+	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
 	tb = new GUI::TextBox(nullptr);
@@ -145,10 +144,10 @@ void GameScene::onLoad()
 	b1->toggleEnabled(true);
 	b2->toggleEnabled(true);
 
-	sf::Vector2f windowSize = viewUI.getSize();
+	sf::Vector2u windowSize = AppWindow::getInstance().getSize();
 
-	b1->setPosition((windowSize.x / 2) - 600, windowSize.y * 0.75f);
-	b2->setPosition((windowSize.x / 2) - 400, windowSize.y * 0.75f);
+	b1->setPosition((windowSize.x / 2.0) - 600, windowSize.y * 0.75f);
+	b2->setPosition((windowSize.x / 2.0) - 400, windowSize.y * 0.75f);
 	b3->setPosition(100, 400);
 	b4->setPosition(100, 400);
 	b5->setPosition(100, 400);
@@ -310,7 +309,7 @@ void GameScene::draw()
 {
 	AppWindow& window = AppWindow::getInstance();
 
-	window.clear(sf::Color::Blue);
+	window.clear();
 
 	window.setView(viewMain);
 
@@ -361,7 +360,7 @@ void GameScene::generateWater()
 {
 	// Setup the wave shader
 	phase = 0.0;
-	waveShader.loadFromFile("Multimedia/Assets/Shaders/wave.vert", sf::Shader::Vertex);
+	waveShader.loadFromFile("Assets/Shaders/wave.vert", sf::Shader::Vertex);
 	waveShader.setParameter("wave_amplitude", sf::Vector2f(WAVE_X, WAVE_Y));
 	waveShader.setParameter("wave_phase", phase);
 
@@ -393,7 +392,7 @@ void GameScene::generateWater()
 void GameScene::generateUI()
 {
 
-	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
