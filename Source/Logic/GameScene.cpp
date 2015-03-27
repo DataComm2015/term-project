@@ -92,23 +92,23 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
 
 	cMap->setTexture(tilemap);
-	championSGO().setTexture(*Manager::TextureManager::get(championSprite));
-	championSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO().setScale(2, 2);
+	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
+	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	championSGO.sprite().setScale(2, 2);
 	championSGO.middleAnchorPoint(true);
 
-	maskSGO().setTexture(*Manager::TextureManager::get(maskSprite));
-	maskSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	maskSGO().setScale(2, 2);
+	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
+	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	maskSGO.sprite().setScale(2, 2);
 	maskSGO.middleAnchorPoint(true);
 
-	wepSGO().setTexture(*Manager::TextureManager::get(wepSprite));
-	wepSGO().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	wepSGO().setScale(2, 2);
+	wepSGO.sprite().setTexture(*Manager::TextureManager::get(wepSprite));
+	wepSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	wepSGO.sprite().setScale(2, 2);
 	wepSGO.middleAnchorPoint(true);
 
-	placeHolderSGO().setTexture(*Manager::TextureManager::get(placeholderSprite));
-	placeHolderSGO().setScale(1, 1);
+	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
+	placeHolderSGO.sprite().setScale(1, 1);
 
 	ventitee = new VEntity(placeHolderSGO, cMap, 0, 0, nullptr, 1, 1);
 	cMap->add(*ventitee);
@@ -119,7 +119,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
 	tb = new GUI::TextBox(nullptr);
 	tb->toggleSelected(true);
-	tb->operator()().setFont(*arial);
+	tb->text().setFont(*arial);
 
 	Manager::MusicManager::get(scat_music)->setVolume(60);
 	Manager::MusicManager::get(scat_music)->play();
@@ -146,12 +146,12 @@ void GameScene::onLoad()
 
 	sf::Vector2u windowSize = AppWindow::getInstance().getSize();
 
-	b1->setPosition((windowSize.x / 2.0) - 600, windowSize.y * 0.75f);
-	b2->setPosition((windowSize.x / 2.0) - 400, windowSize.y * 0.75f);
-	b3->setPosition(100, 400);
-	b4->setPosition(100, 400);
-	b5->setPosition(100, 400);
-	b6->setPosition(100, 400);
+	b1->sprite().setPosition((windowSize.x / 2.0) - 600, windowSize.y * 0.75f);
+	b2->sprite().setPosition((windowSize.x / 2.0) - 400, windowSize.y * 0.75f);
+	b3->sprite().setPosition(100, 400);
+	b4->sprite().setPosition(100, 400);
+	b5->sprite().setPosition(100, 400);
+	b6->sprite().setPosition(100, 400);
 }
 
 void GameScene::unLoad()
@@ -208,24 +208,24 @@ void GameScene::update(sf::Time t)
 	//flip the sprite if facing left
 	if (v->getDirection() == 0)
 	{
-		championSGO().setScale(-2, 2);
-		maskSGO().setScale(-2, 2);
-		wepSGO().setScale(-2, 2);
+		championSGO.sprite().setScale(-2, 2);
+		maskSGO.sprite().setScale(-2, 2);
+		wepSGO.sprite().setScale(-2, 2);
 		//b1->toggleEnabled(true);
 	}
 	else
 	{
-		championSGO().setScale(2, 2);
-		maskSGO().setScale(2, 2);
-		wepSGO().setScale(2, 2);
+		championSGO.sprite().setScale(2, 2);
+		maskSGO.sprite().setScale(2, 2);
+		wepSGO.sprite().setScale(2, 2);
 		//b1->toggleEnabled(false);
 	}
 
 	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
 
-	championSGO().setPosition(v->getXPosition(), v->getYPosition());
-	maskSGO().setPosition(v->getXPosition(), v->getYPosition());
-	wepSGO().setPosition(v->getXPosition(), v->getYPosition());
+	championSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
+	maskSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
+	wepSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 
 	runAnim->update(t);
 	runAnim_mask->update(t);
@@ -236,8 +236,8 @@ void GameScene::update(sf::Time t)
 	b1->update(t);
 	b2->update(t);
 
-	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
-	waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
+	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
 	viewMain.setCenter(v->getXPosition(), v->getYPosition());
 
@@ -319,7 +319,7 @@ void GameScene::draw()
 	renderer.states.shader = &waveShader;
 	renderer.draw(waterMap);
 	renderer.states.shader = nullptr;
-	renderer.draw(cMap);
+	renderer.draw(cMap, true);
 
 	renderer.end();
 
@@ -327,9 +327,9 @@ void GameScene::draw()
 
 	// draw the objects
 	renderer.draw(tb);
-	renderer.draw(&championSGO);
-	renderer.draw(&maskSGO);
-	renderer.draw(&wepSGO);
+	renderer.draw(championSGO);
+	renderer.draw(maskSGO);
+	renderer.draw(wepSGO);
 
 	renderer.end();
 
@@ -391,7 +391,6 @@ void GameScene::generateWater()
 
 void GameScene::generateUI()
 {
-
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
 	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);

@@ -33,7 +33,7 @@ TGO::~TGO()
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -41,7 +41,7 @@ TGO::~TGO()
  *
  * @return     The text
  */
-sf::Text& TGO::operator()()
+sf::Text& TGO::text()
 {
 	return data;
 }
@@ -51,7 +51,7 @@ sf::Text& TGO::operator()()
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -59,7 +59,7 @@ sf::Text& TGO::operator()()
  *
  * @return     The text (const-qualified)
  */
-const sf::Text& TGO::operator()() const
+const sf::Text& TGO::text() const
 {
 	return data;
 }
@@ -69,7 +69,7 @@ const sf::Text& TGO::operator()() const
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -89,7 +89,7 @@ const sf::Transform& TGO::getLocalTransform() const
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -112,7 +112,7 @@ void TGO::middleAnchorPoint(bool arg)
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *

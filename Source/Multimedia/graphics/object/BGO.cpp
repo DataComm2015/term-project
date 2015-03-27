@@ -220,6 +220,16 @@ void BGO::ignoreChildren(bool arg)
 	m_ignoringChildren = arg;
 }
 
+const sf::Transform& BGO::getLocalTransform() const
+{
+	return sf::Transform::Identity;
+}
+
+const sf::Transform& BGO::getGlobalTransform() const
+{
+	return m_sgtrans;
+}
+
 /**
  * Updates this game object and its children.
  *
@@ -278,11 +288,14 @@ void BGO::update(const sf::Time& t)
  */
 void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
 {
-	// Combine transformations (caller's + mine)
-	states.transform *= getTransform();
-
 	// Draw self
 	draw(renderer, states);
+
+	// Combine transformations (caller's + mine)
+	states.transform *= getLocalTransform();
+
+	// cache scene graph transformations
+	m_sgtrans = states.transform;
 
 	// Draw children
 	if (hasChildren())
