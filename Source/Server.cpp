@@ -3,7 +3,7 @@
 #include "Usage.cpp"
 
 #include "Logic/Event.h"
-#include "Logic/ProperEntity.h"
+#include "Logic/Entities/ProperEntity.h"
 #include "Logic/ServerGameScene.h"
 #include "Logic/NetworkEntityPairs.h"
 
