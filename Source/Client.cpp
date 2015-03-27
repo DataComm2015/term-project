@@ -25,6 +25,7 @@ using Networking::Client;
 #endif // __linux__
 
 GameScene* scene;
+ClientLobbyScene * lobbyScene;
 
 #ifdef __linux__
 
@@ -248,7 +249,8 @@ int main(int argc, char* argv[])
 
 	AppWindow::getInstance().setVerticalSyncEnabled(true);
 
-    scene = new GameScene();
+    //scene = new GameScene();
+    lobbyScene = new ClientLobbyScene();
 
 #ifdef __linux__
 

@@ -108,15 +108,13 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
-
-<<<<<<< HEAD
+/*
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	cMap->add(*s);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
 	cMap->add(*s2);
-=======
-	ventitee = new VEntity(placeHolderSGO, cMap, 25, 25, nullptr, 1, 1);
->>>>>>> 48555fa1e8f6526f04ee47e8f6bf562ca4abb16a
+*/
+	//ventitee = new VEntity(placeHolderSGO, cMap, 25, 25, nullptr, 1, 1);
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
@@ -133,7 +131,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	// Link game objects (not everything is linked, for example purposes only)
 	// as of now, the hierarchy system is barely used in this example
-	cMap->add(*ventitee);
+	//cMap->add(*ventitee);
 	maskSGO.add(*tb);
 
 	// Generate stuff
