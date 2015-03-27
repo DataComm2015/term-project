@@ -8,6 +8,8 @@
 
 #include "Engine/Controller.h"
 
+#ifdef __linux__
+
 #include "Network/Client.h"
 #include "Network/Session.h"
 #include "Network/Message.h"
@@ -20,7 +22,11 @@ using Networking::Message;
 using Networking::Session;
 using Networking::Client;
 
+#endif // __linux__
+
 GameScene* scene;
+
+#ifdef __linux__
 
 /////////////
 // Command //
@@ -229,6 +235,8 @@ public:
     };
 };
 
+#endif // __linux__
+
 //////////
 // Main //
 //////////
@@ -238,20 +246,24 @@ int main(int argc, char* argv[])
     printf("USAGE: %s [REMOTE_IP] [REMOTE_PORT]\n",argv[0]);
     fflush(stdout);
 
+	AppWindow::getInstance().setVerticalSyncEnabled(true);
+
     scene = new GameScene();
 
-    NetworkEntityMultiplexer::setInstance(new Mux());
+#ifdef __linux__
 
-    AppWindow::getInstance().addScene(scene);
+    NetworkEntityMultiplexer::setInstance(new Mux());
 
     Client* client = new Client();
 
     short port = atoi(argv[2]);
     client->connect(argv[1], port);
 
+#endif // __linux__
+
+	AppWindow::getInstance().addScene(scene);
+
     AppWindow::getInstance().run();
 
-    delete client;
-
-    return 0;
+    return EXIT_SUCCESS;
 }

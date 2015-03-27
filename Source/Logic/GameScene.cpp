@@ -28,9 +28,8 @@ void updateMainView(sf::View& v)
 
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
-	// Create the cell map
+	// Create the maps
 	cMap = new Map(90, 90);
-
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
@@ -41,10 +40,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 			cMap->setCell(j, i, tempCell);
 		}
 	}
-
 	gMap = new GameMap(cMap);
 	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
-	v = new Vessel(TEGUH, NULL, 0, 0);
 
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
@@ -69,8 +66,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
 
 	delete p;
-	/* END SAMPLE CREATION */
 
+	/* END SAMPLE CREATION */
 
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
@@ -87,6 +84,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 		);
 
 	// an example, obviously...
+	v = new Vessel(SHAMAN, nullptr, 0, 0);
+
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
@@ -111,27 +110,35 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeHolderSGO.sprite().setScale(1, 1);
 
 	ventitee = new VEntity(placeHolderSGO, cMap, 25, 25, nullptr, 1, 1);
-	cMap->add(*ventitee);
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
 	tb = new GUI::TextBox(nullptr);
+	tb->text().setScale(0.5, 0.5);
+	tb->text().move(0, -5);
 	tb->toggleSelected(true);
 	tb->text().setFont(*arial);
 
 	Manager::MusicManager::get(scat_music)->setVolume(60);
 	Manager::MusicManager::get(scat_music)->play();
 
-	// Generate the game map
+	// Link game objects (not everything is linked, for example purposes only)
+	// as of now, the hierarchy system is barely used in this example
+	cMap->add(*ventitee);
+	maskSGO.add(*tb);
+
+	// Generate stuff
+
+	// center the cell map
+	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+
 	if (!gMap->generateMap())
 	{
 		cerr << "Invalid map dimensions." << endl;
 	}
-
 	generateWater();
-
 	generateUI();
 }
 
@@ -326,9 +333,8 @@ void GameScene::draw()
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(tb);
 	renderer.draw(championSGO);
-	renderer.draw(maskSGO);
+	renderer.draw(&maskSGO, true);
 	renderer.draw(wepSGO);
 
 	renderer.end();
@@ -387,6 +393,10 @@ void GameScene::generateWater()
 
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
+
+	// Center the map
+	waterMap->trans = sf::Transform::Identity;
+	waterMap->trans.translate(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 }
 
 void GameScene::generateUI()
