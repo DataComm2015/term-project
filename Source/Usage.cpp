@@ -17,7 +17,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  I will also use this as an alpha testing ground for our API
-//  to see if there are anything missing or 
+//  to see if there are anything missing or
 //  if something's not working the way it should.
 //
 //  Here's the awesome TODO list:
@@ -39,7 +39,7 @@
 #include "Multimedia/graphics/object/BGO.h"
 #include "Multimedia/graphics/object/SGO.h"
 #include "Multimedia/graphics/object/TGO.h"
-#include "Logic/Champion/vessel.h"
+//#include "Logic/Champion/Vessel.h"
 
 class StartScreen : public Marx::Scene
 {
@@ -58,10 +58,13 @@ public:
 			);
 
 		// configure the sprite
+
 		//background().setTexture(*Manager::TextureManager::get(texture_1));
 		sgo().setTexture(*Manager::TextureManager::get(texture_2));
 
 		v = new Vessel(0,NULL,0,0);
+
+
 
 		// might want to have another resource manager for fonts...
 		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
@@ -127,7 +130,7 @@ public:
 		/* This code moves the background but keeps the vessel centered */
 		view_main.move(v->getXSpeed(), v->getYSpeed());
 		sgo().setPosition(view_main.getCenter()); //*/
-		
+
 		/* This code moves the vessel around but keeps the screen centered
 		sgo().setPosition(v->getXPosition(), v->getYPosition());
 		//*/
@@ -148,7 +151,7 @@ public:
 
 		renderer.draw(background);
 
-		
+
 		renderer.end(); // always end when you're done rendering or want to start fresh again
 
 		renderer.begin();
@@ -177,7 +180,7 @@ private:
 
 	SGO sgo;
 	Vessel* v;
-	
+
 	sf::Font font;
 	TGO welcomeText;
 };

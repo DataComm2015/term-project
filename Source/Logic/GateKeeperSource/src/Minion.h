@@ -1,7 +1,9 @@
+#ifndef MINION_H
+#define MINION_H
 /********************************************************************************
-**	SOURCE FILE:	Minion.h -  		Header file for The Minion npc class. 
+**	SOURCE FILE:	Minion.h -  		Header file for The Minion npc class.
 **										Contains function prototypes
-**	 	
+**
 **	PROGRAM:	Term_Project
 **
 **	DATE: 		February 15, 2015
@@ -17,7 +19,8 @@
 class Minion : public GateKeeper
 {
 	public:
-		Minion(GKstruct *gk) : GateKeeper(*gk);
+		Minion(Marx::Map* map, float x, float y, Marx::Controller* ctrl = NULL, float h = 1.0, float w = 1.0) :
+			GateKeeper(map, x, y, ctrl, h, w);
 		void detectPlayers();
 		void enterCombat();
 		void leaveCombat();
@@ -49,5 +52,7 @@ class Minion : public GateKeeper
 		//PatrolRadius _radius;
 		//Timer _cooldownTimer;
 		//AI _ai;
-	
+
 };
+
+#endif

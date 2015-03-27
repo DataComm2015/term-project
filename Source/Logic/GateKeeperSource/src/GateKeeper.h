@@ -1,7 +1,9 @@
+#ifndef GATEKEEP_H
+#define GATEKEEP_H
 /********************************************************************************
 **	SOURCE FILE:	GateKeeper.h -  		Header file for The gatekeeper npc base
 **											class. Contains function prototypes
-**	 	
+**
 **	PROGRAM:	Term_Project
 **
 **	DATE: 		February 15, 2015
@@ -12,32 +14,33 @@
 **	PROGRAMMER: Filip Gutica A00781910
 **
 ***********************************************************************************/
-#include <iostream>
-#include <stdio.h>      
-#include <stdlib.h>
-#include <iomanip>
 
-struct GKstruct{
-	int range;
-	int type;
-	int health;
-	int attack;
-	int attackSpeed;
-	int movementSpeed;
-	bool inCombat;
-	//Player target
-	//Patrol radius
-	//Cooldown timer
-	//AI object
+#include <SFML/Graphics.hpp>
+#include "../../../Engine/VEntity.h"
+#include "../../../Engine/Map.h"
+#include "../../../Engine/Cell.h"
+#include "../../../Engine/Controller.h"
 
-}GKstruct;
-
-class GateKeeper
+class GateKeeper : public Marx::VEntity
 {
 
 	public:
-		GateKeeper(GKstruct *gk);	//Initialize attributes from the GK struct
-		virtual void updateNPC();
+		GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl = NULL, float h = 1.0, float w = 1.0) :
+			VEntity(sprite, map, x, y, ctrl, h, w)
+			,_ctrl(ctrl)
+			{
+				_range = 1;
+				_health = 100;
+				_type = 1;
+				_attack = 1;
+				_attackSpeed = 1;
+				_movementSpeed = 1;
+				_incombat = false;
+				_cooldown = 1;
+			};
+
+		virtual ~GateKeeper();
+		virtual void update(const sf::Time& t) override;
 		virtual void detectPlayers();
 		virtual void enterCombat();
 		virtual void leaveCombat();
@@ -54,10 +57,15 @@ class GateKeeper
 		virtual int getAttack();
 		virtual int getAttackSpeed();
 		virtual int getMovementSpeed();
-		virtual Player getTarget();
+		//virtual Vessel getTarget();
 		virtual time_t getCooldown();
-		
-		
+		virtual void turn();
+		virtual void onCreate();
+		virtual void onDestroy();
+		virtual void onUpdate();
+		virtual bool operator==(const VEntity&);
+
+
 	private:
 		int _range;
 		int _type;
@@ -66,9 +74,13 @@ class GateKeeper
 		int _attackSpeed;
 		int _movementSpeed;
 		bool _incombat;
+		time_t _cooldown;
 		//Player _target;
 		//PatrolRadius _radius;
 		//Timer _cooldownTimer;
 		//AI _ai;
-		
+
+		Marx::Controller* _ctrl;
+
 };
+#endif
