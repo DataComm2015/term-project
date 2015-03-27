@@ -58,14 +58,14 @@ public:
 			);
 
 		// configure the sprite
-<<<<<<< HEAD
+
 		background().setTexture(*Manager::TextureManager::get(texture_1));
 		sgo().setTexture(*Manager::TextureManager::get(texture_2));
 
 		v = new Vessel(0,NULL,0,0);
-=======
+
 		//background().setTexture(*Manager::TextureManager::get(texture_1));
->>>>>>> 1bcc63f6d11939bd79b2b679a344a6f522be3dac
+
 
 		// might want to have another resource manager for fonts...
 		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
