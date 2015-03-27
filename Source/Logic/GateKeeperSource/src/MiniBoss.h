@@ -1,3 +1,5 @@
+#ifndef MINIBOSS_H
+#define MINIBOSS_H
 /********************************************************************************
 **	SOURCE FILE:	MiniBoss.h -  		Header file for The Mini boss npc class.
 **										Contains function prototypes
@@ -52,3 +54,4 @@ class MiniBoss : public GateKeeper
 		//AI _ai;
 
 };
+#ENDIF

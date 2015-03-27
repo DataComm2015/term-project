@@ -1,3 +1,5 @@
+#ifndef BOSS_H
+#define BOSS_H
 /********************************************************************************
 **	SOURCE FILE:	Boss.h -  			Header file for The boss npc class.
 **										Contains function prototypes
@@ -53,3 +55,4 @@ class Boss : public GateKeeper
 		void specialAbility();
 
 };
+#endif

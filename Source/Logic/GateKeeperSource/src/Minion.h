@@ -1,3 +1,5 @@
+#ifndef MINION_H
+#define MINION_H
 /********************************************************************************
 **	SOURCE FILE:	Minion.h -  		Header file for The Minion npc class.
 **										Contains function prototypes
@@ -52,3 +54,5 @@ class Minion : public GateKeeper
 		//AI _ai;
 
 };
+
+#endif

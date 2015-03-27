@@ -1,3 +1,5 @@
+#ifndef GATEKEEP_H
+#define GATEKEEP_H
 /********************************************************************************
 **	SOURCE FILE:	GateKeeper.h -  		Header file for The gatekeeper npc base
 **											class. Contains function prototypes
@@ -12,23 +14,20 @@
 **	PROGRAMMER: Filip Gutica A00781910
 **
 ***********************************************************************************/
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iomanip>
-#include "../../../Engine/Entity.h"
+
+#include <SFML/Graphics.hpp>
+#include "../../../Engine/VEntity.h"
 
 
-
-class GateKeeper : public Marx::Entity
+class GateKeeper : public Marx::VEntity
 {
 
 	public:
-		GateKeeper(Marx::Map* map, float x, float y, Marx::Controller* ctrl = NULL, float h = 1.0, float w = 1.0) :
-			Entity(map, x, y, ctrl, h, w)
+		GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl = NULL, float h = 1.0, float w = 1.0) :
+			VEntity(sprite, map, x, y, ctrl, h, w)
 			,_ctrl(ctrl) {};
 		virtual ~GateKeeper();
-		virtual void updateNPC();
+		virtual void update(const sf::Time& t) override;
 		virtual void detectPlayers();
 		virtual void enterCombat();
 		virtual void leaveCombat();
@@ -47,13 +46,11 @@ class GateKeeper : public Marx::Entity
 		virtual int getMovementSpeed();
 		//virtual Vessel getTarget();
 		virtual time_t getCooldown();
-
 		virtual void turn();
-		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
 		virtual void onUpdate();
-		virtual bool operator==(const Entity&);
+		virtual bool operator==(const VEntity&);
 
 
 	private:
@@ -72,3 +69,4 @@ class GateKeeper : public Marx::Entity
 		Marx::Controller* _ctrl;
 
 };
+#endif
