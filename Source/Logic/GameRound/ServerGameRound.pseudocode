@@ -1,0 +1,51 @@
+Server Game Round
+  start lobby in an infinite timed loop (each loop = 1 frame time)
+    check for new player connections in queue from separate thread
+      put new player in player list
+      send lobby entry confirmation signal to player
+    check player list for messages
+      if a player sends check-in packet
+        reset consecutive miss count = 0
+        send acknowledgement packet
+      if player did not check in
+        player's consecutive miss count +1
+        if player misses 5 check-ins consecutively
+          if player is on ready list
+            remove player from ready list
+          remove player from player list
+          try next player on list
+      if a player sends valid roles and ready message
+        put player on ready list
+      if a player sends regret message
+        if player is on ready list
+          remove player from ready list
+    if enough players on ready list
+      start or continue countdown
+    if countdown ends
+      randomly assign players to vessels
+      if players left over, randomly assign players to deities
+        send start loading screen signal, enter loading screen
+
+  enter loading screen
+    load scenario
+    send scenario
+    check player connections again
+    if player timed out or exited
+      kick player
+      if player was a vessel
+        move random deity to vessel position
+    if enough players still in
+      enter game field loop
+    go back go lobby
+
+  enter game field loop
+    if time not expired yet
+
+    else
+      send game over signal to client
+      tally up scores
+      send results over to all clients
+      if all clients acknowledge results or timeout
+        clean up memory
+        exit game loop and
+        go back to loading screen
