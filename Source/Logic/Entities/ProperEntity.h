@@ -1,7 +1,8 @@
 #ifndef PROPER_ENTITY_H
 #define PROPER_ENTITY_H
 
-#include "../Engine/Entity.h"
+#include "../../Engine/Entity.h"
+#include "../../Engine/Controller.h"
 
 class ProperEntity : public Marx::Entity
 {
