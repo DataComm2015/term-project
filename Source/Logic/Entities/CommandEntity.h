@@ -19,7 +19,7 @@ class GameScene;
  *
  * the client sends command using {Command::update} such as move commands or
  *   others like choosing their character to the Server. such commands are
- *   handled in the {Player::onUpdate} method. and sent using the.
+ *   handled in the {Player::onUpdate} method. and sent using the. .
  */
 class CommandEntity : public NetworkEntity, public KeyListener
 {
