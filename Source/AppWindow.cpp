@@ -1,4 +1,4 @@
-#include "AppWindow.h"
+	#include "AppWindow.h"
 
 using namespace Marx;
 
@@ -34,6 +34,28 @@ sf::View AppWindow::getCurrentView() const
 		sf::Vector2f(size.x * 0.5f, size.y * 0.5f),
 		sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y))
 		);
+}
+
+/******************************************************************************
+*	FUNCTION: getMousePositionRelativeToWindowAndView
+*
+*	DATE: March 10, 2015
+*
+*	DESIGNER: Melvin Loho
+*
+*	PROGRAMMER: Melvin Loho
+*
+*	INTERFACE: sf::Vector2f AppWindow::getMousePositionRelativeToWindowAndView(const sf::View &view) const
+*
+*	RETURNS:
+*		sf::Vector2f - the mouse position
+*
+*	NOTES:
+*		Gets the mouse position relative to the window and view
+*
+******************************************************************************/
+sf::Vector2f AppWindow::getMousePositionRelativeToWindowAndView(const sf::View &view) const {
+	return mapPixelToCoords(sf::Mouse::getPosition(*this), view);
 }
 
 /******************************************************************************
@@ -171,7 +193,7 @@ void AppWindow::run()
 	}
 }
 
-AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(800, 600), "The Game")
+AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(1366, 768), "The Game", sf::Style::Default, sf::ContextSettings(0,0,0))
 {
 	Scene *s = new Scene;
 	scene.emplace_back(s);

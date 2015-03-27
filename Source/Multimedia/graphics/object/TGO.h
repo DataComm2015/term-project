@@ -12,8 +12,8 @@ public:
 
 	virtual ~TGO();
 
-	sf::Text& operator()();
-	const sf::Text& operator()() const;
+	sf::Text& text();
+	const sf::Text& text() const;
 
 	const sf::Transform& getLocalTransform() const override;
 

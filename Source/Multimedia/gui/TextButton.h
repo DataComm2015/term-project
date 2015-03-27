@@ -6,7 +6,7 @@ namespace GUI
 	class TextButton : Button
 	{
 		public:
-			TextButton(BGO*, sf::IntRect*, std::function, std::string);
+			TextButton(sf::IntRect*, std::function, std::string);
 			~TextButton();
 			void setText(std::string);
 			void setOffset(sf::Vector2f);

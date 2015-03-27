@@ -5,17 +5,17 @@
 *
 * @date         2015-02-28
 *
-* @revisions
+* @revisions	2015-03-18 - Removed BGO parent from constructor
 *
 * @designer   
 *
 * @programmer   Jonathan Chu
+*				Marc Rafanan
 *
 * @return       initializer
 */
-ValueButton::ValueButton(BGO* parent, sf::IntRect* decButton, Button* incButton, Button*, Label* theLabel, std::function theFunc, std::string theText, int theValue, int modBy)
+ValueButton::ValueButton(sf::IntRect* decButton, Button* incButton, Button*, Label* theLabel, std::function theFunc, std::string theText, int theValue, int modBy)
 {
-    parent.add(this);
     label = theLabel;
     dec = decButton;
     inc = incButton;

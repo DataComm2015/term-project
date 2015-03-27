@@ -25,7 +25,7 @@
 --      This file implements the Map class members
 ----------------------------------------------------------------------------------------------------------------------*/
 #include "Map.h"
-
+#include <iostream>
 using namespace Marx;
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -63,6 +63,20 @@ Map::~Map()
 	// Empty for now
 }
 
+std::set<Entity*> Map::getEntities() const
+{
+/* TODO:
+	std::set<Entity *> entity;
+	std::set<Entity *>::iterator it; 
+
+	for( Cell * c : cells_ )
+	{
+		std::sort(c->getEntities.begin(), c->getEntities.end());
+		std::set_intersection( entities, );
+	}
+*/
+	return std::set<Entity *>();
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: setCell
@@ -120,10 +134,23 @@ void Map::setCell(const uint x, const uint y, Cell* cell)
 --     Gets the cell specified by the index (x * width + y) of the Map
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Cell* Map::getCell(const uint x, const uint y) const
+Cell* Map::getCell(const unsigned int x, const unsigned int y) const
 {
-    uint index = x * width_ + y;
-    return cells_[index];
+    	unsigned int index = (x * width_) + y;
+	/**/
+	try
+	{
+		return cells_.at(index);
+	} catch(const std::out_of_range& e)
+	{
+		std::cerr << "Cell out of range" << std::endl;
+		fflush(stderr);
+		throw e;
+	} catch(...)
+	{
+		std::cerr << "Cell out of range" << std::endl;
+	}
+	return nullptr;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -240,3 +267,12 @@ uint Map::getTexture() const
     return texture_id_;
 }
 
+const sf::Transform& Map::getLocalTransform() const
+{
+	return trans;
+}
+
+void Map::draw(Renderer& renderer, sf::RenderStates states) const
+{
+	renderer.draw(*this, states);
+}

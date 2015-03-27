@@ -1,5 +1,7 @@
 #include "Button.h"
 
+#include "../../AppWindow.h"
+
 namespace GUI
 {
 	/**
@@ -7,22 +9,26 @@ namespace GUI
 	*
 	* @date         2015-02-27
 	*
-	* @revisions
+	* @revisions	2015-03-18 - Removed BGO parent from constructor
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*				Lewis Scott
+	*				Marc Rafanan
 	*
 	* @return       initializer
 	*/
-	Button::Button(BGO* parent, const sf::Texture& texture, const struct buttonStates theStates, std::function<void()> onClick) : SGO(texture)
+	Button::Button(const sf::Texture& texture, sf::Vector2f si, sf::View& v, std::function<void()> onClick) : SGO(texture), view(v)
 	{
-		parent->add(*this);
 		enabled = true;
-		states = theStates;
+		size = si;
 		on_click = onClick;
-		SGO::operator()().setTextureRect(states.normal);
+		disabled = sf::IntRect(0, 0, size.x, size.y);
+		normal = sf::IntRect(size.x, 0, size.x, size.y);
+		hover = sf::IntRect(size.x * 2, 0, size.x, size.y);
+		clicked = sf::IntRect(size.x * 3, 0, size.x, size.y);
+		sprite().setTextureRect(normal);
 	}
 
 	/**
@@ -32,13 +38,13 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*
 	* @return       void
 	*/
-	inline void Button::toggleEnabled(bool e)
+	void Button::toggleEnabled(bool e)
 	{
 		enabled = e;
 	}
@@ -50,43 +56,44 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer     
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*				Lewis Scott
 	*
-	* @return       void   
+	* @return       void
 	*/
 	void Button::update(sf::Time& t)
 	{
 		static bool tog = false;
+		static AppWindow& appWindow = AppWindow::getInstance();
 
-		if(enabled) // button enabled
+		if (enabled) // button enabled
 		{
-			if(SGO::operator()().getLocalBounds().contains((sf::Vector2f)sf::Mouse::getPosition())) // mouse inside button
+			if (getGlobalTransform().transformRect(sprite().getGlobalBounds()).contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
 			{
-				if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) // mouse clicking button
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // mouse clicking button
 				{
-					SGO::operator()().setTextureRect(states.clicked);
-					
+					sprite().setTextureRect(clicked);
+
 					// So that holding the mouse doesn't activate multiple times
-					if(!tog)
+					if (!tog)
 					{
 						on_click();
 						tog = true;
 					}
 				}
 				else // mouse just hovering
-					SGO::operator()().setTextureRect(states.hover);
+					sprite().setTextureRect(hover);
 			}
 			else //mouse outside button
-				SGO::operator()().setTextureRect(states.normal);
+				sprite().setTextureRect(normal);
 		}
 		else // button disabled
-			SGO::operator()().setTextureRect(states.disabled);
-			
+			sprite().setTextureRect(disabled);
+
 		// Reset the button if the mouse is released
-		if(!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			tog = false;
 	}
 }
