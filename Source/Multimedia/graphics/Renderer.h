@@ -35,7 +35,7 @@ public:
 	void end();
 	void resetStats();
 
-	void draw(const BGO* bgo, bool scenegraph = true, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const BGO* bgo, bool scenegraph = false, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const TGO& tgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const Marx::Map& map, sf::RenderStates states = sf::RenderStates::Default);
