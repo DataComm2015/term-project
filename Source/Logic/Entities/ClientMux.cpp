@@ -1,11 +1,16 @@
-#include "NetworkEntityMultiplexer.h"
-#include "../../Engine/GameScene.h"
+#include "ClientMux.h"
+
+#include "../../Network/NetworkEntityMultiplexer.h"
+#include "../NetworkEntityPairs.h"
+#include "../GameScene.h"
 #include "../../Engine/Map.h"
 #include "../../Engine/Controller.h"
 #include "ProperEntity.h"
 #include "CommandEntity.h"
+#include "NetworkControllerEntity.h"
 
-ClientMux::ClientMux()
+ClientMux::ClientMux(GameScene *scene)
+    : scene(scene)
 {
 }
 
@@ -23,17 +28,17 @@ NetworkEntity* ClientMux::onRegister(int id,
     switch(entityType)
     {
         case NET_ENT_PAIR_PLAYER_COMMAND:
-            ret = new CommandEntity(id);
+            ret = new CommandEntity(id, scene);
             break;
 
         // later, should parse the message to figure out what kind of game
         // entity to create that is being controlled by the NetworkController.
         case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
-            ret = new NetworkController(id);
+            ret = new NetworkControllerEntity(id);
             Marx::Map* cMap = ((GameScene*)scene)->getcMap();
             new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
             break;
     }
 
     return ret;
-};
+}

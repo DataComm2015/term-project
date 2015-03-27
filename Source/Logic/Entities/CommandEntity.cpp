@@ -1,21 +1,25 @@
 #include "CommandEntity.h"
 
-#include "Logic/Event.h"
-#include "Logic/ProperEntity.h"
-#include "Logic/NetworkEntityPairs.h"
+#include "../../Engine/Event.h"
+#include "../GameScene.h"
+#include "../Event.h"
+#include "../Entities/ProperEntity.h"
+#include "../NetworkEntityPairs.h"
 
-#include "Engine/Controller.h"
-#include "Network/Client.h"
-#include "Network/Session.h"
-#include "Network/NetworkEntityMultiplexer.h"
+#include "../../Engine/Controller.h"
+#include "../../Network/Client.h"
+#include "../../Network/Session.h"
+#include "../../Network/NetworkEntityMultiplexer.h"
 
-CommandEntity::Command(int id, GameScene *scene)
+using Networking::Client;
+
+CommandEntity::CommandEntity(int id, GameScene *scene)
     : NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND), scene(scene)
 {
     scene->addKeyListener(this);
 }
 
-CommandEntity::~Command()
+CommandEntity::~CommandEntity()
 {
     scene->rmKeyListener(this);
 }

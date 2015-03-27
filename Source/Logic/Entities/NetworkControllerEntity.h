@@ -3,7 +3,14 @@
 
 #include "../../Engine/Controller.h"
 #include "../../Network/Message.h"
+#include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
+#include "../NetworkEntityPairs.h"
+#include "../Event.h"
+
+using Networking::Message;
+using Networking::Session;
+using Networking::NetworkEntity;
 
 /**
  * the {ServerController} class on the server is logically mapped to a
@@ -19,48 +26,15 @@
  *   be handled, and converted from a message back into an event, then added to
  *   the {NetworkController's} event queue.
  */
-class NetworkController : public ::Marx::Controller, public NetworkEntity
+class NetworkControllerEntity : public ::Marx::Controller, public NetworkEntity
 {
 public:
-    NetworkController(int id)
-        :NetworkEntity(id,NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
-    {
-    }
-    ~NetworkController()
-    {
-    }
-    virtual void onUpdate( Message message )
-    {
-        parseEventMessage(message);
-    }
-    virtual void onUnregister( Session * session, Message message )
-    {
-        parseEventMessage(message);
-    }
+    NetworkControllerEntity(int id);
+    ~NetworkControllerEntity();
+    virtual void onUpdate( Message message );
+    virtual void onUnregister( Session * session, Message message );
 private:
-    void parseEventMessage(Message& message)
-    {
-        switch(message.type)
-        {
-        case ::Marx::MOVE:
-        {
-            // case message payload
-            MoveMessage* mm = (MoveMessage*) message.data;
-
-            // create event from message data
-            MoveEvent ev(mm->x, mm->y, mm->forced);
-
-            // add event to event queue
-            addEvent(ev);
-            break;
-        }
-        default:
-            printf("WARNING: NetworkController::parseEventMessage received an "
-                "unknown event type. please add new case to switch statement");
-            fflush(stdout);
-            break;
-        }
-    }
+    void parseEventMessage(Message& message);
 };
 
 #endif

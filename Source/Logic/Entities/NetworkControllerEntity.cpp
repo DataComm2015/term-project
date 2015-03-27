@@ -1,25 +1,27 @@
 #include "NetworkControllerEntity.h"
 
-NetworkController::NetworkController(int id)
+#include <stdio.h>
+
+NetworkControllerEntity::NetworkControllerEntity(int id)
     :NetworkEntity(id,NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 
-NetworkController::~NetworkController()
+NetworkControllerEntity::~NetworkControllerEntity()
 {
 }
 
-void NetworkController::onUpdate( Message message )
-{
-    parseEventMessage(message);
-}
-
-void NetworkController::onUnregister( Session * session, Message message )
+void NetworkControllerEntity::onUpdate( Message message )
 {
     parseEventMessage(message);
 }
 
-void NetworkController::parseEventMessage(Message& message)
+void NetworkControllerEntity::onUnregister( Session * session, Message message )
+{
+    parseEventMessage(message);
+}
+
+void NetworkControllerEntity::parseEventMessage(Message& message)
 {
     switch(message.type)
     {

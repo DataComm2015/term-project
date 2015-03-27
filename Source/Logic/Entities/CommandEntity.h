@@ -1,15 +1,14 @@
 #ifndef _COMMAND_ENTITY_H_
 #define _COMMAND_ENTITY_H_
 
-#include "Logic/KeyListener.h"
-#include "Network/Message.h"
-#include "Network/NetworkEntity.h"
+#include "../KeyListener.h"
+#include "../../Network/Message.h"
+#include "../../Network/Session.h"
+#include "../../Network/NetworkEntity.h"
 
-using Networking::NetworkEntityMultiplexer;
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
-using Networking::Client;
 
 class GameScene;
 
@@ -24,8 +23,8 @@ class GameScene;
 class CommandEntity : public NetworkEntity, public KeyListener
 {
     public:
-        Command(int id, GameScene *scene);
-        ~Command();
+        CommandEntity(int id, GameScene *scene);
+        ~CommandEntity();
         
     protected:
         virtual void onKeyPressed(int key);
