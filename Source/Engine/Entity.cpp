@@ -159,7 +159,7 @@ Entity * Entity::move(float x, float y, bool force = false)
     for(Cell *c : tempCell)
 	{
 		std::set<Entity*> entities = c->getEntity();
-        std::cout << entities.size() << std::endl;
+        //std::cout << entities.size() << std::endl;
 		for( Entity * e : entities )
 		{
 			if( intersects(*e) && !(e->move__) )

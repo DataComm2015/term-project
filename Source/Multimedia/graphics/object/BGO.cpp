@@ -113,7 +113,7 @@ void BGO::add(BGO& gO)
 {
 	if (gO.m_id == m_id)
 	{
-		throw "Are you crazy!? You just tried to add a graphic object to itself!";
+		throw "Are you crazy!? You've just tried to add a game object to itself!";
 	}
 	else
 	{
