@@ -1,6 +1,6 @@
 //> In the main file
 #include "AppWindow.h"
-#include "Usage.cpp"
+//#include "Usage.cpp"
 
 #include "Logic/Event.h"
 #include "Logic/Entities/ProperEntity.h"

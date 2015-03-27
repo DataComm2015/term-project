@@ -17,7 +17,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "../../../Engine/VEntity.h"
-
+#include "../../../Engine/Map.h"
+#include "../../../Engine/Cell.h"
+#include "../../../Engine/Controller.h"
 
 class GateKeeper : public Marx::VEntity
 {
@@ -25,7 +27,18 @@ class GateKeeper : public Marx::VEntity
 	public:
 		GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl = NULL, float h = 1.0, float w = 1.0) :
 			VEntity(sprite, map, x, y, ctrl, h, w)
-			,_ctrl(ctrl) {};
+			,_ctrl(ctrl)
+			{
+				_range = 1;
+				_health = 100;
+				_type = 1;
+				_attack = 1;
+				_attackSpeed = 1;
+				_movementSpeed = 1;
+				_incombat = false;
+				_cooldown = 1;
+			};
+
 		virtual ~GateKeeper();
 		virtual void update(const sf::Time& t) override;
 		virtual void detectPlayers();
@@ -61,6 +74,7 @@ class GateKeeper : public Marx::VEntity
 		int _attackSpeed;
 		int _movementSpeed;
 		bool _incombat;
+		time_t _cooldown;
 		//Player _target;
 		//PatrolRadius _radius;
 		//Timer _cooldownTimer;
