@@ -1,7 +1,7 @@
 /********************************************************************************
-**	SOURCE FILE:	MiniBoss.h -  		Header file for The Mini boss npc class. 
+**	SOURCE FILE:	MiniBoss.h -  		Header file for The Mini boss npc class.
 **										Contains function prototypes
-**	 	
+**
 **	PROGRAM:	Term_Project
 **
 **	DATE: 		February 15, 2015
@@ -17,7 +17,7 @@
 class MiniBoss : public GateKeeper
 {
 	public:
-		MiniBoss(GKstruct *gk) : GateKeeper(*gk);
+		MiniBoss() : GateKeeper();
 		void updateNPC();
 		void detectPlayers();
 		void enterCombat();
@@ -50,5 +50,5 @@ class MiniBoss : public GateKeeper
 		//PatrolRadius _radius;
 		//Timer _cooldownTimer;
 		//AI _ai;
-	
+
 };

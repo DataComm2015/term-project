@@ -1,7 +1,7 @@
 /********************************************************************************
-**	SOURCE FILE:	Boss.h -  			Header file for The boss npc class. 
+**	SOURCE FILE:	Boss.h -  			Header file for The boss npc class.
 **										Contains function prototypes
-**	 	
+**
 **	PROGRAM:	Term_Project
 **
 **	DATE: 		February 15, 2015
@@ -17,7 +17,7 @@
 class Boss : public GateKeeper
 {
 	public:
-		Boss(GKstruct *gk) : GateKeeper(*gk);
+		Boss() : GateKeeper();
 		void updateNPC();
 		void detectPlayers();
 		void enterCombat();
@@ -51,5 +51,5 @@ class Boss : public GateKeeper
 		//Timer _cooldownTimer;
 		//AI _ai;
 		void specialAbility();
-	
+
 };
