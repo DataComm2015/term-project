@@ -145,6 +145,7 @@ Entity * Entity::move(float x, float y, bool force = false)
 	int temp_y = top;
 	top = x;
 	left = y;
+    move__ = true;
 	// loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i < width + floor(x); i++)
     {
@@ -158,10 +159,10 @@ Entity * Entity::move(float x, float y, bool force = false)
     for(Cell *c : tempCell)
 	{
 		std::set<Entity*> entities = c->getEntity();
+        std::cout << entities.size() << std::endl;
 		for( Entity * e : entities )
 		{
-			
-			if( intersects(*e) )
+			if( intersects(*e) && !(e->move__) )
 			{
 				if( force )
 				{
@@ -173,7 +174,7 @@ Entity * Entity::move(float x, float y, bool force = false)
 					top = temp_y;
 				}
 				
-				
+				move__ = false;
 				return e;
 			}
 		}
@@ -191,6 +192,7 @@ Entity * Entity::move(float x, float y, bool force = false)
 	
 	occupiedCells = tempCell;
 	
+    move__ = false;
 	return nullptr;
 }
 

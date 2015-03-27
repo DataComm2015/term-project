@@ -110,7 +110,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
 
-	ventitee = new VEntity(placeHolderSGO, cMap, 0, 0, nullptr, 1, 1);
+	ventitee = new VEntity(placeHolderSGO, cMap, 25, 25, nullptr, 1, 1);
 	cMap->add(*ventitee);
 
 	sf::Font *arial = new sf::Font();
