@@ -3,6 +3,7 @@
 
 #include "Entity.h"
 #include "Controller.h"
+#include <cmath>
 #include "../Multimedia/graphics/object/SGO.h"
 
 using namespace Marx;
@@ -19,11 +20,18 @@ public:
 		sprite().setOrigin(bounds.width * 0.5f, bounds.height);
 	}
 
+	// this should get removed
 	void update(const sf::Time& t) override
 	{
-		static unsigned counter = 0;
+		static float a = 0;
+		static float b = 0.1;
+		
+		a += 0.01;
 
-		move(left + 0.1, top + 0.1, false);
+		if(move( 45 + 10 * cos(a), 45 + 10 * sin(a), false))
+		{
+			b *= -1;
+		}
 	}
 
 protected:

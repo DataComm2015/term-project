@@ -63,6 +63,20 @@ Map::~Map()
 	// Empty for now
 }
 
+std::set<Entity*> Map::getEntities() const
+{
+/* TODO:
+	std::set<Entity *> entity;
+	std::set<Entity *>::iterator it; 
+
+	for( Cell * c : cells_ )
+	{
+		std::sort(c->getEntities.begin(), c->getEntities.end());
+		std::set_intersection( entities, );
+	}
+*/
+	return std::set<Entity *>();
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: setCell
