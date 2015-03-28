@@ -18,6 +18,7 @@ namespace Marx
 		{
 			const sf::FloatRect &bounds = sprite.sprite().getLocalBounds();
 			sprite.sprite().setOrigin(bounds.width * 0.5f, bounds.height);
+			map->add(*this);
 		}
 
 		// this should get removed

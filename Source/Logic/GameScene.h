@@ -23,6 +23,7 @@
 #include "../Multimedia/manager/MusicManager.h"
 #include "../Engine/VEntity.h"
 #include "../Engine/EGTheSpinner.h"
+#include "Entities/Vessel.h"
 
 #include "KeyListener.h"
 
@@ -83,12 +84,14 @@ class GameScene : public Scene
 		float phase;
 
 		// Game Objects
+		Vessel *vessel;
 
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
 		Marx::Projectile * p;
 
 		SGO championSGO;
+		SGO championSGO2;
 		SGO maskSGO;
 		SGO wepSGO;
 		SGO placeHolderSGO;

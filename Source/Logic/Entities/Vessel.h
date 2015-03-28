@@ -93,13 +93,20 @@ class Vessel : public Marx::VEntity
 		//TO DO: pointer to the game map needed in the future
 
 	public:
-		Vessel( SGO &_sprite, Marx::Map * gmap, float x, float y, Marx::Controller* controller, float height, float width);
+		Vessel( SGO &_sprite,
+			Marx::Map * gmap,
+			float x,
+			float y,
+			Marx::Controller* controller,
+			float height,
+			float width
+			/*, job_class jobClass, Ability* abilityList*/ );
 
 		//inherited methods
 		virtual ~Vessel();
-		virtual void update();
+		virtual void onUpdate();
 		virtual void turn();
-		virtual Marx::VEntity* move(float, float, bool);
+		virtual Marx::Entity* move(float, float, bool);
 		virtual std::set<Marx::Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();

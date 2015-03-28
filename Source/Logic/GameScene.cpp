@@ -47,9 +47,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
 
-	std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
+	/*std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
 
-	p = new Projectile(cMap, 10, 10, NULL, 1, 1);
+ p = new Projectile(cMap, 10, 10, NULL, 1, 1);
 	//				   map, x, y, controller, height, width
 	Projectile p2 = Projectile(cMap, 20, 20, NULL, 1, 1);
 
@@ -67,7 +67,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
 
 	delete p;
-
+*/
 	/* END SAMPLE CREATION */
 
 	// Load the tileset
@@ -99,6 +99,11 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	championSGO.sprite().setScale(2, 2);
 	championSGO.middleAnchorPoint(true);
 
+	championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
+	championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	championSGO2.sprite().setScale(2, 2);
+	championSGO2.middleAnchorPoint(true);
+
 	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
 	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 	maskSGO.sprite().setScale(2, 2);
@@ -112,10 +117,11 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
 
+  std::cout << "before entity instantated" << std::endl;
+	vessel = new Vessel(championSGO2, cMap, 45, 45, NULL, 1.0F, 1.0F);
+
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
-	cMap->add(*s);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
-	cMap->add(*s2);
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
@@ -236,7 +242,7 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
+	sf::Listener::setPosition(viewMain.getCenter().x-45, viewMain.getCenter().y-45, 0);
 
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*
@@ -345,7 +351,7 @@ void GameScene::draw()
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(championSGO);
+	//renderer.draw(championSGO2);
 	renderer.draw(&maskSGO, true);
 	renderer.draw(wepSGO);
 
