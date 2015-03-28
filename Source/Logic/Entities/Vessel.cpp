@@ -813,8 +813,8 @@ void Vessel::detectMove()
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition-1, false)));
-		move(yPosition-1, xPosition, false);
-		yPosition--;
+		move(yPosition-0.1, xPosition, false);
+		yPosition -= 0.1;
 		moving = true;
 		ySpeed = -travelSpeed;
 	}
@@ -822,8 +822,8 @@ void Vessel::detectMove()
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition+1, false)));
-		move(yPosition+1, xPosition, false);
-		yPosition++;
+		move(yPosition+0.1, xPosition, false);
+		yPosition += 0.1;
 		moving = true;
 		ySpeed = travelSpeed;
 	}
@@ -831,8 +831,8 @@ void Vessel::detectMove()
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		//_controller->addEvent(*(new MoveEvent(xPosition-1, yPosition, false)));
-		move(yPosition, xPosition-1, false);
-		xPosition--;
+		move(yPosition, xPosition-0.1, false);
+		xPosition -= 0.1;
 		moving = true;
 		xSpeed = -travelSpeed;
 		direction = 0;	//signal to animate left facing sprite
@@ -841,8 +841,8 @@ void Vessel::detectMove()
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		//_controller->addEvent(*(new MoveEvent(xPosition+1, yPosition, false)));
-		move(yPosition, xPosition+1, false);
-		xPosition++;
+		move(yPosition, xPosition+0.1, false);
+		xPosition += 0.1;
 		moving = true;
 		xSpeed = travelSpeed;
 		direction = 1; //signal to animate right facing sprite
