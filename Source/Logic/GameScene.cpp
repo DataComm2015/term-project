@@ -24,7 +24,7 @@ void onclick()
 void updateMainView(sf::View& v)
 {
 	v = AppWindow::getInstance().getCurrentView();
-	v.zoom(2);
+	v.zoom(0.66);
 }
 
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
@@ -241,6 +241,7 @@ void GameScene::update(sf::Time t)
 {
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	vessel->onUpdate();
+
 	/*
 	v->move();
 
@@ -305,7 +306,8 @@ void GameScene::update(sf::Time t)
 	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	//viewMain.setCenter(v->getXPosition(), v->getYPosition());
+	viewMain.setCenter(
+		vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
