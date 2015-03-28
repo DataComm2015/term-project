@@ -34,7 +34,7 @@ void ServerCommand::onConnect(Session* session)
     // register the client with the player object, and player controller
     player->registerSession(session,msg);
 
-    create an entity that the client is supposed to control
+    // create an entity that the client is supposed to control
     Marx::Map* cMap = ((ServerGameScene*)scene)->getcMap();
 
     // id_resource championSprite = Manager::TextureManager::store(
