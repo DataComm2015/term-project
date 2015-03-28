@@ -1,45 +1,92 @@
 Server Game Round
-  start lobby in an infinite timed loop (each loop = 1 frame time)
-    check for new player connections in queue from separate thread
-      put new player in player list
-      send lobby entry confirmation signal to player
-    check player list for messages
-      if a player sends check-in packet
-        reset consecutive miss count = 0
-        send acknowledgement packet
-      if player did not check in
-        player's consecutive miss count +1
-        if player misses 5 check-ins consecutively
-          if player is on ready list
-            remove player from ready list
-          remove player from player list
-          try next player on list
-      if a player sends valid roles and ready message
-        put player on ready list
-      if a player sends regret message
-        if player is on ready list
-          remove player from ready list
-    if enough players on ready list
-      start or continue countdown
+  start Connection Initiation Thread to catch incoming players
+  start Connection Checking Thread to kick timed-out players
+  start lobby interface
+
+  loop once every game frame
+    check each player for messages
+      if a player sends a valid roles message
+        assign player with roles
+        remove message
+    if >= 4 players on player list (we need at least 4 vessels)
+      start or continue countdown of 20 seconds
+      send to all players start countdown message
+    else
+      stop and reset countdown
+      send to all players stop countdown message
     if countdown ends
-      randomly assign players to vessels
-      if players left over, randomly assign players to deities
-        send start loading screen signal, enter loading screen
+      randomly assign 4 players to vessels
+      randomly assign up to 4 other players to deities
+      unassigned players are ghosts
+      send start loading screen signal
+      enter loading screen
 
-  enter loading screen
-    load scenario
-    send scenario
-    check player connections again
-    if player timed out or exited
-      kick player
-      if player was a vessel
-        move random deity to vessel position
-    if enough players still in
-      enter game field loop
-    go back go lobby
+Connection Initiation Thread
+  loop once every game frame
+    check for new players
+      put any new players in player list
+    if game not in session
+      send lobby entry confirmation signal to player
+    else
+      send game-in-session signal to player
+      send seed to player
 
-  enter game field loop
-    if time not expired yet
+Connection Checking Thread
+  loop once every game frame
+    check through all players in player list for messages
+      if a player has sent a message of any kind
+        reset player's consecutive miss count = 0
+        if the message is a simple check-in message
+          remove message
+        if the message is a quit message
+          remove message
+          Kick Player (player who left)
+      if a player misses 5 consecutive check-ins
+        Kick Player (player who timed out)
+
+Kick Player (player)
+  if player is a vessel
+    change random available deity to vessel
+    change random available ghost to deity
+  else if player is a deity
+    change random available ghost to deity
+  remove player from player list
+
+Loading Screen Function
+  generate seed
+  go through player list 5 times (each loop = 1 frame time)
+    check each player for messages
+      if a player has not received the seed
+        send seed
+      else if acknowledgement received
+        check off player as seed received
+        remove message
+  check all players for seed reception
+    if a player has not received the seed after 5 tries
+      Kick Player (player who has not received seed)
+  generate map from seed
+  generate obstacles from seed
+  generate minions from seed
+  generate mini-bosses from seed
+  generate boss from seed
+  for up to 20 seconds
+    if not all players finished generating yet
+      check each player for messages
+        if a players has finished generating
+          check off player as finished generating
+          remove message
+    else if everyone is done already
+      end for loop
+  if all 20 seconds have passed
+    check each player for game generation
+      Kick Player (player not finished generating)
+  send game start signal to all players
+  enter Game Field
+  once a game is done, return to lobby
+
+Game Field Function
+  loop once every game frame
+    if time not expired yet and players alive > 1
 
     else
       send game over signal to client

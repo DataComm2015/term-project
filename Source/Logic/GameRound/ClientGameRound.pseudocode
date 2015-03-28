@@ -3,41 +3,41 @@ Client Game Round
     if timeout while waiting for server response
       show error message
       quit game
-    else if entry confirmation signal received
-      start lobby
+    else if entry confirmation or game-in-session signal received
+      start Lobby      
 
-  start lobby
-    // need UI people for the following
-    signals for:
-      selecting potential job class
-      selecting potential deity class
-      enabling/disabling/pressing ready button
-      enabling/disabling/pressing regret button
-      exit button
-    // end UI need
-    in an infinite timed loop (each loop = 1 frame time)
-      send check-in packet
-      if received start loading screen signal
-        start loading screen
-      if user signals ready
-        if proper job and deity selected
-          send roles and ready message to server
-          set player state ready
-          disable ready button, enable regret button
-      if user signals regret
-        send regret message to server
-        set player state not ready
-        enable ready button, disable regret button
-      if user signals exit
-        send exit signal to server
-        end Client Game Round
+/*
+need UI people for the following signals:
+  selecting potential vessel class
+  selecting potential deity class
+  pressing exit button
+*/
+Lobby Function
+  send default roles message to server
+  loop once every game frame
+    send check-in packet
+    if received start loading screen signal
+      start loading screen
+    if player selects a vessel or deity class
+      send new roles message to server
+    if user signals exit
+      send quit message to server
+      end Client Game Round
 
   loading screen
-    load scenario from server info
-    if timeout from server
-      send exit signal to server
-      clean up memory
-      end Client Game round
+    wait for seed from server
+      if server does not respond after 5 frames' time
+        server has timed out
+          end Client Game Round
+      else if seed received
+        send acknowledgement packet
+    generate map from seed
+    generate obstacles from seed
+    generate minions from seed
+    generate mini-bosses from seed
+    generate boss from seed
+    wait for ready signal from server for 30 seconds
+      if server does not respond after 30 loops
 
   game field loop
     if not game over yet
