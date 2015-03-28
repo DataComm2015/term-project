@@ -82,6 +82,18 @@
  */
 #define MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND 7
 
+/**
+ * {Command} instance is sending a "start game scene" command to the {Player}
+ *   instance.
+ */
+#define MSG_T_PLAYER_COMMAND_START_GAME_SCENE 8
+
+/**
+ * {Command} instance is sending a "start lobby scene" command to the {Player}
+ *   instance.
+ */
+#define MSG_T_PLAYER_COMMAND_START_LOBBY_SCENE 9
+
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {ServerController} {NetworkEntity} and a //
 // {NetworkController} {NetworkEntity}.                                     //
