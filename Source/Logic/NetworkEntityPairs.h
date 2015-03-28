@@ -81,3 +81,14 @@
  *   instance.
  */
 #define MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND 7
+
+//////////////////////////////////////////////////////////////////////////////
+// message types used to between a {ServerController} {NetworkEntity} and a //
+// {NetworkController} {NetworkEntity}.                                     //
+//////////////////////////////////////////////////////////////////////////////
+
+/**
+ * server is sending a "make a vessel" command to the client using onRegister,
+ *   registering the {ServerCommandEntity} with the client.
+ */
+#define NSG_T_SERVERCONTROLLER_NETCONTROLLER_MAKE_VESSEL 0
