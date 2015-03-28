@@ -106,12 +106,12 @@ class Vessel : public Marx::VEntity
 		virtual ~Vessel();
 		virtual void onUpdate();
 		virtual void turn();
-		virtual Marx::Entity* move(float, float, bool);
+		//virtual Marx::Entity* move(float, float, bool);
 		virtual std::set<Marx::Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
 
-		const Marx::Controller* _controller;
+		Marx::Controller* _controller;
 
 		void setPosition( float x, float y );
 		float getXPosition();
@@ -153,7 +153,7 @@ class Vessel : public Marx::VEntity
 		void die();
 
 		void detectMove();
-		void move();
+		//void move();
 		void stop(int key);
 
 		void normalAttack( int x, int y );

@@ -24,7 +24,7 @@ void onclick()
 void updateMainView(sf::View& v)
 {
 	v = AppWindow::getInstance().getCurrentView();
-	v.zoom(0.66);
+	v.zoom(2);
 }
 
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
@@ -118,7 +118,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeHolderSGO.sprite().setScale(1, 1);
 
   std::cout << "before entity instantated" << std::endl;
-	vessel = new Vessel(championSGO2, cMap, 45, 45, NULL, 1.0F, 1.0F);
+	vessel = new Vessel(championSGO2, cMap, 45, 45, new Controller(), 1.0F, 1.0F);
 
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
@@ -160,7 +160,7 @@ void GameScene::onLoad()
 
 	// position buttons
 	positionButtons();
-	
+
 	// Enable buttons
 	b1->toggleEnabled(true);
 	b2->toggleEnabled(false);
@@ -168,7 +168,7 @@ void GameScene::onLoad()
 	b4->toggleEnabled(true);
 	b5->toggleEnabled(true);
 	b6->toggleEnabled(true);
-	
+
 	b2->toggleEnabled(true);
 	b3->toggleEnabled(true);
 }
@@ -177,7 +177,7 @@ void GameScene::positionButtons()
 {
 	// Get Window size
 	sf::Vector2u windowSize = AppWindow::getInstance().getSize();
-	
+
 	// Get button image height
 	unsigned int height = Manager::TextureManager::get(butSprite)->getSize().y;
 
@@ -193,7 +193,7 @@ void GameScene::positionButtons()
 	// position scaled buttons
 	float buttonWidth = b1->sprite().getGlobalBounds().width;
 	float buttonHeight = b1->sprite().getGlobalBounds().height;
-	
+
 	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 3), windowSize.y - 1.25*buttonHeight);
 	b2->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
 	b3->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 1.25*buttonHeight);
@@ -240,8 +240,10 @@ GameScene::~GameScene()
 void GameScene::update(sf::Time t)
 {
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
+	vessel->onUpdate();
 	/*
 	v->move();
+
 
 	if (v->getXSpeed() != 0 || v->getYSpeed() != 0)
 	{
@@ -323,7 +325,7 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyPressed(e.key.code);
 		}
 
-		// v->detectMove();
+		vessel->detectMove();
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch (e.key.code)
@@ -465,11 +467,11 @@ void GameScene::generateUI()
 {
 	// Create buttons
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
-	
+
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
-	
+
 	sf::Vector2f butSize = sf::Vector2f(width, height);
 
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
