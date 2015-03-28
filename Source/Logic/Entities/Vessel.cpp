@@ -103,10 +103,55 @@ void Vessel::onUpdate()
 					MoveEvent* ev = (MoveEvent*) (&(*it));
 					printf( "move: x:%f y:%f force:%d\n",
 							ev->getX(), ev->getY(), ev->forced() );
-					move( ev->getX(), ev->getY(), ev->forced() );
+					// move();
+					setPosition( ev->getX(), ev->getY() );
+					Entity::move( getXPosition(), getYPosition(), false );
 					break;
 			}
 	}
+
+	// moving = false;	//if no movement buttons were pressed in the last frame, stop moving
+	// std::cout << "Movement: " << xPosition << " " << yPosition << std::endl;
+	// fflush(stdout);
+	// if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	// {
+	// 	_controller->addEvent(*(new MoveEvent(xPosition, yPosition-1, false)));
+	// 	//move(yPosition-0.1, xPosition, false);
+	// 	yPosition -= 0.1;
+	// 	moving = true;
+	// 	ySpeed = -travelSpeed;
+	// }
+	//
+	// if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	// {
+	// 	_controller->addEvent(*(new MoveEvent(xPosition, yPosition+1, false)));
+	// 	//move(yPosition+0.1, xPosition, false);
+	// 	yPosition += 0.1;
+	// 	moving = true;
+	// 	ySpeed = travelSpeed;
+	// }
+	//
+	// if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	// {
+	// 	_controller->addEvent(*(new MoveEvent(xPosition-1, yPosition, false)));
+	// 	//move(yPosition, xPosition-0.1, false);
+	// 	xPosition -= 0.1;
+	// 	moving = true;
+	// 	xSpeed = -travelSpeed;
+	// 	direction = 0;	//signal to animate left facing sprite
+	// }
+	//
+	// if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	// {
+	// 	_controller->addEvent(*(new MoveEvent(xPosition+1, yPosition, false)));
+	// 	//move(yPosition, xPosition+0.1, false);
+	// 	xPosition += 0.1;
+	// 	moving = true;
+	// 	xSpeed = travelSpeed;
+	// 	direction = 1; //signal to animate right facing sprite
+	// }
+
+
 	eventQueue.clear();
 }
 
@@ -780,75 +825,6 @@ void Vessel::die()
 
 }
 
-
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: detectMove
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee, Sebastian Pelka
---
--- PROGRAMMER: Sanders Lee, Sebastian Pelka
---
--- INTERFACE: void Vessel::detectMove()
---
--- RETURNS: nothing
---
--- NOTES:
--- This function sets the vessel to a moving state and changes velocity
--- according to key presses.
---
--- Bookmarks:
--- http://en.sfml-dev.org/forums/index.php?topic=11539.0
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::detectMove()
-{
-	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
-	std::cout << "Movement: " << xPosition << " " << yPosition << std::endl;
-	fflush(stdout);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition-1, false)));
-		move(yPosition-0.1, xPosition, false);
-		yPosition -= 0.1;
-		moving = true;
-		ySpeed = -travelSpeed;
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition+1, false)));
-		move(yPosition+0.1, xPosition, false);
-		yPosition += 0.1;
-		moving = true;
-		ySpeed = travelSpeed;
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition-1, yPosition, false)));
-		move(yPosition, xPosition-0.1, false);
-		xPosition -= 0.1;
-		moving = true;
-		xSpeed = -travelSpeed;
-		direction = 0;	//signal to animate left facing sprite
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition+1, yPosition, false)));
-		move(yPosition, xPosition+0.1, false);
-		xPosition += 0.1;
-		moving = true;
-		xSpeed = travelSpeed;
-		direction = 1; //signal to animate right facing sprite
-	}
-}
-
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: move
 --
@@ -867,11 +843,11 @@ void Vessel::detectMove()
 -- NOTES:
 -- Moves the vessel's coordinates according to velocity.
 ----------------------------------------------------------------------------------------------------------------------*/
-/*void Vessel::move()
+void Vessel::move()
 {
-	//setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed ); //updates internal positioning
-	//Entity::move( getXPosition(), getYPosition(), false ); //updates position on Map
-}*/
+	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed ); //updates internal positioning
+	Entity::move( getXPosition(), getYPosition(), false ); //updates position on Map
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: stop

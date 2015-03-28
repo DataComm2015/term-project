@@ -67,7 +67,7 @@ Map::~Map()
 std::set<Entity*> Map::getEntities() const
 {
 	std::set<Entity *> entity;
-	std::set<Entity *>::iterator it; 
+	std::set<Entity *>::iterator it;
 
 	for( Cell * c : cells_ )
 	{
@@ -76,7 +76,7 @@ std::set<Entity*> Map::getEntities() const
 			entity.emplace(e);
 		}
 	}
-	
+
 	return entity;
 }
 
@@ -116,7 +116,7 @@ void Map::setCell(const uint x, const uint y, Cell* cell)
 --
 -- DATE: February 16, 2015
 --
--- REVISIONS: February 21, 2015    - Changed cells form a 2d array to a 
+-- REVISIONS: February 21, 2015    - Changed cells form a 2d array to a
 --                                  vector.
 --
 -- DESIGNER: Marc Rafanan

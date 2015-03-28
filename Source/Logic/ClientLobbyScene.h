@@ -17,7 +17,7 @@
 
 #define BTN_WIDTH 150
 #define BTN_HEIGHT 75
-#define COUNTDOWN 10
+#define COUNTDOWN 1
 
 /*
 *   This is the Lobby scene.

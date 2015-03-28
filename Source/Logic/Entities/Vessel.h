@@ -152,8 +152,7 @@ class Vessel : public Marx::VEntity
 		bool checkDeath();
 		void die();
 
-		void detectMove();
-		//void move();
+		void move();
 		void stop(int key);
 
 		void normalAttack( int x, int y );

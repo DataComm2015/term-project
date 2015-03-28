@@ -3,6 +3,7 @@
 
 #include "Network/Client.h"
 #include "Logic/Entities/ClientMux.h"
+#include "Logic/GameScene.h"
 
 using Networking::NetworkEntityMultiplexer;
 using Networking::Client;
@@ -18,7 +19,8 @@ int main(int argc, char* argv[])
     fflush(stdout);
 
     AppWindow::getInstance().setVerticalSyncEnabled(true);
-	AppWindow::getInstance().addScene(MainMenuScene::getInstance());
+    // AppWindow::getInstance().addScene(MainMenuScene::getInstance());
+	  AppWindow::getInstance().addScene(new GameScene());
     AppWindow::getInstance().run();
 
     return EXIT_SUCCESS;
