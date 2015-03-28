@@ -11,6 +11,7 @@ using Networking::Message;
 using Networking::Session;
 
 class GameScene;
+class ClientLobbyScene;
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -23,17 +24,18 @@ class GameScene;
 class CommandEntity : public NetworkEntity, public KeyListener
 {
     public:
-        CommandEntity(int id, GameScene *scene);
+        CommandEntity(int id, GameScene *scene, ClientLobbyScene* lobbyScene);
         ~CommandEntity();
-        
+
     protected:
         virtual void onKeyPressed(int key);
         virtual void onKeyReleased(int key);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message message);
-        
+
     private:
-        GameScene *scene;
+        GameScene* _gameScene;
+        ClientLobbyScene* _lobbyScene;
 };
 
 #endif

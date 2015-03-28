@@ -1,27 +1,34 @@
 #include "CommandEntity.h"
 
+#include "../../AppWindow.h"
+
 #include "../../Engine/Event.h"
+#include "../../Engine/Controller.h"
+
+#include "../Entities/ProperEntity.h"
+
 #include "../GameScene.h"
 #include "../Event.h"
-#include "../Entities/ProperEntity.h"
 #include "../NetworkEntityPairs.h"
+#include "../ClientLobbyScene.h"
 
-#include "../../Engine/Controller.h"
 #include "../../Network/Client.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"
 
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene *scene)
-    : NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND), scene(scene)
+CommandEntity::CommandEntity(int id, GameScene* gameScene, ClientLobbyScene* lobbyScene)
+    :NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND)
+    ,_gameScene(gameScene)
+    ,_lobbyScene(lobbyScene)
 {
-    scene->addKeyListener(this);
+    _gameScene->addKeyListener(this);
 }
 
 CommandEntity::~CommandEntity()
 {
-    scene->rmKeyListener(this);
+    _gameScene->rmKeyListener(this);
 }
 
 void CommandEntity::onKeyPressed(int key)
@@ -92,12 +99,26 @@ void CommandEntity::onKeyReleased(int key)
     update(msg);
 }
 
-void CommandEntity::onUnregister(Session* session, Message message)
+void CommandEntity::onUnregister(Session* session, Message msg)
 {
     // Do Nothing
 }
 
-void CommandEntity::onUpdate(Message message)
+void CommandEntity::onUpdate(Message msg)
 {
-    // Do Nothing
+    switch(msg.type)
+    {
+    case MSG_T_PLAYER_COMMAND_START_GAME_SCENE:
+        AppWindow::getInstance().removeScene(1);
+        AppWindow::getInstance().setVerticalSyncEnabled(true);
+        AppWindow::getInstance().addScene(_gameScene);
+        AppWindow::getInstance().run();
+        break;
+    case MSG_T_PLAYER_COMMAND_START_LOBBY_SCENE:
+        AppWindow::getInstance().removeScene(1);
+        AppWindow::getInstance().setVerticalSyncEnabled(true);
+        AppWindow::getInstance().addScene(_lobbyScene);
+        AppWindow::getInstance().run();
+        break;
+    }
 }

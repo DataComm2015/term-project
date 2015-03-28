@@ -27,7 +27,6 @@ class ClientLobbyScene : public Scene
     public:
 
         ClientLobbyScene();
-        ClientLobbyScene(Networking::Client*, GameScene*, ClientMux*);
         virtual void update(sf::Time);
         virtual void processEvents(sf::Event&);
         virtual void draw();
@@ -96,7 +95,6 @@ class ClientLobbyScene : public Scene
         static int maxTime;
         static int currentTime;
 
-        Networking::Client * client;
         GameScene * gameScene;
         ClientMux * clientMux;
 };
