@@ -37,23 +37,23 @@ void ServerCommand::onConnect(Session* session)
     create an entity that the client is supposed to control
     Marx::Map* cMap = ((ServerGameScene*)scene)->getcMap();
 
-    id_resource championSprite = Manager::TextureManager::store(
-  		Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
-  		);
-    
-    SGO championSGO2;
-    championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
-    championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    championSGO2.sprite().setScale(2, 2);
-    championSGO2.middleAnchorPoint(true);
-    Entity* e = new Vessel(championSGO2,cMap,45,45,(::Marx::Controller*)ctrlr,1.0F,1.0F);
+    // id_resource championSprite = Manager::TextureManager::store(
+    //     Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
+    //     );
 
-    // create a message to tell client what kind of entity to make
-    int paramsLen = 10;
-    int* params = (int*) malloc(paramsLen);
-    msg.type = MSG_T_SERVERCONTROLLER_NETCONTROLLER_MAKE_VESSEL;
-    msg.data = params;
-    msg.len  = paramsLen;
+    // SGO championSGO2;
+    // championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
+    // championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    // championSGO2.sprite().setScale(2, 2);
+    // championSGO2.middleAnchorPoint(true);
+    // Entity* e = new Vessel(championSGO2,cMap,45,45,(::Marx::Controller*)ctrlr,1.0F,1.0F);
+
+    // // create a message to tell client what kind of entity to make
+    // int paramsLen = 10;
+    // int* params = (int*) malloc(paramsLen);
+    // msg.type = MSG_T_SERVERCONTROLLER_NETCONTROLLER_MAKE_VESSEL;
+    // msg.data = params;
+    // msg.len  = paramsLen;
 
     // params[0] = (*e->getCell().begin())->getX();
 
