@@ -55,6 +55,8 @@ class GameScene : public Scene
 
 		void generateWater();
 		void generateUI();
+		void positionButtons();
+		
 	private:
 		/**
 		 * set of registered key listeners that should be notified whenever a

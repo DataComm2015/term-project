@@ -17,8 +17,8 @@ FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SG
 FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Entities/Vessel.o \
 					Logic/Environment/EnemyHierarchy.o Logic/Event.o Logic/ServerGameScene.o Logic/Entities/CommandEntity.o \
                     Logic/Entities/ClientMux.o Logic/Entities/NetworkControllerEntity.o \
-                    Logic/Entities/ProperEntity.o \
-										Logic/GateKeeperSource/src/GateKeeper.o
+                    Logic/Entities/ProperEntity.o Logic/Entities/PlayerEntity.o Logic/Entities/ServerCommandEntity.o \
+                    Logic/ServerCommand.o
 
 FILES_NETWORK=		Network/Client.o Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o \
 					Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
@@ -26,7 +26,7 @@ FILES_NETWORK=		Network/Client.o Network/Server.o Network/Session.o Network/sele
 FILE_CLIENT=			Client.cpp
 FILE_SERVER=			Server.cpp
 
-##
+## Targets
 
 all: client server
 
