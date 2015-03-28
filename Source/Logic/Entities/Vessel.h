@@ -6,40 +6,40 @@
 -- FUNCTIONS:
 --     Vessel( job_class jobclass, GameMap gmap, int x, int y );
 --     ~Vessel();
---     
+--
 --     void setPosition( int x, int y );
---     
+--
 --     void resetEXP();
 --     void increaseEXP( int exp );
 --     int  getEXP();
 --     int  getNextLevelEXP();
---     
+--
 --     int  getLevel();
 --     void increaseLevel();
---     
+--
 --     void resetHP();
 --     void increaseHP( int hp );
 --     void decreaseHP( int hp );
 --     int  getHP();
 --     int  getMaxHP();
---     
+--
 --     void resetAttackPower();
 --     void attackPowerUp( int attackpower );
 --     void attackPowerDown( int attackpower );
 --     int  getAttackPower();
 --     int  getDefaultAttackPower();
---     
+--
 --     void resetSpeed();
 --     void speedUp( int speed );
 --     void speedDown( int speed );
 --     int  getSpeed();
 --     int  getDefaultSpeed();
---     
+--
 --     bool checkDeath();
 --     void die();
---     
+--
 --     void move( int direction );
---     
+--
 --     void normalAttack( int x, int y );
 --     void useAbility( int abilityNum );
 --
@@ -55,14 +55,23 @@
 -- This class file provides the functions needed to set up and modify Vessel status.
 -- It also provides the functions to control a Vessel (movement and attack).
 ----------------------------------------------------------------------------------------------------------------------*/
+#ifndef VESSEL_H
+#define VESSEL_H
+
 #include <SFML/Graphics.hpp>
+#include "../../Engine/Map.h"
+#include "../../Engine/VEntity.h"
+#include "../../Engine/Cell.h"
+#include "../../Engine/Controller.h"
+
+#define MAX_LEVEL 10;
 
 typedef char Weapon;
 typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
-class Vessel
+class Vessel : public Marx::VEntity
 {
 	protected:
 		job_class jobClass;
@@ -70,9 +79,11 @@ class Vessel
 		int maxHealth;
 		int currentEXP;
 		int nextLevelEXP;
+		int currentLevel;
+		int defaultSpeed;
 		int travelSpeed;
-		int xPosition;
-		int yPosition;
+		float xPosition;
+		float yPosition;
 		int xSpeed;
 		int ySpeed;
 		int direction;	//0 = right, 1 = left //why not a bool?
@@ -82,12 +93,30 @@ class Vessel
 		//TO DO: pointer to the game map needed in the future
 
 	public:
-		Vessel( job_class jobClass, Ability* abilityList, int x, int y );
-		~Vessel(); //not virtual?
+		Vessel( SGO &_sprite,
+			Marx::Map * gmap,
+			float x,
+			float y,
+			Marx::Controller* controller,
+			float height,
+			float width
+			/*, job_class jobClass, Ability* abilityList*/ );
 
-		void setPosition( int x, int y );
-		int getXPosition();
-		int getYPosition();
+		//inherited methods
+		virtual ~Vessel();
+		virtual void onUpdate();
+		virtual void turn();
+		//virtual Marx::Entity* move(float, float, bool);
+		virtual std::set<Marx::Cell*> getCell();
+		virtual void onCreate();
+		virtual void onDestroy();
+
+		Marx::Controller* _controller;
+
+		void setPosition( float x, float y );
+		float getXPosition();
+		float getYPosition();
+
 		int getXSpeed();
 		int getYSpeed();
 		bool isMoving();
@@ -96,8 +125,7 @@ class Vessel
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
-        int  getNextLevelEXP();
-
+    int  getNextLevelEXP();
 		int  getLevel();
 		void increaseLevel();
 
@@ -125,9 +153,11 @@ class Vessel
 		void die();
 
 		void detectMove();
-		void move();
+		//void move();
 		void stop(int key);
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
 };
+
+#endif

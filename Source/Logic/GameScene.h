@@ -16,7 +16,6 @@
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
-#include "../Logic/Champion/Vessel.h"
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
@@ -24,6 +23,7 @@
 #include "../Multimedia/manager/MusicManager.h"
 #include "../Engine/VEntity.h"
 #include "../Engine/EGTheSpinner.h"
+#include "Entities/Vessel.h"
 
 #include "KeyListener.h"
 
@@ -55,6 +55,8 @@ class GameScene : public Scene
 
 		void generateWater();
 		void generateUI();
+		void positionButtons();
+		
 	private:
 		/**
 		 * set of registered key listeners that should be notified whenever a
@@ -84,16 +86,17 @@ class GameScene : public Scene
 		float phase;
 
 		// Game Objects
+		Vessel *vessel;
 
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
 		Marx::Projectile * p;
 
 		SGO championSGO;
+		SGO championSGO2;
 		SGO maskSGO;
 		SGO wepSGO;
 		SGO placeHolderSGO;
-		Vessel *v;
 		TheSpinner *s;
 		TheSpinner *s2;
 

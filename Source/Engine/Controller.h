@@ -16,6 +16,10 @@ namespace Marx
     public:
         std::vector<Event> getEvents();
         virtual void addEvent(Event ev);
+        void clearEvents()
+        {
+          eventQueue.clear();
+        }
     };
 }
 

@@ -50,7 +50,7 @@ void CommandEntity::onKeyPressed(int key)
 
     // put the command into a message to be sent over the network
     Message msg;
-    msg.type = 0;
+    msg.type = command;
     msg.data = &command;
     msg.len  = sizeof(command);
 
