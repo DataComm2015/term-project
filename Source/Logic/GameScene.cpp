@@ -99,11 +99,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	championSGO.sprite().setScale(2, 2);
 	championSGO.middleAnchorPoint(true);
 
-	championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
-	championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO2.sprite().setScale(2, 2);
-	championSGO2.middleAnchorPoint(true);
-
 	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
 	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 	maskSGO.sprite().setScale(2, 2);
@@ -116,9 +111,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
-
-  std::cout << "before entity instantated" << std::endl;
-	vessel = new Vessel(championSGO2, cMap, 45, 45, new Controller(), 1.0F, 1.0F);
 
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
@@ -239,8 +231,21 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+	std::cout << "updating" << std::endl;
+	auto entities = cMap->getEntities();
+	for ( auto it = entities.begin(); it != entities.end(); ++it)
+	{
+		/*we have to break out one iterator early because the last iterator
+		  was in a REALLY WIERD memory address and was causing bad_alloc()
+		  exceptions to be thrown. This solution is really janky and should
+		  probably be investigated further once the game is running.
+			- Eric & Sebastian*/
+		if(it != --entities.end())
+		{
+		    (*it)->onUpdate();
+		}
+	}
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
-	vessel->onUpdate();
 
 	/*
 	v->move();
@@ -326,8 +331,6 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			(*l)->onKeyPressed(e.key.code);
 		}
-
-		vessel->detectMove();
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch (e.key.code)

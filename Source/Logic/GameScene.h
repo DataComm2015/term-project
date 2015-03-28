@@ -56,7 +56,7 @@ class GameScene : public Scene
 		void generateWater();
 		void generateUI();
 		void positionButtons();
-		
+
 	private:
 		/**
 		 * set of registered key listeners that should be notified whenever a
@@ -93,7 +93,6 @@ class GameScene : public Scene
 		Marx::Projectile * p;
 
 		SGO championSGO;
-		SGO championSGO2;
 		SGO maskSGO;
 		SGO wepSGO;
 		SGO placeHolderSGO;
