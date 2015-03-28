@@ -36,7 +36,8 @@ Vessel::Vessel( SGO &_sprite,
 	direction = 1; //start facing right
 
 	resetEXP();
-
+	xPosition = x;
+	yPosition = y;
 	xSpeed = 0;
 	ySpeed = 0;
 	moving = false;
@@ -89,8 +90,8 @@ Vessel::Vessel( SGO &_sprite,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
-	std::vector< Marx::Event > eventQueue = controller->getEvents();
-
+	std::vector< Marx::Event > eventQueue = _controller->getEvents();
+	_controller->clearEvents();
 	for( std::vector< Marx::Event >::iterator it = eventQueue.begin()
 		; it != eventQueue.end()
 		; ++it )
@@ -99,10 +100,10 @@ void Vessel::onUpdate()
 			switch(it->type)
 			{
 			case ::Marx::MOVE:
-					MoveEvent* ev = (MoveEvent*) (&*it);
+					MoveEvent* ev = (MoveEvent*) (&(*it));
 					printf( "move: x:%f y:%f force:%d\n",
 							ev->getX(), ev->getY(), ev->forced() );
-					//move( ev->getX(), ev->getY(), ev->forced() );
+					move( ev->getX(), ev->getY(), ev->forced() );
 					break;
 			}
 	}
@@ -114,10 +115,10 @@ void Vessel::turn()
 
 }
 
-Marx::Entity* Vessel::move(float, float, bool)
+/*Marx::Entity* Vessel::move(float, float, bool)
 {
 
-}
+}*/
 
 std::set<Marx::Cell*> Vessel::getCell()
 {
@@ -807,21 +808,31 @@ void Vessel::die()
 void Vessel::detectMove()
 {
 	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
-
+	std::cout << "Movement: " << xPosition << " " << yPosition << std::endl;
+	fflush(stdout);
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
+		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition-1, false)));
+		move(yPosition-1, xPosition, false);
+		yPosition--;
 		moving = true;
 		ySpeed = -travelSpeed;
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
+		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition+1, false)));
+		move(yPosition+1, xPosition, false);
+		yPosition++;
 		moving = true;
 		ySpeed = travelSpeed;
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
+		//_controller->addEvent(*(new MoveEvent(xPosition-1, yPosition, false)));
+		move(yPosition, xPosition-1, false);
+		xPosition--;
 		moving = true;
 		xSpeed = -travelSpeed;
 		direction = 0;	//signal to animate left facing sprite
@@ -829,6 +840,9 @@ void Vessel::detectMove()
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
+		//_controller->addEvent(*(new MoveEvent(xPosition+1, yPosition, false)));
+		move(yPosition, xPosition+1, false);
+		xPosition++;
 		moving = true;
 		xSpeed = travelSpeed;
 		direction = 1; //signal to animate right facing sprite
@@ -853,11 +867,11 @@ void Vessel::detectMove()
 -- NOTES:
 -- Moves the vessel's coordinates according to velocity.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::move()
+/*void Vessel::move()
 {
-	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed ); //updates internal positioning
+	//setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed ); //updates internal positioning
 	//Entity::move( getXPosition(), getYPosition(), false ); //updates position on Map
-}
+}*/
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: stop

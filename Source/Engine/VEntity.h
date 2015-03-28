@@ -22,7 +22,10 @@ namespace Marx
 		}
 
 		// this should get removed
-
+		void setSprite(SGO& _sprite)
+		{
+			sprite = _sprite;
+		}
 
 	protected:
 		void draw(Renderer& renderer, sf::RenderStates states) const override;
