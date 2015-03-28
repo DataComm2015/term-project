@@ -5,13 +5,14 @@ Server Game Round
 
 Lobby Function
   loop once every game frame
-    check each player for messages
+    check each player for messages  // for such things, override
+                                    // PlayerEntity::onUpdate(msg)
       if a player sends a valid roles message
         assign player with roles
         remove message
     if >= 4 players on player list (we need at least 4 vessels)
       start or continue countdown of 20 seconds
-      send to all players start countdown message
+      send to all players start countdown message // PlayerEntity::update(msg)
     else
       stop and reset countdown
       send to all players stop countdown message
@@ -24,13 +25,15 @@ Lobby Function
 
 Connection Initiation Thread
   loop once every game frame
-    check for new players
+    check for new players // override ServerCommand::onConnect()
       put any new players in player list
       if game not in session
-        send lobby entry confirmation signal to new player
+        send lobby entry confirmation message to new player
       else
-        send game-in-session signal to new player
-        send seed to new player
+        send game-in-session message to new player
+        wait for new player to go into Loading Screen
+        send alive server controllers (assoc. w/ entities) to new player
+        send game start message to new player
 
 Connection Checking Thread
   loop once every game frame
@@ -40,6 +43,8 @@ Connection Checking Thread
         if the message is a simple check-in message
           remove message
         if the message is a quit message
+          /* override PlayerEntity::onUpdate(quit message)
+             to implement the following two lines */
           remove message
           Kick Player (player who left)
       if a player misses 20 consecutive check-ins
@@ -52,19 +57,12 @@ Kick Player (player)
   else if player is a deity
     change random available ghost to deity
   remove player from player list
+  disconnect player // call Session::disconnect() for specified player
 
 Loading Screen Function
   generate seed
-  loop once every game frame for 20 frames
-    check each player for messages
-      if a player has not received the seed
-        send seed
-      else if acknowledgement received
-        check off player as seed received
-        remove message
-  check all players for seed reception
-    if a player has not received the seed after 20 tries
-      Kick Player (player who has not received seed)
+  /* the following are all automatically generated on client
+     side once generated here on the server */
   generate map from seed
   generate obstacles from seed
   generate minions from seed
@@ -89,9 +87,18 @@ Loading Screen Function
 Game Field Function
   loop once every game frame
     if time not expired yet and players alive > 1
-      go through all controller messages
-        evaluate signals and update game state  // may require another class
-      send game state to all players
+      all entities pull messages from controllers
+        evaluate messages and updates game state
+        send game state to all players
+        // the above 2 lines are implemented by the following
+        /*
+           player input, client          process player input, server
+           CommandEntity::update(msg) -> PlayerEntity::onUpdate(msg)
+                            all of this line on server
+           PlayerEntity::onUpdate(msg) -> ServerCommandEntity::update(msg)
+           all entities, server                all entities, all clients
+           ServerCommandEntity::update(msg) -> NetworkController::onUpdate(msg)
+        */
     else
       send game over message to all players
       send game results to all players

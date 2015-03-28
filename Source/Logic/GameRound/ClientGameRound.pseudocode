@@ -3,12 +3,14 @@ Client Game Round
     if timeout while waiting for server response
       show error message
       quit game
-    else if entry confirmation or game-in-session signal received
+    else if entry confirmation or game-in-session message received
       start Messaging Thread
       start Lobby
 
 Messaging Thread
   loop once every game frame
+    // to check when player messages were last sent,
+    // modify CommandEntity::update(msg)
     if no player message waiting
       send check-in message
     else
@@ -24,40 +26,31 @@ need UI people for the following signals:
 Lobby Function
   if game not in session
     send default roles message to server
+  else
+    go to Loading Screen
   loop once every game frame
-    send check-in packet
+    // to receive messages, CommandEntity::onUpdate(msg)
     if received start loading screen signal or game in session
       start loading screen
     if player selects a different vessel or deity class
       send new roles message to server
-    if user signals exit
+    if user exits
       send quit message to server
       clean up resources
       end Client Game Round
 
 Loading Screen Function
-  wait for seed from server
-    if server does not respond after 20 frames' time
-      server has timed out
-        end Client Game Round
-    else if seed received
-      send acknowledgement message
-  /*
-  generate map from seed
-  generate obstacles from seed
-  generate minions from seed
-  generate mini-bosses from seed
-  generate boss from seed
-  */
-  /*
-  download previous objects from server instead?
-  bind them after generation?
-  ID-based messaging?
-  */
+  /* have to override ClientMux::onRegister() OR
+     CommandEntity::onUpdate(msg) for the following */
+  get map from network multiplexer
+  get obstacles from network multiplexer
+  get minions from network multiplexer
+  get mini-bosses from network multiplexer
+  get boss from network multiplexer
   temp thread for sending finished-generating message
   for up to 30 seconds
     wait for game start message
-      if start signal received
+      if start message received
         enter Game Field
   if all 30 seconds have passed
     clean up resources
@@ -83,5 +76,5 @@ Game State Thread
     if game over message received
       wait and receive results messages
       game is done, end thread
-    update game state in client
+    update game state in client // game state means all entities
     draw screen based on game state
