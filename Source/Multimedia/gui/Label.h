@@ -7,7 +7,7 @@
 
 namespace GUI
 {
-	class Label : TGO
+	class Label : public TGO
 	{
 		public:
 			Label(SGO* theBackground, std::string theText);

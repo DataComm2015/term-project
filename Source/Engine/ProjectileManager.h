@@ -22,16 +22,15 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
-namespace Marx
-{
-	class Projectile;
-	class Entity;
-}
-
 #include <functional>
 #include <set>
 #include "Projectile.h"
-#include "Entity.h"
+#include "VEntity.h"
+
+namespace Marx
+{
+	class Projectile;
+}
 
 namespace Manager
 {
@@ -40,10 +39,10 @@ namespace Manager
 		private:
 			static std::set<Marx::Projectile*> projectile_pool;
 		public:
-			static Marx::Projectile* getProjectile(Marx::Map*, float, float, Marx::Controller *, float, float);
+			static Marx::Projectile* getProjectile(SGO&, Marx::Map*, float, float, Marx::Controller *, float, float);
 			static void enqueue(Marx::Projectile*);
 			static void dequeue(Marx::Projectile*);
 	};
-}
+};
 
 #endif

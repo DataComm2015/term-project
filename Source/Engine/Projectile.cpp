@@ -3,8 +3,8 @@
 
 using namespace Marx;
 
-Projectile::Projectile(Map *map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
-	Entity(map, x, y, ctrl, h, w)
+Projectile::Projectile(SGO &_sprite, Map *map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
+	VEntity(_sprite, map, x, y, ctrl, h, w)
 {
 	_speed = 0;
 }
@@ -22,22 +22,25 @@ Entity * Projectile::move(float x, float y, bool force = false)
 	entity = Entity::move(x, y, force);
 
 	if (entity != nullptr)
-		//onHit(entity);
-	
+	{
+		if (onHit != NULL)
+			onHit(entity);
+	}
+
+
 	return entity;
 }
 
 void Projectile::onCreate()
 {
-	//Manager::ProjectileManager.dequeue(this);
+	Manager::ProjectileManager::dequeue(this);
 }
 
 void Projectile::onDestroy()
 {
-	//Manager::ProjectileManager.enqueue(this);
+	Manager::ProjectileManager::enqueue(this);
 }
 
 
 void Projectile::onUpdate()
 {}
-

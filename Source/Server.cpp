@@ -1,20 +1,15 @@
 //> In the main file
 #include "AppWindow.h"
-#include "Usage.cpp"
+//#include "Usage.cpp"
 
-#include "Logic/NetworkEntityPairs.h"
+#include "Logic/ServerCommand.h"
+#include "Logic/Entities/ServerCommandEntity.h"
 #include "Logic/ServerGameScene.h"
-
-#include "Engine/ProperEntity.h"
-#include "Engine/Controller.h"
-
-#include "Network/Server.h"
-#include "Network/Session.h"
-#include "Network/Message.h"
 #include "Network/NetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
 #include <string.h>
+#include <stdio.h>
 
 // namespace
 using Networking::NetworkEntityMultiplexer;
@@ -25,95 +20,7 @@ using Networking::Session;
 using Networking::Server;
 
 // globals
-bool isRunning;
-sf::Time m_elapsedTime;
-sf::Time m_timePerFrame;
-sf::Time m_timeSinceLastUpdate;
-Scene *scene;
-
-void run();
-
-////////////
-// Player //
-////////////
-
-class Player : public NetworkEntity
-{
-public:
-    Player()
-        :NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
-    {
-    }
-    virtual ~Player()
-    {
-    }
-protected:
-    virtual void onUnregister(Session* session, Message message)
-    {
-    }
-    virtual void onUpdate(Message message)
-    {
-    }
-};
-
-//////////////////////
-// PlayerController //
-//////////////////////
-
-
-
-//////////////////////////////
-// NetworkEntityMultiplexer //
-//////////////////////////////
-
-class Mux : public NetworkEntityMultiplexer
-{
-public:
-    Mux() {};
-    virtual ~Mux() {};
-};
-
-////////////
-// Server //
-////////////
-
-class Svr : public Server
-{
-public:
-    Svr()
-    {
-    }
-    virtual void onConnect(Session* session)
-    {
-        printf("new connection\n");
-
-        // create an entity that the new connection can use to communicate
-        // commands to the server
-        Player* player = new Player();
-        // NetworkController* netCont = new NetworkController();
-
-        // // create an entity that the client is supposed to control
-        // Marx::Map* cMap = ((GameScene*)scene)->getcMap();
-        // new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)netCont,1.0,1.0);
-
-        // create an empty message because we need one
-        Message msg;
-        memset(&msg,0,sizeof(msg));
-
-        // register the client with the player object, and player controller
-        player->registerSession(session,msg);
-        // netCont->registerSession(session,msg);
-    }
-    virtual void onMessage(Session* session, char* data, int len)
-    {
-        printf("message\n");
-    }
-    virtual void onDisconnect(Session* session, int remote)
-    {
-        printf("disconnection\n");
-    }
-private:
-};
+void run(Scene *scene);
 
 //////////
 // main //
@@ -121,20 +28,36 @@ private:
 
 int main( int argc, char ** argv )
 {
+    Scene *scene;
+
     printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
     fflush(stdout);
 
-    NetworkEntityMultiplexer::setInstance(new Mux());
-    Svr server;
-    server.startServer(atoi(argv[1]));
     scene = new ServerGameScene();
-    run();
+
+    ServerCommand server(scene);
+    server.startServer(atoi(argv[1]));
+
+    run(scene);
+
     delete scene;
     return 0;
 }
 
-void run()
+/**
+ * the game loop.
+ */
+void run(Scene *scene)
 {
+    bool isRunning;
+    sf::Time m_elapsedTime;
+    sf::Time m_timePerFrame;
+    sf::Time m_timeSinceLastUpdate;
+    sf::Time m_sleepTime;
+
+    m_sleepTime = sf::seconds(1.0/75);
+    m_timePerFrame = sf::seconds(1.0/60);
+
     if (!isRunning)
     {
         isRunning = true;
@@ -153,11 +76,13 @@ void run()
             while (m_timeSinceLastUpdate > m_timePerFrame)
             {
                 m_timeSinceLastUpdate -= m_timePerFrame;
-
                 scene->update(m_timePerFrame);
+
+                sf::sleep(m_sleepTime);
             }
         }
 
+        
         isRunning = false;
     }
 }
