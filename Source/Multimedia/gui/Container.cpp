@@ -10,7 +10,7 @@ namespace GUI
 	*
 	* @revisions	2015-03-18 - Removed BGO parent from constructor
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*				Marc Rafanan
@@ -25,7 +25,7 @@ namespace GUI
 		orient = theOrientation;
 		ratio = 0.5f;
 		separator = NULL;
-		
+
 		add(*A);
 		add(*B);
 	}
@@ -37,7 +37,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*
@@ -55,7 +55,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*
@@ -73,7 +73,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Jonathan Chu
 	*
@@ -83,7 +83,7 @@ namespace GUI
 	{
 		orient = theOrientation;
 	}
-	
+
 	/**
 	* Sets the position of the container
 	*
@@ -91,7 +91,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Lewis Scott
 	*
@@ -109,7 +109,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer   
+	* @designer
 	*
 	* @programmer   Lewis Scott
 	*
@@ -117,31 +117,31 @@ namespace GUI
 	*/
 	void Container::pack()
 	{
-		bool side = (orient==HORIZONTAL);
+		bool side = (orient == HORIZONTAL);
 		float sep_size = 0.0f;
-		
-		if(separator != NULL)
-			sep_size = side?separator->operator()().getScale().x:separator->operator()().getScale().y;
-		
-		float total = (side?size.x:size.y) - sep_size;
+
+		if (separator != NULL)
+			sep_size = side ? separator->sprite().getScale().x : separator->sprite().getScale().y;
+
+		float total = (side ? size.x : size.y) - sep_size;
 		float side_size = total*(ratio);
-		
+
 		// Scale and position A
-		sf::Vector2f size_a((side?side_size:A->operator()().getScale().x), (side?A->operator()().getScale().y:side_size));
-		A->operator()().setScale(size_a);
-		A->operator()().setPosition(pos);
-		
+		sf::Vector2f size_a((side ? side_size : A->sprite().getScale().x), (side ? A->sprite().getScale().y : side_size));
+		A->sprite().setScale(size_a);
+		A->sprite().setPosition(pos);
+
 		// Position separator
 		sf::Vector2f offset = pos;
-		offset += sf::Vector2f(side?side_size:0.0f, side?0.0f:side_size);
-		separator->operator()().setPosition(offset);
-		
+		offset += sf::Vector2f(side ? side_size : 0.0f, side ? 0.0f : side_size);
+		separator->sprite().setPosition(offset);
+
 		// Scale and position B
-		side_size = total-side_size;
-		sf::Vector2f size_b(side?side_size:B->operator()().getScale().x, side?B->operator()().getScale().y:side_size);
-		offset += sf::Vector2f(side?(separator->operator()().getScale().x):0.0f, side?0.0f:(separator->operator()().getScale().y));
-		B->operator()().setScale(size_b);
-		B->operator()().setPosition(offset);
+		side_size = total - side_size;
+		sf::Vector2f size_b(side ? side_size : B->sprite().getScale().x, side ? B->sprite().getScale().y : side_size);
+		offset += sf::Vector2f(side ? (separator->sprite().getScale().x) : 0.0f, side ? 0.0f : (separator->sprite().getScale().y));
+		B->sprite().setScale(size_b);
+		B->sprite().setPosition(offset);
 	}
 
 	/**
@@ -157,10 +157,10 @@ namespace GUI
 	* @programmer   Marc Rafanan
 	*
 	* @return       void
-	*/	
+	*/
 	sf::Vector2f Container::getSize()
 	{
 		return size;
 	}
-	
+
 }

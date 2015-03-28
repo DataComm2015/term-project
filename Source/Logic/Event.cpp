@@ -12,9 +12,10 @@
 MoveEvent::MoveEvent(float _x, float _y, bool f)
     :Event(Marx::MOVE)
 {
-    x     = _x;
-    y     = _y;
+    x = _x;
+    y = _y;
     force = f;
+    type = Marx::MOVE;
 }
 
 /**

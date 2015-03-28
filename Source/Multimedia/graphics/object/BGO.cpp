@@ -113,7 +113,7 @@ void BGO::add(BGO& gO)
 {
 	if (gO.m_id == m_id)
 	{
-		throw "Are you crazy!? You just tried to add a graphic object to itself!";
+		throw "Are you crazy!? You've just tried to add a game object to itself!";
 	}
 	else
 	{
@@ -220,6 +220,16 @@ void BGO::ignoreChildren(bool arg)
 	m_ignoringChildren = arg;
 }
 
+const sf::Transform& BGO::getLocalTransform() const
+{
+	return sf::Transform::Identity;
+}
+
+const sf::Transform& BGO::getGlobalTransform() const
+{
+	return m_sgtrans;
+}
+
 /**
  * Updates this game object and its children.
  *
@@ -274,26 +284,27 @@ void BGO::update(const sf::Time& t)
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
+ * @param      states   The render states
  */
-void BGO::drawSG(Renderer& renderer)
+void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
 {
+	// Draw self
+	draw(renderer, states);
+
+	// Combine transformations (caller's + mine)
+	states.transform *= getLocalTransform();
+
+	// cache scene graph transformations
+	m_sgtrans = states.transform;
+
 	// Draw children
 	if (hasChildren())
 	{
-		for (BGO* go : m_children)
+		for (const BGO* go : m_children)
 		{
-			// Combine transformations (child's + mine)
-			go->move(getPosition());
-			go->rotate(getRotation());
-			go->scale(getScale());
-
-			// Recurrrsion!!
-			go->drawSG(renderer);
+			go->drawSG(renderer, states);
 		}
 	}
-
-	// Draw self
-	draw(renderer);
 }
 
 /**
@@ -308,6 +319,7 @@ void BGO::drawSG(Renderer& renderer)
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
+ * @param      states   The render states
  */
-void BGO::draw(Renderer& renderer) const
+void BGO::draw(Renderer& renderer, sf::RenderStates states) const
 {}

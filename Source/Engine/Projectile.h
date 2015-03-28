@@ -21,24 +21,21 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
-namespace Marx
-{
-	class Entity;
-}
 #include <functional>
-#include "Entity.h"
-//#include "ProjectileManager.h"
+#include "VEntity.h"
+#include "ProjectileManager.h"
+#include "Map.h"
 
 namespace Marx
 {
-	class Projectile : public Entity
+	class Projectile : public VEntity
 	{
 		private:
 			float _speed;
 			std::function<void(Entity*)> onHit;
 		public:
-			Projectile(Map*, float, float, Controller *, float, float);
-			
+			Projectile(SGO&, Map*, float, float, Controller *, float, float);
+
 			Entity * move(float, float, bool);
 			void setSpeed(float);
 			void onCreate();

@@ -37,11 +37,7 @@ NetworkEntityMultiplexer* NetworkEntityMultiplexer::getInstance()
 {
     if(instance == 0)
     {
-        printf("instance not set yet. must call "
-            "NetworkEntityMultiplexer::setInstance(), passing it a instance of "
-            "a subclass of NetworkEntityMultiplexer before calling "
-            "NetworkEntityMultiplexer::getInstance()\n");
-        exit(1);
+        instance = new NetworkEntityMultiplexer();
     }
     return instance;
 }

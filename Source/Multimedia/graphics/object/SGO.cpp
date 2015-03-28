@@ -52,7 +52,7 @@ SGO::~SGO()
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -60,7 +60,7 @@ SGO::~SGO()
  *
  * @return     The sprite
  */
-sf::Sprite& SGO::operator()()
+sf::Sprite& SGO::sprite()
 {
 	return data;
 }
@@ -70,7 +70,7 @@ sf::Sprite& SGO::operator()()
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -78,7 +78,7 @@ sf::Sprite& SGO::operator()()
  *
  * @return     The sprite (const-qualified)
  */
-const sf::Sprite& SGO::operator()() const
+const sf::Sprite& SGO::sprite() const
 {
 	return data;
 }
@@ -88,7 +88,7 @@ const sf::Sprite& SGO::operator()() const
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -108,7 +108,7 @@ const sf::Transform& SGO::getLocalTransform() const
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
@@ -131,15 +131,16 @@ void SGO::middleAnchorPoint(bool arg)
  *
  * @date       2015-02-25
  *
- * @revisions  
+ * @revisions
  *
  * @designer   Melvin Loho
  *
  * @programmer Melvin Loho
  *
  * @param      renderer The renderer
+ * @param      states   The render states
  */
-void SGO::draw(Renderer& renderer) const
+void SGO::draw(Renderer& renderer, sf::RenderStates states) const
 {
-	renderer.draw(*this);
+	renderer.draw(*this, states);
 }
