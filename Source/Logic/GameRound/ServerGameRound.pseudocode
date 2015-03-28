@@ -1,8 +1,9 @@
 Server Game Round
   start Connection Initiation Thread to catch incoming players
   start Connection Checking Thread to kick timed-out players
-  start lobby interface
+  start Lobby
 
+Lobby Function
   loop once every game frame
     check each player for messages
       if a player sends a valid roles message
@@ -19,17 +20,17 @@ Server Game Round
       randomly assign up to 4 other players to deities
       unassigned players are ghosts
       send start loading screen signal
-      enter loading screen
+      enter Loading Screen
 
 Connection Initiation Thread
   loop once every game frame
     check for new players
       put any new players in player list
-    if game not in session
-      send lobby entry confirmation signal to player
-    else
-      send game-in-session signal to player
-      send seed to player
+      if game not in session
+        send lobby entry confirmation signal to new player
+      else
+        send game-in-session signal to new player
+        send seed to new player
 
 Connection Checking Thread
   loop once every game frame
@@ -41,7 +42,7 @@ Connection Checking Thread
         if the message is a quit message
           remove message
           Kick Player (player who left)
-      if a player misses 5 consecutive check-ins
+      if a player misses 20 consecutive check-ins
         Kick Player (player who timed out)
 
 Kick Player (player)
@@ -54,7 +55,7 @@ Kick Player (player)
 
 Loading Screen Function
   generate seed
-  go through player list 5 times (each loop = 1 frame time)
+  loop once every game frame for 20 frames
     check each player for messages
       if a player has not received the seed
         send seed
@@ -62,7 +63,7 @@ Loading Screen Function
         check off player as seed received
         remove message
   check all players for seed reception
-    if a player has not received the seed after 5 tries
+    if a player has not received the seed after 20 tries
       Kick Player (player who has not received seed)
   generate map from seed
   generate obstacles from seed
@@ -80,19 +81,20 @@ Loading Screen Function
   if all 20 seconds have passed
     check each player for game generation
       Kick Player (player not finished generating)
-  send game start signal to all players
+  game is now in session
+  send game start message to all players
   enter Game Field
-  once a game is done, return to lobby
+  once a game is done, return to Lobby
 
 Game Field Function
   loop once every game frame
     if time not expired yet and players alive > 1
-
+      go through all controller messages
+        evaluate signals and update game state  // may require another class
+      send game state to all players
     else
-      send game over signal to client
-      tally up scores
-      send results over to all clients
-      if all clients acknowledge results or timeout
-        clean up memory
-        exit game loop and
-        go back to loading screen
+      send game over message to all players
+      send game results to all players
+      clean up memory
+      wait for 7 seconds
+      game is done, return to Loading Screen

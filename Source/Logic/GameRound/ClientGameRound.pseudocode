@@ -4,7 +4,16 @@ Client Game Round
       show error message
       quit game
     else if entry confirmation or game-in-session signal received
-      start Lobby      
+      start Messaging Thread
+      start Lobby
+
+Messaging Thread
+  loop once every game frame
+    if no player message waiting
+      send check-in message
+    else
+      send player message
+      remove message
 
 /*
 need UI people for the following signals:
@@ -13,36 +22,66 @@ need UI people for the following signals:
   pressing exit button
 */
 Lobby Function
-  send default roles message to server
+  if game not in session
+    send default roles message to server
   loop once every game frame
     send check-in packet
-    if received start loading screen signal
+    if received start loading screen signal or game in session
       start loading screen
-    if player selects a vessel or deity class
+    if player selects a different vessel or deity class
       send new roles message to server
     if user signals exit
       send quit message to server
+      clean up resources
       end Client Game Round
 
-  loading screen
-    wait for seed from server
-      if server does not respond after 5 frames' time
-        server has timed out
-          end Client Game Round
-      else if seed received
-        send acknowledgement packet
-    generate map from seed
-    generate obstacles from seed
-    generate minions from seed
-    generate mini-bosses from seed
-    generate boss from seed
-    wait for ready signal from server for 30 seconds
-      if server does not respond after 30 loops
+Loading Screen Function
+  wait for seed from server
+    if server does not respond after 20 frames' time
+      server has timed out
+        end Client Game Round
+    else if seed received
+      send acknowledgement message
+  /*
+  generate map from seed
+  generate obstacles from seed
+  generate minions from seed
+  generate mini-bosses from seed
+  generate boss from seed
+  */
+  /*
+  download previous objects from server instead?
+  bind them after generation?
+  ID-based messaging?
+  */
+  temp thread for sending finished-generating message
+  for up to 30 seconds
+    wait for game start message
+      if start signal received
+        enter Game Field
+  if all 30 seconds have passed
+    clean up resources
+    display error message
+    end Client Game Round
 
-  game field loop
-    if not game over yet
-
-    else
-      wait for results until timeout
-        display results on results screen
+Game Field Function
+  start Game State Thread
+  loop once every game frame
+    if game not over
+      if player not dead
+        get player control signals
+        send control signals as controller messages
+    else game over message received (expect game results with it)
+      remove game over message
+      display results on screen for 10 seconds
       clean up memory
+      game is done, return to Loading Screen
+
+Game State Thread
+  loop once every game frame
+    receive game state messages from server
+    if game over message received
+      wait and receive results messages
+      game is done, end thread
+    update game state in client
+    draw screen based on game state
