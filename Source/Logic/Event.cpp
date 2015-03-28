@@ -15,7 +15,6 @@ MoveEvent::MoveEvent(float _x, float _y, bool f)
     x = _x;
     y = _y;
     force = f;
-    type = Marx::MOVE;
 }
 
 /**
