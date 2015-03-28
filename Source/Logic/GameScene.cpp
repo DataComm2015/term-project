@@ -118,7 +118,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
 	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
-	tb = new GUI::TextBox(nullptr);
+	tb = new GUI::TextBox(nullptr, nullptr);
 	tb->text().setScale(0.5, 0.5);
 	tb->text().move(0, -5);
 	tb->toggleSelected(true);
