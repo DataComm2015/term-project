@@ -30,7 +30,7 @@ Vessel::Vessel( SGO &_sprite,
 	float height,
 	float width
 	/*, job_class jobClass, Ability* abilityList*/ )
-			: Marx::VEntity(_sprite, gmap, x, y, controller, height, width )
+			: Marx::VEntity(_sprite, gmap, x, y, NULL, 1.0, 1.0 )
 			,_controller(controller)
 {
 	direction = 1; //start facing right
@@ -41,7 +41,7 @@ Vessel::Vessel( SGO &_sprite,
 	ySpeed = 0;
 	moving = false;
 	//abilities = abilityList;
-	/*
+/*
 	//class-specific instantiation
 	if ( jobClass == WARRIOR )			//warrior
 	{
@@ -77,8 +77,7 @@ Vessel::Vessel( SGO &_sprite,
 		maxHealth = 424242;
 		travelSpeed = 42;
 		//weapon = BOWL_OF_LAKSA;
-	}
-	*/
+	}*/
 	std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
@@ -88,7 +87,7 @@ Vessel::Vessel( SGO &_sprite,
 -- Called every game loop. dequeus all events from the entity's
 -- controller and proceses those events
 ---------------------------------------------*/
-void Vessel::update()
+void Vessel::onUpdate()
 {
 	std::vector< Marx::Event > eventQueue = controller->getEvents();
 
@@ -115,7 +114,7 @@ void Vessel::turn()
 
 }
 
-Marx::VEntity* Vessel::move(float, float, bool)
+Marx::Entity* Vessel::move(float, float, bool)
 {
 
 }

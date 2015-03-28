@@ -22,13 +22,11 @@
 
 #ifndef ENTITY_H_
 #define ENTITY_H_
-namespace Marx
-{
-	class Map;
-}
+
 #include "Cell.h"
 #include "Controller.h"
 #include "../Multimedia/graphics/object/BGO.h"
+#include "Map.h"
 
 #include <set>
 #include <cmath>

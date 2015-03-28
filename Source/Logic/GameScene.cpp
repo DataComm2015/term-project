@@ -5,11 +5,12 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using namespace Marx;
-
+/*
+//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 Animation *runAnim;
 Animation *runAnim_mask;
 Animation *runAnim_wep;
-
+*/
 void onclick()
 {
 	static int i = 0;
@@ -46,9 +47,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
 
-	std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
+	/*std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
 
-	p = new Projectile(cMap, 10, 10, NULL, 1, 1);
+ p = new Projectile(cMap, 10, 10, NULL, 1, 1);
 	//				   map, x, y, controller, height, width
 	Projectile p2 = Projectile(cMap, 20, 20, NULL, 1, 1);
 
@@ -66,7 +67,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
 
 	delete p;
-
+*/
 	/* END SAMPLE CREATION */
 
 	// Load the tileset
@@ -84,17 +85,24 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 		);
 
 	// an example, obviously...
+	/*
 	v = new Vessel(SHAMAN, nullptr, 0, 0);
 
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
+	*/
 
 	cMap->setTexture(tilemap);
 	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
 	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 	championSGO.sprite().setScale(2, 2);
 	championSGO.middleAnchorPoint(true);
+
+	championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
+	championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	championSGO2.sprite().setScale(2, 2);
+	championSGO2.middleAnchorPoint(true);
 
 	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
 	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -109,15 +117,15 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
 
+  std::cout << "before entity instantated" << std::endl;
+	vessel = new Vessel(championSGO2, cMap, 45, 45, NULL, 1.0F, 1.0F);
+
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
-	cMap->add(*s);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
-	cMap->add(*s2);
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
-	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewMain, onclick);
 	tb = new GUI::TextBox(nullptr);
 	tb->text().setScale(0.5, 0.5);
 	tb->text().move(0, -5);
@@ -150,23 +158,58 @@ void GameScene::onLoad()
 	updateMainView(viewMain);
 	viewUI = AppWindow::getInstance().getCurrentView();
 
+	// position buttons
+	positionButtons();
+	
+	// Enable buttons
 	b1->toggleEnabled(true);
+	b2->toggleEnabled(false);
+	b3->toggleEnabled(false);
+	b4->toggleEnabled(true);
+	b5->toggleEnabled(true);
+	b6->toggleEnabled(true);
+	
 	b2->toggleEnabled(true);
+	b3->toggleEnabled(true);
+}
 
+void GameScene::positionButtons()
+{
+	// Get Window size
 	sf::Vector2u windowSize = AppWindow::getInstance().getSize();
+	
+	// Get button image height
+	unsigned int height = Manager::TextureManager::get(butSprite)->getSize().y;
 
-	b1->sprite().setPosition((windowSize.x / 2.0) - 600, windowSize.y * 0.75f);
-	b2->sprite().setPosition((windowSize.x / 2.0) - 400, windowSize.y * 0.75f);
-	b3->sprite().setPosition(100, 400);
-	b4->sprite().setPosition(100, 400);
-	b5->sprite().setPosition(100, 400);
-	b6->sprite().setPosition(100, 400);
+	// Scale button to 10 percent of the window height
+	float buttonScale = 0.10*windowSize.y/height;
+	b1->sprite().setScale(buttonScale, buttonScale);
+	b2->sprite().setScale(buttonScale, buttonScale);
+	b3->sprite().setScale(buttonScale, buttonScale);
+	b4->sprite().setScale(buttonScale, buttonScale);
+	b5->sprite().setScale(buttonScale, buttonScale);
+	b6->sprite().setScale(buttonScale, buttonScale);
+
+	// position scaled buttons
+	float buttonWidth = b1->sprite().getGlobalBounds().width;
+	float buttonHeight = b1->sprite().getGlobalBounds().height;
+	
+	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 3), windowSize.y - 1.25*buttonHeight);
+	b2->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
+	b3->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 1.25*buttonHeight);
+	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
+	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
+	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
 }
 
 void GameScene::unLoad()
 {
 	b1->toggleEnabled(false);
 	b2->toggleEnabled(false);
+	b3->toggleEnabled(false);
+	b4->toggleEnabled(false);
+	b5->toggleEnabled(false);
+	b6->toggleEnabled(false);
 }
 
 
@@ -196,6 +239,8 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
+	/*
 	v->move();
 
 	if (v->getXSpeed() != 0 || v->getYSpeed() != 0)
@@ -229,9 +274,12 @@ void GameScene::update(sf::Time t)
 		wepSGO.sprite().setScale(2, 2);
 		//b1->toggleEnabled(false);
 	}
+	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
+	sf::Listener::setPosition(viewMain.getCenter().x-45, viewMain.getCenter().y-45, 0);
 
+	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
+	/*
 	championSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 	maskSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 	wepSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
@@ -239,17 +287,23 @@ void GameScene::update(sf::Time t)
 	runAnim->update(t);
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
+	*/
 
 	s2->update(t);
 	s->update(t);
 
+	// Update buttons
 	b1->update(t);
 	b2->update(t);
+	b3->update(t);
+	b4->update(t);
+	b5->update(t);
+	b6->update(t);
 
 	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	viewMain.setCenter(v->getXPosition(), v->getYPosition());
+	//viewMain.setCenter(v->getXPosition(), v->getYPosition());
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
@@ -269,7 +323,7 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyPressed(e.key.code);
 		}
 
-		v->detectMove();
+		// v->detectMove();
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch (e.key.code)
@@ -295,13 +349,14 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyReleased(e.key.code);
 		}
 
-		v->stop(e.key.code);
+		// v->stop(e.key.code);
 	}
 	else if (e.type == sf::Event::Resized)
 	{
 		// update views
 		updateMainView(viewMain);
 		viewUI = AppWindow::getInstance().getCurrentView();
+		positionButtons();
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
@@ -336,7 +391,7 @@ void GameScene::draw()
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(championSGO);
+	//renderer.draw(championSGO2);
 	renderer.draw(&maskSGO, true);
 	renderer.draw(wepSGO);
 
@@ -349,6 +404,10 @@ void GameScene::draw()
 
 	renderer.draw(b1);
 	renderer.draw(b2);
+	renderer.draw(b3);
+	renderer.draw(b4);
+	renderer.draw(b5);
+	renderer.draw(b6);
 
 	renderer.end();
 
@@ -404,11 +463,19 @@ void GameScene::generateWater()
 
 void GameScene::generateUI()
 {
+	// Create buttons
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
-	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
-	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
-	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
-	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
-	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
-	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), sf::Vector2f(200, 200), viewUI, onclick);
+	
+	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
+	unsigned int width = imageSize.x / 4;
+	unsigned int height = imageSize.y;
+	
+	sf::Vector2f butSize = sf::Vector2f(width, height);
+
+	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 }
