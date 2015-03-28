@@ -1,5 +1,6 @@
-#include "../Engine/Event.h"
 #include "Event.h"
+
+#include "../Engine/Event.h"
 
 /**
  * constructs a new move event
@@ -9,6 +10,7 @@
  * @param f whatever forced means
  */
 MoveEvent::MoveEvent(float _x, float _y, bool f)
+    :Event(Marx::MOVE)
 {
     x = _x;
     y = _y;
