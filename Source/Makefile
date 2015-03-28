@@ -14,7 +14,7 @@ FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SG
 					Multimedia/gui/Label.o Multimedia/gui/Button.o Multimedia/gui/Container.o Multimedia/gui/TextBox.o	\
 					Multimedia/manager/ResourceManager.o Multimedia/manager/MusicManager.o Multimedia/manager/SoundManager.o
 
-FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Champion/Vessel.o \
+FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameScene.o Logic/Entities/Vessel.o \
 					Logic/Environment/EnemyHierarchy.o Logic/Event.o Logic/ServerGameScene.o Logic/Entities/CommandEntity.o \
                     Logic/Entities/ClientMux.o Logic/Entities/NetworkControllerEntity.o \
                     Logic/Entities/ProperEntity.o Logic/Entities/PlayerEntity.o Logic/Entities/ServerCommandEntity.o \
@@ -38,8 +38,8 @@ client: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FI
 
 server: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_SERVER)
 	$(CXX) $(CPPFLAGS) \
-	-o $(SERVER_EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system -lpthread -lsfml-audio \
-	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_SERVER)
+	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_SERVER) \
+	-o $(SERVER_EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system -lpthread -lsfml-audio
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@

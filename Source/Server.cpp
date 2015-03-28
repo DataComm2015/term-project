@@ -1,6 +1,6 @@
 //> In the main file
 #include "AppWindow.h"
-#include "Usage.cpp"
+//#include "Usage.cpp"
 
 #include "Logic/ServerCommand.h"
 #include "Logic/Entities/ServerCommandEntity.h"

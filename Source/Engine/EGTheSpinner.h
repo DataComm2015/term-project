@@ -12,7 +12,7 @@ class TheSpinner : public VEntity
 {
 public:
 	TheSpinner(SGO &_sprite, Map * _map, float x, float y, float rad, float direct) :
-		VEntity(_sprite, _map, x, y, NULL, 1, 1), radius(rad), theta(0), dir(direct), midx(x), midy(y) 
+		VEntity(_sprite, _map, x, y, NULL, 1, 1), radius(rad), theta(0), dir(direct), midx(x), midy(y)
 	{
 	}
 

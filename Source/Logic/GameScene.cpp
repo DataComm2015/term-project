@@ -5,11 +5,12 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using namespace Marx;
-
+/*
+//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 Animation *runAnim;
 Animation *runAnim_mask;
 Animation *runAnim_wep;
-
+*/
 void onclick()
 {
 	static int i = 0;
@@ -46,9 +47,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
 
-	std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
+	/*std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
 
-	p = new Projectile(cMap, 10, 10, NULL, 1, 1);
+ p = new Projectile(cMap, 10, 10, NULL, 1, 1);
 	//				   map, x, y, controller, height, width
 	Projectile p2 = Projectile(cMap, 20, 20, NULL, 1, 1);
 
@@ -66,7 +67,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
 
 	delete p;
-
+*/
 	/* END SAMPLE CREATION */
 
 	// Load the tileset
@@ -84,17 +85,24 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 		);
 
 	// an example, obviously...
+	/*
 	v = new Vessel(SHAMAN, nullptr, 0, 0);
 
 	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
+	*/
 
 	cMap->setTexture(tilemap);
 	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
 	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 	championSGO.sprite().setScale(2, 2);
 	championSGO.middleAnchorPoint(true);
+
+	championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
+	championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+	championSGO2.sprite().setScale(2, 2);
+	championSGO2.middleAnchorPoint(true);
 
 	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
 	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -109,10 +117,11 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
 
+  std::cout << "before entity instantated" << std::endl;
+	vessel = new Vessel(championSGO2, cMap, 45, 45, NULL, 1.0F, 1.0F);
+
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
-	cMap->add(*s);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
-	cMap->add(*s2);
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
@@ -230,6 +239,8 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
+	/*
 	v->move();
 
 	if (v->getXSpeed() != 0 || v->getYSpeed() != 0)
@@ -263,9 +274,12 @@ void GameScene::update(sf::Time t)
 		wepSGO.sprite().setScale(2, 2);
 		//b1->toggleEnabled(false);
 	}
+	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
+	sf::Listener::setPosition(viewMain.getCenter().x-45, viewMain.getCenter().y-45, 0);
 
+	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
+	/*
 	championSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 	maskSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
 	wepSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
@@ -273,6 +287,7 @@ void GameScene::update(sf::Time t)
 	runAnim->update(t);
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
+	*/
 
 	s2->update(t);
 	s->update(t);
@@ -288,7 +303,7 @@ void GameScene::update(sf::Time t)
 	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	viewMain.setCenter(v->getXPosition(), v->getYPosition());
+	//viewMain.setCenter(v->getXPosition(), v->getYPosition());
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
@@ -308,7 +323,7 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyPressed(e.key.code);
 		}
 
-		v->detectMove();
+		// v->detectMove();
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch (e.key.code)
@@ -334,7 +349,7 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyReleased(e.key.code);
 		}
 
-		v->stop(e.key.code);
+		// v->stop(e.key.code);
 	}
 	else if (e.type == sf::Event::Resized)
 	{
@@ -376,7 +391,7 @@ void GameScene::draw()
 	renderer.begin();
 
 	// draw the objects
-	renderer.draw(championSGO);
+	//renderer.draw(championSGO2);
 	renderer.draw(&maskSGO, true);
 	renderer.draw(wepSGO);
 

@@ -16,16 +16,25 @@
 -- The AI interface provides the functions necessary for an given AI class to operate. Three functions (move(), attack(),
 -- and search() are presented here as virtual functions, which will be inherited by a specific AI class.)
 ----------------------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <list>
+#include <vector>
 
 class GuardDog : public AI
 {
 	public:
-
-		virtual ~AI();
-		virtual Entity Move();
-		virtual void Attack(Champion c);
-		virtual void Search();
-		virtual void Die();
+		~AI();
+		Entity Move();
+		void Attack(Vessel v);
+		void Search();
+		void Die();
+		
+	private:
+		int sightRange;
+		std::vector<Vessel> playerList;
+		std::vector<Vessel> targetList;
+		
+		
 };
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -108,9 +117,31 @@ void GuardDog::Attack(Champion c) // Entity e?
 -- Details the searching behaviour of Gatekeepers that implement the GuardDog AI class. The guard dog will search all
 -- cells in a given radius of its spawn point. Any champions located in those cells will be added to an array of targets.
 ----------------------------------------------------------------------------------------------------------------------*/
-void GuardDog::Search()
+void GuardDog::Search(int xpos, int ypos)
 {
+	double distance;
 
+	//loop through a vector of all players in the game and add players to hitlist
+	for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+	{
+		distance = getDistance(playerList[i], xpos, ypos);
+		if (distance < sight_range)
+		{
+			//if the player is in range, add the player to the target hit list
+			vessel.push_back(playerList[i]);
+		}
+	}
+	
+	//iterate through the target list and remove players outside the guard dog's sight
+	for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+	{
+		distance = getDistance(targetList[i], xpos, ypos);
+		if (distance > sight_range)
+		{
+			//if the player out of range, remove the player from the target hit list
+			targetList.remove(targetList[i]);
+		}
+	}
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -205,9 +236,12 @@ Champion[] GuardDog::ChangeTarget(Champion c)
 -- PROGRAMMERS: Sebastian Pelka
 --
 -- NOTES:
--- returns the target cell in which Champion c is currently located. Typically called when updating pathing information.
+-- returns the distance between the gatekeeper and vessel
 ----------------------------------------------------------------------------------------------------------------------*/
-Cell GuardDog::GetTargetLocation(Champion c);
+Cell GuardDog::GetDistance(int xpos, int ypos)
+{
+
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Die
