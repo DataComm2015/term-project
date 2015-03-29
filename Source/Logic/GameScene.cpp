@@ -11,6 +11,7 @@ Animation *runAnim;
 Animation *runAnim_mask;
 Animation *runAnim_wep;
 */
+
 void onclick()
 {
 	static int i = 0;
@@ -20,6 +21,19 @@ void onclick()
 
 	i++;
 }
+
+GUI::HealthBar *pubHB;
+void onclickHealthTest()
+{
+	static float health = 1.0;
+	
+	health = health - .10;
+	
+	if(health >= 0)
+		pubHB->update(health);
+}
+
+
 
 void updateMainView(sf::View& v)
 {
@@ -155,14 +169,11 @@ void GameScene::onLoad()
 
 	// Enable buttons
 	b1->toggleEnabled(true);
-	b2->toggleEnabled(false);
-	b3->toggleEnabled(false);
+	b2->toggleEnabled(true);
+	b3->toggleEnabled(true);
 	b4->toggleEnabled(true);
 	b5->toggleEnabled(true);
 	b6->toggleEnabled(true);
-
-	b2->toggleEnabled(true);
-	b3->toggleEnabled(true);
 }
 
 void GameScene::positionButtons()
@@ -192,6 +203,9 @@ void GameScene::positionButtons()
 	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
 	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
 	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
+	
+	// position healthbar
+	hb->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 4*buttonHeight);
 }
 
 void GameScene::unLoad()
@@ -409,6 +423,7 @@ void GameScene::draw()
 	renderer.draw(b4);
 	renderer.draw(b5);
 	renderer.draw(b6);
+	renderer.draw(hb);
 
 	renderer.end();
 
@@ -471,6 +486,7 @@ void GameScene::generateUI()
 {
 	// Create buttons
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
+	healthSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
@@ -483,5 +499,16 @@ void GameScene::generateUI()
 	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+	
+	// Create health bar (If statement here if vessel or deity)
+	imageSize = Manager::TextureManager::get(healthSprite)->getSize();
+	width = imageSize.x;
+	height = imageSize.y;
+
+	sf::Vector2f healthSize = sf::Vector2f(width, height);
+
+	hb = new GUI::HealthBar(*Manager::TextureManager::get(healthSprite), healthSize, viewUI);
+	
+	pubHB = hb;
 }
