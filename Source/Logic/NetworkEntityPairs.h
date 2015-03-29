@@ -29,6 +29,12 @@
  */
 #define NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER 1
 
+/**
+ * a {ServerGameState} instance on the server side is connected to a
+ *   {ClientGameState} instance on the client side.
+ */
+#define NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE 2
+
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {Player} {NetworkEntity} and a {Command} //
 // {NetworkEntity}.                                                         //
@@ -114,3 +120,19 @@
  *   registering the {ServerCommandEntity} with the client.
  */
 #define MSG_T_SERVERCONTROLLER_NETCONTROLLER_MAKE_VESSEL 0
+
+////////////////////////////////////////////////////////////////////////////////
+// message types used to between a {ServerGameState} and a {ClientGameState}. //
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * {ServerGameState} instance is sending a "start game scene" command to the
+ *   {ClientGameState} instance.
+ */
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 0
+
+/**
+ * {ServerGameState} instance is sending a "start lobby scene" command to the
+ *   {ClientGameState} instance.
+ */
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 1

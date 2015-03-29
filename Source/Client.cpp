@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 
     AppWindow::getInstance().setVerticalSyncEnabled(true);
     AppWindow::getInstance().addScene(MainMenuScene::getInstance());
-	  // AppWindow::getInstance().addScene(new GameScene());
+    // AppWindow::getInstance().addScene(new GameScene());
     AppWindow::getInstance().run();
 
     return EXIT_SUCCESS;

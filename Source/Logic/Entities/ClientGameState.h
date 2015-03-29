@@ -1,5 +1,5 @@
-#ifndef _COMMAND_ENTITY_H_
-#define _COMMAND_ENTITY_H_
+#ifndef _CLIENTGAMESTATE_H_
+#define _CLIENTGAMESTATE_H_
 
 #include "../KeyListener.h"
 #include "../../Network/Message.h"
@@ -11,6 +11,7 @@ using Networking::Message;
 using Networking::Session;
 
 class GameScene;
+class ClientLobbyScene;
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -20,20 +21,19 @@ class GameScene;
  *   others like choosing their character to the Server. such commands are
  *   handled in the {Player::onUpdate} method. and sent using the. .
  */
-class CommandEntity : public NetworkEntity, public KeyListener
+class ClientGameState : public NetworkEntity
 {
     public:
-        CommandEntity(int id, GameScene *gameScene);
-        ~CommandEntity();
+        ClientGameState(int id, GameScene *scene, ClientLobbyScene* lobbyScene);
+        ~ClientGameState();
 
     protected:
-        virtual void onKeyPressed(int key);
-        virtual void onKeyReleased(int key);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message message);
 
     private:
         GameScene* _gameScene;
+        ClientLobbyScene* _lobbyScene;
 };
 
 #endif
