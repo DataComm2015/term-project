@@ -8,6 +8,8 @@ namespace Marx
 {
 	class Action
 	{
+		protected:
+			sf::Time TTL;
 		public:
 			virtual void onUpdate(sf::Time) = 0;
 			virtual void onHit(Entity * e ) = 0;
