@@ -26,7 +26,7 @@ using Marx::Controller;
 class PlayerEntity : public NetworkEntity
 {
     public:
-        PlayerEntity(ServerCommand *server, Controller* serverController);
+        PlayerEntity(ServerCommand *server);
         virtual ~PlayerEntity();
 
         void setMode(PLAYER_MODE mode);
@@ -35,6 +35,7 @@ class PlayerEntity : public NetworkEntity
     protected:
         virtual void onUnregister(Session* session, Message msg);
         virtual void onUpdate(Message msg);
+        void clearControllerEvents();
     private:
         Controller* serverController;
         ServerCommand *server;

@@ -125,6 +125,18 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 }
 
 
+void ServerGameScene::createPlayers()
+{
+    std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+
+    // make serverCommandEntity for each vessel
+
+    // iterate through all players
+     // if vessel
+        // make vessels
+
+}
+
 
 
 

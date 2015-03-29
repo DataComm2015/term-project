@@ -3,6 +3,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 #include "../ServerCommand.h"
+#include "ServerCommandEntity.h"
 #include "ServerGameState.h"
 
 #include <cstdio>
@@ -17,14 +18,15 @@
  *   handled in the {Player::onUpdate} method. and sent using the.
  */
 
-PlayerEntity::PlayerEntity(ServerCommand *server, Controller* serverController)
+PlayerEntity::PlayerEntity(ServerCommand *server )
     : server(server), NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
 {
-    this->serverController = serverController;
+    this->serverController = new ServerCommandEntity();
 }
 
 PlayerEntity::~PlayerEntity()
 {
+    delete serverController;
 }
 
 void PlayerEntity::setMode(PLAYER_MODE mode)
@@ -47,6 +49,16 @@ PLAYER_MODE PlayerEntity::getMode()
 void PlayerEntity::onUnregister(Session* session, Message msg)
 {
     server->playerLeft(session);
+}
+/**
+ *  Jeff Bayntun and Eric Tsang
+ *
+ * @brief PlayerEntity::clearControllerEvents
+ * clears all events from
+ */
+void PlayerEntity::clearControllerEvents()
+{
+    serverController->clearEvents();
 }
 
 void PlayerEntity::onUpdate(Message msg)
