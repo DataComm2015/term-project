@@ -12,6 +12,9 @@
 #include "CommandEntity.h"
 #include "ClientGameState.h"
 #include "NetworkControllerEntity.h"
+#include "ClientEnemyController.h"
+#include "../EnemyControllerInit.h"
+#include "../EnemyTypes.h"
 #include <cstring>
 
 ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene)
@@ -51,10 +54,15 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 
         case NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE:
         {
-            gameState = new ClientGameState(id,_gameScene,_lobbyScene);
+            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene);
             ret = gameState;
             break;
         }
+        
+        case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
+            EnemyControllerInit *init = (EnemyControllerInit*) msg.data;
+            ret = new ClientEnemyController(id, init);
+            return ret;
     }
 
     return ret;
@@ -66,5 +74,4 @@ void ClientMux::shutdown()
     memset(&msg,0,sizeof(msg));
 
     command->unregisterSession(session, msg);
-    gameState->unregisterSession(session, msg);
 }

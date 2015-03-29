@@ -31,7 +31,10 @@ class ServerCommand : public Server
         virtual void onDisconnect(Session* session, int remote);
         Scene *getActiveScene();
         ServerGameState *getGameState();
+        ServerGameScene *getGameScene();
+        bool isGameInProgress();
         void goToLobby();
+        void prepareForGameState();
         void goToGame();
         
         void playerLeft(Session *session);

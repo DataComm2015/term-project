@@ -8,7 +8,6 @@
 #include "../Network/Session.h"
 #include "../Engine/Scene.h"
 
-class PlayerEntity;
 class ServerCommand;
 
 using Marx::Scene;
@@ -28,16 +27,17 @@ class ServerLobbyScene : public Scene
         void onclick();
         
         void enterScene();
-        void addPlayer(Session *session, PlayerEntity*);
-        void removePlayer(Session *session);
-        std::map<Session*, PlayerEntity*> getPlayers();
+        void leaveScene();
+        void addPlayer();
+        void removePlayer();
 
 	private:
 	    ServerCommand *command;
     	sf::View viewMain;
     	float timer;
     	bool timerRunning;
-    	std::map<Session*, PlayerEntity*> players;
+        bool waitingToStart;
+    	int playerCount;
     	
     	void startTimer();
     	void stopTimer();

@@ -35,7 +35,7 @@ void ServerCommand::onConnect(Session* session)
     // create an entity that the new connection can use to communicate
     // commands to the server
     ServerCommandEntity* ctrlr = new ServerCommandEntity();
-    PlayerEntity* player = new PlayerEntity(ctrlr);
+    PlayerEntity* player = new PlayerEntity(this, ctrlr);
 
     // create an empty message because we need one
     Message msg;
@@ -48,8 +48,8 @@ void ServerCommand::onConnect(Session* session)
     gameState->registerSession(session,msg);
     
     // Add Player to Lobby
-    lobbyScene->addPlayer(session, player);
-    gameState->playerJoined(lobbyScene->getPlayers().size());
+    lobbyScene->addPlayer();
+    gameState->playerJoined(session, player);
     
     // If game is not in progress -> go to lobby
     if (activeScene == lobbyScene)
@@ -59,7 +59,8 @@ void ServerCommand::onConnect(Session* session)
     // If game is in progress -> go to game scene as ghost
     else
     {
-        gameState->goToGame(true);
+        player->setMode(GHOST);
+        gameState->goToGame(gameScene->getWorldSeed());
     }
 }
 
@@ -83,6 +84,16 @@ ServerGameState *ServerCommand::getGameState()
     return gameState;
 }
 
+ServerGameScene *ServerCommand::getGameScene()
+{
+    return gameScene;
+}
+
+bool ServerCommand::isGameInProgress()
+{
+    return activeScene == gameScene;
+}
+
 void ServerCommand::goToLobby()
 {
     activeScene = lobbyScene;
@@ -90,15 +101,19 @@ void ServerCommand::goToLobby()
     gameState->goToLobby();
 }
 
+void ServerCommand::prepareForGameState()
+{
+    gameState->prepareForGameState();
+}
+
 void ServerCommand::goToGame()
 {
     activeScene = gameScene;
     gameScene->enterScene();
-    gameState->goToGame(false);
 }
 
 void ServerCommand::playerLeft(Session *session)
 {
-    gameState->playerLeft(lobbyScene->getPlayers().size());
-    lobbyScene->removePlayer(session);
+    gameState->playerLeft(session);
+    lobbyScene->removePlayer();
 }

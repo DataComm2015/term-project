@@ -11,12 +11,12 @@ using Marx::Controller;
 using Marx::Event;
 
 /**
- * the {ServerController} class on the server is logically mapped to a
+ * the {ServerCommandEntity} class on the server is logically mapped to a
  *   {NetworkController} on the client. other controllers such as AI controllers
- *   should inherit from the {ServerController} class, and get their entity to
+ *   should inherit from the {ServerCommandEntity} class, and get their entity to
  *   do stuff by using the addEvent method.
  *
- * whenever the {ServerController::addEvent} function is called, it will get its
+ * whenever the {ServerCommandEntity::addEvent} function is called, it will get its
  *   entity to do stuff. if the event should be received on the client side as
  *   well, then the event should be converted into a Networking::Message in the
  *   {ServerController::sendEventMessage} method. the same message will be
@@ -28,6 +28,7 @@ class ServerCommandEntity : public Controller, public Networking::NetworkEntity
 {
     public:
         ServerCommandEntity();
+        ServerCommandEntity(int type);
         virtual ~ServerCommandEntity();
         virtual void addEvent(Event event);
         virtual void onUnregister(Session* session, Message message);

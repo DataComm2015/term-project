@@ -1,13 +1,10 @@
 #include "ServerLobbyScene.h"
 #include <iostream>
 
+#include "../GameSettings.h"
 #include "NetworkEntityPairs.h"
 #include "ServerCommand.h"
-#include "Entities/PlayerEntity.h"
 #include "Entities/ServerGameState.h"
-
-#define SERVER_INITIAL_TIMER_VALUE 20
-#define SERVER_LOBBY_MIN_REQUIRED_PLAYERS 2
 
 using std::cout;
 using std::cerr;
@@ -18,6 +15,7 @@ ServerLobbyScene::ServerLobbyScene(ServerCommand *command)
     : command(command)
 {
     timerRunning = false;
+    waitingToStart = false;
     timer = SERVER_INITIAL_TIMER_VALUE;
 }
 
@@ -28,13 +26,14 @@ ServerLobbyScene::~ServerLobbyScene()
 
 void ServerLobbyScene::update(sf::Time time)
 {
-	if (timerRunning)
+	if (timerRunning && !waitingToStart)
 	{
 	    timer -= time.asSeconds();
 	    
 	    if (timer <= 0)
 	    {
-	        command->goToGame();
+            waitingToStart = true;
+	        command->prepareForGameState();
 	    }
 	}
 }
@@ -52,11 +51,11 @@ void ServerLobbyScene::draw(){}
 /*
  * Add a Player to the Lobby
  */
-void ServerLobbyScene::addPlayer(Session *session, PlayerEntity *entity)
+void ServerLobbyScene::addPlayer()
 {
-    players[session] = entity;
+    playerCount++;
     
-    if (players.size() >= SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
+    if (playerCount >= MIN_REQUIRED_PLAYERS)
     {
         startTimer();
     }
@@ -65,35 +64,31 @@ void ServerLobbyScene::addPlayer(Session *session, PlayerEntity *entity)
 /*
  * Remove a player from the lobby
  */
-void ServerLobbyScene::removePlayer(Session *session)
+void ServerLobbyScene::removePlayer()
 {
-    std::map<Session*, PlayerEntity*>::iterator itr = players.find(session);
-    
-    if (itr != players.end())
-    {
-        players.erase(itr);
-    }
-    
-    if (players.size() < SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
+    playerCount--;
+
+    if (playerCount < MIN_REQUIRED_PLAYERS)
     {
         stopTimer();
     }
 }
 
-std::map<Session*, PlayerEntity*> ServerLobbyScene::getPlayers()
-{
-    return players;
-}
-
 void ServerLobbyScene::enterScene()
 {
+    waitingToStart = false;
     timerRunning = false;
     timer = SERVER_INITIAL_TIMER_VALUE;
     
-    if (players.size() >= SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
+    if (playerCount >= MIN_REQUIRED_PLAYERS)
     {
         startTimer();
     }
+}
+
+void ServerLobbyScene::leaveScene()
+{
+    
 }
 
 void ServerLobbyScene::startTimer()

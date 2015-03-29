@@ -5,7 +5,6 @@
 #include <cstdio>
 #include <SFML/Graphics.hpp>
 #include "../Engine/Scene.h"
-#include "../Logic/Environment/GameMap.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
 #include "../Multimedia/graphics/Renderer.h"
@@ -13,7 +12,12 @@
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
 
+#include "Environment/GameMap.h"
+#include "EnemyTypes.h"
+
 class ServerCommand;
+class Creature;
+class Behaviour;
 
 /*
 *   This is the In-game Scene where all round-events occur.
@@ -29,12 +33,17 @@ class ServerGameScene : public Scene
         ~ServerGameScene();
         
         void enterScene();
+        void leaveScene();
+        int getWorldSeed();
+        void createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float x, float y);
 
     private:
         Marx::Map *cMap;
         GameMap *gMap;
         sf::View viewMain;
         ServerCommand *command;
+        int worldSeed;
+        std::vector<Creature*> enemies;
 };
 
 #endif

@@ -26,11 +26,29 @@ CommandEntity::CommandEntity(int id, GameScene* gameScene)
     ,_gameScene(gameScene)
 {
     _gameScene->addKeyListener(this);
+    playerMode = GHOST;
 }
 
 CommandEntity::~CommandEntity()
 {
     _gameScene->rmKeyListener(this);
+}
+
+PLAYER_MODE CommandEntity::getPlayerMode()
+{
+    return playerMode;
+}
+
+void CommandEntity::notifyServerLobbySelections(PlayerLobbyChoices *selections)
+{
+    // put the command into a message to be sent over the network
+    Message msg;
+    msg.type = MSG_T_PLAYER_SELECT_LOBBY_OPTIONS;
+    msg.data = (void*)selections;
+    msg.len  = sizeof(PlayerLobbyChoices);
+
+    // send the command over the network
+    update(msg);
 }
 
 void CommandEntity::onKeyPressed(int key)
@@ -103,7 +121,6 @@ void CommandEntity::onKeyReleased(int key)
 
 void CommandEntity::onRegister(Session *session)
 {
-    printf("REGISTERED COMMAND ENTITY\r\n");
 }
 
 void CommandEntity::onUnregister(Session* session, Message msg)
@@ -113,5 +130,11 @@ void CommandEntity::onUnregister(Session* session, Message msg)
 
 void CommandEntity::onUpdate(Message msg)
 {
-    // Do Nothing
+    switch (msg.type)
+    {
+        case MSG_T_PLAYER_SET_MODE:
+            playerMode = *((PLAYER_MODE*) msg.data);
+            
+            break;
+    }
 }

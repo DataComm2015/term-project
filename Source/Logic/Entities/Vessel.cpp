@@ -41,6 +41,7 @@ Vessel::Vessel( SGO &_sprite,
 	xSpeed = 0;
 	ySpeed = 0;
 	moving = false;
+	attackPower = 0;
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -1090,4 +1091,82 @@ int Vessel::getDirection()
 job_class Vessel::getJobClass()
 {
 	return jobClass;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setHealth
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void setHealth(int health)
+-- int attack: the amount to set health to
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- This function provides a common interface for setting health for
+-- all Creatures.
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::setHealth(int health)
+{
+    currentHealth = health;
+    
+    if (currentHealth < 0)
+        currentHealth = 0;
+    else if (currentHealth > maxHealth)
+        currentHealth = maxHealth;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setAttack
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void setAttack(int attack)
+-- int attack: the amount to set attack power to
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- This function provides a common interface for increasing attack power for
+-- all Creatures.
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::setAttack(int attack)
+{
+    attackPower = attack;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setAttack
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: Entity *getEntity()
+--
+-- RETURNS: The Entity associated with the Creature
+--
+-- NOTES:
+-- This function provides a method for retrieving the Entity from the Creature.
+----------------------------------------------------------------------------------------------------------------------*/
+Entity *Vessel::getEntity()
+{
+    return this;
 }

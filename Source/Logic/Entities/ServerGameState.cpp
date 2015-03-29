@@ -1,8 +1,15 @@
 #include "ServerGameState.h"
 
 #include <cstring>
+#include <ctime>
+#include <cstdlib>
+
+#include "../ServerGameScene.h"
+#include "../../GameSettings.h"
 #include "../ServerCommand.h"
 #include "../NetworkEntityPairs.h"
+#include "../../Network/Session.h"
+#include "PlayerEntity.h"
 
 using Networking::NetworkEntity;
 using Networking::Session;
@@ -12,32 +19,48 @@ ServerGameState::ServerGameState(ServerCommand *command)
     : NetworkEntity(NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE)
     , command(command)
 {
+    srand(time(NULL));
 }
 
 ServerGameState::~ServerGameState()
 {
 }
 
-void ServerGameState::playerJoined(int numPlayers)
+void ServerGameState::playerJoined(Session *session, PlayerEntity *player)
 {
+    players[session] = player;
+    int playerCount = players.size();
+
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_PLAYER_CONNECTED;
-    msg.data = (void*) &numPlayers;
-    msg.len = sizeof(numPlayers);
+    msg.data = (void*) &playerCount;
+    msg.len = sizeof(int);
 
     update(msg);
 }
 
-void ServerGameState::playerLeft(int numPlayers)
+void ServerGameState::playerLeft(Session *session)
 {
     printf("PLAYER LEFT\r\n");
-
+    int playerCount;
+    
     Message msg;
     memset(&msg,0,sizeof(msg));
+    players[session]->unregisterSession(session, msg);
+
+    std::map<Session*,PlayerEntity*>::iterator itr = players.find(session);
+    if (itr != players.end())
+    {
+        players.erase(itr);
+    }
+
+    playerCount = players.size();
+    playersWaitingToLaunch--;
+
     msg.type = MSG_T_PLAYER_DISCONNECTED;
-    msg.data = (void*) &numPlayers;
-    msg.len = sizeof(numPlayers);
+    msg.data = (void*) &playerCount;
+    msg.len = sizeof(int);
 
     update(msg);
 }
@@ -64,6 +87,11 @@ void ServerGameState::stopLobbyCountdown(int remainingTime)
     update(msg);
 }
 
+std::map<Session*, PlayerEntity*> ServerGameState::getPlayers()
+{
+    return players;
+}
+
 void ServerGameState::goToLobby()
 {
     Message msg;
@@ -75,13 +103,38 @@ void ServerGameState::goToLobby()
     update(msg);
 }
 
-void ServerGameState::goToGame(bool inProgress)
+void ServerGameState::prepareForGameState()
+{
+    Message msg;
+    memset(&msg,0,sizeof(msg));
+    msg.type = MSG_T_PLAYER_READY_FOR_GAME;
+    msg.data = (void*) "PREPARE FOR GAME START";
+    msg.len = strlen((char*)msg.data);
+
+    assignPlayerModes();
+    playersWaitingToLaunch = players.size();
+
+    update(msg);
+}
+
+void ServerGameState::notifyReadyForGame()
+{
+    playersWaitingToLaunch--;
+
+    if (playersWaitingToLaunch <= 0)
+    {
+        command->goToGame();
+        goToGame(command->getGameScene()->getWorldSeed());
+    }
+}
+
+void ServerGameState::goToGame(int worldSeed)
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE;
-    msg.data = (void*) "GO TO GAME SCENE";
-    msg.len = strlen((char*)msg.data);
+    msg.data = (void*) &worldSeed;
+    msg.len = sizeof(worldSeed);
 
     update(msg);
 }
@@ -89,9 +142,84 @@ void ServerGameState::goToGame(bool inProgress)
 void ServerGameState::onUnregister(Networking::Session *session,
                                    Networking::Message message)
 {
-    command->playerLeft(session);
 }
 
 void ServerGameState::onUpdate(Networking::Message message)
 {
 }
+
+void ServerGameState::assignPlayerModes()
+{
+    int vesselsRemaining = NUM_VESSELS;
+    int count = 0;
+    int randNum;
+
+    /* Assign each player a type (VESSEL OR DEITY) */
+    std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
+    while (itr != players.end())
+    {
+        // If there are still vessels left to place, check if player should be vessel
+        if (vesselsRemaining > 0)
+        {
+            // If there are only enough players left for vessels, make them vessels.
+            if (players.size() - count <= NUM_VESSELS)
+            {
+                itr->second->setMode(VESSEL);
+                vesselsRemaining--;
+            }
+            // If player could be either a vessel or a deity, choose randomly
+            else
+            {
+                randNum = rand() % players.size();
+                if (randNum < NUM_VESSELS )
+                {
+                    itr->second->setMode(VESSEL);
+                    vesselsRemaining--;
+                }
+                else
+                {
+                    itr->second->setMode(DEITY);
+                }
+            }
+        }
+        // If all vessels have been chosen, remaining players are deities
+        else
+        {
+            itr->second->setMode(DEITY);
+        }
+
+        count++;
+        itr++;
+    }
+}
+
+void ServerGameState::registerWithAllPlayers(Networking::NetworkEntity *entity, Message *msg)
+{
+    std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
+    while (itr != players.end())
+    {
+        printf("REGISTERING ENEMY\r\n");
+        printf("ENTITY TYPE: %d\r\n", entity->type);
+        entity->registerSession(itr->first, *msg);
+        itr++;
+    }
+}
+
+void ServerGameState::unregisterFromAllPlayers(Networking::NetworkEntity *entity)
+{
+    Message msg;
+    memset(&msg, 0, sizeof(msg));
+
+    std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
+    while (itr != players.end())
+    {
+        entity->unregisterSession(itr->first, msg);
+        itr++;
+    }
+}
+
+
+
+
+
+
