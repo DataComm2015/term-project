@@ -35,22 +35,26 @@ namespace Marx
 {
 	class Entity : public sf::FloatRect, public BGO
 	{
-	private:
-		bool move__;
 	protected:
+		
 		Controller * controller;
 		std::set<Cell*> occupiedCells;
 		Map * map;
+		bool blocking;
 	public:
 		Entity(Map * _map, float x, float y, Controller * ctrl, float h, float w);
 		virtual ~Entity();
 		virtual void turn();
 		Entity * move(float, float, bool);
+		Entity * rMove(float, float, bool);
+		Entity * aMove(float, float, bool);
 		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
 		virtual void onUpdate();
 		virtual bool operator==(const Entity&);
+		void setBlocking(bool);
+		bool getBlocking();
 	};
 };
 #endif
