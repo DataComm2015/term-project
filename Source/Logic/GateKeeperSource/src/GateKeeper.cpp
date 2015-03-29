@@ -6,7 +6,7 @@ GateKeeper::~GateKeeper()
 
 }
 
-void GateKeeper::update(const sf::Time& t)
+void GateKeeper::onUpdate()
 {
   std::vector< Marx::Event > eventQueue = controller->getEvents();
 
@@ -86,6 +86,21 @@ void GateKeeper::setCooldown(/*Timer*/)
 
 }
 
+void GateKeeper::setPosition(float x, float y)
+{
+
+}
+
+void GateKeeper::setXSpeed(float x)
+{
+
+}
+
+void GateKeeper::setYSpeed(float y)
+{
+
+}
+
 int GateKeeper::getRange()
 {
   return _range;
@@ -127,11 +142,6 @@ void GateKeeper::onCreate()
 }
 
 void GateKeeper::onDestroy()
-{
-
-}
-
-void GateKeeper::onUpdate()
 {
 
 }
