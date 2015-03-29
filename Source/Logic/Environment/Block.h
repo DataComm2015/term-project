@@ -71,6 +71,8 @@ class Block
 		void setTile(tile_id id);
 		void setDeco(vector<CellTile> *tiles);
 
+		Cell* getRandomCell();
+
 		BlockType getType();
 		BlockZone getZone();
 
