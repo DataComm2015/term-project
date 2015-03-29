@@ -1,12 +1,14 @@
 #include "ServerGameScene.h"
 #include <iostream>
+#include "ServerCommand.h"
 
 using std::cout;
 using std::cerr;
 using std::endl;
 using namespace Marx;
 
-ServerGameScene::ServerGameScene()
+ServerGameScene::ServerGameScene(ServerCommand *command)
+    : command(command)
 {
 	// Create the cell map
 	cMap = new Map(25, 25);
@@ -64,4 +66,8 @@ void ServerGameScene::draw()
 
 }
 
+void ServerGameScene::enterScene()
+{
+    printf("IN GAME SCENE\r\n");
+}
 

@@ -1,27 +1,36 @@
 #include "CommandEntity.h"
 
+#include "../../AppWindow.h"
+
 #include "../../Engine/Event.h"
+#include "../../Engine/Controller.h"
+
+#include "../Entities/ProperEntity.h"
+
 #include "../GameScene.h"
 #include "../Event.h"
-#include "../Entities/ProperEntity.h"
 #include "../NetworkEntityPairs.h"
+#include "../ClientLobbyScene.h"
 
-#include "../../Engine/Controller.h"
 #include "../../Network/Client.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"
 
+#include <cstdio>
+#include <cstring>
+
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene *scene)
-    : NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND), scene(scene)
+CommandEntity::CommandEntity(int id, GameScene* gameScene)
+    :NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND)
+    ,_gameScene(gameScene)
 {
-    scene->addKeyListener(this);
+    _gameScene->addKeyListener(this);
 }
 
 CommandEntity::~CommandEntity()
 {
-    scene->rmKeyListener(this);
+    _gameScene->rmKeyListener(this);
 }
 
 void CommandEntity::onKeyPressed(int key)
@@ -92,12 +101,17 @@ void CommandEntity::onKeyReleased(int key)
     update(msg);
 }
 
-void CommandEntity::onUnregister(Session* session, Message message)
+void CommandEntity::onRegister(Session *session)
+{
+    printf("REGISTERED COMMAND ENTITY\r\n");
+}
+
+void CommandEntity::onUnregister(Session* session, Message msg)
 {
     // Do Nothing
 }
 
-void CommandEntity::onUpdate(Message message)
+void CommandEntity::onUpdate(Message msg)
 {
     // Do Nothing
 }

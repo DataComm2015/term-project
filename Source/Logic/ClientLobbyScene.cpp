@@ -1,6 +1,7 @@
 #include "ClientLobbyScene.h"
 #include <iostream>
 #include <SFML/System/Time.hpp>
+#include "Entities/ClientMux.h"
 
 using std::cout;
 using std::cerr;
@@ -8,96 +9,24 @@ using std::endl;
 using namespace Marx;
 
 using Networking::NetworkEntityMultiplexer;
-using Networking::Client;
 
 int ClientLobbyScene::vesselChoice;
 int ClientLobbyScene::deityChoice;
 sf::Clock ClientLobbyScene::clck;
 bool ClientLobbyScene::timego;
-int ClientLobbyScene::maxTime;
-int ClientLobbyScene::currentTime;
+float ClientLobbyScene::currentTime;
 
 
-ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
+ClientLobbyScene::ClientLobbyScene()
+    : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
     // as art assets are created for these, add them
 
-    client = NULL;
-    gameScene = NULL;
-    clientMux = NULL;
-
+    playerCount = 0;
     vesselChoice = 1;
     deityChoice = 1;
-    maxTime = COUNTDOWN;
-    currentTime = COUNTDOWN;
-
-    circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/circleOutline.png"));
-
-    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/lobby-background.jpg"));
-
-    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-one.png"));
-    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-two.png"));
-
-    vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
-    vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
-
-    aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
-    aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
-
-    leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
-
-    /* Initialize buttons */
-    vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onVesselOneClick);
-    vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onVesselTwoClick);
-
-    aspectOneBtn = new GUI::Button(*Manager::TextureManager::get(aspectOneImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onDeityOneClick);
-    aspectTwoBtn = new GUI::Button(*Manager::TextureManager::get(aspectTwoImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onDeityTwoClick);
-
-    leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onLeaveClick);
-
-    /*Init artwork*/
-    vesselOneSGO = new SGO(*Manager::TextureManager::get(vesselOneArt));
-    vesselTwoSGO = new SGO(*Manager::TextureManager::get(vesselTwoArt));
-
-    vesselOneCircleSGO = new SGO(*Manager::TextureManager::get(circle));
-    vesselTwoCircleSGO = new SGO(*Manager::TextureManager::get(circle));
-    deityOneCircleSGO = new SGO(*Manager::TextureManager::get(circle));
-    deityTwoCircleSGO = new SGO(*Manager::TextureManager::get(circle));
-
-    background = new SGO(*Manager::TextureManager::get(backgroundImg));
-
-    sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Assets/Fonts/arial.ttf");
-
-
-    countdownBox = new GUI::TextBox();
-    countdownBox->text().setScale(1, 1);
-    countdownBox->text().move(5, 5);
-    countdownBox->toggleSelected(false);
-    countdownBox->text().setFont(*arial);
-
-    playerBox = new GUI::TextBox();
-    playerBox->text().setScale(1, 1);
-    playerBox->text().move(5, 20);
-    playerBox->toggleSelected(false);
-    playerBox->text().setFont(*arial);
-
-}
-
-ClientLobbyScene::ClientLobbyScene(Client * c, GameScene * g, ClientMux * m) : renderer(AppWindow::getInstance(), 48400)
-{
-    /* Get texture assets */
-    // as art assets are created for these, add them
-
-    client = c;
-    gameScene = g;
-    clientMux = m;
-
-    vesselChoice = 1;
-    deityChoice = 1;
-    maxTime = COUNTDOWN;
-    currentTime = COUNTDOWN;
+    timego = false;
 
     circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/circleOutline.png"));
 
@@ -196,10 +125,21 @@ void ClientLobbyScene::update(sf::Time t)
     aspectOneBtn->update(t);
     aspectTwoBtn->update(t);
     leaveBtn->update(t);
+    
+    if(timego && currentTime > 0)
+    {
+        currentTime -= t.asSeconds();
+    }
 }
 
 void ClientLobbyScene::processEvents(sf::Event& e)
 {
+    if (e.type == sf::Event::Closed)
+	{
+	    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
+		AppWindow::getInstance().close();
+	}
+
     countdownBox->process(e);
 }
 
@@ -211,27 +151,14 @@ void ClientLobbyScene::draw()
 
     window.setView(viewMain);
 
-    if(timego)
-    {
-        sf::Time timersa;
-        timersa = clck.getElapsedTime();
-        float cTime = timersa.asSeconds();
-        currentTime = maxTime - cTime;
-        if(currentTime == 0)
-        {
-            timego = false;
-            AppWindow::getInstance().removeScene(1);
-            AppWindow::getInstance().setVerticalSyncEnabled(true);
-            AppWindow::getInstance().addScene(gameScene);
-            AppWindow::getInstance().run();
-        }
-    }
-
-
     renderer.begin();
 
-    countdownBox->setText(std::to_string(currentTime) + "s" );
-    playerBox->setText("1 player");
+    if (timego)
+    {
+        countdownBox->setText(std::to_string((int)currentTime) + "s" );
+    }
+    
+    playerBox->setText(std::to_string(playerCount) + " player(s)");
 
     // draw the objects
     renderer.draw(*background);
@@ -318,3 +245,32 @@ int ClientLobbyScene::getVesselChoice()
 {
     return vesselChoice;
 }
+
+void ClientLobbyScene::startTimer(int remainingTime)
+{
+    timego = true;
+    currentTime = remainingTime;
+}
+
+void ClientLobbyScene::stopTimer(int remainingTime)
+{
+    timego = false;
+    currentTime = remainingTime;
+}
+
+void ClientLobbyScene::updatePlayerCount(int numPlayers)
+{
+    playerCount = numPlayers;
+}
+
+
+
+
+
+
+
+
+
+
+
+

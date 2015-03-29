@@ -2,9 +2,9 @@
 #include "AppWindow.h"
 //#include "Usage.cpp"
 
+#include "Engine/Scene.h"
 #include "Logic/ServerCommand.h"
 #include "Logic/Entities/ServerCommandEntity.h"
-#include "Logic/ServerGameScene.h"
 #include "Network/NetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
@@ -20,7 +20,7 @@ using Networking::Session;
 using Networking::Server;
 
 // globals
-void run(Scene *scene);
+void run(ServerCommand *server);
 
 //////////
 // main //
@@ -28,26 +28,21 @@ void run(Scene *scene);
 
 int main( int argc, char ** argv )
 {
-    Scene *scene;
-
     printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
     fflush(stdout);
-
-    scene = new ServerGameScene();
-
-    ServerCommand server(scene);
+    
+    ServerCommand server;
+    
     server.startServer(atoi(argv[1]));
+    run(&server);
 
-    run(scene);
-
-    delete scene;
     return 0;
 }
 
 /**
  * the game loop.
  */
-void run(Scene *scene)
+void run(ServerCommand *server)
 {
     bool isRunning;
     sf::Time m_elapsedTime;
@@ -76,7 +71,7 @@ void run(Scene *scene)
             while (m_timeSinceLastUpdate > m_timePerFrame)
             {
                 m_timeSinceLastUpdate -= m_timePerFrame;
-                scene->update(m_timePerFrame);
+                server->getActiveScene()->update(m_timePerFrame);
 
                 sf::sleep(m_sleepTime);
             }

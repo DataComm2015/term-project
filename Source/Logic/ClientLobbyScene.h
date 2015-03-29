@@ -17,7 +17,7 @@
 
 #define BTN_WIDTH 150
 #define BTN_HEIGHT 75
-#define COUNTDOWN 10
+#define COUNTDOWN 4
 
 /*
 *   This is the Lobby scene.
@@ -27,7 +27,6 @@ class ClientLobbyScene : public Scene
     public:
 
         ClientLobbyScene();
-        ClientLobbyScene(Networking::Client*, GameScene*, ClientMux*);
         virtual void update(sf::Time);
         virtual void processEvents(sf::Event&);
         virtual void draw();
@@ -46,6 +45,10 @@ class ClientLobbyScene : public Scene
         void updateMainView(sf::View& v);
         static int vesselChoice;
         static int deityChoice;
+        
+        void startTimer(int remainingTime);
+        void stopTimer(int remainingTime);
+        void updatePlayerCount(int numPlayers);
     private:
 
         sf::View viewMain;
@@ -93,10 +96,9 @@ class ClientLobbyScene : public Scene
 
         static sf::Clock clck;
         static bool timego;
-        static int maxTime;
-        static int currentTime;
+        static float currentTime;
+        int playerCount;
 
-        Networking::Client * client;
         GameScene * gameScene;
         ClientMux * clientMux;
 };
