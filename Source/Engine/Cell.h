@@ -7,7 +7,7 @@
 --
 -- DATE: February 16, 2015
 --
--- REVISIONS:
+-- REVISIONS: March 29, 2015 - Added Blocking mechanic
 --
 -- DESIGNER: Marc Vouve
 --           Marc Rafanan
@@ -42,7 +42,7 @@ namespace Marx
     class Cell : public sf::FloatRect
     {
         public:
-            explicit Cell(int x = 0, int y = 0, tile_id tid = 0): xcoord_(x), ycoord_(y), tile_id_(tid) {}
+            explicit Cell(int x = 0, int y = 0, tile_id tid = 0, bool block = false): xcoord_(x), ycoord_(y), tile_id_(tid), blocking(block) {}
 
             // Getters and setters for tile id
             void setTileId(tile_id t_id);
@@ -54,6 +54,7 @@ namespace Marx
             void    setCoord(const int& x, const int& y); 
 			void	addEntity(Entity *);
 			void	removeEntity(Entity *);
+			void	setBlocking( bool );
             int     getX() const;
             int     getY() const;
             std::set<Entity*> getEntity();
@@ -65,6 +66,7 @@ namespace Marx
             int xcoord_;
             int ycoord_;
             std::set<Entity*> entity;
+			bool blocking;
     };
 } /* namespace Marx */
 

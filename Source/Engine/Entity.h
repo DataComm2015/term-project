@@ -36,6 +36,7 @@ namespace Marx
 	class Entity : public sf::FloatRect, public BGO
 	{
 	protected:
+		unsigned char blocking;	// can other entities pass through this entitiy? This can be set when an entity moves or by using setBlocking(short blocking)
 		Controller * controller;
 		std::set<Cell*> occupiedCells;
 		Map * map;
@@ -50,6 +51,7 @@ namespace Marx
 		virtual void onCreate();
 		virtual void onDestroy();
 		virtual void onUpdate();
+		setBlocking();
 		virtual bool operator==(const Entity&);
 	};
 };
