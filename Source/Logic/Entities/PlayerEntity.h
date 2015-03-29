@@ -6,6 +6,7 @@
 #include "../../Network/Message.h"
 #include "../../Network/NetworkEntity.h"
 #include "../PlayerMode.h"
+#include "../PlayerLobbyChoices.h"
 
 class ServerCommand;
 
@@ -38,6 +39,7 @@ class PlayerEntity : public NetworkEntity
         Controller* serverController;
         ServerCommand *server;
         PLAYER_MODE mode;
+        PlayerLobbyChoices lobbyChoices;
 };
 
 #endif

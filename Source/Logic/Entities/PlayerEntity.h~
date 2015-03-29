@@ -1,8 +1,12 @@
+#ifndef _PLAYER_ENTITY_H_
+#define _PLAYER_ENTITY_H_
+
 #include "../../Engine/Controller.h"
 #include "../../Network/Session.h"
 #include "../../Network/Message.h"
 #include "../../Network/NetworkEntity.h"
 #include "../PlayerMode.h"
+#include "../PlayerLobbyChoices.h"
 
 class ServerCommand;
 
@@ -36,3 +40,5 @@ class PlayerEntity : public NetworkEntity
         ServerCommand *server;
         PLAYER_MODE mode;
 };
+
+#endif

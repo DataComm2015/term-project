@@ -33,6 +33,7 @@ class ServerCommand : public Server
         ServerGameState *getGameState();
         bool isGameInProgress();
         void goToLobby();
+        void prepareForGameState();
         void goToGame();
         
         void playerLeft(Session *session);

@@ -3,6 +3,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 #include "../ServerCommand.h"
+#include "ServerGameState.h"
 
 #include <cstdio>
 
@@ -20,7 +21,6 @@ PlayerEntity::PlayerEntity(ServerCommand *server, Controller* serverController)
     : server(server), NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
 {
     this->serverController = serverController;
-    printf("CREATING PLAYER ENTITY\r\n");
 }
 
 PlayerEntity::~PlayerEntity()
@@ -100,6 +100,11 @@ void PlayerEntity::onUpdate(Message msg)
             MoveEvent event(0,0,0);
             serverController->addEvent(event);
             break;
+        }
+        case MSG_T_PLAYER_SELECT_LOBBY_OPTIONS:
+        {
+            lobbyChoices = *((PlayerLobbyChoices*) msg.data);
+            server->getGameState()->notifyReadyForGame();
         }
     }
 }

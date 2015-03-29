@@ -35,6 +35,7 @@ class ServerLobbyScene : public Scene
     	sf::View viewMain;
     	float timer;
     	bool timerRunning;
+        bool waitingToStart;
     	int playerCount;
     	
     	void startTimer();

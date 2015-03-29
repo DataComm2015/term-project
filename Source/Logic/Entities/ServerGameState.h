@@ -27,7 +27,9 @@ class ServerGameState : public Networking::NetworkEntity
 
         std::map<Session*, PlayerEntity*> getPlayers();
         void goToLobby();
-        void goToGame(bool inProgress);
+        void prepareForGameState();
+        void notifyReadyForGame();
+        void goToGame();
 
     protected:
         virtual void onUnregister(Networking::Session *session,
@@ -37,6 +39,7 @@ class ServerGameState : public Networking::NetworkEntity
         
         ServerCommand *command;
     	std::map<Session*, PlayerEntity*> players;
+        int playersWaitingToLaunch;
 };
 
 #endif

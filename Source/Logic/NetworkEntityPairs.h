@@ -115,6 +115,16 @@
  */
 #define MSG_T_PLAYER_SET_MODE 14
 
+/**
+ * Client -> Server Message informing server of client lobby option selections
+ */
+#define MSG_T_PLAYER_SELECT_LOBBY_OPTIONS 15
+
+/**
+ * Server -> Client Request options before starting game
+ */
+#define MSG_T_PLAYER_READY_FOR_GAME 16
+
 
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {ServerController} {NetworkEntity} and a //

@@ -60,7 +60,7 @@ void ServerCommand::onConnect(Session* session)
     else
     {
         player->setMode(GHOST);
-        gameState->goToGame(true);
+        gameState->goToGame();
     }
 }
 
@@ -96,9 +96,13 @@ void ServerCommand::goToLobby()
     gameState->goToLobby();
 }
 
+void ServerCommand::prepareForGameState()
+{
+    gameState->prepareForGameState();
+}
+
 void ServerCommand::goToGame()
 {
-    gameState->goToGame(false);
     activeScene = gameScene;
     gameScene->enterScene();
 }

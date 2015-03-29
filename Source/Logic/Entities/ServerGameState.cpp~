@@ -55,6 +55,7 @@ void ServerGameState::playerLeft(Session *session)
     }
 
     playerCount = players.size();
+    playersWaitingToLaunch--;
 
     msg.type = MSG_T_PLAYER_DISCONNECTED;
     msg.data = (void*) &playerCount;
@@ -101,18 +102,31 @@ void ServerGameState::goToLobby()
     update(msg);
 }
 
-void ServerGameState::goToGame(bool inProgress)
+void ServerGameState::prepareForGameState()
 {
-    // If this is a transition from lobby to game, give players a type
-    if (!inProgress)
-    {
-        assignPlayerModes();
-    }
-    else
-    {
-        
-    }
+    Message msg;
+    memset(&msg,0,sizeof(msg));
+    msg.type = MSG_T_PLAYER_READY_FOR_GAME;
+    msg.data = (void*) "PREPARE FOR GAME START";
+    msg.len = strlen((char*)msg.data);
 
+    assignPlayerModes();
+    playersWaitingToLaunch = players.size();
+}
+
+void ServerGameState::notifyReadyForGame()
+{
+    playersWaitingToLaunch--;
+
+    if (playersWaitingToLaunch <= 0)
+    {
+        goToGame();
+        command->goToGame();
+    }
+}
+
+void ServerGameState::goToGame()
+{
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE;

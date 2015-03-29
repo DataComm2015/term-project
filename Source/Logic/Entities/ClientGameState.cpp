@@ -42,9 +42,14 @@ void ClientGameState::onUpdate(Message msg)
 {
     switch(msg.type)
     {
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
-            printf("received go to game scene message\nStarting as: ");
+        case MSG_T_PLAYER_READY_FOR_GAME:
+            /* Send back player lobby selections */
+            command->notifyServerLobbySelections(_lobbyScene->getSelections());
+            break;
 
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
+
+            /* Server has informed client of what kind of player it is before going to GameScene */
             switch(command->getPlayerMode())
             {
                 case VESSEL:
@@ -68,7 +73,6 @@ void ClientGameState::onUpdate(Message msg)
             AppWindow::getInstance().addScene(_gameScene);
             break;
         case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE:
-            printf("received go to lobby scene message\n");
             AppWindow::getInstance().removeScene(1);
             AppWindow::getInstance().addScene(_lobbyScene);
             break;

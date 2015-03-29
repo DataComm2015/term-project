@@ -6,8 +6,6 @@
 #include "ServerCommand.h"
 #include "Entities/ServerGameState.h"
 
-#define SERVER_INITIAL_TIMER_VALUE 20
-
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -17,6 +15,7 @@ ServerLobbyScene::ServerLobbyScene(ServerCommand *command)
     : command(command)
 {
     timerRunning = false;
+    waitingToStart = false;
     timer = SERVER_INITIAL_TIMER_VALUE;
 }
 
@@ -27,13 +26,14 @@ ServerLobbyScene::~ServerLobbyScene()
 
 void ServerLobbyScene::update(sf::Time time)
 {
-	if (timerRunning)
+	if (timerRunning && !waitingToStart)
 	{
 	    timer -= time.asSeconds();
 	    
 	    if (timer <= 0)
 	    {
-	        command->goToGame();
+            waitingToStart = true;
+	        command->prepareForGameState();
 	    }
 	}
 }
@@ -76,6 +76,7 @@ void ServerLobbyScene::removePlayer()
 
 void ServerLobbyScene::enterScene()
 {
+    waitingToStart = false;
     timerRunning = false;
     timer = SERVER_INITIAL_TIMER_VALUE;
     
