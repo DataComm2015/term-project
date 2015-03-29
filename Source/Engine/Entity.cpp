@@ -115,6 +115,32 @@ void  Entity::turn()
     // process events
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::rMove
+--
+-- DATE: February 29, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: move(float x, float y, bool force)
+--					float x: left corner of the entity.
+--					float y: top corner of the entity.
+--					bool force: if this is true the entity will move even if it will collide with another entity.
+--
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
+--
+-- NOTES: This function provides an interface to move entities relivate to their current position.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Entity * Entity::rMove(float x, float y, bool force = false)
+{
+	return aMove(x + left, y + top, force);
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION:
@@ -122,6 +148,34 @@ void  Entity::turn()
 -- DATE: February 19, 2015
 --
 -- REVISIONS: March 23, 2015 - Added map interaction
+--			  March 29, 2015 - Abstracted into rMove and aMove. Leaving this here as depricated.
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: move(float x, float y, bool force)
+--					float x: left corner of the entity.
+--					float y: top corner of the entity.
+--					bool force: if this is true the entity will move even if it will collide with another entity.
+--
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
+--
+-- NOTES: DEPRICATED.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Entity * Entity::move(float x, float y, bool force = false)
+{
+	return aMove(x, y, force);
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION:
+--
+-- DATE: March 29th
+--
+-- REVISIONS: 
 --
 -- DESIGNER: Marc Vouve
 --
@@ -138,7 +192,7 @@ void  Entity::turn()
 -- NOTES: 
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity * Entity::move(float x, float y, bool force = false)
+Entity * Entity::aMove(float x, float y, bool force = false)
 {
     std::set<Cell*> tempCell;
 	int temp_x = left;

@@ -44,7 +44,7 @@ namespace Marx
 		virtual ~Entity();
 		virtual void turn();
 		Entity * move(float, float, bool);
-		Entity * pMove(float, float, bool);
+		Entity * rMove(float, float, bool);
 		Entity * aMove(float, float, bool);
 		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
