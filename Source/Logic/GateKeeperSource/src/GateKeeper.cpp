@@ -140,3 +140,26 @@ bool GateKeeper::operator==(const VEntity&)
 {
   return true;
 }
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getEntity
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: Entity *getEntity()
+--
+-- RETURNS: The Entity associated with the Creature
+--
+-- NOTES:
+-- This function provides a method for retrieving the Entity from the Creature.
+----------------------------------------------------------------------------------------------------------------------*/
+Entity *GateKeeper::getEntity()
+{
+    return this;
+}

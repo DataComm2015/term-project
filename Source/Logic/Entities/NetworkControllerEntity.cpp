@@ -7,6 +7,11 @@ NetworkControllerEntity::NetworkControllerEntity(int id)
 {
 }
 
+NetworkControllerEntity::NetworkControllerEntity(int id, int type)
+    :NetworkEntity(id,type)
+{
+}
+
 NetworkControllerEntity::~NetworkControllerEntity()
 {
 }

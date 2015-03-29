@@ -26,6 +26,9 @@ namespace Networking
         void update(Message message);
         void registerSession(Session * session, Message message);
         void unregisterSession(Session * session, Message message);
+        
+        int type;
+        int id;
     protected:
         virtual void onRegister(Session *session);
         virtual void onUnregister(Session * session, Message message);
@@ -34,8 +37,6 @@ namespace Networking
         void silentRegister(Session* session);
         void silentUnregister(Session* session);
         static int nextId;
-        int id;
-        int type;
         NetworkEntityMultiplexer* mux;
         std::set< Session * > registeredSessions;
 

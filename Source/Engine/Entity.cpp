@@ -223,6 +223,30 @@ std::set<Cell*> Entity::getCell()
 }
 
 /*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::getController
+--
+-- DATE: March 29, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: Controller* Entity::getController()
+--
+-- RETURNS: Controller* controller
+--
+-- NOTES:
+--        Returns the Entities controller
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Controller *Entity::getController()
+{
+    return controller;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Entity::operator==
 --
 -- DATE: February 19, 2015
