@@ -34,13 +34,13 @@ void ServerCommand::onConnect(Session* session)
     // register the client with the player object, and player controller
     player->registerSession(session,msg);
 
-    create an entity that the client is supposed to control
+    // create an entity that the client is supposed to control
     Marx::Map* cMap = ((ServerGameScene*)scene)->getcMap();
 
     id_resource championSprite = Manager::TextureManager::store(
   		Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
   		);
-    
+
     SGO championSGO2;
     championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
     championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
