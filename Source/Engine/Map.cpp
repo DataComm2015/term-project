@@ -55,12 +55,13 @@ using namespace Marx;
 ----------------------------------------------------------------------------------------------------------------------*/
 Map::Map(const uint height, const uint width) : width_(width), height_(height), cells_(std::vector<Cell*>(width * height + 1))
 {
-
+	cells_[width * height] = new Cell( -1, -1, 0, true );
 }
 
 
 Map::~Map()
 {
+	delete cells_[width * height];
 	// Empty for now
 }
 

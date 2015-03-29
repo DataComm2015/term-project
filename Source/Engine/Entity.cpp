@@ -189,7 +189,7 @@ Entity * Entity::move(float x, float y, bool force = false)
 -- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
 --			entity would collide with.
 --
--- NOTES: 
+-- NOTES: DOES NOT RETURN ANYTHING IF A CELL THAT YOU ARE TRYING TO MOVE INTO IS BLOCKING!
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::aMove(float x, float y, bool force = false)
@@ -199,6 +199,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 	int temp_y = top;
 	top = x;
 	left = y;
+	blocking = force;
 
 	// loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i <= width + floor(x); i++)
@@ -212,6 +213,13 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 	// loop through all cells in the temporary array. looping for 
     for(Cell *c : tempCell)
 	{
+		if( c->getBlocking() )	// This doesn't return anything.
+		{
+			left = temp_x;
+			top  = temp_y;
+			
+			return nullptr;
+		}
 		std::set<Entity*> entities = c->getEntity();
 
 		for( Entity * e : entities )

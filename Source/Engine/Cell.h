@@ -55,6 +55,7 @@ namespace Marx
 			void	addEntity(Entity *);
 			void	removeEntity(Entity *);
 			void	setBlocking( bool );
+			bool	getBlocking();
             int     getX() const;
             int     getY() const;
             std::set<Entity*> getEntity();
