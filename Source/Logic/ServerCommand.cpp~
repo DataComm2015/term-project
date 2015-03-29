@@ -96,9 +96,3 @@ void ServerCommand::goToGame()
     gameScene->enterScene();
     gameState->goToGame(false);
 }
-
-void ServerCommand::playerLeft(Session *session)
-{
-    gameState->playerLeft(session);
-    lobbyScene->removePlayer();
-}

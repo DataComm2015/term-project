@@ -8,6 +8,7 @@
 #include "../Network/Session.h"
 #include "../Engine/Scene.h"
 
+class PlayerEntity;
 class ServerCommand;
 
 using Marx::Scene;

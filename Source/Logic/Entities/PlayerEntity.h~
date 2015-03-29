@@ -28,5 +28,4 @@ class PlayerEntity : public NetworkEntity
         virtual void onUpdate(Message msg);
     private:
         Controller* serverController;
-        ServerCommand *server;
 };

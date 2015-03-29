@@ -55,7 +55,7 @@ void ServerLobbyScene::addPlayer()
 {
     playerCount++;
     
-    if (playerCount >= SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
+    if (playersCount >= SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
     {
         startTimer();
     }

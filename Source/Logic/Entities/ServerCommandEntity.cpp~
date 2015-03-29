@@ -7,7 +7,6 @@
 ServerCommandEntity::ServerCommandEntity()
     :NetworkEntity(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
 {
-    printf("CREATING ServerCommandEntity\r\n");
 }
 
 ServerCommandEntity::~ServerCommandEntity()
