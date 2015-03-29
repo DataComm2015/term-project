@@ -26,7 +26,7 @@ namespace Networking
         void update(Message message);
         void registerSession(Session * session, Message message);
         void unregisterSession(Session * session, Message message);
-        
+        int getType();
         int type;
         int id;
     protected:
@@ -39,7 +39,6 @@ namespace Networking
         static int nextId;
         NetworkEntityMultiplexer* mux;
         std::set< Session * > registeredSessions;
-
     };
 }
 

@@ -10,7 +10,7 @@
 using namespace std;
 
 int Networking::NetworkEntity::nextId = 0;
-
+int getType();
 Networking::NetworkEntity::NetworkEntity( int type )
     :NetworkEntity(nextId++,type)
 {
@@ -195,6 +195,11 @@ void Networking::NetworkEntity::unregisterSession( Session * session, Message me
 
     silentUnregister(session);
     mux->unregisterSession(id, session, message);
+}
+
+int Networking::NetworkEntity::getType()
+{
+    return type;
 }
 
 /*----------------------------------------------------------------------------------------------
