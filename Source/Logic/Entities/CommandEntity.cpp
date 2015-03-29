@@ -1,27 +1,54 @@
 #include "CommandEntity.h"
 
+#include "../../AppWindow.h"
+
 #include "../../Engine/Event.h"
+#include "../../Engine/Controller.h"
+
+#include "../Entities/ProperEntity.h"
+
 #include "../GameScene.h"
 #include "../Event.h"
-#include "../Entities/ProperEntity.h"
 #include "../NetworkEntityPairs.h"
+#include "../ClientLobbyScene.h"
 
-#include "../../Engine/Controller.h"
 #include "../../Network/Client.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"
 
+#include <cstdio>
+#include <cstring>
+
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene *scene)
-    : NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND), scene(scene)
+CommandEntity::CommandEntity(int id, GameScene* gameScene)
+    :NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND)
+    ,_gameScene(gameScene)
 {
-    scene->addKeyListener(this);
+    _gameScene->addKeyListener(this);
+    playerMode = GHOST;
 }
 
 CommandEntity::~CommandEntity()
 {
-    scene->rmKeyListener(this);
+    _gameScene->rmKeyListener(this);
+}
+
+PLAYER_MODE CommandEntity::getPlayerMode()
+{
+    return playerMode;
+}
+
+void CommandEntity::notifyServerLobbySelections(PlayerLobbyChoices *selections)
+{
+    // put the command into a message to be sent over the network
+    Message msg;
+    msg.type = MSG_T_PLAYER_SELECT_LOBBY_OPTIONS;
+    msg.data = (void*)selections;
+    msg.len  = sizeof(PlayerLobbyChoices);
+
+    // send the command over the network
+    update(msg);
 }
 
 void CommandEntity::onKeyPressed(int key)
@@ -92,12 +119,22 @@ void CommandEntity::onKeyReleased(int key)
     update(msg);
 }
 
-void CommandEntity::onUnregister(Session* session, Message message)
+void CommandEntity::onRegister(Session *session)
+{
+}
+
+void CommandEntity::onUnregister(Session* session, Message msg)
 {
     // Do Nothing
 }
 
-void CommandEntity::onUpdate(Message message)
+void CommandEntity::onUpdate(Message msg)
 {
-    // Do Nothing
+    switch (msg.type)
+    {
+        case MSG_T_PLAYER_SET_MODE:
+            playerMode = *((PLAYER_MODE*) msg.data);
+            
+            break;
+    }
 }

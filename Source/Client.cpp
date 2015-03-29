@@ -19,10 +19,14 @@ int main(int argc, char* argv[])
     fflush(stdout);
 
     AppWindow::getInstance().setVerticalSyncEnabled(true);
+<<<<<<< HEAD
     // AppWindow::getInstance().addScene(MainMenuScene::getInstance());
     std::cout << "MAIN: before addScene" << std::endl;
 	  AppWindow::getInstance().addScene(new GameScene());
     std::cout << "MAIN: before run" << std::endl;
+=======
+    AppWindow::getInstance().addScene(MainMenuScene::getInstance());
+>>>>>>> 324e0d5b92cdd197e03712a4aedeecd998eec898
     AppWindow::getInstance().run();
 
     return EXIT_SUCCESS;

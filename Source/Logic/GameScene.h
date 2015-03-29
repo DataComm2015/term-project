@@ -53,6 +53,7 @@ class GameScene : public Scene
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
 
+        void generateMap(int seed);
 		void generateWater();
 		void generateUI();
 		void positionButtons();

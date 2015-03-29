@@ -1,14 +1,22 @@
 #include "ServerLobbyScene.h"
 #include <iostream>
 
+#include "../GameSettings.h"
+#include "NetworkEntityPairs.h"
+#include "ServerCommand.h"
+#include "Entities/ServerGameState.h"
+
 using std::cout;
 using std::cerr;
 using std::endl;
 using namespace Marx;
 
-ServerLobbyScene::ServerLobbyScene() : renderer(AppWindow.getInstance(), 48400)
+ServerLobbyScene::ServerLobbyScene(ServerCommand *command)
+    : command(command)
 {
-    //
+    timerRunning = false;
+    waitingToStart = false;
+    timer = SERVER_INITIAL_TIMER_VALUE;
 }
 
 ServerLobbyScene::~ServerLobbyScene()
@@ -16,17 +24,81 @@ ServerLobbyScene::~ServerLobbyScene()
     //
 }
 
-void ServerLobbyScene::update(sf::Time)
+void ServerLobbyScene::update(sf::Time time)
 {
-	//
+	if (timerRunning && !waitingToStart)
+	{
+	    timer -= time.asSeconds();
+	    
+	    if (timer <= 0)
+	    {
+            waitingToStart = true;
+	        command->prepareForGameState();
+	    }
+	}
 }
 
-void ServerLobbyScene::processEvents(sf::Event& e)
+/*
+ * Server Doesn't Need SF Events
+ */
+void ServerLobbyScene::processEvents(sf::Event& e){}
+
+/*
+ * Server Doesn't Draw Anything
+ */
+void ServerLobbyScene::draw(){}
+
+/*
+ * Add a Player to the Lobby
+ */
+void ServerLobbyScene::addPlayer()
 {
-	//
+    playerCount++;
+    
+    if (playerCount >= MIN_REQUIRED_PLAYERS)
+    {
+        startTimer();
+    }
 }
 
-void ServerLobbyScene::draw()
+/*
+ * Remove a player from the lobby
+ */
+void ServerLobbyScene::removePlayer()
 {
-    //  
+    playerCount--;
+
+    if (playerCount < MIN_REQUIRED_PLAYERS)
+    {
+        stopTimer();
+    }
+}
+
+void ServerLobbyScene::enterScene()
+{
+    waitingToStart = false;
+    timerRunning = false;
+    timer = SERVER_INITIAL_TIMER_VALUE;
+    
+    if (playerCount >= MIN_REQUIRED_PLAYERS)
+    {
+        startTimer();
+    }
+}
+
+void ServerLobbyScene::leaveScene()
+{
+    
+}
+
+void ServerLobbyScene::startTimer()
+{
+    timerRunning = true;
+    command->getGameState()->startLobbyCountdown(timer);
+}
+
+void ServerLobbyScene::stopTimer()
+{
+    timerRunning = false;
+    command->getGameState()->stopLobbyCountdown(timer);
 }

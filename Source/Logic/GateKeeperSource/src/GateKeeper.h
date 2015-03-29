@@ -20,8 +20,9 @@
 #include "../../../Engine/Map.h"
 #include "../../../Engine/Cell.h"
 #include "../../../Engine/Controller.h"
+#include "../../Creature.h"
 
-class GateKeeper : public Marx::VEntity
+class GateKeeper : public Marx::VEntity, public Creature
 {
 
 	public:
@@ -72,7 +73,7 @@ class GateKeeper : public Marx::VEntity
 		virtual void onDestroy();
 		virtual void onUpdate();
 		virtual bool operator==(const VEntity&);
-
+        virtual Entity* getEntity();
 
 	private:
 		int _range;
