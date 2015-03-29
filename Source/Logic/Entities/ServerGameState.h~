@@ -5,6 +5,8 @@
 #include "../../Network/Message.h"
 #include "../../Network/Session.h"
 
+#include <map>
+
 using Networking::Session;
 using Networking::Message;
 
@@ -25,12 +27,13 @@ class ServerGameState : public Networking::NetworkEntity
 
         std::map<Session*, PlayerEntity*> getPlayers();
         void goToLobby();
-        void goToGame(bool inProgress);
+        void goToGame();
 
     protected:
         virtual void onUnregister(Networking::Session *session,
                                   Networking::Message message);
         virtual void onUpdate(Networking::Message message);
+        void assignPlayerModes();
         
         ServerCommand *command;
     	std::map<Session*, PlayerEntity*> players;

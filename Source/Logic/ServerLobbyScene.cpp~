@@ -1,12 +1,12 @@
 #include "ServerLobbyScene.h"
 #include <iostream>
 
+#include "../../GameSettings.h"
 #include "NetworkEntityPairs.h"
 #include "ServerCommand.h"
 #include "Entities/ServerGameState.h"
 
 #define SERVER_INITIAL_TIMER_VALUE 20
-#define SERVER_LOBBY_MIN_REQUIRED_PLAYERS 2
 
 using std::cout;
 using std::cerr;
@@ -55,7 +55,7 @@ void ServerLobbyScene::addPlayer()
 {
     playerCount++;
     
-    if (playersCount >= SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
+    if (playerCount >= MIN_REQUIRED_PLAYERS)
     {
         startTimer();
     }
@@ -68,7 +68,7 @@ void ServerLobbyScene::removePlayer()
 {
     playerCount--;
 
-    if (playerCount < SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
+    if (playerCount < MIN_REQUIRED_PLAYERS)
     {
         stopTimer();
     }
@@ -79,7 +79,7 @@ void ServerLobbyScene::enterScene()
     timerRunning = false;
     timer = SERVER_INITIAL_TIMER_VALUE;
     
-    if (playerCount >= SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
+    if (playerCount >= MIN_REQUIRED_PLAYERS)
     {
         startTimer();
     }

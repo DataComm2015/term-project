@@ -33,6 +33,7 @@ class ServerGameState : public Networking::NetworkEntity
         virtual void onUnregister(Networking::Session *session,
                                   Networking::Message message);
         virtual void onUpdate(Networking::Message message);
+        void assignPlayerModes();
         
         ServerCommand *command;
     	std::map<Session*, PlayerEntity*> players;

@@ -51,7 +51,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 
         case NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE:
         {
-            gameState = new ClientGameState(id,_gameScene,_lobbyScene);
+            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene);
             ret = gameState;
             break;
         }

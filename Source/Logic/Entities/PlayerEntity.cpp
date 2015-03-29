@@ -6,6 +6,7 @@
 
 #include <cstdio>
 
+
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
  *   class over the network, which is on the client side.
@@ -24,6 +25,23 @@ PlayerEntity::PlayerEntity(ServerCommand *server, Controller* serverController)
 
 PlayerEntity::~PlayerEntity()
 {
+}
+
+void PlayerEntity::setMode(PLAYER_MODE mode)
+{
+    this->mode = mode;
+
+    Message msg;
+    msg.type = MSG_T_PLAYER_SET_MODE;
+    msg.data = (void*) &(this->mode);
+    msg.len = sizeof(this->mode);
+
+    update(msg);
+}
+
+PLAYER_MODE PlayerEntity::getMode()
+{
+    return mode;
 }
 
 void PlayerEntity::onUnregister(Session* session, Message msg)

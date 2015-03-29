@@ -42,7 +42,6 @@ class ServerCommand : public Server
         Scene *activeScene;
         
         ServerGameState *gameState;
-        PlayerEntity *player;
 };
 
 #endif

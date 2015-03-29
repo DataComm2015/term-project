@@ -59,6 +59,7 @@ void ServerCommand::onConnect(Session* session)
     // If game is in progress -> go to game scene as ghost
     else
     {
+        player->setMode(GHOST);
         gameState->goToGame(true);
     }
 }
@@ -83,6 +84,11 @@ ServerGameState *ServerCommand::getGameState()
     return gameState;
 }
 
+bool ServerCommand::isGameInProgress()
+{
+    return activeScene == gameScene;
+}
+
 void ServerCommand::goToLobby()
 {
     activeScene = lobbyScene;
@@ -92,9 +98,9 @@ void ServerCommand::goToLobby()
 
 void ServerCommand::goToGame()
 {
+    gameState->goToGame(false);
     activeScene = gameScene;
     gameScene->enterScene();
-    gameState->goToGame(false);
 }
 
 void ServerCommand::playerLeft(Session *session)

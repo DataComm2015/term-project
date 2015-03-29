@@ -1,6 +1,10 @@
 #include "ServerGameState.h"
 
 #include <cstring>
+#include <ctime>
+#include <cstdlib>
+
+#include "../../GameSettings.h"
 #include "../ServerCommand.h"
 #include "../NetworkEntityPairs.h"
 #include "../../Network/Session.h"
@@ -14,6 +18,7 @@ ServerGameState::ServerGameState(ServerCommand *command)
     : NetworkEntity(NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE)
     , command(command)
 {
+    srand(time(NULL));
 }
 
 ServerGameState::~ServerGameState()
@@ -98,6 +103,12 @@ void ServerGameState::goToLobby()
 
 void ServerGameState::goToGame(bool inProgress)
 {
+    // If this is a transition from lobby to game, give players a type
+    if (!inProgress)
+    {
+        assignPlayerModes();
+    }
+
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE;
@@ -115,3 +126,54 @@ void ServerGameState::onUnregister(Networking::Session *session,
 void ServerGameState::onUpdate(Networking::Message message)
 {
 }
+
+void ServerGameState::assignPlayerModes()
+{
+    int vesselsRemaining = NUM_VESSELS;
+    int count = 0;
+    int randNum;
+
+    /* Assign each player a type (VESSEL OR DEITY) */
+    std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
+    while (itr != players.end())
+    {
+        // If there are still vessels left to place, check if player should be vessel
+        if (vesselsRemaining > 0)
+        {
+            // If there are only enough players left for vessels, make them vessels.
+            if (players.size() - count <= NUM_VESSELS)
+            {
+                itr->second->setMode(VESSEL);
+                vesselsRemaining--;
+            }
+            // If player could be either a vessel or a deity, choose randomly
+            else
+            {
+                randNum = rand() % players.size();
+                if (randNum < NUM_VESSELS )
+                {
+                    itr->second->setMode(VESSEL);
+                    vesselsRemaining--;
+                }
+                else
+                {
+                    itr->second->setMode(DEITY);
+                }
+            }
+        }
+        // If all vessels have been chosen, remaining players are deities
+        else
+        {
+            itr->second->setMode(DEITY);
+        }
+
+        count++;
+        itr++;
+    }
+}
+
+
+
+
+
+

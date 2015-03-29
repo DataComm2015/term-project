@@ -322,9 +322,6 @@ void GameScene::processEvents(sf::Event& e)
 {
 	if (e.type == sf::Event::Closed)
 	{
-        ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
-		AppWindow::getInstance().close();
-
 		AppWindow::getInstance().close();
 	}
 	else if (e.type == sf::Event::KeyPressed)
