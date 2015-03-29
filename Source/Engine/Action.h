@@ -4,6 +4,8 @@ This class is a pure virtual class that details implementation for the Projectil
 
 */
 
+#include <SFML/System/Time.hpp>
+
 namespace Marx
 {
 	class Action
@@ -13,5 +15,6 @@ namespace Marx
 		public:
 			virtual void onUpdate(sf::Time) = 0;
 			virtual void onHit(Entity * e ) = 0;
+			sf::Time getTTL(){ return TTL }
 	}
 }
