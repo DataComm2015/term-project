@@ -1,6 +1,7 @@
 #include "ServerGameState.h"
 
 #include <cstring>
+#include "../ServerCommand.h"
 #include "../NetworkEntityPairs.h"
 
 using Networking::NetworkEntity;
@@ -17,20 +18,26 @@ ServerGameState::~ServerGameState()
 {
 }
 
-void ServerGameState::playerJoined()
+void ServerGameState::playerJoined(int numPlayers)
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_PLAYER_CONNECTED;
+    msg.data = (void*) &numPlayers;
+    msg.len = sizeof(numPlayers);
 
     update(msg);
 }
 
-void ServerGameState::playerLeft()
+void ServerGameState::playerLeft(int numPlayers)
 {
+    printf("PLAYER LEFT\r\n");
+
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_PLAYER_DISCONNECTED;
+    msg.data = (void*) &numPlayers;
+    msg.len = sizeof(numPlayers);
 
     update(msg);
 }
@@ -39,8 +46,8 @@ void ServerGameState::startLobbyCountdown(int remainingTime)
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
-    msg.type = MSG_T_LOBBY_COUNTDOWN_STOP;
-    msg.data = &(remainingTime);
+    msg.type = MSG_T_LOBBY_COUNTDOWN_START;
+    msg.data = (void*) &(remainingTime);
     msg.len = sizeof(remainingTime);
 
     update(msg);
@@ -51,7 +58,7 @@ void ServerGameState::stopLobbyCountdown(int remainingTime)
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_LOBBY_COUNTDOWN_STOP;
-    msg.data = &(remainingTime);
+    msg.data = (void*) &(remainingTime);
     msg.len = sizeof(remainingTime);
 
     update(msg);
@@ -82,6 +89,7 @@ void ServerGameState::goToGame(bool inProgress)
 void ServerGameState::onUnregister(Networking::Session *session,
                                    Networking::Message message)
 {
+    command->playerLeft(session);
 }
 
 void ServerGameState::onUpdate(Networking::Message message)

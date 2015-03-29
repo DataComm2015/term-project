@@ -13,8 +13,8 @@ class ServerGameState : public Networking::NetworkEntity
         ServerGameState(ServerCommand *command);
         virtual ~ServerGameState();
 
-        void playerJoined();
-        void playerLeft();
+        void playerJoined(int numPlayers);
+        void playerLeft(int numPlayers);
 
         void startLobbyCountdown(int remainingTime);
         void stopLobbyCountdown(int remainingTime);

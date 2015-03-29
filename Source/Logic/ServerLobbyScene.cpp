@@ -6,7 +6,7 @@
 #include "Entities/PlayerEntity.h"
 #include "Entities/ServerGameState.h"
 
-#define SERVER_INITIAL_TIMER_VALUE 5
+#define SERVER_INITIAL_TIMER_VALUE 20
 #define SERVER_LOBBY_MIN_REQUIRED_PLAYERS 2
 
 using std::cout;
@@ -30,7 +30,6 @@ void ServerLobbyScene::update(sf::Time time)
 {
 	if (timerRunning)
 	{
-	    printf("TIMER: %d\r\n", time.asSeconds());
 	    timer -= time.asSeconds();
 	    
 	    if (timer <= 0)
@@ -68,7 +67,12 @@ void ServerLobbyScene::addPlayer(Session *session, PlayerEntity *entity)
  */
 void ServerLobbyScene::removePlayer(Session *session)
 {
-    players.erase(players.find(session));
+    std::map<Session*, PlayerEntity*>::iterator itr = players.find(session);
+    
+    if (itr != players.end())
+    {
+        players.erase(itr);
+    }
     
     if (players.size() < SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
     {

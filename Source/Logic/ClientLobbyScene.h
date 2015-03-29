@@ -45,6 +45,10 @@ class ClientLobbyScene : public Scene
         void updateMainView(sf::View& v);
         static int vesselChoice;
         static int deityChoice;
+        
+        void startTimer(int remainingTime);
+        void stopTimer(int remainingTime);
+        void updatePlayerCount(int numPlayers);
     private:
 
         sf::View viewMain;
@@ -92,8 +96,8 @@ class ClientLobbyScene : public Scene
 
         static sf::Clock clck;
         static bool timego;
-        static int maxTime;
-        static int currentTime;
+        static float currentTime;
+        int playerCount;
 
         GameScene * gameScene;
         ClientMux * clientMux;

@@ -12,6 +12,8 @@ using Networking::NetworkEntityMultiplexer;
 
 class GameScene;
 class ClientLobbyScene;
+class ClientGameState;
+class CommandEntity;
 
 /**
  * the client's implementation of the {NetworkEntityMultiplexer}. this thing is
@@ -28,9 +30,14 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
         virtual ~ClientMux();
         virtual NetworkEntity* onRegister(int id, int entityType,
             Session* session, Message msg);
+            
+        void shutdown();
     private:
+        Session *session;
         GameScene* _gameScene;
         ClientLobbyScene* _lobbyScene;
+        CommandEntity *command;
+        ClientGameState *gameState;
 };
 
 #endif

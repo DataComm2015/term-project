@@ -29,6 +29,7 @@ class CommandEntity : public NetworkEntity, public KeyListener
     protected:
         virtual void onKeyPressed(int key);
         virtual void onKeyReleased(int key);
+        virtual void onRegister(Session *session);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message message);
 

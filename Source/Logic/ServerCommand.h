@@ -33,6 +33,8 @@ class ServerCommand : public Server
         ServerGameState *getGameState();
         void goToLobby();
         void goToGame();
+        
+        void playerLeft(Session *session);
 
     private:
 	    ServerLobbyScene *lobbyScene;

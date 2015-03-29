@@ -16,6 +16,9 @@
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"
 
+#include <cstdio>
+#include <cstring>
+
 using Networking::Client;
 
 CommandEntity::CommandEntity(int id, GameScene* gameScene)
@@ -96,6 +99,11 @@ void CommandEntity::onKeyReleased(int key)
 
     // send the command over the network
     update(msg);
+}
+
+void CommandEntity::onRegister(Session *session)
+{
+    printf("REGISTERED COMMAND ENTITY\r\n");
 }
 
 void CommandEntity::onUnregister(Session* session, Message msg)

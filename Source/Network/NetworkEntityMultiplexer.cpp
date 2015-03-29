@@ -159,6 +159,7 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         logicMsg.len -= sizeof(int)*3;
         entities[intPtr[0]] = onRegister(intPtr[0],intPtr[2],session,logicMsg);
         entities[intPtr[0]]->silentRegister(session);
+        entities[intPtr[0]]->onRegister(session);
 
         // print debug message
         #ifdef DEBUG

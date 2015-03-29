@@ -68,5 +68,6 @@ void ServerGameScene::draw()
 
 void ServerGameScene::enterScene()
 {
+    printf("IN GAME SCENE\r\n");
 }
 
