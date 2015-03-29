@@ -18,10 +18,9 @@
 
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene* gameScene, ClientLobbyScene* lobbyScene)
+CommandEntity::CommandEntity(int id, GameScene* gameScene)
     :NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND)
     ,_gameScene(gameScene)
-    ,_lobbyScene(lobbyScene)
 {
     _gameScene->addKeyListener(this);
 }
@@ -106,19 +105,5 @@ void CommandEntity::onUnregister(Session* session, Message msg)
 
 void CommandEntity::onUpdate(Message msg)
 {
-    switch(msg.type)
-    {
-    case MSG_T_PLAYER_COMMAND_START_GAME_SCENE:
-        AppWindow::getInstance().removeScene(1);
-        AppWindow::getInstance().setVerticalSyncEnabled(true);
-        AppWindow::getInstance().addScene(_gameScene);
-        AppWindow::getInstance().run();
-        break;
-    case MSG_T_PLAYER_COMMAND_START_LOBBY_SCENE:
-        AppWindow::getInstance().removeScene(1);
-        AppWindow::getInstance().setVerticalSyncEnabled(true);
-        AppWindow::getInstance().addScene(_lobbyScene);
-        AppWindow::getInstance().run();
-        break;
-    }
+    // Do Nothing
 }
