@@ -2,6 +2,11 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
+#include "../ServerCommand.h"
+#include "ServerGameState.h"
+
+#include <cstdio>
+
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -12,8 +17,8 @@
  *   handled in the {Player::onUpdate} method. and sent using the.
  */
 
-PlayerEntity::PlayerEntity(Controller* serverController)
-    :NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
+PlayerEntity::PlayerEntity(ServerCommand *server, Controller* serverController)
+    : server(server), NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
 {
     this->serverController = serverController;
 }
@@ -22,8 +27,26 @@ PlayerEntity::~PlayerEntity()
 {
 }
 
+void PlayerEntity::setMode(PLAYER_MODE mode)
+{
+    this->mode = mode;
+
+    Message msg;
+    msg.type = MSG_T_PLAYER_SET_MODE;
+    msg.data = (void*) &(this->mode);
+    msg.len = sizeof(this->mode);
+
+    update(msg);
+}
+
+PLAYER_MODE PlayerEntity::getMode()
+{
+    return mode;
+}
+
 void PlayerEntity::onUnregister(Session* session, Message msg)
 {
+    server->playerLeft(session);
 }
 
 void PlayerEntity::onUpdate(Message msg)
@@ -77,6 +100,11 @@ void PlayerEntity::onUpdate(Message msg)
             MoveEvent event(0,0,0);
             serverController->addEvent(event);
             break;
+        }
+        case MSG_T_PLAYER_SELECT_LOBBY_OPTIONS:
+        {
+            lobbyChoices = *((PlayerLobbyChoices*) msg.data);
+            server->getGameState()->notifyReadyForGame();
         }
     }
 }

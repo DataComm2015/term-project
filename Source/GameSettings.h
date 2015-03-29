@@ -1,0 +1,8 @@
+#ifndef _GAME_SETTINGS_H_
+#define _GAME_SETTINGS_H_
+
+#define MIN_REQUIRED_PLAYERS 2
+#define NUM_VESSELS 1
+#define SERVER_INITIAL_TIMER_VALUE 5
+
+#endif

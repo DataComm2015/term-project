@@ -9,6 +9,12 @@ ServerCommandEntity::ServerCommandEntity()
 {
 }
 
+ServerCommandEntity::ServerCommandEntity(int type)
+    :NetworkEntity(type)
+{
+    printf("TYPE: %d, ID: %d\r\n", type, id);
+}
+
 ServerCommandEntity::~ServerCommandEntity()
 {
 }

@@ -19,8 +19,7 @@ int main(int argc, char* argv[])
     fflush(stdout);
 
     AppWindow::getInstance().setVerticalSyncEnabled(true);
-    // AppWindow::getInstance().addScene(MainMenuScene::getInstance());
-	  AppWindow::getInstance().addScene(new GameScene());
+    AppWindow::getInstance().addScene(MainMenuScene::getInstance());
     AppWindow::getInstance().run();
 
     return EXIT_SUCCESS;

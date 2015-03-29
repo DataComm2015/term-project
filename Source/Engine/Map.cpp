@@ -14,7 +14,7 @@
 --
 -- DATE: February 16, 2015
 --
--- REVISIONS: N/A
+-- REVISIONS: March 29th - added NULL object cell.
 --
 -- DESIGNER: Marc Rafanan
 --           Marc Vouve
@@ -32,6 +32,7 @@ using namespace Marx;
 -- FUNCTION: Map
 --
 -- DATE: February 16, 2015
+--		 
 --
 -- REVISIONS: (Date and Description)
 --
@@ -52,32 +53,54 @@ using namespace Marx;
 --     Map constructor
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Map::Map(const uint height, const uint width) : width_(width), height_(height), cells_(std::vector<Cell*>(width * height))
+Map::Map(const uint height, const uint width) : width_(width), height_(height), cells_(std::vector<Cell*>(width * height + 1))
 {
-
+	cells_[width * height] = new Cell( -1, -1, 0, true );
 }
 
 
 Map::~Map()
 {
+	delete cells_[width_ * height_];
 	// Empty for now
 }
 
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getEntities
+--
+-- DATE: March 29, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: std::set<Entity*> & Map::getEntities()
+--
+-- PARAMETERS:
+--
+-- RETURNS:
+--     std::set<Entity*>
+--
+-- NOTES:
+--     This iterates through the entire map and returns a collection of the entities contained.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 std::set<Entity*> Map::getEntities() const
 {
-	std::set<Entity *> entity;
+	std::set<Entity *> entities;
 	std::set<Entity *>::iterator it;
 
 	for( Cell * c : cells_ )
 	{
 		for(Entity * e : c->getEntity())
 		{
-			entity.emplace(e);
+			entities.emplace(e);
 		}
 	}
 
-	return entity;
+	return entities;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -118,10 +141,12 @@ void Map::setCell(const uint x, const uint y, Cell* cell)
 --
 -- REVISIONS: February 21, 2015    - Changed cells form a 2d array to a
 --                                  vector.
+--			  March 29, 2015		- added null object funcationality.
 --
 -- DESIGNER: Marc Rafanan
 --
 -- PROGRAMMER: Marc Rafanan
+--			   Marc Vouve
 --
 -- INTERFACE: getCell(const int& index)
 --
@@ -138,7 +163,11 @@ void Map::setCell(const uint x, const uint y, Cell* cell)
 ----------------------------------------------------------------------------------------------------------------------*/
 Cell* Map::getCell(const unsigned int x, const unsigned int y) const
 {
-    	unsigned int index = (x * width_) + y;
+   	unsigned int index = (x * width_) + y;
+    if(y < 0 || x < 0 ||x > width_ || y > height_)
+    {
+    	return *(cells_.end());
+    }
 	/**/
 	try
 	{
