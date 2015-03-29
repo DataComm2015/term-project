@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cstdlib>
 
+#include "../ServerGameScene.h"
 #include "../../GameSettings.h"
 #include "../ServerCommand.h"
 #include "../NetworkEntityPairs.h"
@@ -122,18 +123,18 @@ void ServerGameState::notifyReadyForGame()
 
     if (playersWaitingToLaunch <= 0)
     {
-        goToGame();
         command->goToGame();
+        goToGame(command->getGameScene()->getWorldSeed());
     }
 }
 
-void ServerGameState::goToGame()
+void ServerGameState::goToGame(int worldSeed)
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE;
-    msg.data = (void*) "GO TO GAME SCENE";
-    msg.len = strlen((char*)msg.data);
+    msg.data = (void*) &worldSeed;
+    msg.len = sizeof(worldSeed);
 
     update(msg);
 }

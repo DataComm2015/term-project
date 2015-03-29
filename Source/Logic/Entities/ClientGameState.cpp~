@@ -48,7 +48,6 @@ void ClientGameState::onUpdate(Message msg)
             break;
 
         case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
-            printf("received go to game scene message\nStarting as: ");
 
             /* Server has informed client of what kind of player it is before going to GameScene */
             switch(command->getPlayerMode())

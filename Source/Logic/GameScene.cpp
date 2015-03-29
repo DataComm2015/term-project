@@ -136,7 +136,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	// center the cell map
 	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 
-	if (!gMap->generateMap())
+	if (!gMap->generateMap(0))
 	{
 		cerr << "Invalid map dimensions." << endl;
 	}
@@ -337,18 +337,10 @@ void GameScene::processEvents(sf::Event& e)
 		// ALL OF THE FOLLOWING IS TEMPORARY
 		switch (e.key.code)
 		{
-		case sf::Keyboard::Return:
-		{
-			break;
-		}
-
-		case sf::Keyboard::Space:
-		{
-			// Generate the game map
-			gMap->generateMap();
-			generateWater();
-			break;
-		}
+		    case sf::Keyboard::Return:
+		    {
+			    break;
+		    }
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
@@ -431,6 +423,11 @@ void GameScene::addKeyListener(KeyListener* listener)
 void GameScene::rmKeyListener(KeyListener* listener)
 {
 	keyListeners.erase(listener);
+}
+
+void GameScene::generateMap(int seed)
+{
+    gMap->generateMap(seed);
 }
 
 void GameScene::generateWater()

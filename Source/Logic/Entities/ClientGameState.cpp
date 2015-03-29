@@ -70,6 +70,7 @@ void ClientGameState::onUpdate(Message msg)
             }
 
             AppWindow::getInstance().removeScene(1);
+            _gameScene->generateMap(*((int*) msg.data));
             AppWindow::getInstance().addScene(_gameScene);
             break;
         case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE:

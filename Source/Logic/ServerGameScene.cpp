@@ -1,6 +1,8 @@
 #include "ServerGameScene.h"
-#include <iostream>
 #include "ServerCommand.h"
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using std::cout;
 using std::cerr;
@@ -24,14 +26,9 @@ ServerGameScene::ServerGameScene(ServerCommand *command)
 		}
 	}
 
+    srand(time(NULL));
+    
 	gMap = new GameMap(cMap);
-
-	// Generate the game map
-	if (!gMap->generateMap())
-	{
-		cerr << "Invalid map dimensions." << endl;
-	}
-
 }
 
 ServerGameScene::~ServerGameScene()
@@ -68,5 +65,13 @@ void ServerGameScene::draw()
 
 void ServerGameScene::enterScene()
 {
+    worldSeed = rand();
+
+    // Generate the game map
+	!gMap->generateMap(worldSeed);
 }
 
+int ServerGameScene::getWorldSeed()
+{
+    return worldSeed;
+}

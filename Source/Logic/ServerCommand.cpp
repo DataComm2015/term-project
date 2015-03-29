@@ -60,7 +60,7 @@ void ServerCommand::onConnect(Session* session)
     else
     {
         player->setMode(GHOST);
-        gameState->goToGame();
+        gameState->goToGame(gameScene->getWorldSeed());
     }
 }
 
@@ -82,6 +82,11 @@ Scene *ServerCommand::getActiveScene()
 ServerGameState *ServerCommand::getGameState()
 {
     return gameState;
+}
+
+ServerGameScene *ServerCommand::getGameScene()
+{
+    return gameScene;
 }
 
 bool ServerCommand::isGameInProgress()

@@ -36,7 +36,7 @@ class GameMap
 	public:
 		GameMap(Marx::Map *cMap);
 		~GameMap();
-		bool generateMap(int seed);
+		bool generateMap();
 		
 		Marx::Map* getCellMap();
 		Block** getBlockMap();
