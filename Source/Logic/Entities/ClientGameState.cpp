@@ -42,15 +42,11 @@ void ClientGameState::onUpdate(Message msg)
     {
     case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
         AppWindow::getInstance().removeScene(1);
-        AppWindow::getInstance().setVerticalSyncEnabled(true);
         AppWindow::getInstance().addScene(_gameScene);
-        AppWindow::getInstance().run();
         break;
     case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE:
         AppWindow::getInstance().removeScene(1);
-        AppWindow::getInstance().setVerticalSyncEnabled(true);
         AppWindow::getInstance().addScene(_lobbyScene);
-        AppWindow::getInstance().run();
         break;
     }
 }

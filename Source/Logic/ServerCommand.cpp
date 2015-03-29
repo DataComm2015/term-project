@@ -42,19 +42,19 @@ void ServerCommand::onConnect(Session* session)
 
     // register the client with the player object, and player controller
     player->registerSession(session,msg);
-    
+
     // register the client with the GameState object
     gameState->registerSession(session,msg);
 
     // create an entity that the client is supposed to control
     //Marx::Map* cMap = ((ServerGameScene*)scene)->getcMap();
 
-    ctrlr->registerSession(session,msg);
+    // ctrlr->registerSession(session,msg);
 }
 
 void ServerCommand::onMessage(Session* session, char* data, int len)
 {
-    
+
 }
 
 void ServerCommand::onDisconnect(Session* session, int remote)
