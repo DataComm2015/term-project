@@ -13,7 +13,7 @@
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
 
-
+class ServerCommand;
 
 /*
 *   This is the In-game Scene where all round-events occur.
@@ -21,17 +21,20 @@
 class ServerGameScene : public Scene
 {
     public:
-        ServerGameScene();
+        ServerGameScene(ServerCommand *command);
         virtual void update(sf::Time);
         virtual void processEvents(sf::Event&);
         virtual void draw();
         Marx::Map* getcMap() { return cMap; }
         ~ServerGameScene();
+        
+        void enterScene();
 
     private:
         Marx::Map *cMap;
         GameMap *gMap;
         sf::View viewMain;
+        ServerCommand *command;
 };
 
 #endif
