@@ -92,9 +92,11 @@ void ServerGameScene::leaveScene()
     std::vector<Creature*>::iterator itr = enemies.begin();
     while (itr != enemies.end())
     {
-        NetworkEntity *controller = dynamic_cast<NetworkEntity*>((*itr)->getEntity()->getController());
-        command->getGameState()->unregisterFromAllPlayers(controller);
+        //NetworkEntity *controller = dynamic_cast<NetworkEntity*>((*itr)->getEntity()->getController());
+        //command->getGameState()->unregisterFromAllPlayers(controller);
     }
+    
+    enemies.clear();
 }
 
 int ServerGameScene::getWorldSeed()
@@ -118,6 +120,7 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 	ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
 	enemies.push_back(EnemySpawner::createEnemy(type, enemyController, cMap, x, y));
 	enemyController->init();
+	printf("ENEMY ENTITY TYPE: %d\r\n", enemyController->getType());
 	command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
 

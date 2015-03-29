@@ -33,8 +33,6 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
     NetworkEntity* ret;
     this->session = session;
 
-    printf("CREATING THING: %d\r\n", id);
-
     switch(entityType)
     {
         case NET_ENT_PAIR_PLAYER_COMMAND:
