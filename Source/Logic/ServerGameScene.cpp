@@ -23,13 +23,13 @@ ServerGameScene::ServerGameScene(ServerCommand *command)
     : command(command)
 {
 	// Create the cell map
-	cMap = new Map(25, 25);
+	cMap = new Map(90, 90);
 
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
 		{
-			Cell *tempCell = new Cell();
+			Cell *tempCell = new Cell(j, i);
 			tempCell->setTileId(1);
 
 			cMap->setCell(j, i, tempCell);
@@ -78,13 +78,7 @@ void ServerGameScene::enterScene()
     worldSeed = rand();
 
     // Generate the game map
-	gMap->generateMap(worldSeed);
-	
-	createEnemy(I_DONT_KNOW, NULL, 50, 50);
-	createEnemy(BASIC_TYPE, NULL, 25, 25);
-	createEnemy(I_DONT_KNOW, NULL, 10, 50);
-	createEnemy(I_DONT_KNOW, NULL, 50, 10);
-	createEnemy(BASIC_TYPE, NULL, 35, 52);
+	gMap->generateMap(worldSeed, this);
 }
 
 void ServerGameScene::leaveScene()

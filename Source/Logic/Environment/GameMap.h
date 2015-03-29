@@ -2,8 +2,8 @@
 #define GAMEMAP_H_
 
 #include "../../Engine/Map.h"
-#include "../ServerGameScene.h"
 #include "Block.h"
+#include "../EnemyTypes.h"
 
 /* The number of human players in a round */
 #define NUM_PLAYERS 4
@@ -27,6 +27,8 @@
 #define MAX_ENEMY_GROUP 10
 
 
+class ServerGameScene;
+
 /* 
 *	The GameMap class contains a list of cells, blocks, and functions
 *	for generating a map and placing entities into the map.
@@ -45,6 +47,8 @@ class GameMap
 		int getBlocksHor();
 		int getBlocksVert();
 
+		void getVesselPosition(int vesselNum, int *xPos, int *yPos);
+
 	private:
 		bool createBlockMap();
 		void generateZones();
@@ -55,11 +59,11 @@ class GameMap
 		void generatePlaceholderBlocks();
 		void generateTiles();
 		BlockType makeBlockType(BlockZone z, int rRoll);
-
-		bool placeEntity(int x, int y, Entity* entity);
+		ENEMY_TYPES getEnemyType(std::string enemy);
 
 		Marx::Map *cellMap;
 		Block** blockMap;
+		ServerGameScene *gameScene;
 		int width;
 		int height;
 		int bWidth;
