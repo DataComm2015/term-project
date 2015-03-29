@@ -63,6 +63,7 @@
 #include "../../Engine/VEntity.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
+#include "../Creature.h"
 
 #define MAX_LEVEL 10;
 
@@ -71,7 +72,7 @@ typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
-class Vessel : public Marx::VEntity
+class Vessel : public Marx::VEntity, public Creature
 {
 	protected:
 		job_class jobClass;
@@ -82,6 +83,7 @@ class Vessel : public Marx::VEntity
 		int currentLevel;
 		int defaultSpeed;
 		int travelSpeed;
+		int attackPower;
 		float xPosition;
 		float yPosition;
 		int xSpeed;
@@ -157,6 +159,10 @@ class Vessel : public Marx::VEntity
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
+		
+		virtual void setHealth(int health);
+		virtual void setAttack(int attack);
+		virtual Entity *getEntity();
 };
 
 #endif
