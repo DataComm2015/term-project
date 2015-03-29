@@ -164,7 +164,7 @@ void Map::setCell(const uint x, const uint y, Cell* cell)
 Cell* Map::getCell(const unsigned int x, const unsigned int y) const
 {
    	unsigned int index = (x * width_) + y;
-    if( x < 0 ||x > width_ || y > height_ || 0 < y)
+    if(y < 0 || x < 0 ||x > width_ || y > height_)
     {
     	return *(cells_.end());
     }
