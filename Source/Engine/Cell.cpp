@@ -341,3 +341,59 @@ void Cell::removeEntity(Entity * e)
 {
 	entity.erase(e);
 }
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setBlocking
+--
+-- DATE: March 29, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: setBlocking(bool)
+--
+-- PARAMETERS:
+--     entity * the entity curently in the cell to be removed.
+--
+-- RETURNS:
+--     void
+--
+-- NOTES:
+--     Adds an entity to the cell.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+void Cell::setBlocking(bool b)
+{
+	blocking = b;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getBlocking
+--
+-- DATE: March 239, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: getBlocking()
+--
+-- PARAMETERS:
+--
+-- RETURNS:
+--     bool - true if the cell is blocking;
+--			  false if the cell is not blocking
+--
+-- NOTES:
+--     Adds an entity to the cell.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+bool Cell::getBlocking()
+{
+	return blocking;
+}

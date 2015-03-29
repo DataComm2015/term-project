@@ -35,6 +35,12 @@
  */
 #define NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE 2
 
+/**
+ * a {ServerEnemyController} instance on the server side is connected to a
+ *   {ClientEnemyController} instance on the client side.
+ */
+#define NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER 3
+
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {Player} {NetworkEntity} and a {Command} //
 // {NetworkEntity}.                                                         //
@@ -110,6 +116,22 @@
  */
 #define MSG_T_LOBBY_COUNTDOWN_STOP 13
 
+/**
+ * Server message sent to clients to change their player mode (VESSEL, DEITY, GHOST)
+ */
+#define MSG_T_PLAYER_SET_MODE 14
+
+/**
+ * Client -> Server Message informing server of client lobby option selections
+ */
+#define MSG_T_PLAYER_SELECT_LOBBY_OPTIONS 15
+
+/**
+ * Server -> Client Request options before starting game
+ */
+#define MSG_T_PLAYER_READY_FOR_GAME 16
+
+
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {ServerController} {NetworkEntity} and a //
 // {NetworkController} {NetworkEntity}.                                     //
@@ -129,10 +151,10 @@
  * {ServerGameState} instance is sending a "start game scene" command to the
  *   {ClientGameState} instance.
  */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 0
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 1
 
 /**
  * {ServerGameState} instance is sending a "start lobby scene" command to the
  *   {ClientGameState} instance.
  */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 1
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 0

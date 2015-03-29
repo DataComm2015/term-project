@@ -10,7 +10,7 @@
 using namespace std;
 
 int Networking::NetworkEntity::nextId = 0;
-
+int getType();
 Networking::NetworkEntity::NetworkEntity( int type )
     :NetworkEntity(nextId++,type)
 {
@@ -197,9 +197,34 @@ void Networking::NetworkEntity::unregisterSession( Session * session, Message me
     mux->unregisterSession(id, session, message);
 }
 
-/**
- *
- */
+int Networking::NetworkEntity::getType()
+{
+    return type;
+}
+
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        NetworkEntity::onRegister
+--
+-- DATE:            March 28, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Teams
+--
+-- PROGRAMMER:      Calvin Rempel
+--
+-- INTERFACE:       NetworkEntity::onRegister();
+--                  session: session that has been registered to the entity
+--
+-- RETURNS:         void
+--
+-- NOTES:           Meant to be overwritten by the user. Called when the entity
+--                  is registered with a pair.
+-----------------------------------------------------------------------------------------------*/
+void Networking::NetworkEntity::onRegister(Session *session)
+{
+}
+
 /*----------------------------------------------------------------------------------------------
 -- FUNCTION:        NetworkEntity::onUnregister
 --

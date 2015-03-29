@@ -1,5 +1,5 @@
 CXX=g++
-CPPFLAGS=-std=c++11
+CPPFLAGS=-std=c++11 -g
 CLIENT_EXE=app
 SERVER_EXE=serv
 
@@ -18,7 +18,8 @@ FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameSc
 					Logic/Environment/EnemyHierarchy.o Logic/Event.o Logic/ServerGameScene.o Logic/ServerLobbyScene.o \
 					Logic/Entities/CommandEntity.o Logic/Entities/ClientMux.o Logic/Entities/NetworkControllerEntity.o \
                     Logic/Entities/ProperEntity.o Logic/Entities/PlayerEntity.o Logic/Entities/ServerCommandEntity.o \
-                    Logic/ServerCommand.o Logic/ClientLobbyScene.o Logic/MainMenuScene.o Logic/Entities/ClientGameState.o Logic/Entities/ServerGameState.o
+                    Logic/ServerCommand.o Logic/ClientLobbyScene.o Logic/MainMenuScene.o Logic/Entities/ClientGameState.o Logic/Entities/ServerGameState.o \
+                    Logic/Creature.o Logic/EnemySpawner.o Logic/Entities/ServerEnemyController.o Logic/Entities/ClientEnemyController.o
 
 FILES_NETWORK=		Network/Client.o Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o \
 					Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o

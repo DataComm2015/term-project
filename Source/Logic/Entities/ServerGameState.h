@@ -5,7 +5,13 @@
 #include "../../Network/Message.h"
 #include "../../Network/Session.h"
 
+#include <map>
+
+using Networking::Session;
+using Networking::Message;
+
 class ServerCommand;
+class PlayerEntity;
 
 class ServerGameState : public Networking::NetworkEntity
 {
@@ -13,21 +19,30 @@ class ServerGameState : public Networking::NetworkEntity
         ServerGameState(ServerCommand *command);
         virtual ~ServerGameState();
 
-        void playerJoined();
-        void playerLeft();
+        void playerJoined(Session *session, PlayerEntity *player);
+        void playerLeft(Session *session);
 
         void startLobbyCountdown(int remainingTime);
         void stopLobbyCountdown(int remainingTime);
 
+        std::map<Session*, PlayerEntity*> getPlayers();
         void goToLobby();
-        void goToGame();
+        void prepareForGameState();
+        void notifyReadyForGame();
+        void goToGame(int worldSeed);
+
+        void registerWithAllPlayers(Networking::NetworkEntity *entity, Message *msg);
+        void unregisterFromAllPlayers(Networking::NetworkEntity *entity);
 
     protected:
         virtual void onUnregister(Networking::Session *session,
                                   Networking::Message message);
         virtual void onUpdate(Networking::Message message);
+        void assignPlayerModes();
         
         ServerCommand *command;
+    	std::map<Session*, PlayerEntity*> players;
+        int playersWaitingToLaunch;
 };
 
 #endif

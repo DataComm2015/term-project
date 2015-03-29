@@ -6,11 +6,15 @@
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
 
+#include "PlayerEntity.h"
+#include "../ClientLobbyScene.h"
+
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
 
 class GameScene;
+struct PlayerLobbyChoices;
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -26,14 +30,19 @@ class CommandEntity : public NetworkEntity, public KeyListener
         CommandEntity(int id, GameScene *gameScene);
         ~CommandEntity();
 
+        PLAYER_MODE getPlayerMode();
+        void notifyServerLobbySelections(PlayerLobbyChoices *selections);
+
     protected:
         virtual void onKeyPressed(int key);
         virtual void onKeyReleased(int key);
+        virtual void onRegister(Session *session);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message message);
 
     private:
         GameScene* _gameScene;
+        PLAYER_MODE playerMode;
 };
 
 #endif

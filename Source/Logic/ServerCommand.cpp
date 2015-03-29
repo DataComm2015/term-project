@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <map>
+#include <cstdio>
 
 #include "../Network/Session.h"
 #include "NetworkEntityPairs.h"
@@ -34,7 +35,7 @@ void ServerCommand::onConnect(Session* session)
     // create an entity that the new connection can use to communicate
     // commands to the server
     ServerCommandEntity* ctrlr = new ServerCommandEntity();
-    PlayerEntity* player = new PlayerEntity(ctrlr);
+    PlayerEntity* player = new PlayerEntity(this, ctrlr);
 
     // create an empty message because we need one
     Message msg;
@@ -45,16 +46,28 @@ void ServerCommand::onConnect(Session* session)
 
     // register the client with the GameState object
     gameState->registerSession(session,msg);
-
-    // create an entity that the client is supposed to control
-    //Marx::Map* cMap = ((ServerGameScene*)scene)->getcMap();
-
-    // ctrlr->registerSession(session,msg);
+    
+    // Add Player to Lobby
+    lobbyScene->addPlayer();
+    gameState->playerJoined(session, player);
+    
+    // If game is not in progress -> go to lobby
+    if (activeScene == lobbyScene)
+    {
+        gameState->goToLobby();
+    }
+    // If game is in progress -> go to game scene as ghost
+    else
+    {
+        player->setMode(GHOST);
+        gameState->goToGame(gameScene->getWorldSeed());
+    }
 }
 
 void ServerCommand::onMessage(Session* session, char* data, int len)
 {
-
+    
+    
 }
 
 void ServerCommand::onDisconnect(Session* session, int remote)
@@ -71,6 +84,16 @@ ServerGameState *ServerCommand::getGameState()
     return gameState;
 }
 
+ServerGameScene *ServerCommand::getGameScene()
+{
+    return gameScene;
+}
+
+bool ServerCommand::isGameInProgress()
+{
+    return activeScene == gameScene;
+}
+
 void ServerCommand::goToLobby()
 {
     activeScene = lobbyScene;
@@ -78,9 +101,19 @@ void ServerCommand::goToLobby()
     gameState->goToLobby();
 }
 
+void ServerCommand::prepareForGameState()
+{
+    gameState->prepareForGameState();
+}
+
 void ServerCommand::goToGame()
 {
     activeScene = gameScene;
     gameScene->enterScene();
-    gameState->goToGame();
+}
+
+void ServerCommand::playerLeft(Session *session)
+{
+    gameState->playerLeft(session);
+    lobbyScene->removePlayer();
 }
