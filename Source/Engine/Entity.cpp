@@ -215,7 +215,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 	for(Cell *c : tempCell)
 		if( c->getBlocking() )	// This doesn't return anything.
 		{
-			canMove false;
+			canMove = false;
 		}
 
 	// loop through all cells in the temporary array. looping for 
@@ -382,3 +382,12 @@ void Entity::onUpdate()
 	// logic team
 }
 
+void Entity::setBlocking(bool b)
+{
+	blocking = b;
+}
+
+bool Entity::getBlocking()
+{
+	return blocking;
+}

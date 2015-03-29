@@ -61,7 +61,7 @@ Map::Map(const uint height, const uint width) : width_(width), height_(height), 
 
 Map::~Map()
 {
-	delete cells_[width * height];
+	delete cells_[width_ * height_];
 	// Empty for now
 }
 
