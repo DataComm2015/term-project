@@ -242,6 +242,14 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		}
 	}
 	
+	if(!canMove)
+	{
+		left = temp_x;
+		top = temp_y;
+		
+		return nullptr;
+	}
+	
 	for(Cell * c: occupiedCells )
 	{
 		c->removeEntity(this);
@@ -254,11 +262,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 	
 	occupiedCells = tempCell;
 
-	if(!canMove)
-	{
-		left = temp_x;
-		top = temp_y;
-	}
+	
 	
 	return nullptr;
 }
