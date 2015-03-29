@@ -4,6 +4,7 @@
 #include "EnemyTypes.h"
 #include "../Engine/Map.h"
 #include "../Engine/Controller.h"
+#include "GateKeeperSource/src/GateKeeper.h"
 
 class Creature;
 
