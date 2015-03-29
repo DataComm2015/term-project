@@ -82,6 +82,28 @@
  */
 #define MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND 7
 
+/**
+ * Server message sent to clients to indicate that a new player has connected.
+ */
+#define MSG_T_PLAYER_CONNECTED 10
+
+/**
+ * Server message sent to clients to indicate that a player has disconnected.
+ */
+#define MSG_T_PLAYER_DISCONNECTED 11
+
+/**
+ * Server message sent to clients to indicate that lobby countdown is
+ * continuing.
+ */
+#define MSG_T_LOBBY_COUNTDOWN_START 12
+
+/**
+ * Server message sent to clients to indicate that lobby countdown is
+ * paused.
+ */
+#define MSG_T_LOBBY_COUNTDOWN_STOP 13
+
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {ServerController} {NetworkEntity} and a //
 // {NetworkController} {NetworkEntity}.                                     //
