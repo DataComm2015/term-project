@@ -2,7 +2,7 @@
 #define GAMEMAP_H_
 
 #include "../../Engine/Map.h"
-#include "../../Engine/Entity.h"
+#include "../ServerGameScene.h"
 #include "Block.h"
 
 /* The number of human players in a round */
@@ -36,7 +36,7 @@ class GameMap
 	public:
 		GameMap(Marx::Map *cMap);
 		~GameMap();
-		bool generateMap(int seed);
+		bool generateMap(int seed, ServerGameScene *scene = NULL);
 		
 		Marx::Map* getCellMap();
 		Block** getBlockMap();
