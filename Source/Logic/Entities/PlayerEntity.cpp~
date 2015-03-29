@@ -104,7 +104,7 @@ void PlayerEntity::onUpdate(Message msg)
         case MSG_T_PLAYER_SELECT_LOBBY_OPTIONS:
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
-            server->getGameState()->notifyReadyForGame();
+            server->getGameState()->notifyReadyForGameState();
         }
     }
 }

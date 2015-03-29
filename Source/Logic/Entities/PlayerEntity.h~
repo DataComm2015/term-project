@@ -39,7 +39,6 @@ class PlayerEntity : public NetworkEntity
         Controller* serverController;
         ServerCommand *server;
         PLAYER_MODE mode;
-        PlayerLobbyChoices lobbyChoices;
 };
 
 #endif

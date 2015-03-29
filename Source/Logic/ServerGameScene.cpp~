@@ -1,8 +1,8 @@
 #include "ServerGameScene.h"
 #include "ServerCommand.h"
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+#include <rand.h>
+#include <time.h>
 
 using std::cout;
 using std::cerr;

@@ -134,7 +134,6 @@ void CommandEntity::onUpdate(Message msg)
     {
         case MSG_T_PLAYER_SET_MODE:
             playerMode = *((PLAYER_MODE*) msg.data);
-            
             break;
     }
 }

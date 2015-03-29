@@ -29,7 +29,7 @@ class ServerGameState : public Networking::NetworkEntity
         void goToLobby();
         void prepareForGameState();
         void notifyReadyForGame();
-        void goToGame(int worldSeed);
+        void goToGame();
 
     protected:
         virtual void onUnregister(Networking::Session *session,
