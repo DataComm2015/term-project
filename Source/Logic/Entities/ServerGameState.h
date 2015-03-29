@@ -20,7 +20,7 @@ class ServerGameState : public Networking::NetworkEntity
         void stopLobbyCountdown(int remainingTime);
 
         void goToLobby();
-        void goToGame();
+        void goToGame(bool inProgress);
 
     protected:
         virtual void onUnregister(Networking::Session *session,

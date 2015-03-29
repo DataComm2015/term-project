@@ -62,17 +62,19 @@ void ServerGameState::goToLobby()
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE;
-    msg.data = (void*) "HELLO WORLD";
+    msg.data = (void*) "GO TO LOBBY";
     msg.len = strlen((char*)msg.data);
 
     update(msg);
 }
 
-void ServerGameState::goToGame()
+void ServerGameState::goToGame(bool inProgress)
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE;
+    msg.data = (void*) "GO TO GAME SCENE";
+    msg.len = strlen((char*)msg.data);
 
     update(msg);
 }
