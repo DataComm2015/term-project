@@ -100,7 +100,7 @@ GameMap::~GameMap()
 *		This function is responsible for initiating and orchestrating
 *		the process of generating a map to start a new round.
 ******************************************************************************/
-bool GameMap::generateMap(int seed)
+bool GameMap::generateMap(int seed, ServerGameScene *gameScene)
 {
     srand(seed);
 
@@ -115,17 +115,20 @@ bool GameMap::generateMap(int seed)
 
 	// Place the boss
 
-	// Place the players
-	generatePlayers();
+	if (gameScene != NULL)
+	{	
+		// Place the players
+		generatePlayers();
 
-	// Place mini-bosses
-    generateMiniBosses();
-    
-	// Define placeholder blocks
-	generatePlaceholderBlocks();
+		// Place mini-bosses
+	    generateMiniBosses();
+	    
+		// Define placeholder blocks
+		generatePlaceholderBlocks();
 
-	// Generate enemies
-	generateEnemies();
+		// Generate enemies
+		generateEnemies();
+	}
 
 	// Generate miscellaneous objects
 
@@ -420,7 +423,6 @@ void GameMap::generateEnemies()
 ******************************************************************************/
 void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 {
-/*
 	EnemyHierarchy *eh = EnemyHierarchy::getInstance();
 	string enemy;
 
@@ -440,7 +442,6 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					for (int i = 0; i < num; i++)
 					{
 						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
-						cout << enemy << endl;
 					}
 
 					break;
@@ -451,7 +452,6 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					for (int i = 0; i < num; i++)
 					{
 						eh->getEnemy(&enemy, "grass/lost_grass/air_grass", true, 5);
-						cout << enemy << endl;
 					}
 
 					break;
@@ -484,7 +484,6 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 			break;
 		}
 	}
-*/
 }
 
 
