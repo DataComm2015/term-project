@@ -1,6 +1,7 @@
 #include "ClientLobbyScene.h"
 #include <iostream>
 #include <SFML/System/Time.hpp>
+#include "Entities/ClientMux.h"
 
 using std::cout;
 using std::cerr;
@@ -13,19 +14,19 @@ int ClientLobbyScene::vesselChoice;
 int ClientLobbyScene::deityChoice;
 sf::Clock ClientLobbyScene::clck;
 bool ClientLobbyScene::timego;
-int ClientLobbyScene::maxTime;
-int ClientLobbyScene::currentTime;
+float ClientLobbyScene::currentTime;
 
 
-ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
+ClientLobbyScene::ClientLobbyScene()
+    : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
     // as art assets are created for these, add them
 
+    playerCount = 0;
     vesselChoice = 1;
     deityChoice = 1;
-    maxTime = COUNTDOWN;
-    currentTime = COUNTDOWN;
+    timego = false;
 
     circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/circleOutline.png"));
 
@@ -124,10 +125,21 @@ void ClientLobbyScene::update(sf::Time t)
     aspectOneBtn->update(t);
     aspectTwoBtn->update(t);
     leaveBtn->update(t);
+    
+    if(timego && currentTime > 0)
+    {
+        currentTime -= t.asSeconds();
+    }
 }
 
 void ClientLobbyScene::processEvents(sf::Event& e)
 {
+    if (e.type == sf::Event::Closed)
+	{
+	    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
+		AppWindow::getInstance().close();
+	}
+
     countdownBox->process(e);
 }
 
@@ -139,27 +151,14 @@ void ClientLobbyScene::draw()
 
     window.setView(viewMain);
 
-    if(timego)
-    {
-        sf::Time timersa;
-        timersa = clck.getElapsedTime();
-        float cTime = timersa.asSeconds();
-        currentTime = maxTime - cTime;
-        if(currentTime == 0)
-        {
-            timego = false;
-            AppWindow::getInstance().removeScene(1);
-            AppWindow::getInstance().setVerticalSyncEnabled(true);
-            AppWindow::getInstance().addScene(gameScene);
-            AppWindow::getInstance().run();
-        }
-    }
-
-
     renderer.begin();
 
-    countdownBox->setText(std::to_string(currentTime) + "s" );
-    playerBox->setText("1 player");
+    if (timego)
+    {
+        countdownBox->setText(std::to_string((int)currentTime) + "s" );
+    }
+    
+    playerBox->setText(std::to_string(playerCount) + " player(s)");
 
     // draw the objects
     renderer.draw(*background);
@@ -246,3 +245,32 @@ int ClientLobbyScene::getVesselChoice()
 {
     return vesselChoice;
 }
+
+void ClientLobbyScene::startTimer(int remainingTime)
+{
+    timego = true;
+    currentTime = remainingTime;
+}
+
+void ClientLobbyScene::stopTimer(int remainingTime)
+{
+    timego = false;
+    currentTime = remainingTime;
+}
+
+void ClientLobbyScene::updatePlayerCount(int numPlayers)
+{
+    playerCount = numPlayers;
+}
+
+
+
+
+
+
+
+
+
+
+
+

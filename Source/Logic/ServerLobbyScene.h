@@ -35,7 +35,7 @@ class ServerLobbyScene : public Scene
 	private:
 	    ServerCommand *command;
     	sf::View viewMain;
-    	sf::Time timer;
+    	float timer;
     	bool timerRunning;
     	std::map<Session*, PlayerEntity*> players;
     	
