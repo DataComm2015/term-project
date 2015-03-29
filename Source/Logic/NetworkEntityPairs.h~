@@ -123,7 +123,7 @@
 /**
  * Server -> Client Request options before starting game
  */
-#define MSG_T_PLAYER_READY_FOR_GAME 16
+#define MSG_T_PLAYER_SELECT_LOBBY_OPTIONS 15
 
 
 //////////////////////////////////////////////////////////////////////////////

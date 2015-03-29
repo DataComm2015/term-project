@@ -6,6 +6,8 @@
 #include "ServerCommand.h"
 #include "Entities/ServerGameState.h"
 
+#define SERVER_INITIAL_TIMER_VALUE 20
+
 using std::cout;
 using std::cerr;
 using std::endl;

@@ -1,18 +1,19 @@
-#ifndef _CLIENTGAMESTATE_H_
-#define _CLIENTGAMESTATE_H_
+#ifndef _COMMAND_ENTITY_H_
+#define _COMMAND_ENTITY_H_
 
 #include "../KeyListener.h"
 #include "../../Network/Message.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
 
+#include "PlayerEntity.h"
+#include "../ClientLobbyScene.h"
+
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
 
 class GameScene;
-class ClientLobbyScene;
-class CommandEntity;
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -22,20 +23,25 @@ class CommandEntity;
  *   others like choosing their character to the Server. such commands are
  *   handled in the {Player::onUpdate} method. and sent using the. .
  */
-class ClientGameState : public NetworkEntity
+class CommandEntity : public NetworkEntity, public KeyListener
 {
     public:
-        ClientGameState(int id, CommandEntity *command, GameScene *scene, ClientLobbyScene* lobbyScene);
-        ~ClientGameState();
+        CommandEntity(int id, GameScene *gameScene);
+        ~CommandEntity();
+
+        PLAYER_MODE getPlayerMode();
+        void notifyServerLobbySelections(PlayerLobbyChoices *selections);
 
     protected:
+        virtual void onKeyPressed(int key);
+        virtual void onKeyReleased(int key);
+        virtual void onRegister(Session *session);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message message);
 
     private:
         GameScene* _gameScene;
-        ClientLobbyScene* _lobbyScene;
-        CommandEntity *command;
+        PLAYER_MODE playerMode;
 };
 
 #endif

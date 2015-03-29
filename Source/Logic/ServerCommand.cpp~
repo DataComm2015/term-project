@@ -60,7 +60,7 @@ void ServerCommand::onConnect(Session* session)
     else
     {
         player->setMode(GHOST);
-        gameState->goToGame(gameScene->getWorldSeed());
+        gameState->goToGame();
     }
 }
 
