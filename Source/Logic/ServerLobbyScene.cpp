@@ -6,8 +6,8 @@
 #include "Entities/PlayerEntity.h"
 #include "Entities/ServerGameState.h"
 
-#define SERVER_INITIAL_TIMER_VALUE 5
-#define SERVER_LOBBY_MIN_REQUIRED_PLAYERS 4
+#define SERVER_INITIAL_TIMER_VALUE 20
+#define SERVER_LOBBY_MIN_REQUIRED_PLAYERS 2
 
 using std::cout;
 using std::cerr;
@@ -18,7 +18,7 @@ ServerLobbyScene::ServerLobbyScene(ServerCommand *command)
     : command(command)
 {
     timerRunning = false;
-    timer = sf::seconds(SERVER_INITIAL_TIMER_VALUE);
+    timer = SERVER_INITIAL_TIMER_VALUE;
 }
 
 ServerLobbyScene::~ServerLobbyScene()
@@ -28,13 +28,13 @@ ServerLobbyScene::~ServerLobbyScene()
 
 void ServerLobbyScene::update(sf::Time time)
 {
-	if (!timerRunning)
+	if (timerRunning)
 	{
-	    timer -= time;
+	    timer -= time.asSeconds();
 	    
-	    if (timer <= sf::seconds(0))
+	    if (timer <= 0)
 	    {
-	        command->goToLobby();
+	        command->goToGame();
 	    }
 	}
 }
@@ -67,7 +67,12 @@ void ServerLobbyScene::addPlayer(Session *session, PlayerEntity *entity)
  */
 void ServerLobbyScene::removePlayer(Session *session)
 {
-    players.erase(players.find(session));
+    std::map<Session*, PlayerEntity*>::iterator itr = players.find(session);
+    
+    if (itr != players.end())
+    {
+        players.erase(itr);
+    }
     
     if (players.size() < SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
     {
@@ -82,7 +87,8 @@ std::map<Session*, PlayerEntity*> ServerLobbyScene::getPlayers()
 
 void ServerLobbyScene::enterScene()
 {
-    timer = sf::seconds(SERVER_INITIAL_TIMER_VALUE);
+    timerRunning = false;
+    timer = SERVER_INITIAL_TIMER_VALUE;
     
     if (players.size() >= SERVER_LOBBY_MIN_REQUIRED_PLAYERS)
     {
@@ -93,11 +99,11 @@ void ServerLobbyScene::enterScene()
 void ServerLobbyScene::startTimer()
 {
     timerRunning = true;
-    command->getGameState()->startLobbyCountdown(timer.asSeconds());
+    command->getGameState()->startLobbyCountdown(timer);
 }
 
 void ServerLobbyScene::stopTimer()
 {
     timerRunning = false;
-    command->getGameState()->stopLobbyCountdown(timer.asSeconds());
+    command->getGameState()->stopLobbyCountdown(timer);
 }

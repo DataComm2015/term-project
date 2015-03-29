@@ -138,13 +138,14 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
     switch(msg.type)
     {
     case MSG_TYPE_UPDATE:
-        logicMsg.data = ((int*)logicMsg.data)+1;
-        logicMsg.len -= 4;
+        logicMsg.data = &intPtr[2];
+        logicMsg.type = intPtr[1];
+        logicMsg.len -= sizeof(int)*2;
         entities[intPtr[0]]->onUpdate(logicMsg);
 
         // print debug message
         #ifdef DEBUG
-        printf("NetworkEntity#%d::onUpdate(\"",intPtr[0]);
+        printf("NetworkEntity#%d::onUpdate(%d,\"",intPtr[0],logicMsg.type);
         for(int i = 0; i < logicMsg.len; ++i)
         {
             printf("%c",((char*)logicMsg.data)[i]);
@@ -153,10 +154,12 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         #endif
         break;
     case MSG_TYPE_REGISTER:
-        logicMsg.data = ((int*)logicMsg.data)+2;
-        logicMsg.len -= 8;
-        entities[intPtr[0]] = onRegister(intPtr[0],intPtr[1],session,logicMsg);
+        logicMsg.data = &intPtr[3];
+        logicMsg.type = intPtr[1];
+        logicMsg.len -= sizeof(int)*3;
+        entities[intPtr[0]] = onRegister(intPtr[0],intPtr[2],session,logicMsg);
         entities[intPtr[0]]->silentRegister(session);
+        entities[intPtr[0]]->onRegister(session);
 
         // print debug message
         #ifdef DEBUG
@@ -169,8 +172,9 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         #endif
         break;
     case MSG_TYPE_UNREGISTER:
-        logicMsg.data = ((int*)logicMsg.data)+1;
-        logicMsg.len -= 4;
+        logicMsg.data = &intPtr[2];
+        logicMsg.type = intPtr[1];
+        logicMsg.len -= sizeof(int)*2;
         entities[intPtr[0]]->onUnregister(session, logicMsg);
         entities[intPtr[0]]->silentUnregister(session);
         entities.erase(*intPtr);
@@ -220,7 +224,7 @@ void NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Mess
 {
     // print debug message
     #ifdef DEBUG
-    printf("NetworkEntity#%d::update(\"",id);
+    printf("NetworkEntity#%d::update(%d,\"",id,msg.type);
     for(int i = 0; i < msg.len; ++i)
     {
         printf("%c",((char*)msg.data)[i]);
@@ -229,12 +233,13 @@ void NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Mess
     #endif
 
     // allocate enough memory to hold message header, and payload
-    int datalen = msg.len+sizeof(int);
+    int datalen = msg.len+sizeof(int)*2;
     char* data = (char*)malloc(datalen);
 
     // inject header information
     int* intPtr = (int*) data;
     intPtr[0] = id;
+    intPtr[1] = msg.type;
 
     // inject payload information
     memcpy(&data[datalen-msg.len],msg.data,msg.len);
@@ -296,13 +301,14 @@ void NetworkEntityMultiplexer::registerSession(int id, int type, Session* sessio
     #endif
 
     // allocate enough memory to hold message header, and payload
-    int datalen = msg.len+sizeof(int)*2;
+    int datalen = msg.len+sizeof(int)*3;
     char* data = (char*)malloc(datalen);
 
     // inject header information
     int* intPtr = (int*) data;
     intPtr[0] = id;
-    intPtr[1] = type;
+    intPtr[1] = msg.type;
+    intPtr[2] = type;
 
     // inject payload information
     memcpy(&data[datalen-msg.len],msg.data,msg.len);
@@ -360,12 +366,13 @@ void NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Messa
     #endif
 
     // allocate enough memory to hold message header, and payload
-    int datalen = msg.len+sizeof(int);
+    int datalen = msg.len+sizeof(int)*2;
     char* data = (char*)malloc(datalen);
 
     // inject header information
     int* intptr = (int*) data;
     intptr[0] = id;
+    intptr[1] = msg.type;
 
     // inject payload information
     memcpy(&data[datalen-msg.len],msg.data,msg.len);

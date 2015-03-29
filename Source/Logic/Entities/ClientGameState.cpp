@@ -40,13 +40,29 @@ void ClientGameState::onUpdate(Message msg)
 {
     switch(msg.type)
     {
-    case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
-        AppWindow::getInstance().removeScene(1);
-        AppWindow::getInstance().addScene(_gameScene);
-        break;
-    case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE:
-        AppWindow::getInstance().removeScene(1);
-        AppWindow::getInstance().addScene(_lobbyScene);
-        break;
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
+            printf("received go to game scene message\n");
+            AppWindow::getInstance().removeScene(1);
+            AppWindow::getInstance().addScene(_gameScene);
+            break;
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE:
+            printf("received go to lobby scene message\n");
+            AppWindow::getInstance().removeScene(1);
+            AppWindow::getInstance().addScene(_lobbyScene);
+            break;
+        case MSG_T_PLAYER_CONNECTED:
+            _lobbyScene->updatePlayerCount(*((int*)msg.data));
+            break;
+        case MSG_T_PLAYER_DISCONNECTED:
+            _lobbyScene->updatePlayerCount(*((int*)msg.data));
+            break;
+            
+        case MSG_T_LOBBY_COUNTDOWN_START:
+            _lobbyScene->startTimer(*((int*)msg.data));
+            break;
+            
+        case MSG_T_LOBBY_COUNTDOWN_STOP:
+            _lobbyScene->stopTimer(*((int*)msg.data));
+            break;
     }
 }
