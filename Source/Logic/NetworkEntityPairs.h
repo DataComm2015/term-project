@@ -129,10 +129,10 @@
  * {ServerGameState} instance is sending a "start game scene" command to the
  *   {ClientGameState} instance.
  */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 0
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 1
 
 /**
  * {ServerGameState} instance is sending a "start lobby scene" command to the
  *   {ClientGameState} instance.
  */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 1
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 0

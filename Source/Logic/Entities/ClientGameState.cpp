@@ -41,10 +41,12 @@ void ClientGameState::onUpdate(Message msg)
     switch(msg.type)
     {
     case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
+        printf("received go to game scene message\n");
         AppWindow::getInstance().removeScene(1);
         AppWindow::getInstance().addScene(_gameScene);
         break;
     case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE:
+        printf("received go to lobby scene message\n");
         AppWindow::getInstance().removeScene(1);
         AppWindow::getInstance().addScene(_lobbyScene);
         break;
