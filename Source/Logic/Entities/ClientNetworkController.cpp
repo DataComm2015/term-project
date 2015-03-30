@@ -7,7 +7,7 @@ using Networking::Session;
 using Networking::NetworkEntity;
 
 ClientNetworkController::ClientNetworkController(int id)
-    :NetworkEntity(id,NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
+    :NetworkEntity(id,(int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 

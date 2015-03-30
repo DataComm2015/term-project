@@ -59,7 +59,7 @@ void ServerCommand::onConnect(Session* session)
     // If game is in progress -> go to game scene as ghost
     else
     {
-        player->setMode(GHOST);
+        player->setMode(PLAYER_MODE::GHOST);
         gameState->goToGame(gameScene->getWorldSeed());
     }
 

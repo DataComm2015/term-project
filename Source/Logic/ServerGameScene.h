@@ -14,7 +14,6 @@
 #include "../Multimedia/graphics/object/TGO.h"
 
 #include "Environment/GameMap.h"
-#include "EnemyTypes.h"
 #include "PlayerMode.h"
 
 class ServerCommand;
@@ -38,7 +37,7 @@ class ServerGameScene : public Scene
         void leaveScene();
         int getWorldSeed();
         void createPlayers();
-        void createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float x, float y);
+        void createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y);
 
     private:
         SGO gkSGO;

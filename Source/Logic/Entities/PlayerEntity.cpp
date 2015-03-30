@@ -19,7 +19,7 @@
  */
 
 PlayerEntity::PlayerEntity(ServerCommand *server)
-    : server(server), NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
+    : server(server), NetworkEntity((int)NetworkEntityPair::PLAYER_COMMAND)
 {
     this->controller = 0;
 }
@@ -34,7 +34,7 @@ void PlayerEntity::setMode(PLAYER_MODE mode)
     this->mode = mode;
 
     Message msg;
-    msg.type = MSG_T_PLAYER_COMMAND_SET_MODE;
+    msg.type = (int)PlayerCommandMsgType::SET_MODE;
     msg.data = (void*) &(this->mode);
     msg.len = sizeof(this->mode);
 
@@ -74,9 +74,9 @@ void PlayerEntity::unsetController()
 
 void PlayerEntity::onUpdate(Message msg)
 {
-    switch(msg.type)
+    switch((PlayerCommandMsgType)msg.type)
     {
-        case MSG_T_PLAYER_COMMAND_SELECT_LOBBY_OPTIONS:
+        case PlayerCommandMsgType::SELECT_LOBBY_OPTIONS:
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
             server->getGameState()->notifyReadyForGame();

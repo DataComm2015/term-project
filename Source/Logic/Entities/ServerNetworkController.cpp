@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 ServerNetworkController::ServerNetworkController()
-    :NetworkEntity(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
+    :NetworkEntity((int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 

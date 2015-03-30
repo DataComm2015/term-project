@@ -109,14 +109,14 @@ int ServerGameScene::getWorldSeed()
     return worldSeed;
 }
 
-void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float x, float y)
+void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y)
 {
     EnemyControllerInit initData;
 	initData.type = type;
 	initData.x = x;
 	initData.y = y;
 
-  printf("X: %f, Y: %f\n", x, y);
+    printf("X: %f, Y: %f\n", x, y);
 
 	Message msg;
 	msg.type = 0;

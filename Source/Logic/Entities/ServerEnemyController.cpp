@@ -6,7 +6,7 @@
 #include <cstdio>
 
 ServerEnemyController::ServerEnemyController(Behaviour *behaviour)
-    : ServerNetworkController(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
+    : ServerNetworkController((int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
      ,behaviour(behaviour)
 {
 }

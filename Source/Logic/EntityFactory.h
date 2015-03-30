@@ -3,7 +3,7 @@
 
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/manager/ResourceManager.h"
-#include "EnemyTypes.h"
+#include "EntityTypes.h"
 
 namespace Marx
 {
@@ -29,7 +29,7 @@ class EntityFactory
             Networking::Message* msg,
             Marx::Controller* cont);
         Entity* makeEntity(
-            ENEMY_TYPES type,
+            ENTITY_TYPES type,
             Marx::Controller* controller,
             Marx::Map* map,
             float x,

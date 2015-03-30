@@ -1,7 +1,7 @@
 #include "GateKeeperSource/src/GateKeeper.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
-#include "EnemyTypes.h"
+#include "EntityTypes.h"
 #include "Creature.h"
 
 #include "../Engine/Controller.h"
@@ -56,7 +56,7 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
     EnemyControllerInit* init = (EnemyControllerInit*) msg->data;
 
     // Init Data:
-    // init->type  ENEMY_TYPES
+    // init->type  ENTITY_TYPES
     // init->x     float
     // init->y     float
 
@@ -66,7 +66,7 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
 
 Entity* EntityFactory::makeEntity(
-    ENEMY_TYPES type,
+    ENTITY_TYPES type,
     Controller* cont,
     Map* map,
     float x,

@@ -23,7 +23,7 @@ using Networking::Client;
 
 ClientGameState::ClientGameState(int id, CommandEntity *command, GameScene* gameScene, ClientLobbyScene* lobbyScene)
     : command(command)
-    ,NetworkEntity(id,NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE)
+    ,NetworkEntity(id,(int)NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE)
     ,_gameScene(gameScene)
     ,_lobbyScene(lobbyScene)
 {
@@ -40,27 +40,27 @@ void ClientGameState::onUnregister(Session* session, Message msg)
 
 void ClientGameState::onUpdate(Message msg)
 {
-    switch(msg.type)
+    switch((ServerGameStateClientGameStateMsgType)msg.type)
     {
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_READY_FOR_GAME:
+        case ServerGameStateClientGameStateMsgType::READY_FOR_GAME:
             /* Send back player lobby selections */
             command->notifyServerLobbySelections(_lobbyScene->getSelections());
             break;
 
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE:
+        case ServerGameStateClientGameStateMsgType::START_GAME_SCENE:
 
             /* Server has informed client of what kind of player it is before going to GameScene */
-            switch(command->getPlayerMode())
+            switch((PLAYER_MODE)command->getPlayerMode())
             {
-                case VESSEL:
+                case PLAYER_MODE::VESSEL:
                     printf("VESSEL\n");
                     break;
 
-                case DEITY:
+                case PLAYER_MODE::DEITY:
                     printf("DEITY\n");
                     break;
 
-                case GHOST:
+                case PLAYER_MODE::GHOST:
                     printf("GHOST\n");
                     break;
 
@@ -73,22 +73,22 @@ void ClientGameState::onUpdate(Message msg)
             _gameScene->generateMap(*((int*) msg.data));
             AppWindow::getInstance().addScene(_gameScene);
             break;
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE:
+        case ServerGameStateClientGameStateMsgType::START_LOBBY_SCENE:
             AppWindow::getInstance().removeScene(1);
             AppWindow::getInstance().addScene(_lobbyScene);
             break;
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_CONNECTED:
+        case ServerGameStateClientGameStateMsgType::PLAYER_CONNECTED:
             _lobbyScene->updatePlayerCount(*((int*)msg.data));
             break;
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_DISCONNECTED:
+        case ServerGameStateClientGameStateMsgType::PLAYER_DISCONNECTED:
             _lobbyScene->updatePlayerCount(*((int*)msg.data));
             break;
 
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_START:
+        case ServerGameStateClientGameStateMsgType::LOBBY_COUNTDOWN_START:
             _lobbyScene->startTimer(*((int*)msg.data));
             break;
 
-        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_STOP:
+        case ServerGameStateClientGameStateMsgType::LOBBY_COUNTDOWN_STOP:
             _lobbyScene->stopTimer(*((int*)msg.data));
             break;
     }

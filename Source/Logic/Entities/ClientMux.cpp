@@ -10,7 +10,7 @@
 
 #include "../EntityFactory.h"
 #include "../EnemyControllerInit.h"
-#include "../EnemyTypes.h"
+#include "../EntityTypes.h"
 
 #include "CommandEntity.h"
 #include "ClientGameState.h"
@@ -34,9 +34,9 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
     NetworkEntity* ret;
     this->session = session;
 
-    switch(entityType)
+    switch((NetworkEntityPair)entityType)
     {
-        case NET_ENT_PAIR_PLAYER_COMMAND:
+        case NetworkEntityPair::PLAYER_COMMAND:
         {
             command = new CommandEntity(id,_gameScene);
             ret = command;
@@ -45,7 +45,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 
         // later, should parse the message to figure out what kind of game
         // entity to create that is being controlled by the NetworkController.
-        case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
+        case NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER:
         {
             ret = new ClientNetworkController(id);
             Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
@@ -53,7 +53,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             break;
         }
 
-        case NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE:
+        case NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE:
         {
             gameState = new ClientGameState(id, command, _gameScene, _lobbyScene);
             ret = gameState;

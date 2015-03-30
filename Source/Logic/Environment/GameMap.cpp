@@ -36,7 +36,7 @@ using namespace Marx;
 *		nothing
 *
 *	NOTES:
-*		This is the primary constructor of the GameMap class. 
+*		This is the primary constructor of the GameMap class.
 *
 *		This constructor defines the cell map that the GameMap will use.
 ******************************************************************************/
@@ -118,13 +118,13 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 
 	// Place the boss
 	if (gameScene != NULL)
-	{	
+	{
 		// Place the players
 		generatePlayers();
 
 		// Place mini-bosses
 	    generateMiniBosses();
-	    
+
 		// Define placeholder blocks
 		generatePlaceholderBlocks();
 
@@ -291,22 +291,22 @@ void GameMap::generateZones()
 
 /******************************************************************************
 *   FUNCTION: generatePlayers
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: void generatePlayers();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       void
-*   
+*
 *   NOTES:
 *     This function randomly selects a player for each corner of
 *	  the map and assigns them to that block.
@@ -361,22 +361,22 @@ void GameMap::generatePlayers()
 
 /******************************************************************************
 *   FUNCTION: generateEnemies
-*   
+*
 *   DATE: March 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: void generateEnemies();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       void
-*   
+*
 *   NOTES:
 *     This function generates groupings of enemies for each enemy block in the
 *     game map.
@@ -400,25 +400,25 @@ void GameMap::generateEnemies()
 
 /******************************************************************************
 *   FUNCTION: createEnemyGroup
-*   
+*
 *   DATE: March 18, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: void createEnemyGroup(Block *block, BlockZone z, int num);
-*   
+*
 *   PARAMETERS:
 *		block - the block to create in
 *		z - the zone to use for creation
 *		num - the number of enemies to create
-*   
+*
 *   RETURNS:
 *       void
-*   
+*
 *   NOTES:
 *		This function uses the enemy hierarchy to create groupings of enemies
 *		based on the zone supplied.
@@ -442,7 +442,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					for (int i = 0; i < num; i++)
 					{
 						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
-						gameScene->createEnemy(getEnemyType(enemy), NULL, 
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							block->getRandomCell()->getX(), block->getRandomCell()->getY());
 
 						int xPos = block->getRandomCell()->getX();
@@ -457,7 +457,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					for (int i = 0; i < num; i++)
 					{
 						eh->getEnemy(&enemy, "grass/lost_grass/air_grass");
-						gameScene->createEnemy(getEnemyType(enemy), NULL, 
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							block->getRandomCell()->getX(), block->getRandomCell()->getY());
 					}
 
@@ -480,7 +480,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					for (int i = 0; i < num; i++)
 					{
 						eh->getEnemy(&enemy, "stone/lost_stone/ground_stone");
-						gameScene->createEnemy(getEnemyType(enemy), NULL, 
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							block->getRandomCell()->getX(), block->getRandomCell()->getY());
 					}
 
@@ -492,7 +492,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					for (int i = 0; i < num; i++)
 					{
 						eh->getEnemy(&enemy, "stone/lost_stone/air_stone");
-						gameScene->createEnemy(getEnemyType(enemy), NULL, 
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							block->getRandomCell()->getX(), block->getRandomCell()->getY());
 					}
 
@@ -509,25 +509,25 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 
 /******************************************************************************
 *   FUNCTION: getVesselPosition
-*   
+*
 *   DATE: March 29, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: void getVesselPosition(int vesselNum, int *xPos, int *yPos);
-*   
+*
 *   PARAMETERS:
 *		vesselNum - the vessel (0 - 3) to request
 *		xPos - the destination for the x position
 *		yPos - the destination for the y position
-*   
+*
 *   RETURNS:
 *       void
-*   
+*
 *   NOTES:
 *		This function returns the coordinates of a vessel on the game map.
 ******************************************************************************/
@@ -574,27 +574,27 @@ void GameMap::getVesselPosition(int vesselNum, int *xPos, int *yPos)
 
 /******************************************************************************
 *   FUNCTION: getEnemyType
-*   
+*
 *   DATE: March 29, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
-*   INTERFACE: ENEMY_TYPES getEnemyType(string enemy);
-*   
+*
+*   INTERFACE: ENTITY_TYPES getEnemyType(string enemy);
+*
 *   PARAMETERS:
 *		enemy - the enemy string to request the type for
-*   
+*
 *   RETURNS:
-*       ENEMY_TYPES - the enum to return
-*   
+*       ENTITY_TYPES - the enum to return
+*
 *   NOTES:
 *		This function converts a string to an enum for enemy types.
 ******************************************************************************/
-ENEMY_TYPES GameMap::getEnemyType(string enemy)
+ENTITY_TYPES GameMap::getEnemyType(string enemy)
 {
 	if (enemy.compare("test1") == 0)
 	{
@@ -609,22 +609,22 @@ ENEMY_TYPES GameMap::getEnemyType(string enemy)
 
 /******************************************************************************
 *   FUNCTION: generateMiniBosses
-*   
+*
 *   DATE: February 15, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen, Julian Brandrick
-*   
+*
 *   PROGRAMMER: Julian Brandrick, Chris Klassen
-*   
+*
 *   INTERFACE: void generateMiniBosses();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       void
-*   
+*
 *   NOTES:
 *     This function places Mini-Bosses in certain points of the map, depending
 *     on its size:
@@ -698,22 +698,22 @@ void GameMap::generateMiniBosses()
 
 /******************************************************************************
 *   FUNCTION: generatePlaceholderBlocks
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: void generatePlaceholderBlocks();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       void
-*   
+*
 *   NOTES:
 *     This function assigns each placeholder block a specific type.
 *	  The type selection depends on the block's zone and surroundings.
@@ -740,24 +740,24 @@ void GameMap::generatePlaceholderBlocks()
 
 /******************************************************************************
 *   FUNCTION: makeBlockType
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: BlockType makeBlockType(BlockZone z, int rRoll);
-*   
+*
 *   PARAMETERS:
 *		z - the zone of the block
 *		rRoll - the randomly generated number to use in determination
-*   
+*
 *   RETURNS:
 *       BlockType - the type of zone selected for the block
-*   
+*
 *   NOTES:
 *     This function determines the type of block selected for the placeholder
 *	  block based on the zone and random roll.
@@ -812,22 +812,22 @@ BlockType GameMap::makeBlockType(BlockZone z, int rRoll)
 
 /******************************************************************************
 *   FUNCTION: generateTiles
-*   
+*
 *   DATE: March 4, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: void generateTiles();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       void
-*   
+*
 *   NOTES:
 *     This function sets the correct tile ID for each cell in
 *     the game map.
@@ -861,7 +861,7 @@ void GameMap::generateTiles()
 	vector<CellTile> grassDecos({GRASS_D1, GRASS_D2, GRASS_D3, GRASS_D4, GRASS_D5, GRASS_D6});
 	vector<CellTile> stoneDecos({STONE_D1, STONE_D2, STONE_D3});
 	vector<CellTile> arbiterDecos({ARBITER_D1, ARBITER_D2, ARBITER_D3});
-	
+
 	for (int i = 0; i < bHeight; i++)
 	{
 		for (int j = 0; j < bWidth; j++)
@@ -994,7 +994,7 @@ void GameMap::generateTiles()
 	cellMap->getCell(width - 2, height - 1)->setTileId(GRASS_CR);
 
 
-	// Cliff Water Edge Tiles	
+	// Cliff Water Edge Tiles
 	// for (int i = 0; i < width; i++)
 	// {
 	// 	int offset = rand() % 2;
@@ -1013,22 +1013,22 @@ void GameMap::generateTiles()
 
 /******************************************************************************
 *   FUNCTION: getCellMap
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: Map* getCellMap();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       Map* - a pointer to the map object used by the game map.
-*   
+*
 *   NOTES:
 *     This function returns the map used by the game map.
 ******************************************************************************/
@@ -1040,22 +1040,22 @@ Map* GameMap::getCellMap()
 
 /******************************************************************************
 *   FUNCTION: getBlockMap
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: Block** getBlockMap();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       Block** - the block map used by the GameMap
-*   
+*
 *   NOTES:
 *     This function returns the block map used for map generation logic.
 ******************************************************************************/
@@ -1067,22 +1067,22 @@ Block** GameMap::getBlockMap()
 
 /******************************************************************************
 *   FUNCTION: getWidth
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: int getWidth();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       int - the width of the GameMap
-*   
+*
 *   NOTES:
 *     This function returns the width of the game map.
 ******************************************************************************/
@@ -1094,22 +1094,22 @@ int GameMap::getWidth()
 
 /******************************************************************************
 *   FUNCTION: getHeight
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Chris Klassen
-*   
+*
 *   PROGRAMMER: Chris Klassen
-*   
+*
 *   INTERFACE: int getHeight();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       int - the height of the GameMap
-*   
+*
 *   NOTES:
 *     This function returns the height of the game map.
 ******************************************************************************/
@@ -1121,22 +1121,22 @@ int GameMap::getHeight()
 
 /******************************************************************************
 *   FUNCTION: getBlocksHor
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Julian Brandrick
-*   
+*
 *   PROGRAMMER: Julian Brandrick
-*   
+*
 *   INTERFACE: int getBlocksHor();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       int - the width of the GameMap in blocks.
-*   
+*
 *   NOTES:
 *     This function returns the width of the game map in blocks.
 ******************************************************************************/
@@ -1148,22 +1148,22 @@ int GameMap::getBlocksHor()
 
 /******************************************************************************
 *   FUNCTION: getBlocksVert
-*   
+*
 *   DATE: February 17, 2015
-*   
+*
 *   REVISIONS: (Date and Description)
-*   
+*
 *   DESIGNER: Julian Brandrick
-*   
+*
 *   PROGRAMMER: Julian Brandrick
-*   
+*
 *   INTERFACE: int getBlocksVert();
-*   
+*
 *   PARAMETERS:
-*   
+*
 *   RETURNS:
 *       int - the height of the GameMap in blocks.
-*   
+*
 *   NOTES:
 *     This function returns the height of the game map in blocks.
 ******************************************************************************/
