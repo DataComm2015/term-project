@@ -3,13 +3,19 @@
 
 #include "NetworkControllerEntity.h"
 #include "../EnemyControllerInit.h"
+#include "../GameScene.h"
+#include "../EnemySpawner.h"
+#include "../Creature.h"
 
 class ClientEnemyController : public NetworkControllerEntity
 {
     public:
-        ClientEnemyController(int id, EnemyControllerInit *initData);
+        ClientEnemyController(int id, EnemyControllerInit *initData, GameScene *gs);
         ~ClientEnemyController();
         virtual void onUpdate( Message message );
+    private:
+    	GameScene *gameScene;
+    	Creature *enemy;
 };
 
 #endif

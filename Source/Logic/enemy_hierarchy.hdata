@@ -1,0 +1,76 @@
+# Enemy Hierarchy Data File
+#
+# Designed and Developed by Chris Klassen
+
+# Entry format
+#
+# !Node_Parent [null/id]
+# Node_Name [id]
+# Node_Type [root/leaf]
+# (if leaf)
+#		Enemy_Name
+
+
+
+# ROOT #
+
+null
+enemy
+root
+
+
+# GRASS #
+
+enemy
+grass
+root
+
+	grass
+	lost_grass
+	root
+
+		lost_grass
+		ground_grass
+		root
+
+			ground_grass
+			test_enemy1
+			leaf
+			test1
+
+		lost_grass
+		air_grass
+		root
+
+			air_grass
+			test_enemy3
+			leaf
+			test2
+
+# STONE #
+	
+enemy
+stone
+root
+
+	stone
+	lost_stone
+	root
+
+		lost_stone
+		ground_stone
+		root
+
+			ground_stone
+			test_enemy1
+			leaf
+			test1
+
+		lost_stone
+		air_stone
+		root
+
+			air_stone
+			test_enemy3
+			leaf
+			test2

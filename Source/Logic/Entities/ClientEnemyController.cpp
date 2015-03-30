@@ -1,14 +1,23 @@
 #include "ClientEnemyController.h"
-
 #include "../NetworkEntityPairs.h"
+#include <iostream>
 
-ClientEnemyController::ClientEnemyController(int id, EnemyControllerInit *initData)
+using std::cout;
+using std::endl;
+
+ClientEnemyController::ClientEnemyController(int id, EnemyControllerInit *initData, GameScene *gs)
     : NetworkControllerEntity(id, NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER)
 {
+    gameScene = gs;
+
     // Init Data:
     // initData->type  ENEMY_TYPES
     // initData->x     float
     // initData->y     float
+
+    // Create the enemy
+    enemy = EnemySpawner::createEnemy(initData->type, this, gs->getcMap(), initData->x, initData->y);
+    //cout << "Made an enemy: " << initData->type << " (" << initData->x << ", " << initData->y << ")" << endl;
 }
 
 ClientEnemyController::~ClientEnemyController()
