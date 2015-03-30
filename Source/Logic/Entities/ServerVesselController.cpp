@@ -3,7 +3,7 @@
 #include "../Event.h"
 
 ServerVesselController::ServerVesselController()
-    : ServerCommandEntity(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
+    : ServerNetworkController(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 

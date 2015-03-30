@@ -6,7 +6,7 @@
 #include <cstdio>
 
 ServerEnemyController::ServerEnemyController(Behaviour *behaviour)
-    : ServerCommandEntity(NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER)
+    : ServerNetworkController(NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER)
      ,behaviour(behaviour)
 {
 }
@@ -19,7 +19,7 @@ void ServerEnemyController::init()
 {
     if (behaviour)
         behaviour->init();
-        
+
     printf("I AM TYPE: %d\r\n", type);
 }
 

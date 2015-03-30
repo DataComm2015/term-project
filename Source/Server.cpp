@@ -4,7 +4,7 @@
 
 #include "Engine/Scene.h"
 #include "Logic/ServerCommand.h"
-#include "Logic/Entities/ServerCommandEntity.h"
+#include "Logic/Entities/ServerNetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
 #include <string.h>

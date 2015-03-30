@@ -1,4 +1,4 @@
-#include "NetworkControllerEntity.h"
+#include "ClientNetworkController.h"
 
 #include <stdio.h>
 
@@ -6,22 +6,22 @@ using Networking::Message;
 using Networking::Session;
 using Networking::NetworkEntity;
 
-NetworkControllerEntity::NetworkControllerEntity(int id)
+ClientNetworkController::ClientNetworkController(int id)
     :NetworkEntity(id,NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 
-NetworkControllerEntity::NetworkControllerEntity(int id, int type)
+ClientNetworkController::ClientNetworkController(int id, int type)
     :NetworkEntity(id,type)
 {
 }
 
-NetworkControllerEntity::~NetworkControllerEntity()
+ClientNetworkController::~ClientNetworkController()
 {
 }
 
 /*------------------------------------------------------------------------------
--- FUNCTION:        NetworkControllerEntity::onUpdate
+-- FUNCTION:        ClientNetworkController::onUpdate
 --
 -- DATE:            March 17, 2015
 --
@@ -31,20 +31,20 @@ NetworkControllerEntity::~NetworkControllerEntity()
 --
 -- PROGRAMMER:      Jeff Bayntun
 --
--- INTERFACE:       void NetworkControllerEntity::onUpdate( Message message )
+-- INTERFACE:       void ClientNetworkController::onUpdate( Message message )
 --                  message: message received over the network
 
 -- RETURNS:         void
 --
 -- NOTES:           parses the message and where it is added to the eventQueue
 ----------------------------------------------------------------------------------*/
-void NetworkControllerEntity::onUpdate( Message message )
+void ClientNetworkController::onUpdate( Message message )
 {
     parseEventMessage(message);
 }
 
 /*------------------------------------------------------------------------------
--- FUNCTION:        NetworkControllerEntity::onUnregister
+-- FUNCTION:        ClientNetworkController::onUnregister
 --
 -- DATE:            March 17, 2015
 --
@@ -54,7 +54,7 @@ void NetworkControllerEntity::onUpdate( Message message )
 --
 -- PROGRAMMER:      Jeff Bayntun
 --
--- INTERFACE:       void NetworkControllerEntity::onUnregister( Session * session, Message message )
+-- INTERFACE:       void ClientNetworkController::onUnregister( Session * session, Message message )
             session - session to unregister
             message - message sent with unregister
 
@@ -62,13 +62,13 @@ void NetworkControllerEntity::onUpdate( Message message )
 --
 -- NOTES:           unregisters session and handles message
 ----------------------------------------------------------------------------------*/
-void NetworkControllerEntity::onUnregister( Session * session, Message message )
+void ClientNetworkController::onUnregister( Session * session, Message message )
 {
     parseEventMessage(message);
 }
 
 /*------------------------------------------------------------------------------
--- FUNCTION:        NetworkControllerEntity::parseEventMessage
+-- FUNCTION:        ClientNetworkController::parseEventMessage
 --
 -- DATE:            March 17, 2015
 --
@@ -78,14 +78,14 @@ void NetworkControllerEntity::onUnregister( Session * session, Message message )
 --
 -- PROGRAMMER:      Jeff Bayntun, Eric Tsang
 --
--- INTERFACE:       void NetworkControllerEntity::parseEventMessage( Message& message )
+-- INTERFACE:       void ClientNetworkController::parseEventMessage( Message& message )
             message - reference to the message
 
 -- RETURNS:         void
 --
 -- NOTES:           convinience method to handle messages
 ---------------------------------------------------------------------------------*/
-void NetworkControllerEntity::parseEventMessage( Message& message )
+void ClientNetworkController::parseEventMessage( Message& message )
 {
     switch(message.type)
     {
@@ -103,7 +103,7 @@ void NetworkControllerEntity::parseEventMessage( Message& message )
     }
     default:
     {
-        printf("WARNING: NetworkControllerEntity::parseEventMessage received an "
+        printf("WARNING: ClientNetworkController::parseEventMessage received an "
             "unknown event type. please add new case to switch statement");
         fflush(stdout);
         break;

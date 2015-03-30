@@ -6,7 +6,7 @@ using std::cout;
 using std::endl;
 
 ClientEnemyController::ClientEnemyController(int id, EnemyControllerInit *initData, GameScene *gs)
-    : NetworkControllerEntity(id, NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER)
+    : ClientNetworkController(id, NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER)
 {
     gameScene = gs;
 

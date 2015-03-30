@@ -1,9 +1,9 @@
 #ifndef SERVERVESSELCONTROLLER_H
 #define SERVERVESSELCONTROLLER_H
 
-#include "ServerCommandEntity.h"
+#include "ServerNetworkController.h"
 
-class ServerVesselController: public ServerCommandEntity
+class ServerVesselController: public ServerNetworkController
 {
 public:
     ServerVesselController();

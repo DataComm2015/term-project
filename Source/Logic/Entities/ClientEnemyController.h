@@ -1,13 +1,13 @@
 #ifndef _CLIENT_ENEMY_CONTROLLER_H_
 #define _CLIENT_ENEMY_CONTROLLER_H_
 
-#include "NetworkControllerEntity.h"
+#include "ClientNetworkController.h"
 #include "../EnemyControllerInit.h"
 #include "../GameScene.h"
 #include "../EnemySpawner.h"
 #include "../Creature.h"
 
-class ClientEnemyController : public NetworkControllerEntity
+class ClientEnemyController : public ClientNetworkController
 {
     public:
         ClientEnemyController(int id, EnemyControllerInit *initData, GameScene *gs);

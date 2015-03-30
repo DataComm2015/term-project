@@ -6,7 +6,7 @@
 
 #include "../Network/Session.h"
 #include "NetworkEntityPairs.h"
-#include "Entities/ServerCommandEntity.h"
+#include "Entities/ServerNetworkController.h"
 #include "../Network/Message.h"
 #include "../Multimedia/manager/ResourceManager.h"
 #include "../Multimedia/graphics/object/SGO.h"

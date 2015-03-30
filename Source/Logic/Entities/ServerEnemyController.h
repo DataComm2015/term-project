@@ -1,19 +1,19 @@
 #ifndef _SERVER_ENEMY_CONTROLLER_H_
 #define _SERVER_ENEMY_CONTROLLER_H_
 
-#include "ServerCommandEntity.h"
+#include "ServerNetworkController.h"
 
 class Behaviour;
 
-class ServerEnemyController : public ServerCommandEntity
+class ServerEnemyController : public ServerNetworkController
 {
     public:
         ServerEnemyController(Behaviour *behaviour);
         virtual ~ServerEnemyController();
-        
+
         void init();
         void updateBehaviour(float deltaTime);
-        
+
     private:
         Behaviour *behaviour;
 };

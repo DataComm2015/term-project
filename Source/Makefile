@@ -43,10 +43,10 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/ServerLobbyScene.o \
 				Logic/Entities/CommandEntity.o \
 				Logic/Entities/ClientMux.o \
-				Logic/Entities/NetworkControllerEntity.o \
+				Logic/Entities/ClientNetworkController.o \
 				Logic/Entities/ProperEntity.o \
 				Logic/Entities/PlayerEntity.o \
-				Logic/Entities/ServerCommandEntity.o \
+				Logic/Entities/ServerNetworkController.o \
 				Logic/ServerCommand.o \
 				Logic/ClientLobbyScene.o \
 				Logic/MainMenuScene.o \

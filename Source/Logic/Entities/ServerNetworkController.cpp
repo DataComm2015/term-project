@@ -1,31 +1,31 @@
-#include "ServerCommandEntity.h"
+#include "ServerNetworkController.h"
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 #include <stdio.h>
 
-ServerCommandEntity::ServerCommandEntity()
+ServerNetworkController::ServerNetworkController()
     :NetworkEntity(NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 
-ServerCommandEntity::ServerCommandEntity(int type)
+ServerNetworkController::ServerNetworkController(int type)
     :NetworkEntity(type)
 {
     printf("TYPE: %d, ID: %d\r\n", type, id);
 }
 
-ServerCommandEntity::~ServerCommandEntity()
+ServerNetworkController::~ServerNetworkController()
 {
 }
 
-void ServerCommandEntity::addEvent(Event event)
+void ServerNetworkController::addEvent(Event event)
 {
     Controller::addEvent(event);
     sendEventMessage(event);
 }
 
-void ServerCommandEntity::sendEventMessage(Event event)
+void ServerNetworkController::sendEventMessage(Event event)
 {
     // create network message from event
     switch(event.type)
@@ -59,10 +59,10 @@ void ServerCommandEntity::sendEventMessage(Event event)
     }
 }
 
-void ServerCommandEntity::onUnregister(Session* session, Message message)
+void ServerNetworkController::onUnregister(Session* session, Message message)
 {
 }
 
-void ServerCommandEntity::onUpdate(Message msg)
+void ServerNetworkController::onUpdate(Message msg)
 {
 }

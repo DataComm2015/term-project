@@ -7,7 +7,7 @@
 #include "../../Network/NetworkEntity.h"
 #include "../PlayerMode.h"
 #include "../PlayerLobbyChoices.h"
-#include "ServerCommandEntity.h"
+#include "ServerNetworkController.h"
 
 class ServerCommand;
 
@@ -32,7 +32,7 @@ class PlayerEntity : public NetworkEntity
         void setMode(PLAYER_MODE mode);
         PLAYER_MODE getMode();
 
-        void setController(ServerCommandEntity* controller);
+        void setController(ServerNetworkController* controller);
         void unsetController();
 
     protected:
@@ -41,7 +41,7 @@ class PlayerEntity : public NetworkEntity
         void clearControllerEvents();
 
     private:
-        ServerCommandEntity* controller;
+        ServerNetworkController* controller;
         ServerCommand *server;
         PLAYER_MODE mode;
         PlayerLobbyChoices lobbyChoices;

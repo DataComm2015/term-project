@@ -147,7 +147,7 @@ void ServerGameScene::createPlayers()
 
     int i = 0;
 
-    // make serverCommandEntity for each vessel
+    // make ServerNetworkController for each vessel
     for(auto it = players.begin(); it != players.end(); ++it)
     {
         p = it->second;

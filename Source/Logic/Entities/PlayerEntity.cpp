@@ -3,7 +3,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 #include "../ServerCommand.h"
-#include "ServerCommandEntity.h"
+#include "ServerNetworkController.h"
 #include "ServerGameState.h"
 
 #include <cstdio>
@@ -62,7 +62,7 @@ void PlayerEntity::clearControllerEvents()
     controller->clearEvents();
 }
 
-void PlayerEntity::setController(ServerCommandEntity* controller)
+void PlayerEntity::setController(ServerNetworkController* controller)
 {
     this->controller = controller;
 }
