@@ -433,7 +433,7 @@ void GameScene::draw()
 	renderer.draw(b4);
 	renderer.draw(b5);
 	renderer.draw(b6);
-	renderer.draw(hb);
+	renderer.draw(hb, true);
 
 	renderer.end();
 
@@ -496,7 +496,6 @@ void GameScene::generateUI()
 {
 	// Create buttons
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
-	healthSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
@@ -512,13 +511,16 @@ void GameScene::generateUI()
 	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
 	
 	// Create health bar (If statement here if vessel or deity)
-	imageSize = Manager::TextureManager::get(healthSprite)->getSize();
+	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
+	hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
+
+	imageSize = Manager::TextureManager::get(hbgSprite)->getSize();
 	width = imageSize.x;
 	height = imageSize.y;
 
 	sf::Vector2f healthSize = sf::Vector2f(width, height);
 
-	hb = new GUI::HealthBar(*Manager::TextureManager::get(healthSprite), healthSize, viewUI);
+	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
 	
 	pubHB = hb;
 }
