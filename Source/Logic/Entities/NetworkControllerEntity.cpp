@@ -2,6 +2,10 @@
 
 #include <stdio.h>
 
+using Networking::Message;
+using Networking::Session;
+using Networking::NetworkEntity;
+
 NetworkControllerEntity::NetworkControllerEntity(int id)
     :NetworkEntity(id,NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER)
 {

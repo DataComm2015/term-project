@@ -33,7 +33,7 @@ class ServerGameScene : public Scene
         virtual void draw();
         Marx::Map* getcMap() { return cMap; }
         ~ServerGameScene();
-        
+
         void enterScene();
         void leaveScene();
         int getWorldSeed();
@@ -41,6 +41,7 @@ class ServerGameScene : public Scene
         void createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float x, float y);
 
     private:
+        SGO gkSGO;
         Marx::Map *cMap;
         GameMap *gMap;
         sf::View viewMain;

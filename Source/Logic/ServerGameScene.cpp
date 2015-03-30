@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 
 using std::cout;
 using std::cerr;
@@ -82,6 +83,8 @@ void ServerGameScene::enterScene()
 
     // Generate the game map
 	gMap->generateMap(worldSeed, this);
+
+    createPlayers();
 }
 
 void ServerGameScene::leaveScene()
@@ -135,21 +138,40 @@ void ServerGameScene::createPlayers()
     PlayerEntity* p;
     PLAYER_MODE mode;
 
+    int i = 0;
+
     // make serverCommandEntity for each vessel
-    std::map<Session*, PlayerEntity*>::iterator it = players.begin();
-    while(it != players.end())
+    for(auto it = players.begin(); it != players.end(); ++it)
     {
         p = it->second;
         mode = p->getMode();
 
+        printf("I am a player%d!\n",++i);
+
         if(mode == VESSEL )
         {
-            ServerVesselController* vesselController = new ServerVesselController();
-            p->setController(vesselController);
+            ServerVesselController* cont = new ServerVesselController();
+            p->setController(cont);
 
             printf("I made a vessel! :D\n");
 
-            //create vessel, pass it server vessel controller too
+            // making sprite for the vessel. plz move into vessel later
+            id_resource gkSprite = Manager::TextureManager::store(
+                  Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
+            );
+
+            gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
+            gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+            gkSGO.sprite().setScale(2, 2);
+            gkSGO.middleAnchorPoint(true);
+
+            // create vessel, pass it server vessel controller too
+            new Vessel(gkSGO,cMap,12.0F,12.0F,cont,1.0F,1.0F);
+
+            // register the vessel controller with all clients
+            Message msg;
+            memset(&msg,0,sizeof(msg));
+            command->getGameState()->registerWithAllPlayers(cont,&msg);
         }
         else if(mode == DEITY)
         {

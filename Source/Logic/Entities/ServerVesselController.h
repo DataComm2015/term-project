@@ -8,7 +8,7 @@ class ServerVesselController: public ServerCommandEntity
 public:
     ServerVesselController();
     virtual ~ServerVesselController();
-    // virtual void onUpdate(Message msg);
+    virtual void onUpdate(Message msg);
 };
 
 #endif // SERVERVESSELCONTROLLER_H

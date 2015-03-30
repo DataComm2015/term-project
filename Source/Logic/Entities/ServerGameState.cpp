@@ -44,7 +44,7 @@ void ServerGameState::playerLeft(Session *session)
 {
     printf("PLAYER LEFT\r\n");
     int playerCount;
-    
+
     Message msg;
     memset(&msg,0,sizeof(msg));
     players[session]->unregisterSession(session, msg);
@@ -198,8 +198,6 @@ void ServerGameState::registerWithAllPlayers(Networking::NetworkEntity *entity, 
     std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
     while (itr != players.end())
     {
-        printf("REGISTERING ENEMY\r\n");
-        printf("ENTITY TYPE: %d\r\n", entity->type);
         entity->registerSession(itr->first, *msg);
         itr++;
     }
