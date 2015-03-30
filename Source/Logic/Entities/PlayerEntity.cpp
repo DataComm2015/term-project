@@ -18,10 +18,10 @@
  *   handled in the {Player::onUpdate} method. and sent using the.
  */
 
-PlayerEntity::PlayerEntity(ServerCommand *server )
+PlayerEntity::PlayerEntity(ServerCommand *server)
     : server(server), NetworkEntity(NET_ENT_PAIR_PLAYER_COMMAND)
 {
-    this->serverController = new ServerCommandEntity();
+    this->controller = 0;
 }
 
 PlayerEntity::~PlayerEntity()
@@ -61,62 +61,35 @@ void PlayerEntity::clearControllerEvents()
     serverController->clearEvents();
 }
 
+void PlayerEntity::setController(Controller* controller)
+{
+    this->controller = controller;
+}
+
+void PlayerEntity::unsetController()
+{
+    this->controller = 0;
+}
+
 void PlayerEntity::onUpdate(Message msg)
 {
     switch(msg.type)
     {
-        case MSG_T_PLAYER_COMMAND_START_MV_LEFT_COMMAND:
-        {
-            MoveEvent event(-1,0,0);
-            serverController->addEvent(event);
-            break;
-        }
-        case MSG_T_PLAYER_COMMAND_START_MV_RIGHT_COMMAND:
-        {
-            MoveEvent event(1,0,0);
-            serverController->addEvent(event);
-            break;
-        }
-        case MSG_T_PLAYER_COMMAND_START_MV_UP_COMMAND:
-        {
-            MoveEvent event(0,-1,0);
-            serverController->addEvent(event);
-            break;
-        }
-        case MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND:
-        {
-            MoveEvent event(0,1,0);
-            serverController->addEvent(event);
-            break;
-        }
-        case MSG_T_PLAYER_COMMAND_STOP_MV_LEFT_COMMAND:
-        {
-            MoveEvent event(0,0,0);
-            serverController->addEvent(event);
-            break;
-        }
-        case MSG_T_PLAYER_COMMAND_STOP_MV_RIGHT_COMMAND:
-        {
-            MoveEvent event(0,0,0);
-            serverController->addEvent(event);
-            break;
-        }
-        case MSG_T_PLAYER_COMMAND_STOP_MV_UP_COMMAND:
-        {
-            MoveEvent event(0,0,0);
-            serverController->addEvent(event);
-            break;
-        }
-        case MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND:
-        {
-            MoveEvent event(0,0,0);
-            serverController->addEvent(event);
-            break;
-        }
         case MSG_T_PLAYER_SELECT_LOBBY_OPTIONS:
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
             server->getGameState()->notifyReadyForGame();
+        }
+
+        // if the player entity doesn't understand the network message, it
+        // forwards it to the controller which controls a vessel, or deity
+        default:
+        {
+            if(controller)
+            {
+                controller->onUpdate(msg);
+            }
+            break;
         }
     }
 }

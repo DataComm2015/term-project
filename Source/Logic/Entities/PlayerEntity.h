@@ -36,8 +36,11 @@ class PlayerEntity : public NetworkEntity
         virtual void onUnregister(Session* session, Message msg);
         virtual void onUpdate(Message msg);
         void clearControllerEvents();
+        void setController(Controller* controller);
+        void unsetController();
+
     private:
-        Controller* serverController;
+        Controller* controller;
         ServerCommand *server;
         PLAYER_MODE mode;
         PlayerLobbyChoices lobbyChoices;
