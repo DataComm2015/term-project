@@ -9,6 +9,9 @@
 #include "../Network/Message.h"
 #include "EnemyControllerInit.h"
 #include "NetworkEntityPairs.h"
+#include "Entities/PlayerEntity.h"
+#include "Entities/ServerVesselController.h"
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -37,7 +40,7 @@ ServerGameScene::ServerGameScene(ServerCommand *command)
 	}
 
     srand(time(NULL));
-    
+
 	gMap = new GameMap(cMap);
 }
 
@@ -59,13 +62,13 @@ ServerGameScene::~ServerGameScene()
 void ServerGameScene::update(sf::Time)
 {
 	//printf("Update Run Scene\n");
-	
+
 	return;
 }
 
 void ServerGameScene::processEvents(sf::Event& e)
 {
-		
+
 }
 
 void ServerGameScene::draw()
@@ -89,7 +92,7 @@ void ServerGameScene::leaveScene()
         //NetworkEntity *controller = dynamic_cast<NetworkEntity*>((*itr)->getEntity()->getController());
         //command->getGameState()->unregisterFromAllPlayers(controller);
     }
-    
+
     enemies.clear();
 }
 
@@ -104,12 +107,12 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 	initData.type = type;
 	initData.x = x;
 	initData.y = y;
-	
+
 	Message msg;
 	msg.type = 0;
 	msg.data = (void*) &initData;
 	msg.len = sizeof(initData);
-	
+
 	// Create the enemy
 	ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
 	enemies.push_back(EnemySpawner::createEnemy(type, enemyController, cMap, x, y));
@@ -133,16 +136,18 @@ void ServerGameScene::createPlayers()
     PLAYER_MODE mode;
 
     // make serverCommandEntity for each vessel
-    map<Session*, PlayerEntity*>::iterator it = players.begin();
+    std::map<Session*, PlayerEntity*>::iterator it = players.begin();
     while(it != players.end())
     {
         p = it->second;
-        mode = p.getMode();
+        mode = p->getMode();
 
         if(mode == VESSEL )
         {
-            ServerVesselController vesselController = new VesselController();
+            ServerVesselController* vesselController = new ServerVesselController();
             p->setController(vesselController);
+
+            printf("I made a vessel! :D\n");
 
             //create vessel, pass it server vessel controller too
         }
