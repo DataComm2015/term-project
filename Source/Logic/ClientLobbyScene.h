@@ -23,6 +23,8 @@
 #define CLASS_BTN_WIDTH 46
 #define CLASS_BTN_HEIGHT 47
 
+#define CLASS_BTN_WIDTH_B 52
+#define CLASS_BTN_HEIGHT_B 52
 /*
 *   This is the Lobby scene.
 */
@@ -41,14 +43,10 @@ class ClientLobbyScene : public Scene
         static void onVesselTwoClick();
         static void onDeityOneClick();
         static void onDeityTwoClick();
-
-        static int getDeityChoice();
-        static int getVesselChoice();
-
         void updateMainView(sf::View& v);
         static int vesselChoice;
         static int deityChoice;
-        
+
         void startTimer(int remainingTime);
         void stopTimer(int remainingTime);
         void updatePlayerCount(int numPlayers);

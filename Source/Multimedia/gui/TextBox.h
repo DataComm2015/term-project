@@ -16,6 +16,7 @@ namespace GUI
 			void process(sf::Event& e);
 			std::string getText();
 			void setText(std::string s);
+			bool getSelected();
 		private:
 			void * usrDataOnComplete;
 			bool selected;

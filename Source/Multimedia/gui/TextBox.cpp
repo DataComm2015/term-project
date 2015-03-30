@@ -8,14 +8,14 @@ namespace GUI
 		complete = c;
 		usrDataOnComplete = data;
 	}
-	
+
 	TextBox::~TextBox(){}
-	
+
 	void TextBox::toggleSelected(bool s)
 	{
 		selected = s;
 	}
-	
+
 	void TextBox::process(sf::Event& e)
 	{
 		if(selected && e.type == sf::Event::KeyPressed)
@@ -40,14 +40,19 @@ namespace GUI
 				setText(getText() + (char)e.text.unicode);
 		}
 	}
-	
+
 	std::string TextBox::getText()
 	{
 		return this->text().getString();
 	}
-	
+
 	void TextBox::setText(std::string s)
 	{
 		this->text().setString(s);
+	}
+
+	bool TextBox::getSelected()
+	{
+		return this->selected;
 	}
 }
