@@ -24,6 +24,14 @@ Session::Session(int socket)
 
 Session::~Session()
 {
+    Message* m;
+    while(!messages.empty())
+    {
+         auto it = messages.front();
+        m = it;
+        free( m );
+        messages.pop_front();
+    }
     disconnect();
 }
 
@@ -40,7 +48,17 @@ void Session::disconnect()
 {
     close(socket);
 }
-
+/**
+ * @brief Session::onMessage
+ *          takes a message from the network and adds it to the
+ *          queue for later use.
+ * @param msg
+ *          pointer to the message received
+ *
+ * @designer Network Teams
+ *
+ * @author Jeff Bayntun, Eric Tsang
+ */
 void Session::onMessage(Message* msg)
 {
     #ifdef DEBUG
@@ -51,7 +69,13 @@ void Session::onMessage(Message* msg)
     }
     printf("\n");
     #endif
-    entityMux->onMessage(this,*msg);
+
+    Message* message = new Message;
+    message->type = msg->type;
+    message->len = msg->len;
+    message->data = malloc(message->len);
+    memcpy(message->data, msg->data, message->len);
+    messages.push_back(message);
 }
 
 void Session::onDisconnect(int remote)
@@ -66,4 +90,22 @@ void Session::onDisconnect(int remote)
             "NetworkEntity@%p was unregistered\n",this,*entity);
         (*entity)->silentUnregister(this);
     }
+}
+/**
+ * @brief Session::handleMessages
+ *              passes all queued messages to the mux
+ *              should messages be deleted after mux pass??
+ *
+ * @designer Jeff Baytun
+ * @author   Jeff Bayntun
+ *
+ */
+void Session::handleMessages()
+{
+    for(Message* m: messages)
+    {
+        entityMux->onMessage(this, *m);
+    }
+
+    // delete all here or in the loop.....
 }

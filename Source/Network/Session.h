@@ -22,7 +22,9 @@
 #ifndef _NETWORK_SESSION_H_
 #define _NETWORK_SESSION_H_
 
+#include <deque>
 #include <set>
+#include <cstring>
 
 namespace Networking
 {
@@ -43,11 +45,13 @@ namespace Networking
         void disconnect();
         void onMessage(Message* msg);
         void onDisconnect(int remote);
+        void handleMessages();
 
     private:
         int socket;
         NetworkEntityMultiplexer* entityMux;
         std::set<NetworkEntity*> registeredEntities;
+        std::deque<Message*> messages;
     };
 }
 
