@@ -19,6 +19,7 @@
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
+#include "../Multimedia/gui/HealthBar.h"
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
 #include "../Engine/VEntity.h"
@@ -57,7 +58,7 @@ class GameScene : public Scene
 		void generateWater();
 		void generateUI();
 		void positionButtons();
-
+		
 	private:
 		/**
 		 * set of registered key listeners that should be notified whenever a
@@ -80,6 +81,7 @@ class GameScene : public Scene
 		id_resource maskSprite;
 		id_resource wepSprite;
 		id_resource butSprite;
+		id_resource healthSprite;
 		id_resource scat_music;
 		id_resource chick_sound;
 		id_resource placeholderSprite;
@@ -109,6 +111,7 @@ class GameScene : public Scene
 		GUI::Button *b5;
 		GUI::Button *b6;
 		GUI::TextBox *tb;
+		GUI::HealthBar *hb;
 };
 
 #endif

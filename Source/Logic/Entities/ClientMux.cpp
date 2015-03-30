@@ -61,7 +61,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
         
         case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
             EnemyControllerInit *init = (EnemyControllerInit*) msg.data;
-            ret = new ClientEnemyController(id, init);
+            ret = new ClientEnemyController(id, init, _gameScene);
             return ret;
     }
 
