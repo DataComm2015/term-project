@@ -54,9 +54,8 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/GateKeeperSource/src/GateKeeper.o \
 				Logic/Entities/ServerGameState.o \
 				Logic/Creature.o \
-				Logic/EnemySpawner.o \
+				Logic/EntityFactory.o \
 				Logic/Entities/ServerEnemyController.o \
-				Logic/Entities/ClientEnemyController.o \
 				Logic/Entities/ServerVesselController.o
 
 

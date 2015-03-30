@@ -8,13 +8,15 @@
 #include "../../Engine/Map.h"
 #include "../../Engine/Controller.h"
 
-#include "ProperEntity.h"
+#include "../EntityFactory.h"
+#include "../EnemyControllerInit.h"
+#include "../EnemyTypes.h"
+
 #include "CommandEntity.h"
 #include "ClientGameState.h"
 #include "ClientNetworkController.h"
 #include "ClientEnemyController.h"
-#include "../EnemyControllerInit.h"
-#include "../EnemyTypes.h"
+
 #include <cstring>
 
 ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene)
@@ -44,12 +46,11 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 
         // later, should parse the message to figure out what kind of game
         // entity to create that is being controlled by the NetworkController.
-        case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
         case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
         {
             ret = new ClientNetworkController(id);
             Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
-            new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+            EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,(Controller*)ret);
             break;
         }
 
@@ -59,12 +60,6 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             ret = gameState;
             break;
         }
-
-        // case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
-        //     printf("Creating Enemy\r\n");
-        //     EnemyControllerInit *init = (EnemyControllerInit*) msg.data;
-        //     ret = new ClientEnemyController(id, init, _gameScene);
-        //     break;
     }
 
     return ret;

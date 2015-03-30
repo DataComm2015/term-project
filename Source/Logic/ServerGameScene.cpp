@@ -2,7 +2,7 @@
 
 #include "Entities/ServerGameState.h"
 #include "ServerCommand.h"
-#include "EnemySpawner.h"
+#include "EntityFactory.h"
 #include "Creature.h"
 #include "Artificial Intelligence/Behaviour.h"
 #include "Entities/ServerEnemyController.h"
@@ -125,7 +125,7 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 
 	// Create the enemy
 	ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
-	enemies.push_back(EnemySpawner::createEnemy(type, enemyController, cMap, x, y));
+	enemies.push_back(EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
 	enemyController->init();
 	printf("ENEMY ENTITY TYPE: %d\r\n", enemyController->getType());
 	command->getGameState()->registerWithAllPlayers(enemyController, &msg);
@@ -140,7 +140,7 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
  * across the network.
  */
 void ServerGameScene::createPlayers()
-{
+{/*
     std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
     PlayerEntity* p;
     PLAYER_MODE mode;
@@ -190,4 +190,4 @@ void ServerGameScene::createPlayers()
     }
 
 
-}
+*/}

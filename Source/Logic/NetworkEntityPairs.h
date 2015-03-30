@@ -35,12 +35,6 @@
  */
 #define NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE 2
 
-/**
- * a {ServerEnemyController} instance on the server side is connected to a
- *   {ClientEnemyController} instance on the client side.
- */
-#define NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER 3
-
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {Player} {NetworkEntity} and a {Command} //
 // {NetworkEntity}.                                                         //
