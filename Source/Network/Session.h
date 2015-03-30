@@ -26,10 +26,16 @@
 #include <set>
 #include <cstring>
 
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/sem.h>
+
 namespace Networking
 {
     class NetworkEntity;
     class NetworkEntityMultiplexer;
+    static int SEM_KEY = 9956;
 
     struct Message;
 
@@ -49,9 +55,14 @@ namespace Networking
 
     private:
         int socket;
+        int sem;
         NetworkEntityMultiplexer* entityMux;
         std::set<NetworkEntity*> registeredEntities;
         std::deque<Message*> messages;
+        int createSem(int key);
+        bool deleteSem(int sid);
+        bool accessSem(int sid);
+        bool releaseSem(int sid);
     };
 }
 
