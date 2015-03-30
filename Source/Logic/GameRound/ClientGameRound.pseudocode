@@ -1,0 +1,80 @@
+Client Game Round
+  try to connect to a lobby
+    if timeout while waiting for server response
+      show error message
+      quit game
+    else if entry confirmation or game-in-session message received
+      start Messaging Thread
+      start Lobby
+
+Messaging Thread
+  loop once every game frame
+    // to check when player messages were last sent,
+    // modify CommandEntity::update(msg)
+    if no player message waiting
+      send check-in message
+    else
+      send player message
+      remove message
+
+/*
+need UI people for the following signals:
+  selecting potential vessel class
+  selecting potential deity class
+  pressing exit button
+*/
+Lobby Function
+  if game not in session
+    send default roles message to server
+  else
+    go to Loading Screen
+  loop once every game frame
+    // to receive messages, CommandEntity::onUpdate(msg)
+    if received start loading screen signal or game in session
+      start loading screen
+    if player selects a different vessel or deity class
+      send new roles message to server
+    if user exits
+      send quit message to server
+      clean up resources
+      end Client Game Round
+
+Loading Screen Function
+  /* have to override ClientMux::onRegister() OR
+     CommandEntity::onUpdate(msg) for the following */
+  get map from network multiplexer
+  get obstacles from network multiplexer
+  get minions from network multiplexer
+  get mini-bosses from network multiplexer
+  get boss from network multiplexer
+  temp thread for sending finished-generating message
+  for up to 30 seconds
+    wait for game start message
+      if start message received
+        enter Game Field
+  if all 30 seconds have passed
+    clean up resources
+    display error message
+    end Client Game Round
+
+Game Field Function
+  start Game State Thread
+  loop once every game frame
+    if game not over
+      if player not dead
+        get player control signals
+        send control signals as controller messages
+    else game over message received (expect game results with it)
+      remove game over message
+      display results on screen for 10 seconds
+      clean up memory
+      game is done, return to Loading Screen
+
+Game State Thread
+  loop once every game frame
+    receive game state messages from server
+    if game over message received
+      wait and receive results messages
+      game is done, end thread
+    update game state in client // game state means all entities
+    draw screen based on game state
