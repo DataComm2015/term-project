@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cstdio>
+#include <map>
 #include <SFML/Graphics.hpp>
 #include "../Engine/Scene.h"
 #include "../AppWindow.h"
@@ -35,6 +36,7 @@ class ServerGameScene : public Scene
         void enterScene();
         void leaveScene();
         int getWorldSeed();
+        void createPlayers();
         void createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float x, float y);
 
     private:

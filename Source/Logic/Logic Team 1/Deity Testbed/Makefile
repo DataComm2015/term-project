@@ -2,8 +2,8 @@
 
 CC=g++ -ggdb -Wall -Wextra -pedantic -std=c++0x
 
-deitytest: CastAbility.o TrainingDummy.o
-	$(CC) -o deitytest CastAbility.o TrainingDummy.o
+deitytest: AbilityManager.o CastAbility.o TrainingDummy.o
+	$(CC) -o deitytest AbilityManager.o CastAbility.o TrainingDummy.o
 
 clean:
 	rm -f *.o core.* deitytest*
@@ -13,3 +13,6 @@ CastAbility.o:
 
 TrainingDummy.o:
 	$(CC) -c TrainingDummy.cpp
+
+AbilityManager.o:
+	$(CC) -c AbilityManager.cpp

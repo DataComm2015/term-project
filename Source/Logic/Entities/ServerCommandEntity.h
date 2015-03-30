@@ -16,7 +16,7 @@ using Marx::Event;
  *   should inherit from the {ServerCommandEntity} class, and get their entity to
  *   do stuff by using the addEvent method.
  *
- * whenever the {ServerCommandEntity::addEvent} function is called, it will get its
+ *   whenever the {ServerCommandEntity::addEvent} function is called, it will get its
  *   entity to do stuff. if the event should be received on the client side as
  *   well, then the event should be converted into a Networking::Message in the
  *   {ServerController::sendEventMessage} method. the same message will be

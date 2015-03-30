@@ -34,8 +34,7 @@ void ServerCommand::onConnect(Session* session)
 
     // create an entity that the new connection can use to communicate
     // commands to the server
-    ServerCommandEntity* ctrlr = new ServerCommandEntity();
-    PlayerEntity* player = new PlayerEntity(this, ctrlr);
+    PlayerEntity* player = new PlayerEntity(this);
 
     // create an empty message because we need one
     Message msg;
