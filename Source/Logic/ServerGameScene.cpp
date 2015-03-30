@@ -140,7 +140,7 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
  * across the network.
  */
 void ServerGameScene::createPlayers()
-{/*
+{
     std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
     PlayerEntity* p;
     PLAYER_MODE mode;
@@ -155,39 +155,34 @@ void ServerGameScene::createPlayers()
 
         printf("I am a player%d!\n",++i);
 
-        if(mode == VESSEL )
+        switch(mode)
         {
-            ServerVesselController* cont = new ServerVesselController();
-            p->setController(cont);
+        case PLAYER_MODE::VESSEL:
+            {
+                ServerVesselController* cont = new ServerVesselController();
+                p->setController(cont);
 
-            printf("I made a vessel! :D\n");
+                // create vessel, pass it server vessel controller too
+                EntityFactory::getInstance()->makeEntity(ENTITY_TYPES::VESSEL,cont,cMap,12,12);
 
-            // making sprite for the vessel. plz move into vessel later
-            id_resource gkSprite = Manager::TextureManager::store(
-                  Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
-            );
+                // register the vessel controller with all clients
+                Message msg;
+                memset(&msg,0,sizeof(msg));
+                command->getGameState()->registerWithAllPlayers(cont,&msg);
+                break;
+            }
+        case PLAYER_MODE::GHOST:
+            {
+                break;
+            }
+        case PLAYER_MODE::DEITY:
+            {
+                //SeverDeityController* deityController = new DeityController();
+                //p->setController(deityController);
 
-            gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
-            gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-            gkSGO.sprite().setScale(2, 2);
-            gkSGO.middleAnchorPoint(true);
-
-            // create vessel, pass it server vessel controller too
-            new Vessel(gkSGO,cMap,12.0F,12.0F,cont,1.0F,1.0F);
-
-            // register the vessel controller with all clients
-            Message msg;
-            memset(&msg,0,sizeof(msg));
-            command->getGameState()->registerWithAllPlayers(cont,&msg);
-        }
-        else if(mode == DEITY)
-        {
-            //SeverDeityController* deityController = new DeityController();
-            //p->setController(deityController);
-
-            //create deity, pass it controller too.
+                //create deity, pass it controller too.
+                break;
+            }
         }
     }
-
-
-*/}
+}

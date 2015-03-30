@@ -12,6 +12,7 @@
 #include "../Multimedia/graphics/object/SGO.h"
 
 #include "Entities/ProperEntity.h"
+#include "Entities/Vessel.h"
 
 using Networking::Message;
 using Marx::Controller;
@@ -76,15 +77,19 @@ Entity* EntityFactory::makeEntity(
 
     switch(type)
     {
-        case BASIC_TYPE:
+        case ENTITY_TYPES::BASIC_TYPE:
             entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
             break;
-
-        // case I_DONT_KNOW:
-        //     // CREATE NEW ENEMY OF GIVEN TYPE
-        //     // RETURN ENEMY
-        //     break;
-
+        case ENTITY_TYPES::VESSEL:
+            entity = new Vessel(gkSGO,map,x,y,cont,1,1);
+            break;
+        case ENTITY_TYPES::I_DONT_KNOW:
+            // CREATE NEW ENEMY OF GIVEN TYPE
+            // RETURN ENEMY
+            break;
+        case ENTITY_TYPES::BAWS:
+        case ENTITY_TYPES::MINION:
+        case ENTITY_TYPES::MINI_BOSS:
         default:
             entity = new ProperEntity(map,x,y,cont,1.0,1.0);
             break;
