@@ -26,6 +26,7 @@ public:
 	void ignoreChildren(bool arg);
 
 	virtual const sf::Transform& getLocalTransform() const;
+	const sf::Transform& getGlobalTransform() const;
 
 	void updateSG(const sf::Time& t);
 	virtual void update(const sf::Time& t);
@@ -43,6 +44,8 @@ private:
 	BGO* m_parent;
 	id_go m_id;
 	bool m_ignoringChildren;
+
+	mutable sf::Transform m_sgtrans;
 };
 
 #endif // BGO_H

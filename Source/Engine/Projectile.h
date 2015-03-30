@@ -23,17 +23,14 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
-namespace Marx
-{
-	class Entity;
-}
 #include <functional>
-#include "Entity.h"
-//#include "ProjectileManager.h"
+#include "VEntity.h"
+#include "ProjectileManager.h"
+#include "Map.h"
 
 namespace Marx
 {
-	class Projectile : public Entity
+	class Projectile : public VEntity
 	{
 		private:
 			float _speed;
@@ -44,11 +41,10 @@ namespace Marx
 			std::function<void(Entity*, int)> onHit;
 
 		public:
-			Projectile(Map*, float, float, Controller *, float, float);
-			Entity * move(float, float, float, bool);
-			void setVelocity(float speed, float delta_x, float delta_y);
-			void setAttackPower(int attack_power);
-			void setTimeToLive(float delta_t);
+			Projectile(SGO&, Map*, float, float, Controller *, float, float);
+
+			Entity * move(float, float, bool);
+			void setSpeed(float);
 			void onCreate();
 			void onDestroy();
 			void onUpdate();

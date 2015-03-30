@@ -29,6 +29,7 @@
 ----------------------------------------------------------------------------------------------------------------------*/
 #include "Entity.h"
 #include "Map.h"
+#include <iostream>
 
 using namespace Marx;
 
@@ -52,18 +53,19 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(Map * map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
-    sf::FloatRect(x, y, h, w ), controller(ctrl)
+Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
+    map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
 	occupiedCells = std::set<Cell*>();
 
-  for(int i = floor(x); i < width + floor(x); i++)
-  {
-      for(int j = floor(y); j < height + floor(y); j++)
-      {
-          occupiedCells.emplace(map->getCell(floor(i),floor(j)));
-      }
-  }
+    for(int i = floor(x); i < width + floor(x); i++)
+    {
+        for(int j = floor(y); j < height + floor(y); j++)
+        {
+            occupiedCells.emplace(map->getCell(floor(i),floor(j)));
+			map->getCell(floor(i),floor(j))->addEntity(this);
+        }
+    }
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -113,11 +115,10 @@ void  Entity::turn()
     // process events
 }
 
-
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION:
+-- FUNCTION: Entity::rMove
 --
--- DATE: February 19, 2015
+-- DATE: February 29, 2015
 --
 -- REVISIONS:
 --
@@ -133,44 +134,134 @@ void  Entity::turn()
 -- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
 --			entity would collide with.
 --
--- NOTES:
+-- NOTES: This function provides an interface to move entities relivate to their current position.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Entity * Entity::rMove(float x, float y, bool force = false)
+{
+	return aMove(x + left, y + top, force);
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION:
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS: March 23, 2015 - Added map interaction
+--			  March 29, 2015 - Abstracted into rMove and aMove. Leaving this here as depricated.
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: move(float x, float y, bool force)
+--					float x: left corner of the entity.
+--					float y: top corner of the entity.
+--					bool force: if this is true the entity will move even if it will collide with another entity.
+--
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
+--
+-- NOTES: DEPRECATED.
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::move(float x, float y, bool force = false)
 {
+	return aMove(x, y, force);
+}
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION:
+--
+-- DATE: March 29th
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: move(float x, float y, bool force)
+--					float x: left corner of the entity.
+--					float y: top corner of the entity.
+--					bool force: if this is true the entity will move even if it will collide with another entity.
+--
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
+--
+-- NOTES: DOES NOT RETURN ANYTHING IF A CELL THAT YOU ARE TRYING TO MOVE INTO IS BLOCKING!
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Entity * Entity::aMove(float x, float y, bool force = false)
+{
     std::set<Cell*> tempCell;
-	  // loop through collecting all cells that this entity will be contained in.
-    for(int i = floor(x); i < width + floor(x); i++)
+	int temp_x = left;
+	int temp_y = top;
+	top = x;
+	left = y;
+	blocking = force;
+	bool canMove = true;
+
+	// loop through collecting all cells that this entity will be contained in.
+    for(int i = floor(x); i <= width + floor(x); i++)
     {
-        for(int j = floor(y); j < height + floor(y); j++)
+        for(int j = floor(y); j <= height + floor(y); j++)
         {
-            tempCell.emplace(map->getCell(floor(i),floor(j)));
-        }
+            tempCell.emplace(map->getCell(i, j));
+		}
     }
+
+	// checks if any cells are blocking.
+	for(Cell *c : tempCell)
+		if( c->getBlocking() )	// This doesn't return anything.
+		{
+			canMove = false;
+		}
 
 
 	  // loop through all cells in the temporary array. looping for
     for(Cell *c : tempCell)
-  	{
-  		std::set<Entity*> entities = c->getEntity();
-  		for( Entity * e : entities )
-  		{
-  			if( intersects(*e) )
-  			{
-  				if( force )
-  				{
-  					occupiedCells = tempCell;
-  				}
+	{
+		std::set<Entity*> entities = c->getEntity();
 
-  				return e;
-  			}
-  		}
-  	}
+		for( Entity * e : entities )
+		{
+			if( intersects(*e) && e != this && e->blocking)
+			{
+				if( force )
+				{
+					break;
+				}
+				else
+				{
+					left = temp_x;
+					top = temp_y;
+				}
 
-  	occupiedCells = tempCell;
+				return e;
+			}
+		}
+	}
 
-  	return nullptr;
+	for(Cell * c: occupiedCells )
+	{
+		c->removeEntity(this);
+	}
+
+	for(Cell * c : tempCell )
+	{
+		c->addEntity(this);
+	}
+
+	occupiedCells = tempCell;
+
+	if(!canMove)
+	{
+		left = temp_x;
+		top = temp_y;
+	}
+
+	return nullptr;
 }
 
 
@@ -197,6 +288,30 @@ Entity * Entity::move(float x, float y, bool force = false)
 std::set<Cell*> Entity::getCell()
 {
     return occupiedCells;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::getController
+--
+-- DATE: March 29, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marx-Engine
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: Controller* Entity::getController()
+--
+-- RETURNS: Controller* controller
+--
+-- NOTES:
+--        Returns the Entities controller
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Controller *Entity::getController()
+{
+    return controller;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -290,4 +405,14 @@ void Entity::onDestroy()
 void Entity::onUpdate()
 {
 	// logic team
+}
+
+void Entity::setBlocking(bool b)
+{
+	blocking = b;
+}
+
+bool Entity::getBlocking()
+{
+	return blocking;
 }

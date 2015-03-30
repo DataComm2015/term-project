@@ -1,56 +1,83 @@
 //> In the main file
 #include "AppWindow.h"
-#include "Usage.cpp"
-#include "Engine/ServerGameScene.h"
-#include "Network/Server.h"
+//#include "Usage.cpp"
 
+#include "Engine/Scene.h"
+#include "Logic/ServerCommand.h"
+#include "Logic/Entities/ServerCommandEntity.h"
+#include "Network/NetworkController.h"
+#include "Network/NetworkEntityMultiplexer.h"
+
+#include <string.h>
+#include <stdio.h>
+
+// namespace
+using Networking::NetworkEntityMultiplexer;
+using Networking::NetworkController;
+using Networking::NetworkEntity;
+using Networking::Message;
+using Networking::Session;
 using Networking::Server;
 
-#define DEFAULT_PORT 7000
-#define DEBUG
+// globals
+void run(ServerCommand *server);
 
-bool isRunning;
-sf::Time m_elapsedTime, m_timePerFrame, m_timeSinceLastUpdate;
-Scene *scene;
-
-void run();
-
+//////////
+// main //
+//////////
 
 int main( int argc, char ** argv )
 {
-	Server server;
-	server.startServer( DEFAULT_PORT );
-	scene = new ServerGameScene();
-	run();
-	delete scene;
-	return 0;
+    printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
+    fflush(stdout);
+    
+    ServerCommand server;
+    
+    server.startServer(atoi(argv[1]));
+    run(&server);
+
+    return 0;
 }
 
-void run()
+/**
+ * the game loop.
+ */
+void run(ServerCommand *server)
 {
-	if (!isRunning)
-	{
-		isRunning = true;
+    bool isRunning;
+    sf::Time m_elapsedTime;
+    sf::Time m_timePerFrame;
+    sf::Time m_timeSinceLastUpdate;
+    sf::Time m_sleepTime;
 
-		sf::Clock clock;
-		sf::Event event;
+    m_sleepTime = sf::seconds(1.0/75);
+    m_timePerFrame = sf::seconds(1.0/60);
 
-		// LOOP
-		while (isRunning)
-		{
-			// TIME UPDATES
-			m_elapsedTime = clock.restart();
-			m_timeSinceLastUpdate += m_elapsedTime;
+    if (!isRunning)
+    {
+        isRunning = true;
 
-			// TIME PER FRAME CONTROLLED LOOP
-			while (m_timeSinceLastUpdate > m_timePerFrame)
-			{
-				m_timeSinceLastUpdate -= m_timePerFrame;
+        sf::Clock clock;
+        sf::Event event;
 
-				scene->update(m_timePerFrame);
-			}
-		}
+        // LOOP
+        while (isRunning)
+        {
+            // TIME UPDATES
+            m_elapsedTime = clock.restart();
+            m_timeSinceLastUpdate += m_elapsedTime;
 
-		isRunning = false;
-	}
+            // TIME PER FRAME CONTROLLED LOOP
+            while (m_timeSinceLastUpdate > m_timePerFrame)
+            {
+                m_timeSinceLastUpdate -= m_timePerFrame;
+                server->getActiveScene()->update(m_timePerFrame);
+
+                sf::sleep(m_sleepTime);
+            }
+        }
+
+        
+        isRunning = false;
+    }
 }

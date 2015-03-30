@@ -57,18 +57,21 @@ public:
 			);
 
 		// configure the sprite
-		background().setTexture(*Manager::TextureManager::get(texture_1));
+
+		//background().setTexture(*Manager::TextureManager::get(texture_1));
 		sgo().setTexture(*Manager::TextureManager::get(texture_2));
 
 		v = new Vessel(0,NULL,0,0);
 
+
+
 		// might want to have another resource manager for fonts...
 		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
 
-		// configure the text
-		welcomeText().setFont(font);
-		welcomeText().setCharacterSize(30);
-		welcomeText().setString("Welcome to Spectre");
+		// configure the text this doesn't compile :/
+		//welcomeText().setFont(font);
+		//welcomeText().setCharacterSize(30);
+		//welcomeText().setString("Welcome to Spectre");
 	}
 
 	// Destructors are... obvious
@@ -125,7 +128,7 @@ public:
 		/* This code moves the background but keeps the vessel centered */
 		view_main.move(v->getXSpeed(), v->getYSpeed());
 		sgo().setPosition(view_main.getCenter()); //*/
-		
+
 		/* This code moves the vessel around but keeps the screen centered
 		sgo().setPosition(v->getXPosition(), v->getYPosition());
 		//*/
@@ -145,7 +148,7 @@ public:
 		renderer.states.blendMode = sf::BlendAdd; // pointless in this case, but useful in others
 
 		renderer.draw(background);
-		
+
 		renderer.end(); // always end when you're done rendering or want to start fresh again
 
 		renderer.begin();
@@ -173,7 +176,7 @@ private:
 
 	SGO sgo;
 	Vessel* v;
-	
+
 	sf::Font font;
 	TGO welcomeText;
 };

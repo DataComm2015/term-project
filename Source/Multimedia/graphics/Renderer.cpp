@@ -204,13 +204,13 @@ void Renderer::resetStats()
  * @param      scenegraph Whether to draw the whole hierarchy or just the specified game object
  * @param      states     The render states
  */
-void Renderer::draw(const BGO &go, bool scenegraph, sf::RenderStates states)
+void Renderer::draw(const BGO *go, bool scenegraph, sf::RenderStates states)
 {
 	if (!active) throw "Renderer is not active.";
 
 	mergeRenderStates(states);
 
-	scenegraph ? go.drawSG(*this, states) : go.draw(*this, states);
+	scenegraph ? go->drawSG(*this, states) : go->draw(*this, states);
 }
 
 /**
@@ -231,14 +231,13 @@ void Renderer::draw(const SGO &sgo, sf::RenderStates states)
 {
 	if (!active) throw "Renderer is not active.";
 
-	// Combine transformations with this sprite's
-
-	states.transform.combine(sgo().getTransform());
+	// Combine transformations with the object's local transformations
+	states.transform.combine(sgo.getLocalTransform());
 
 	// Store transformed vertices positions
 
 	sf::Vector2f vPos[RECT_POINTS];
-	sf::FloatRect sgoLB = sgo().getLocalBounds();
+	sf::FloatRect sgoLB = sgo.sprite().getLocalBounds();
 
 	vPos[0] = states.transform.transformPoint(sgoLB.left, sgoLB.top);
 	vPos[1] = states.transform.transformPoint(sgoLB.left, sgoLB.top + sgoLB.height);
@@ -248,13 +247,13 @@ void Renderer::draw(const SGO &sgo, sf::RenderStates states)
 	// Create appropriate vertices
 
 	sf::Vertex vertices[SPRITE_VERTICES];
-	sf::IntRect texRect = sgo().getTextureRect();
+	sf::IntRect texRect = sgo.sprite().getTextureRect();
 
 	vertices[0].position = vPos[0];	vertices[2].position = vPos[2];
 	vertices[1].position = vPos[1];	vertices[3].position = vPos[2];
 	vertices[5].position = vPos[1];	vertices[4].position = vPos[3];
 
-	for (unsigned int v = 0; v < SPRITE_VERTICES; v++) vertices[v].color = sgo().getColor();
+	for (unsigned int v = 0; v < SPRITE_VERTICES; v++) vertices[v].color = sgo.sprite().getColor();
 
 	vertices[0].texCoords = { static_cast<float>(texRect.left), static_cast<float>(texRect.top) };
 	vertices[1].texCoords = { static_cast<float>(texRect.left), static_cast<float>(texRect.top + texRect.height) };
@@ -265,7 +264,7 @@ void Renderer::draw(const SGO &sgo, sf::RenderStates states)
 
 	// Send vertices and texture
 
-	batchSprite(*sgo().getTexture(), vertices);
+	batchSprite(*sgo.sprite().getTexture(), vertices);
 }
 
 /**
@@ -286,9 +285,12 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
 {
 	if (!active) throw "Renderer is not active.";
 
+	// Combine transformations with the object's local transformations
+	states.transform.combine(tgo.getLocalTransform());
+
 	flushSprites();
 
-	sf_draw(tgo(), states);
+	sf_draw(tgo.text(), states);
 }
 
 /**
@@ -308,6 +310,9 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
 void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 {
 	if (!active) throw "Renderer is not active.";
+
+	// Combine transformations with the object's local transformations
+	states.transform.combine(map.getLocalTransform());
 
 	flushSprites();
 

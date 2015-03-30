@@ -1,9 +1,10 @@
 #include "Projectile.h"
+#include <iostream>
 
 using namespace Marx;
 
-Projectile::Projectile(Map *map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
-	Entity(map, x, y, ctrl, h, w)
+Projectile::Projectile(SGO &_sprite, Map *map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
+	VEntity(_sprite, map, x, y, ctrl, h, w)
 {
 	_speed = 0;
 	_delta_x = 0;
@@ -111,32 +112,27 @@ void setTimeToLive(float ttl)
 --------------------------------------------------------------------------------------------------------------------*/
 Entity * Projectile::move(float x, float y, float delta_t, bool force = false)
 {
-  Entity *entity;
-	float _hypotenuse = sqrt (_delta_x*_delta_x + _delta_y*_delta_y);
-
-	// calculate TTL
-	// move projectile if TTL is still > 0
-	// else move to where the TTL should have been 0
-
-	x += _speed*_delta_x/_hypotenuse;
-	y += _speed*_delta_y/_hypotenuse;
+    Entity *entity;
 
 	entity = Entity::move(x, y, force);
 
 	if (entity != nullptr)
-		onHit(entity, _attack_power);
+	{
+		if (onHit != NULL)
+			onHit(entity);
+	}
 
 	return entity;
 }
 
 void Projectile::onCreate()
 {
-	//Manager::ProjectileManager.dequeue(this);
+	Manager::ProjectileManager::dequeue(this);
 }
 
 void Projectile::onDestroy()
 {
-	//Manager::ProjectileManager.enqueue(this);
+	Manager::ProjectileManager::enqueue(this);
 }
 
 

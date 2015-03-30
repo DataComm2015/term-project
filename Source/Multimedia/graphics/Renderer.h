@@ -3,10 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../manager/ResourceManager.h"
-#include "../../Engine/TextureManager.h"
-#include "../../Engine/TileManager.h"
-
 #define SPRITE_VERTICES 6
 #define TILE_VERTICES 4
 #define RECT_POINTS 4
@@ -39,7 +35,7 @@ public:
 	void end();
 	void resetStats();
 
-	void draw(const BGO& bgo, bool scenegraph, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const BGO* bgo, bool scenegraph = false, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const TGO& tgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const Marx::Map& map, sf::RenderStates states = sf::RenderStates::Default);
