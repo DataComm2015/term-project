@@ -15,7 +15,6 @@
 #include "CommandEntity.h"
 #include "ClientGameState.h"
 #include "ClientNetworkController.h"
-#include "ClientEnemyController.h"
 
 #include <cstring>
 

@@ -47,7 +47,10 @@ EntityFactory* EntityFactory::getInstance()
     return instance;
 }
 
-Entity* EntityFactory::makeEntityFromNetworkMessage(Map* cMap, Message* msg, Controller* cont)
+Entity* EntityFactory::makeEntityFromNetworkMessage(
+    Map* cMap,
+    Message* msg,
+    Controller* cont)
 {
     // Parse Network Message
     EnemyControllerInit* init = (EnemyControllerInit*) msg->data;
@@ -62,23 +65,28 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(Map* cMap, Message* msg, Con
 }
 
 
-Entity* EntityFactory::makeEntity(ENEMY_TYPES type, Controller* cont,Map* map, float x, float y)
+Entity* EntityFactory::makeEntity(
+    ENEMY_TYPES type,
+    Controller* cont,
+    Map* map,
+    float x,
+    float y)
 {
     Entity* entity;
 
     switch(type)
     {
         case BASIC_TYPE:
-            entity = new ProperEntity(map,x,y,cont,1.0,1.0);
-            // entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            break;
 
-            break;
-        case I_DONT_KNOW:
-            // CREATE NEW ENEMY OF GIVEN TYPE
-            // RETURN ENEMY
-            break;
+        // case I_DONT_KNOW:
+        //     // CREATE NEW ENEMY OF GIVEN TYPE
+        //     // RETURN ENEMY
+        //     break;
 
         default:
+            entity = new ProperEntity(map,x,y,cont,1.0,1.0);
             break;
     }
 

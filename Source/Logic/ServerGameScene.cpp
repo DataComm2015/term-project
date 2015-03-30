@@ -125,7 +125,7 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 
 	// Create the enemy
 	ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
-	enemies.push_back(EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
+	enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
 	enemyController->init();
 	printf("ENEMY ENTITY TYPE: %d\r\n", enemyController->getType());
 	command->getGameState()->registerWithAllPlayers(enemyController, &msg);
