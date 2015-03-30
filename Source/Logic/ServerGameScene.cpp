@@ -80,11 +80,13 @@ void ServerGameScene::enterScene()
     // Generate the game map
 	gMap->generateMap(worldSeed, this);
 
+/*
 	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
 	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
 	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
 	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
 	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
+*/
 }
 
 void ServerGameScene::leaveScene()

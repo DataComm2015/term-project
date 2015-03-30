@@ -58,8 +58,9 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             ret = gameState;
             break;
         }
-        
+
         case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
+            printf("Creating Enemy\r\n");
             EnemyControllerInit *init = (EnemyControllerInit*) msg.data;
             ret = new ClientEnemyController(id, init, _gameScene);
             return ret;
