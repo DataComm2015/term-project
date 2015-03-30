@@ -11,6 +11,7 @@ Animation *runAnim;
 Animation *runAnim_mask;
 Animation *runAnim_wep;
 */
+
 void onclick()
 {
 	static int i = 0;
@@ -21,6 +22,19 @@ void onclick()
 	i++;
 }
 
+GUI::HealthBar *pubHB;
+void onclickHealthTest()
+{
+	static float health = 1.0;
+	
+	health = health - .10;
+	
+	if(health >= 0)
+		pubHB->update(health);
+}
+
+
+
 void updateMainView(sf::View& v)
 {
 	v = AppWindow::getInstance().getCurrentView();
@@ -30,6 +44,7 @@ void updateMainView(sf::View& v)
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
 	// Create the maps
+	std::cout << "creating map " << std::endl;
 	cMap = new Map(90, 90);
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
@@ -70,6 +85,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 */
 	/* END SAMPLE CREATION */
 
+	std::cout << "making tileset" << std::endl;
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
 	championSprite = Manager::TextureManager::store(
@@ -115,6 +131,10 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
 
+	std::cout << "before vesesl made" << std::endl;
+	vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, NULL, 1.0F, 1.0F);
+
+
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
@@ -134,14 +154,18 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	// Generate stuff
 
 	// center the cell map
+	std::cout << "centering map" << std::endl;
 	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 
 	if (!gMap->generateMap(0))
 	{
 		cerr << "Invalid map dimensions." << endl;
 	}
+	std::cout << "before generate water" << std::endl;
 	generateWater();
+	std::cout << "after generate water" << std::endl;
 	generateUI();
+	std::cout << "after generate ui" << std::endl;
 }
 
 void GameScene::onLoad()
@@ -155,14 +179,11 @@ void GameScene::onLoad()
 
 	// Enable buttons
 	b1->toggleEnabled(true);
-	b2->toggleEnabled(false);
-	b3->toggleEnabled(false);
+	b2->toggleEnabled(true);
+	b3->toggleEnabled(true);
 	b4->toggleEnabled(true);
 	b5->toggleEnabled(true);
 	b6->toggleEnabled(true);
-
-	b2->toggleEnabled(true);
-	b3->toggleEnabled(true);
 }
 
 void GameScene::positionButtons()
@@ -192,6 +213,9 @@ void GameScene::positionButtons()
 	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
 	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
 	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
+	
+	// position healthbar
+	hb->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 4*buttonHeight);
 }
 
 void GameScene::unLoad()
@@ -307,11 +331,11 @@ void GameScene::update(sf::Time t)
 	b5->update(t);
 	b6->update(t);
 
-	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+//	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	//viewMain.setCenter(
-	//	vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
+	viewMain.setCenter(
+		vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
@@ -409,6 +433,7 @@ void GameScene::draw()
 	renderer.draw(b4);
 	renderer.draw(b5);
 	renderer.draw(b6);
+	renderer.draw(hb, true);
 
 	renderer.end();
 
@@ -483,5 +508,19 @@ void GameScene::generateUI()
 	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+	
+	// Create health bar (If statement here if vessel or deity)
+	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
+	hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
+
+	imageSize = Manager::TextureManager::get(hbgSprite)->getSize();
+	width = imageSize.x;
+	height = imageSize.y;
+
+	sf::Vector2f healthSize = sf::Vector2f(width, height);
+
+	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
+	
+	pubHB = hb;
 }

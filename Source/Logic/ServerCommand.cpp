@@ -44,13 +44,14 @@ void ServerCommand::onConnect(Session* session)
     // register the client with the player object, and player controller
     player->registerSession(session,msg);
 
+
     // register the client with the GameState object
     gameState->registerSession(session,msg);
-    
+
     // Add Player to Lobby
     lobbyScene->addPlayer();
     gameState->playerJoined(session, player);
-    
+
     // If game is not in progress -> go to lobby
     if (activeScene == lobbyScene)
     {
@@ -62,12 +63,13 @@ void ServerCommand::onConnect(Session* session)
         player->setMode(GHOST);
         gameState->goToGame(gameScene->getWorldSeed());
     }
+
 }
 
 void ServerCommand::onMessage(Session* session, char* data, int len)
 {
-    
-    
+
+
 }
 
 void ServerCommand::onDisconnect(Session* session, int remote)
