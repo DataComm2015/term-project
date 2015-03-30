@@ -3,7 +3,10 @@
  *
  * @date       2015-02-25
  *
- * @revisions
+ * @revisions  2015-03-24
+ *             Game objects are now sf::Transformable.
+ *             Render states objects are non longer passed around when drawing.
+ *             Use the renderer's public render states member variable instead.
  *
  * @designer   Melvin Loho
  *
@@ -108,10 +111,12 @@ BGO* BGO::getParent() const
  */
 void BGO::add(BGO& gO)
 {
-	if (gO.m_id == m_id) {
-		throw std::exception("Are you crazy!? You just tried to add a graphic object to itself!");
+	if (gO.m_id == m_id)
+	{
+		throw "Are you crazy!? You've just tried to add a game object to itself!";
 	}
-	else {
+	else
+	{
 		if (gO.m_parent) gO.m_parent->rem(gO);
 		gO.m_parent = this;
 		m_children.push_back(&gO);
@@ -137,8 +142,10 @@ bool BGO::rem(const BGO& gO)
 {
 	for (std::vector<BGO*>::iterator iter = m_children.begin();
 		iter != m_children.end();
-		++iter) {
-		if (*iter == &gO) {
+		++iter)
+	{
+		if (*iter == &gO)
+		{
 			m_children.erase(iter);
 			return true;
 		}
@@ -165,8 +172,10 @@ bool BGO::rem(id_go id)
 {
 	for (std::vector<BGO*>::iterator iter = m_children.begin();
 		iter != m_children.end();
-		++iter) {
-		if ((*iter)->m_id == id) {
+		++iter)
+	{
+		if ((*iter)->m_id == id)
+		{
 			m_children.erase(iter);
 			return true;
 		}
@@ -211,22 +220,14 @@ void BGO::ignoreChildren(bool arg)
 	m_ignoringChildren = arg;
 }
 
-/**
- * Gets the local transformation matrix belonging to the object that is represented by this game object.
- *
- * @date       2015-02-25
- *
- * @revisions
- *
- * @designer   Melvin Loho
- *
- * @programmer Melvin Loho
- *
- * @return     The transformation matrix
- */
 const sf::Transform& BGO::getLocalTransform() const
 {
 	return sf::Transform::Identity;
+}
+
+const sf::Transform& BGO::getGlobalTransform() const
+{
+	return m_sgtrans;
 }
 
 /**
@@ -287,21 +288,23 @@ void BGO::update(const sf::Time& t)
  */
 void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
 {
+	// Draw self
+	draw(renderer, states);
+
+	// Combine transformations (caller's + mine)
+	states.transform *= getLocalTransform();
+
+	// cache scene graph transformations
+	m_sgtrans = states.transform;
+
 	// Draw children
 	if (hasChildren())
 	{
-		// Combine transformations (parent's + current's)
-		sf::RenderStates combinedStates = states;
-		combinedStates.transform.combine(getLocalTransform());
-
 		for (const BGO* go : m_children)
 		{
-			go->drawSG(renderer, combinedStates);
+			go->drawSG(renderer, states);
 		}
 	}
-
-	// Draw self
-	draw(renderer, states);
 }
 
 /**

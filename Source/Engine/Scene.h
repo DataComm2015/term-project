@@ -9,6 +9,7 @@
 **/
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <cstdio>
 
 namespace Marx
 {

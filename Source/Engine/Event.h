@@ -1,3 +1,4 @@
+
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: Event.h
 --
@@ -10,26 +11,40 @@
 -- REVISIONS:
 --
 -- DESIGNER: Marc Rafanan
+--           Marc Vouve
 --
 -- PROGRAMMER: Marc Rafanan
+--             Marc Vouve
+--             Jeff Bayntun
+--             Eric Tsang
 --
 -- NOTES:
---        This file defines the Event class members
+-- This file defines the Event class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-
 #ifndef EVENT_H_
 #define EVENT_H_
-
 namespace Marx
 {
+
     /*
-    * Event Class
-    */
+     * Event Types
+     */
+    enum EventType
+    {
+        MOVE
+    };
+
+    /*
+     * Event Class
+     */
     class Event
     {
-        public:
-            // Empty for now
+    public:
+        Event(EventType e):type(e) {};
+        const EventType type;
     };
 }
+
+
 #endif /* EVENT_H_ */

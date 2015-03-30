@@ -1,34 +1,50 @@
-  # the compiler: gcc for C program, define as g++ for C++
-  CC = g++
 
-  # compiler flags:
-  #  -Wall turns on most, but not all, compiler warnings
-  #  -std=c++11 sets compiler to use c++ 2011 standard
-  #  -pthread for using linux pthreads
-  CFLAGS  = -Wall -std=c++11 -pthread
+CC = g++ -Wall -W -Wextra -std=c++11
+LIBS = -pthread
 
-
- server: server_pro.o message_q.o
-	 $(CC) $(CFLAGS) -o server server_pro.o message_q.o
-
- server_pro.o : server_pro.cpp
-	$(CC) $(CFLAGS) -c server_pro.cpp
+# clean
+clean:
+	rm *.out *.o
 
 
- client: client_pro.o message_q.o
-	 $(CC) $(CFLAGS) -o client client_pro.o message_q.o
 
- client_pro.o : client_pro.cpp
-	$(CC) $(CFLAGS) -c client_pro.cpp
+# client test modules
+ClientTest: ClientTest.o Client.o Session.o select_helper.o net_helper.o NetworkEntityMultiplexer.o NetworkEntity.o
+	$(CC) $(LIBS) -o ./ClientTest.out ClientTest.o Client.o Session.o select_helper.o net_helper.o NetworkEntityMultiplexer.o NetworkEntity.o
 
-test: message_q.o test.o
-	 $(CC) $(CFLAGS) -o test test.o message_q.o
+ClientTest.o: ClientTest.cpp
+	$(CC) -c ClientTest.cpp
 
- clean:
-	$(RM) client server test *.o *.exe
+Client.o: Client.cpp Client.h
+	$(CC) -c Client.cpp
 
-test.o: test.cpp
-	$(CC) $(CFLAGS) -c test.cpp
 
-message_q.o: message_q.cpp
-	$(CC) $(CFLAGS) -c message_q.cpp
+
+# server test modules
+ServerTest: ServerTest.o Server.o Session.o select_helper.o net_helper.o NetworkEntityMultiplexer.o NetworkEntity.o
+	$(CC) $(LIBS) -o ./ServerTest.out ServerTest.o Server.o Session.o select_helper.o net_helper.o NetworkEntityMultiplexer.o NetworkEntity.o
+
+ServerTest.o: ServerTest.cpp
+	$(CC) -c ServerTest.cpp
+
+Server.o: Server.cpp Server.h
+	$(CC) -c Server.cpp
+
+
+
+
+# shared helper modules
+Session.o: Session.cpp Session.h
+	$(CC) -c Session.cpp
+
+select_helper.o: select_helper.cpp select_helper.h
+	$(CC) -c select_helper.cpp
+
+net_helper.o: net_helper.cpp net_helper.h
+	$(CC) -c net_helper.cpp
+
+NetworkEntityMultiplexer.o: NetworkEntityMultiplexer.cpp NetworkEntityMultiplexer.h
+	$(CC) -c NetworkEntityMultiplexer.cpp
+
+NetworkEntity.o: NetworkEntity.cpp NetworkEntity.h
+	$(CC) -c NetworkEntity.cpp

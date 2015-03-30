@@ -19,35 +19,52 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
+
 #ifndef MAP_H_
 #define MAP_H_
 
-#include <vector>
-#include "Cell.h"
-
 namespace Marx
+{
+	class Map;	
+}
+
+#include <vector>
+#include <stdexcept> 
+#include "Cell.h"
+#include "../Multimedia/graphics/object/BGO.h"
+#include "../Multimedia/graphics/Renderer.h"
+
+
+namespace Marx 
 {
     typedef unsigned int uint;
     /* 
     *    Map base class
     *   
     */
-    class Map
+    class Map : public BGO
     {
         public:
             Map(const uint height, const uint width);
+            ~Map();
             unsigned int getHeight() const;
             unsigned int getWidth() const;
-            void setCell(const uint x, const uint y, const Cell& cell);
-            Cell getCell(const uint x, const uint y) const;
+            void setCell(const uint x, const uint y, Cell* cell);
+            Cell* getCell(const uint x, const uint y) const;
             void setTexture(const uint texture_id);
             uint getTexture() const;
+			std::set<Entity*> getEntities() const;
+			const sf::Transform& getLocalTransform() const override;
+			sf::Transform trans;
             
+	protected:
+		void draw(Renderer& renderer, sf::RenderStates states) const override;
+
         private:
-            uint width_;
-            uint height_;
-            uint texture_id_;
-            std::vector<Cell> cells_;
+            unsigned int width_;
+            unsigned int height_;
+            unsigned int texture_id_;
+            std::vector<Cell*> cells_;
     };
 } /* namespace Marx */
 

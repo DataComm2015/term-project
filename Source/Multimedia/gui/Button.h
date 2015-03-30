@@ -1,17 +1,25 @@
 #ifndef BUTTON
 #define BUTTON
 
+#include <functional>
+#include "../graphics/object/SGO.h"
+
 namespace GUI
 {
-	class Button : SGO
+    // class button extends from sgo
+    // so it has everything from sgo and add extra defined here
+	class Button : public SGO
 	{
 		public:
-			Button(BGO*, sf::IntRect*, std::function);
-			inline void toggleEnabled(bool);
-			void update(sf::Time&);
+            Button(const sf::Texture& texture, sf::Vector2f si, sf::View& v, std::function<void()> onClick);
+			void toggleEnabled(bool e);
+			void update(sf::Time& t);
 		private:
-			std::function on_click;
-			sf::IntRect[3] states;
+			sf::View& view;
+			std::function<void()> on_click;
+			sf::Vector2f size;
+            bool enabled;
+            sf::IntRect disabled, normal, hover, clicked;
 	};
 }
 

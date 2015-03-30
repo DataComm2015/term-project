@@ -22,31 +22,33 @@
 #ifndef _NETWORK_SESSION_H_
 #define _NETWORK_SESSION_H_
 
+#include <set>
+
 namespace Networking
 {
-    class Socket;
-	class ReadProcess;
-	class SendProcess;
-	class NetworkEntityMultiplexer;
+    class NetworkEntity;
+    class NetworkEntityMultiplexer;
 
-	class Session
-	{
-		public:
-            Session(Socket *socket, ReadProcess *readProcess, SendProcess *sendProcess, NetworkEntityMultiplexer *entityMux);
-			virtual ~Session();
-			
-			void send(Message *message);
-			void disconnect();
+    struct Message;
 
-		private:
-			void onMessageReceived(Message *message);
-			void onConnectionClosedByRemote();
-			
-            Socket *socket;
-			ReadProcess *readProcess;
-			SendProcess *sendProcess;
-			NetworkEntityMultiplexer *entityMux;
-	};
+    class Session
+    {
+    friend class NetworkEntity;
+    friend class NetworkEntityMultiplexer;
+
+    public:
+        Session(int socket);
+        virtual ~Session();
+        void send(Message* msg);
+        void disconnect();
+        void onMessage(Message* msg);
+        void onDisconnect(int remote);
+
+    private:
+        int socket;
+        NetworkEntityMultiplexer* entityMux;
+        std::set<NetworkEntity*> registeredEntities;
+    };
 }
 
 #endif

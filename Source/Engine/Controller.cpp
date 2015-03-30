@@ -21,7 +21,7 @@
 
 #include "Controller.h"
 
-
+using namespace Marx;
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: std::vector<Event> Controller::getEvents()
 --
@@ -32,7 +32,7 @@
 -- DESIGNER: Marc Vouve
 --
 -- PROGRAMMER: Michael Chimick
---	       Marc Vouve 
+--	       Marc Vouve
 --
 -- INTERFACE: std::vector<Marx::Event> Controller::getEvents()
 --
@@ -45,4 +45,9 @@
 std::vector<Event> Controller::getEvents()
 {
     return eventQueue;
+}
+
+void Controller::addEvent(Event event)
+{
+    eventQueue.push_back(event);
 }

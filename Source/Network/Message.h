@@ -3,14 +3,12 @@
 
 namespace Networking
 {
-
-    typedef struct
+    struct Message
     {
         int type;
-        void * data;
+        void* data;
         int len;
-    }
-    Message;
+    };
 }
 
 #endif
