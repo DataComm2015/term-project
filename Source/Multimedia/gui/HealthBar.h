@@ -11,11 +11,13 @@ namespace GUI
 	class HealthBar : public SGO
 	{
 		public:
-            HealthBar(const sf::Texture& texture, sf::Vector2f si, sf::View& v);
+            HealthBar(const sf::Texture& bgtexture, const sf::Texture& bartexture, sf::Vector2f si, sf::View& v);
 			void update(float percent);
 		private:
 			sf::View& view;
-			sf::Vector2f size;
+			sf::Vector2f bgSize;
+			sf::Vector2u barSize;
+			SGO bar;
 	};
 }
 

@@ -17,10 +17,19 @@ namespace GUI
 	*
 	* @return       initializer
 	*/
-	HealthBar::HealthBar(const sf::Texture& texture, sf::Vector2f si, sf::View& v) : SGO(texture), view(v)
+	HealthBar::HealthBar(const sf::Texture& bgtexture, const sf::Texture& bartexture, sf::Vector2f si, sf::View& v) : SGO(bgtexture), view(v)
 	{
-		size = si;
-		sprite().setTextureRect(sf::IntRect(0, 0, size.x, size.y));
+		bgSize = si;
+		sprite().setTextureRect(sf::IntRect(0, 0, bgSize.x, bgSize.y));
+
+		// Create the bar		
+		bar = SGO(bartexture);
+		barSize = bartexture.getSize();
+		
+		bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x, barSize.y));
+		bar.sprite().setPosition(45, 10);
+		
+		this->add(bar);
 	}
 
 	/**
@@ -38,6 +47,6 @@ namespace GUI
 	*/
 	void HealthBar::update(float percent)
 	{
-		sprite().setTextureRect(sf::IntRect(0, 0, size.x - (size.x*(1.0 - percent)), size.y));
+		bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x - (barSize.x * (1.0 - percent)), barSize.y));
 	}
 }

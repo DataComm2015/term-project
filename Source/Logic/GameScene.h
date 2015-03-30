@@ -81,7 +81,8 @@ class GameScene : public Scene
 		id_resource maskSprite;
 		id_resource wepSprite;
 		id_resource butSprite;
-		id_resource healthSprite;
+		id_resource hbarSprite;
+		id_resource hbgSprite;
 		id_resource scat_music;
 		id_resource chick_sound;
 		id_resource placeholderSprite;
