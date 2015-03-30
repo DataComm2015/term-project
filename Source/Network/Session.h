@@ -25,18 +25,21 @@
 #include <deque>
 #include <set>
 #include <cstring>
+#include "semaphores.h"
 
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-#include <sys/sem.h>
 
 namespace Networking
 {
+    class Session;
+    void handleSessionMessages();
+
+    static int SESSION_SET_SEM_KEY = 226;
+    static int SESSION_SEM = createSem(SESSION_SET_SEM_KEY);
+    static int MESSAGE_SEM_KEY = 9956;
+    static std::set<Session*> SESSIONS;
+
     class NetworkEntity;
     class NetworkEntityMultiplexer;
-    static int SEM_KEY = 9956;
-
     struct Message;
 
     class Session
@@ -53,16 +56,14 @@ namespace Networking
         void onDisconnect(int remote);
         void handleMessages();
 
+
     private:
         int socket;
-        int sem;
+        int messagesSem;
         NetworkEntityMultiplexer* entityMux;
         std::set<NetworkEntity*> registeredEntities;
         std::deque<Message*> messages;
-        int createSem(int key);
-        bool deleteSem(int sid);
-        bool accessSem(int sid);
-        bool releaseSem(int sid);
+
     };
 }
 
