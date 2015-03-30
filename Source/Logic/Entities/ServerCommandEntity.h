@@ -1,3 +1,6 @@
+#ifndef SERVER_COMMAND_ENTITY_H_
+#define SERVER_COMMAND_ENTITY_H_
+
 #include "../../Engine/Controller.h"
 #include "../../Network/Session.h"
 #include "../../Network/Message.h"
@@ -28,11 +31,14 @@ class ServerCommandEntity : public Controller, public Networking::NetworkEntity
 {
     public:
         ServerCommandEntity();
-        ServerCommandEntity(int type);
         virtual ~ServerCommandEntity();
         virtual void addEvent(Event event);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message msg);
-
         void sendEventMessage(Event event);
+
+    protected:
+        ServerCommandEntity(int type);
 };
+
+#endif

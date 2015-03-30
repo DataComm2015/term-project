@@ -26,7 +26,7 @@ PlayerEntity::PlayerEntity(ServerCommand *server)
 
 PlayerEntity::~PlayerEntity()
 {
-    delete serverController;
+    delete controller;
 }
 
 void PlayerEntity::setMode(PLAYER_MODE mode)
@@ -50,6 +50,7 @@ void PlayerEntity::onUnregister(Session* session, Message msg)
 {
     server->playerLeft(session);
 }
+
 /**
  *  Jeff Bayntun and Eric Tsang
  *
@@ -58,10 +59,10 @@ void PlayerEntity::onUnregister(Session* session, Message msg)
  */
 void PlayerEntity::clearControllerEvents()
 {
-    serverController->clearEvents();
+    controller->clearEvents();
 }
 
-void PlayerEntity::setController(Controller* controller)
+void PlayerEntity::setController(ServerCommandEntity* controller)
 {
     this->controller = controller;
 }
