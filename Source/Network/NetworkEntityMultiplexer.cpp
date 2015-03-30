@@ -141,7 +141,6 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         logicMsg.data = &intPtr[2];
         logicMsg.type = intPtr[1];
         logicMsg.len -= sizeof(int)*2;
-        entities[intPtr[0]]->onUpdate(logicMsg);
 
         // print debug message
         #ifdef DEBUG
@@ -151,15 +150,15 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
             printf("%c",((char*)logicMsg.data)[i]);
         }
         printf("\")\n");
+        fflush(stdout);
         #endif
+
+        entities[intPtr[0]]->onUpdate(logicMsg);
         break;
     case MSG_TYPE_REGISTER:
         logicMsg.data = &intPtr[3];
         logicMsg.type = intPtr[1];
         logicMsg.len -= sizeof(int)*3;
-        entities[intPtr[0]] = onRegister(intPtr[0],intPtr[2],session,logicMsg);
-        entities[intPtr[0]]->silentRegister(session);
-        entities[intPtr[0]]->onRegister(session);
 
         // print debug message
         #ifdef DEBUG
@@ -169,15 +168,18 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
             printf("%c",((char*)logicMsg.data)[i]);
         }
         printf("\")\n");
+        fflush(stdout);
         #endif
+
+        entities[intPtr[0]] = onRegister(intPtr[0],intPtr[2],session,logicMsg);
+        entities[intPtr[0]]->silentRegister(session);
+        entities[intPtr[0]]->onRegister(session);
         break;
     case MSG_TYPE_UNREGISTER:
+
         logicMsg.data = &intPtr[2];
         logicMsg.type = intPtr[1];
         logicMsg.len -= sizeof(int)*2;
-        entities[intPtr[0]]->onUnregister(session, logicMsg);
-        entities[intPtr[0]]->silentUnregister(session);
-        entities.erase(*intPtr);
 
         // print debug message
         #ifdef DEBUG
@@ -187,7 +189,12 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
             printf("%c",((char*)logicMsg.data)[i]);
         }
         printf("\")\n");
+        fflush(stdout);
         #endif
+
+        entities[intPtr[0]]->onUnregister(session, logicMsg);
+        entities[intPtr[0]]->silentUnregister(session);
+        entities.erase(*intPtr);
         break;
     case MSG_TYPE_WARNING:
         printf("REMOTE %s\n",(char*)msg.data);
@@ -230,6 +237,7 @@ void NetworkEntityMultiplexer::update(int id, std::set<Session*>& sessions, Mess
         printf("%c",((char*)msg.data)[i]);
     }
     printf("\")\n");
+    fflush(stdout);
     #endif
 
     // allocate enough memory to hold message header, and payload
@@ -298,6 +306,7 @@ void NetworkEntityMultiplexer::registerSession(int id, int type, Session* sessio
         printf("%c",((char*)msg.data)[i]);
     }
     printf("\")\n");
+    fflush(stdout);
     #endif
 
     // allocate enough memory to hold message header, and payload
@@ -363,6 +372,7 @@ void NetworkEntityMultiplexer::unregisterSession(int id, Session* session, Messa
         printf("%c",((char*)msg.data)[i]);
     }
     printf("\")\n");
+    fflush(stdout);
     #endif
 
     // allocate enough memory to hold message header, and payload

@@ -34,7 +34,7 @@ void PlayerEntity::setMode(PLAYER_MODE mode)
     this->mode = mode;
 
     Message msg;
-    msg.type = MSG_T_PLAYER_SET_MODE;
+    msg.type = MSG_T_PLAYER_COMMAND_SET_MODE;
     msg.data = (void*) &(this->mode);
     msg.len = sizeof(this->mode);
 
@@ -76,7 +76,7 @@ void PlayerEntity::onUpdate(Message msg)
 {
     switch(msg.type)
     {
-        case MSG_T_PLAYER_SELECT_LOBBY_OPTIONS:
+        case MSG_T_PLAYER_COMMAND_SELECT_LOBBY_OPTIONS:
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
             server->getGameState()->notifyReadyForGame();

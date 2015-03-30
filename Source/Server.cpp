@@ -5,7 +5,6 @@
 #include "Engine/Scene.h"
 #include "Logic/ServerCommand.h"
 #include "Logic/Entities/ServerCommandEntity.h"
-#include "Network/NetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
 #include <string.h>
@@ -13,7 +12,6 @@
 
 // namespace
 using Networking::NetworkEntityMultiplexer;
-using Networking::NetworkController;
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
@@ -30,9 +28,9 @@ int main( int argc, char ** argv )
 {
     printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
     fflush(stdout);
-    
+
     ServerCommand server;
-    
+
     server.startServer(atoi(argv[1]));
     run(&server);
 
@@ -77,7 +75,7 @@ void run(ServerCommand *server)
             }
         }
 
-        
+
         isRunning = false;
     }
 }

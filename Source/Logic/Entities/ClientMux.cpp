@@ -44,6 +44,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 
         // later, should parse the message to figure out what kind of game
         // entity to create that is being controlled by the NetworkController.
+        case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
         case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
         {
             ret = new NetworkControllerEntity(id);
@@ -58,11 +59,12 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             ret = gameState;
             break;
         }
-        
-        case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
-            EnemyControllerInit *init = (EnemyControllerInit*) msg.data;
-            ret = new ClientEnemyController(id, init, _gameScene);
-            return ret;
+
+        // case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
+        //     printf("Creating Enemy\r\n");
+        //     EnemyControllerInit *init = (EnemyControllerInit*) msg.data;
+        //     ret = new ClientEnemyController(id, init, _gameScene);
+        //     break;
     }
 
     return ret;

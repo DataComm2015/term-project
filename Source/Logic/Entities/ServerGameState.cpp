@@ -33,7 +33,7 @@ void ServerGameState::playerJoined(Session *session, PlayerEntity *player)
 
     Message msg;
     memset(&msg,0,sizeof(msg));
-    msg.type = MSG_T_PLAYER_CONNECTED;
+    msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_CONNECTED;
     msg.data = (void*) &playerCount;
     msg.len = sizeof(int);
 
@@ -58,7 +58,7 @@ void ServerGameState::playerLeft(Session *session)
     playerCount = players.size();
     playersWaitingToLaunch--;
 
-    msg.type = MSG_T_PLAYER_DISCONNECTED;
+    msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_DISCONNECTED;
     msg.data = (void*) &playerCount;
     msg.len = sizeof(int);
 
@@ -69,7 +69,7 @@ void ServerGameState::startLobbyCountdown(int remainingTime)
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
-    msg.type = MSG_T_LOBBY_COUNTDOWN_START;
+    msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_START;
     msg.data = (void*) &(remainingTime);
     msg.len = sizeof(remainingTime);
 
@@ -80,7 +80,7 @@ void ServerGameState::stopLobbyCountdown(int remainingTime)
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
-    msg.type = MSG_T_LOBBY_COUNTDOWN_STOP;
+    msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_STOP;
     msg.data = (void*) &(remainingTime);
     msg.len = sizeof(remainingTime);
 
@@ -107,7 +107,7 @@ void ServerGameState::prepareForGameState()
 {
     Message msg;
     memset(&msg,0,sizeof(msg));
-    msg.type = MSG_T_PLAYER_READY_FOR_GAME;
+    msg.type = MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_READY_FOR_GAME;
     msg.data = (void*) "PREPARE FOR GAME START";
     msg.len = strlen((char*)msg.data);
 

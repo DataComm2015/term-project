@@ -95,41 +95,14 @@
 #define MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND 7
 
 /**
- * Server message sent to clients to indicate that a new player has connected.
- */
-#define MSG_T_PLAYER_CONNECTED 10
-
-/**
- * Server message sent to clients to indicate that a player has disconnected.
- */
-#define MSG_T_PLAYER_DISCONNECTED 11
-
-/**
- * Server message sent to clients to indicate that lobby countdown is
- * continuing.
- */
-#define MSG_T_LOBBY_COUNTDOWN_START 12
-
-/**
- * Server message sent to clients to indicate that lobby countdown is
- * paused.
- */
-#define MSG_T_LOBBY_COUNTDOWN_STOP 13
-
-/**
  * Server message sent to clients to change their player mode (VESSEL, DEITY, GHOST)
  */
-#define MSG_T_PLAYER_SET_MODE 14
+#define MSG_T_PLAYER_COMMAND_SET_MODE 8
 
 /**
  * Client -> Server Message informing server of client lobby option selections
  */
-#define MSG_T_PLAYER_SELECT_LOBBY_OPTIONS 15
-
-/**
- * Server -> Client Request options before starting game
- */
-#define MSG_T_PLAYER_READY_FOR_GAME 16
+#define MSG_T_PLAYER_COMMAND_SELECT_LOBBY_OPTIONS 9
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -151,10 +124,37 @@
  * {ServerGameState} instance is sending a "start game scene" command to the
  *   {ClientGameState} instance.
  */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 1
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 0
 
 /**
  * {ServerGameState} instance is sending a "start lobby scene" command to the
  *   {ClientGameState} instance.
  */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 0
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 1
+
+/**
+ * Server message sent to clients to indicate that a new player has connected.
+ */
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_CONNECTED 2
+
+/**
+ * Server message sent to clients to indicate that a player has disconnected.
+ */
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_DISCONNECTED 3
+
+/**
+ * Server message sent to clients to indicate that lobby countdown is
+ * continuing.
+ */
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_START 4
+
+/**
+ * Server message sent to clients to indicate that lobby countdown is
+ * paused.
+ */
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_STOP 5
+
+/**
+ * Server -> Client Request options before starting game
+ */
+#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_READY_FOR_GAME 6

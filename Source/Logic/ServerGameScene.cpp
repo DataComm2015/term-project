@@ -84,7 +84,12 @@ void ServerGameScene::enterScene()
     // Generate the game map
 	gMap->generateMap(worldSeed, this);
 
-    createPlayers();
+    // createPlayers();
+	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
+	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
+	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
+	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
+	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
 }
 
 void ServerGameScene::leaveScene()
@@ -110,6 +115,8 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 	initData.type = type;
 	initData.x = x;
 	initData.y = y;
+
+  printf("X: %f, Y: %f\n", x, y);
 
 	Message msg;
 	msg.type = 0;
@@ -184,9 +191,3 @@ void ServerGameScene::createPlayers()
 
 
 }
-
-
-
-
-
-

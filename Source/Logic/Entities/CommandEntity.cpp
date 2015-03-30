@@ -43,7 +43,7 @@ void CommandEntity::notifyServerLobbySelections(PlayerLobbyChoices *selections)
 {
     // put the command into a message to be sent over the network
     Message msg;
-    msg.type = MSG_T_PLAYER_SELECT_LOBBY_OPTIONS;
+    msg.type = MSG_T_PLAYER_COMMAND_SELECT_LOBBY_OPTIONS;
     msg.data = (void*)selections;
     msg.len  = sizeof(PlayerLobbyChoices);
 
@@ -132,9 +132,9 @@ void CommandEntity::onUpdate(Message msg)
 {
     switch (msg.type)
     {
-        case MSG_T_PLAYER_SET_MODE:
+        case MSG_T_PLAYER_COMMAND_SET_MODE:
             playerMode = *((PLAYER_MODE*) msg.data);
-            
+
             break;
     }
 }

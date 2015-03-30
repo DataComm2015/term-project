@@ -42,7 +42,7 @@ void ClientGameState::onUpdate(Message msg)
 {
     switch(msg.type)
     {
-        case MSG_T_PLAYER_READY_FOR_GAME:
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_READY_FOR_GAME:
             /* Send back player lobby selections */
             command->notifyServerLobbySelections(_lobbyScene->getSelections());
             break;
@@ -77,18 +77,18 @@ void ClientGameState::onUpdate(Message msg)
             AppWindow::getInstance().removeScene(1);
             AppWindow::getInstance().addScene(_lobbyScene);
             break;
-        case MSG_T_PLAYER_CONNECTED:
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_CONNECTED:
             _lobbyScene->updatePlayerCount(*((int*)msg.data));
             break;
-        case MSG_T_PLAYER_DISCONNECTED:
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_PLAYER_DISCONNECTED:
             _lobbyScene->updatePlayerCount(*((int*)msg.data));
             break;
-            
-        case MSG_T_LOBBY_COUNTDOWN_START:
+
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_START:
             _lobbyScene->startTimer(*((int*)msg.data));
             break;
-            
-        case MSG_T_LOBBY_COUNTDOWN_STOP:
+
+        case MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_LOBBY_COUNTDOWN_STOP:
             _lobbyScene->stopTimer(*((int*)msg.data));
             break;
     }
