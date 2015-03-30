@@ -66,6 +66,7 @@ class GameScene : public Scene
 		 */
 		std::set<KeyListener*> keyListeners;
 
+
 		GameMap *gMap;
 
 		Renderer renderer;

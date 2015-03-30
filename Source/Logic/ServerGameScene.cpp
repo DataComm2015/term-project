@@ -37,7 +37,7 @@ ServerGameScene::ServerGameScene(ServerCommand *command)
 	}
 
     srand(time(NULL));
-    
+
 	gMap = new GameMap(cMap);
 }
 
@@ -59,13 +59,13 @@ ServerGameScene::~ServerGameScene()
 void ServerGameScene::update(sf::Time)
 {
 	//printf("Update Run Scene\n");
-	
+
 	return;
 }
 
 void ServerGameScene::processEvents(sf::Event& e)
 {
-		
+
 }
 
 void ServerGameScene::draw()
@@ -79,6 +79,14 @@ void ServerGameScene::enterScene()
 
     // Generate the game map
 	gMap->generateMap(worldSeed, this);
+
+/*
+	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
+	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
+	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
+	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
+	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
+*/
 }
 
 void ServerGameScene::leaveScene()
@@ -89,7 +97,7 @@ void ServerGameScene::leaveScene()
         //NetworkEntity *controller = dynamic_cast<NetworkEntity*>((*itr)->getEntity()->getController());
         //command->getGameState()->unregisterFromAllPlayers(controller);
     }
-    
+
     enemies.clear();
 }
 
@@ -104,12 +112,14 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 	initData.type = type;
 	initData.x = x;
 	initData.y = y;
-	
+
+  printf("X: %f, Y: %f\n", x, y);
+
 	Message msg;
 	msg.type = 0;
 	msg.data = (void*) &initData;
 	msg.len = sizeof(initData);
-	
+
 	// Create the enemy
 	ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
 	enemies.push_back(EnemySpawner::createEnemy(type, enemyController, cMap, x, y));
@@ -117,10 +127,3 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 	printf("ENEMY ENTITY TYPE: %d\r\n", enemyController->getType());
 	command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
-
-
-
-
-
-
-

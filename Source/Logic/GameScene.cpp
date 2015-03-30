@@ -44,6 +44,7 @@ void updateMainView(sf::View& v)
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
 	// Create the maps
+	std::cout << "creating map " << std::endl;
 	cMap = new Map(90, 90);
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
@@ -84,6 +85,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 */
 	/* END SAMPLE CREATION */
 
+	std::cout << "making tileset" << std::endl;
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
 	championSprite = Manager::TextureManager::store(
@@ -129,6 +131,10 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
 
+	std::cout << "before vesesl made" << std::endl;
+	vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, NULL, 1.0F, 1.0F);
+
+
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
@@ -148,14 +154,18 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	// Generate stuff
 
 	// center the cell map
+	std::cout << "centering map" << std::endl;
 	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 
 	if (!gMap->generateMap(0))
 	{
 		cerr << "Invalid map dimensions." << endl;
 	}
+	std::cout << "before generate water" << std::endl;
 	generateWater();
+	std::cout << "after generate water" << std::endl;
 	generateUI();
+	std::cout << "after generate ui" << std::endl;
 }
 
 void GameScene::onLoad()
@@ -321,11 +331,11 @@ void GameScene::update(sf::Time t)
 	b5->update(t);
 	b6->update(t);
 
-	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+//	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	//viewMain.setCenter(
-	//	vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
+	viewMain.setCenter(
+		vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
