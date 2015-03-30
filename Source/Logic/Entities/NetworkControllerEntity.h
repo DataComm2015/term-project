@@ -8,9 +8,6 @@
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 
-using Networking::Message;
-using Networking::Session;
-using Networking::NetworkEntity;
 
 /**
  * the {ServerController} class on the server is logically mapped to a
@@ -26,16 +23,20 @@ using Networking::NetworkEntity;
  *   be handled, and converted from a message back into an event, then added to
  *   the {NetworkController's} event queue.
  */
-class NetworkControllerEntity : public ::Marx::Controller, public NetworkEntity
+class NetworkControllerEntity
+    : public ::Marx::Controller
+    , public Networking::NetworkEntity
 {
 public:
     NetworkControllerEntity(int id);
     NetworkControllerEntity(int id, int type);
     ~NetworkControllerEntity();
-    virtual void onUpdate( Message message );
-    virtual void onUnregister( Session * session, Message message );
+    virtual void onUpdate(Networking::Message message);
+    virtual void onUnregister(Networking::Session* session,
+        Networking::Message message);
+
 private:
-    void parseEventMessage(Message& message);
+    void parseEventMessage(Networking::Message& message);
 };
 
 #endif

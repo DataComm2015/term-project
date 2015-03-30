@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cstdio>
+#include <map>
 #include <SFML/Graphics.hpp>
 #include "../Engine/Scene.h"
 #include "../AppWindow.h"
@@ -14,6 +15,7 @@
 
 #include "Environment/GameMap.h"
 #include "EnemyTypes.h"
+#include "PlayerMode.h"
 
 class ServerCommand;
 class Creature;
@@ -31,13 +33,15 @@ class ServerGameScene : public Scene
         virtual void draw();
         Marx::Map* getcMap() { return cMap; }
         ~ServerGameScene();
-        
+
         void enterScene();
         void leaveScene();
         int getWorldSeed();
+        void createPlayers();
         void createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float x, float y);
 
     private:
+        SGO gkSGO;
         Marx::Map *cMap;
         GameMap *gMap;
         sf::View viewMain;
