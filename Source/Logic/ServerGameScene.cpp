@@ -118,16 +118,43 @@ void ServerGameScene::createEnemy(ENEMY_TYPES type, Behaviour *behaviour, float 
 	command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
 
+/**
 
+  Designer: Jeff Bayntun, Eric Tsang
+  Coder:    Jeff Bayntun
+ * @brief ServerGameScene::createPlayers
+ * Creates all the vessels and deitys, this includes hooking them up
+ * across the network.
+ */
 void ServerGameScene::createPlayers()
 {
     std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+    PlayerEntity* p;
+    PLAYER_MODE mode;
 
     // make serverCommandEntity for each vessel
+    map<Session*, PlayerEntity*>::iterator it = players.begin();
+    while(it != players.end())
+    {
+        p = it->second;
+        mode = p.getMode();
 
-    // iterate through all players
-     // if vessel
-        // make vessels
+        if(mode == VESSEL )
+        {
+            ServerVesselController vesselController = new VesselController();
+            p->setController(vesselController);
+
+            //create vessel, pass it server vessel controller too
+        }
+        else if(mode == DEITY)
+        {
+            //SeverDeityController* deityController = new DeityController();
+            //p->setController(deityController);
+
+            //create deity, pass it controller too.
+        }
+    }
+
 
 }
 

@@ -15,6 +15,7 @@
 
 #include "Environment/GameMap.h"
 #include "EnemyTypes.h"
+#include "PlayerMode.h"
 
 class ServerCommand;
 class Creature;
