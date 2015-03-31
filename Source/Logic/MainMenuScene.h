@@ -25,8 +25,11 @@
 #define NICKNAME_TXT 2
 #define TEXT_BOXES 3
 
-#define CLASS_BTN_WIDTH 46
-#define CLASS_BTN_HEIGHT 47
+#define CLASS_BTN_WIDTH 48
+#define CLASS_BTN_HEIGHT 49
+
+#define WIDE_BUTTONS_W 64
+#define WIDE_BUTTONS_H 31
 
 /*
 *   This is the Lobby scene.

@@ -26,9 +26,9 @@ GUI::HealthBar *pubHB;
 void onclickHealthTest()
 {
 	static float health = 1.0;
-	
+
 	health = health - .10;
-	
+
 	if(health >= 0)
 		pubHB->update(health);
 }
@@ -138,7 +138,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
-	tb = new GUI::TextBox(nullptr, nullptr);
+	tb = new GUI::TextBox(NULL, NULL);
 	tb->text().setScale(0.5, 0.5);
 	tb->text().move(0, -5);
 	tb->toggleSelected(true);
@@ -213,7 +213,7 @@ void GameScene::positionButtons()
 	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
 	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
 	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
-	
+
 	// position healthbar
 	hb->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 4*buttonHeight);
 }
@@ -590,7 +590,7 @@ void GameScene::generateUI()
 	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
-	
+
 	// Create health bar (If statement here if vessel or deity)
 	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 	hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
@@ -602,6 +602,6 @@ void GameScene::generateUI()
 	sf::Vector2f healthSize = sf::Vector2f(width, height);
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
-	
+
 	pubHB = hb;
 }

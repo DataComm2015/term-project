@@ -79,9 +79,9 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     sf::Font *arial = new sf::Font();
     arial->loadFromFile("Assets/Fonts/arial.ttf");
 
-    textBoxes[ SERVER_TXT ]   = new GUI::TextBox( nextTextBox, this );
-    textBoxes[ PORT_TXT ]     = new GUI::TextBox( nextTextBox, this );
-    textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this );
+    textBoxes[ SERVER_TXT ]   = new GUI::TextBox( nextTextBox, this, 16 );
+    textBoxes[ PORT_TXT ]     = new GUI::TextBox( nextTextBox, this, 4 );
+    textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this, 16 );
 
     textBoxes[ SERVER_TXT ]->text().setFont(*arial);
     textBoxes[ PORT_TXT ]->text().setFont(*arial);
@@ -89,11 +89,11 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
 
     /* Get texture assets */
     // as art assets are created for these, add them
-    connectImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
-    connectBtn = new GUI::Button(*Manager::TextureManager::get(connectImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onClick);
+    connectImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/connected-btn.png"));
+    connectBtn = new GUI::Button(*Manager::TextureManager::get(connectImg), sf::Vector2f(WIDE_BUTTONS_W, WIDE_BUTTONS_H), viewMain, onClick);
 
-    creditImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
-    creditBtn = new GUI::Button(*Manager::TextureManager::get(creditImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onClickCredit);
+    creditImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/credits-btn.png"));
+    creditBtn = new GUI::Button(*Manager::TextureManager::get(creditImg), sf::Vector2f(WIDE_BUTTONS_W, WIDE_BUTTONS_H), viewMain, onClickCredit);
 
     serverTextBackground = new SGO(*Manager::TextureManager::get(textBackgroundImg));
     portTextBackground = new SGO(*Manager::TextureManager::get(textBackgroundImg));
@@ -370,7 +370,7 @@ void MainMenuScene::onClickCredit()
 
     AppWindow::getInstance().removeScene(1);
 
-    AppWindow::getInstance().addScene(creditscene); 
+    AppWindow::getInstance().addScene(creditscene);
 
     AppWindow::getInstance().run();
 }

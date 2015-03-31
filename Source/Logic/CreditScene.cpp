@@ -24,13 +24,13 @@ CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstan
     // background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
     mainmenu = mainmen;
-    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/couch.jpg"));
+    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/credits-background.png"));
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
     background->sprite().setScale(5, 5);
 
-    creditImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/couch.jpg"));
-    creditText = new SGO(*Manager::TextureManager::get(backgroundImg));
-    creditText->sprite().setScale(10, 10);
+    creditImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/credits.png"));
+    creditText = new SGO(*Manager::TextureManager::get(creditImg));
+    creditText->sprite().setScale(3, 3);
     /* Get texture assets */
     // as art assets are created for these, add them
     backImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/connect_btn.png"));
@@ -65,7 +65,7 @@ void CreditScene::update(sf::Time t)
 {
     backBtn->update(t);
 
-    if(creditText->sprite().getPosition().y > -1000)
+    if(creditText->sprite().getPosition().y > -2500)
     {
         creditText->sprite().move(0, -t.asSeconds() * 100);
     }

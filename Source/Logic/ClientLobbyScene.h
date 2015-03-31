@@ -25,7 +25,7 @@
 
 #define CLASS_BTN_WIDTH_B 52
 #define CLASS_BTN_HEIGHT_B 52
- 
+
 /*
 *   This is the Lobby scene.
 */
@@ -104,7 +104,12 @@ class ClientLobbyScene : public Scene
         const int CIRCLE_WH = 200;
         const int VESSEL_ART_WH = 400;
 
+        const int MAX_SCROLL = 1000;
+
         static sf::Clock clck;
+
+        static int currScrollHeight;
+
         static bool timego;
         static float currentTime;
         int playerCount;

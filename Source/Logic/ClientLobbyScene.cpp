@@ -16,6 +16,7 @@ sf::Clock ClientLobbyScene::clck;
 bool ClientLobbyScene::timego;
 float ClientLobbyScene::currentTime;
 int ClientLobbyScene::click;
+int ClientLobbyScene::currScrollHeight;
 
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -63,7 +64,7 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     deityOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     deityTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
-    easterEggImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/easteregg.png"));
+    easterEggImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/easteregg.png"));
 
     leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
@@ -91,20 +92,21 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
+    //tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
+
     sf::Font *arial = new sf::Font();
     arial->loadFromFile("Assets/Fonts/arial.ttf");
 
 
-    countdownBox = new GUI::TextBox();
+    countdownBox = new GUI::TextBox(NULL,NULL);
     countdownBox->text().setScale(1, 1);
     countdownBox->toggleSelected(false);
     countdownBox->text().setFont(*arial);
 
-    playerBox = new GUI::TextBox();
+    playerBox = new GUI::TextBox(NULL,NULL);
     playerBox->text().setScale(1, 1);
     playerBox->toggleSelected(false);
     playerBox->text().setFont(*arial);
-
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -283,6 +285,14 @@ void ClientLobbyScene::draw()
     renderer.begin();
 
     //Background has to go first
+
+    if(currScrollHeight < MAX_SCROLL)
+    {
+        //Time scrollTime = clck.getElapsedTime();
+        //currScrollHeight = scrollTime.asSeconds();
+    }
+
+
     renderer.draw(*background);
 
     if (timego)
@@ -304,10 +314,6 @@ void ClientLobbyScene::draw()
 
     renderer.draw(*easterEggBtn);
 
-    if(click > 0)
-    {
-//        click--;
-    }
     easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT+ click * -25);
     renderer.draw(*easterEggSGO);
 
