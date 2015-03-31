@@ -108,6 +108,11 @@ void ClientNetworkController::parseEventMessage( Message& message )
         addEvent(ev);\
         break;
     }
+	case ::Marx::ATTACK:
+	{
+		
+		break;
+	}
     default:
     {
         printf("WARNING: ClientNetworkController::parseEventMessage received an "

@@ -66,6 +66,16 @@ enum class PlayerCommandMsgType
      *   instance.
      */
     START_MV_DOWN_COMMAND,
+	/**
+     * {Command} instance is sending a "Start attack" command to the {Player}
+     *   instance.
+     */
+	//START_ATT_COMMAND,
+	/**
+     * {Command} instance is sending a "Start attack" command to the {Player}
+     *   instance.
+     */
+	//START_SK_ATT_COMMAND,
     /**
      * {Command} instance is sending a "stop moving left" command to the {Player}
      *   instance.

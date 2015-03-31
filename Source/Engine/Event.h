@@ -33,7 +33,9 @@ namespace Marx
     {
         MOVE,
 	R_MOVE,
-	A_MOVE
+	A_MOVE,
+	ATTACK,
+	SK_ATTACK
     };
 
     /*

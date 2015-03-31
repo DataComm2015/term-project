@@ -2,6 +2,7 @@
 
 #include "../Engine/Event.h"
 
+/* ------------------------------- Move Event ----------------------------------- */
 /**
  * constructs a new move event
  *
@@ -68,3 +69,18 @@ bool MoveEvent::forced()
 {
     return force;
 }
+
+/* ------------------------------- Attack Event ----------------------------------- */
+AttackEvent::AttackEvent() :
+{
+	
+}
+
+
+
+
+/* ------------------------------- Skill Attack Event ----------------------------------- */
+
+
+
+

@@ -37,4 +37,33 @@ private:
     bool force;
 };
 
+struct AttackMessage
+{	
+	// Entity id destination
+	int dest;
+	float damage;
+};
+
+class AttackEvent : public ::Marx::Event
+{
+public:
+	
+private:
+	int dest;
+	
+};
+
+struct SkillAttackMessage
+{
+	float destx;
+	float desty;
+	float speed;
+	float damage;
+};
+
+class SkillAttackEvent : public ::Marx::Event
+{
+	
+};
+
 #endif
