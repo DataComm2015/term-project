@@ -60,7 +60,7 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 
 
 FILES_NETWORK=	Network/Client.o \
-				Network/Server.o \
+				Network/semaphores.o \
 				Network/Session.o \
 				Network/select_helper.o \
 				Network/net_helper.o \

@@ -199,8 +199,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 	int temp_y = top;
 	top = x;
 	left = y;
-	blocking = force;
-	bool canMove = true;
+	blocking = !force;
 
 	// loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i <= width + floor(x); i++)
@@ -211,12 +210,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		}
     }
 
-	// checks if any cells are blocking.
-	for(Cell *c : tempCell)
-		if( c->getBlocking() )	// This doesn't return anything.
-		{
-			canMove = false;
-		}
+	
 
 	// loop through all cells in the temporary array. looping for
     for(Cell *c : tempCell)
@@ -227,11 +221,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		{
 			if( intersects(*e) && e != this && e->blocking)
 			{
-				if( force )
-				{
-					break;
-				}
-				else
+				if( !force )
 				{
 					left = temp_x;
 					top = temp_y;
@@ -252,13 +242,19 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		c->addEntity(this);
 	}
 
+	// checks if any cells are blocking.
+	for(Cell *c : tempCell)
+		if( c->getBlocking() )	// This doesn't return anything.
+		{
+			left = temp_x;
+			top = temp_y;
+
+			return nullptr;
+		}
+	
 	occupiedCells = tempCell;
 
-	if(!canMove)
-	{
-		left = temp_x;
-		top = temp_y;
-	}
+	
 
 	return nullptr;
 }

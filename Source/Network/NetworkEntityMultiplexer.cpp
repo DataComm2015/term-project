@@ -138,9 +138,14 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
     switch(msg.type)
     {
     case MSG_TYPE_UPDATE:
+
+      //  printf("msg_type_update\n\n");
+       // printf("msg data: %s\n\n", msg.data);
+
         logicMsg.data = &intPtr[2];
         logicMsg.type = intPtr[1];
         logicMsg.len -= sizeof(int)*2;
+        //printf("entities[intPtr[0]]: %p     intPtr[0]: %d\n",entities[intPtr[0]],intPtr[0]);
 
         // print debug message
         #ifdef DEBUG
@@ -156,6 +161,7 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         entities[intPtr[0]]->onUpdate(logicMsg);
         break;
     case MSG_TYPE_REGISTER:
+       // printf("msg_type_register\n");
         logicMsg.data = &intPtr[3];
         logicMsg.type = intPtr[1];
         logicMsg.len -= sizeof(int)*3;
@@ -176,7 +182,6 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         entities[intPtr[0]]->onRegister(session);
         break;
     case MSG_TYPE_UNREGISTER:
-
         logicMsg.data = &intPtr[2];
         logicMsg.type = intPtr[1];
         logicMsg.len -= sizeof(int)*2;
@@ -197,6 +202,7 @@ void NetworkEntityMultiplexer::onMessage(Session* session, Message msg)
         entities.erase(*intPtr);
         break;
     case MSG_TYPE_WARNING:
+       // printf("msg_type_warning\n");
         printf("REMOTE %s\n",(char*)msg.data);
         break;
     }
