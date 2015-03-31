@@ -63,6 +63,7 @@
 #include "../../Engine/VEntity.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
+#include "../Creature.h"
 
 #define MAX_LEVEL 10;
 
@@ -71,7 +72,7 @@ typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
-class Vessel : public Marx::VEntity
+class Vessel : public Marx::VEntity, public Creature
 {
 	protected:
 		job_class jobClass;
@@ -82,12 +83,14 @@ class Vessel : public Marx::VEntity
 		int currentLevel;
 		int defaultSpeed;
 		int travelSpeed;
-		float xPosition;
-		float yPosition;
-		int xSpeed;
-		int ySpeed;
+		int attackPower;
+		float xSpeed;
+		float ySpeed;
 		int direction;	//0 = right, 1 = left //why not a bool?
-		bool moving;
+		bool movingLeft;
+        bool movingRight;
+		bool movingUp;
+        bool movingDown;
 		Weapon* weapon;
 		Ability* abilities;	//3 abilities for each Vessel
 		//TO DO: pointer to the game map needed in the future
@@ -105,13 +108,6 @@ class Vessel : public Marx::VEntity
 		//inherited methods
 		virtual ~Vessel();
 		virtual void onUpdate();
-		virtual void turn();
-		//virtual Marx::Entity* move(float, float, bool);
-		virtual std::set<Marx::Cell*> getCell();
-		virtual void onCreate();
-		virtual void onDestroy();
-
-		Marx::Controller* _controller;
 
 		void setPosition( float x, float y );
 		float getXPosition();
@@ -152,12 +148,15 @@ class Vessel : public Marx::VEntity
 		bool checkDeath();
 		void die();
 
-		void detectMove();
-		//void move();
+		void move();
 		void stop(int key);
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
+
+		virtual void setHealth(int health);
+		virtual void setAttack(int attack);
+		virtual Entity *getEntity();
 };
 
 #endif

@@ -11,6 +11,7 @@ Animation *runAnim;
 Animation *runAnim_mask;
 Animation *runAnim_wep;
 */
+
 void onclick()
 {
 	static int i = 0;
@@ -19,6 +20,31 @@ void onclick()
 		exit(0);
 
 	i++;
+}
+
+GUI::HealthBar *pubHB;
+void onclickHealthTest()
+{
+	static float health = 1.0;
+
+	health = health - .10;
+
+	if(health >= 0)
+		pubHB->update(health);
+}
+
+GUI::TextBox *pubLevelInd;
+void onclickLevelup()
+{
+	static int level = 1;
+	std::string slevel;
+	
+	// level should be double digits
+	if(level < 10)
+		slevel = "0" + std::to_string(level++);
+	else
+		slevel = std::to_string(level++);
+	pubLevelInd->setText(slevel);
 }
 
 void updateMainView(sf::View& v)
@@ -30,6 +56,7 @@ void updateMainView(sf::View& v)
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
 	// Create the maps
+	std::cout << "creating map " << std::endl;
 	cMap = new Map(90, 90);
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
@@ -43,6 +70,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	}
 	gMap = new GameMap(cMap);
 	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
+
+	myVessel = NULL;
 
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
@@ -70,6 +99,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 */
 	/* END SAMPLE CREATION */
 
+	std::cout << "making tileset" << std::endl;
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
 	championSprite = Manager::TextureManager::store(
@@ -99,11 +129,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	championSGO.sprite().setScale(2, 2);
 	championSGO.middleAnchorPoint(true);
 
-	championSGO2.sprite().setTexture(*Manager::TextureManager::get(championSprite));
-	championSGO2.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO2.sprite().setScale(2, 2);
-	championSGO2.middleAnchorPoint(true);
-
 	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
 	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 	maskSGO.sprite().setScale(2, 2);
@@ -116,9 +141,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.sprite().setScale(1, 1);
-
-  std::cout << "before entity instantated" << std::endl;
-	vessel = new Vessel(championSGO2, cMap, 45, 45, new Controller(), 1.0F, 1.0F);
 
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
@@ -142,14 +164,18 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	// Generate stuff
 
 	// center the cell map
+	std::cout << "centering map" << std::endl;
 	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 
-	if (!gMap->generateMap())
+	if (!gMap->generateMap(0))
 	{
 		cerr << "Invalid map dimensions." << endl;
 	}
+	std::cout << "before generate water" << std::endl;
 	generateWater();
+	std::cout << "after generate water" << std::endl;
 	generateUI();
+	std::cout << "after generate ui" << std::endl;
 }
 
 void GameScene::onLoad()
@@ -159,21 +185,19 @@ void GameScene::onLoad()
 	viewUI = AppWindow::getInstance().getCurrentView();
 
 	// position buttons
-	positionButtons();
+	positionUI();
 
 	// Enable buttons
 	b1->toggleEnabled(true);
-	b2->toggleEnabled(false);
-	b3->toggleEnabled(false);
+	b2->toggleEnabled(true);
+	b3->toggleEnabled(true);
 	b4->toggleEnabled(true);
 	b5->toggleEnabled(true);
 	b6->toggleEnabled(true);
-
-	b2->toggleEnabled(true);
-	b3->toggleEnabled(true);
 }
 
-void GameScene::positionButtons()
+
+void GameScene::positionUI()
 {
 	// Get Window size
 	sf::Vector2u windowSize = AppWindow::getInstance().getSize();
@@ -200,6 +224,23 @@ void GameScene::positionButtons()
 	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
 	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
 	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
+
+	// Scale healthbar
+	hb->sprite().setScale(3, 3);
+
+	// position healthbar
+	hb->sprite().setPosition(20, 20);
+
+	// position and scale level indicator
+	levelInd->text().move(14, 10);
+	levelInd->text().setScale(1.5, 1.5);
+
+
+}
+
+void GameScene::setPlayerVessel(Vessel *vessel)
+{
+	myVessel = vessel;
 }
 
 void GameScene::unLoad()
@@ -239,8 +280,21 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+
+	// static int listEntity = 100;
+	auto entities = cMap->getEntities();
+	for ( auto it = entities.begin(); it != entities.end(); ++it)
+	{
+		(*it)->onUpdate();
+	}
+
+	if (myVessel != 0)
+	{
+		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left)*32.0F, (myVessel->top)*32.0F));
+	}
+
+	// listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
-	vessel->onUpdate();
 
 	/*
 	v->move();
@@ -303,11 +357,8 @@ void GameScene::update(sf::Time t)
 	b5->update(t);
 	b6->update(t);
 
-	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+//	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
-
-	viewMain.setCenter(
-		vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
@@ -316,8 +367,12 @@ void GameScene::update(sf::Time t)
 
 void GameScene::processEvents(sf::Event& e)
 {
+	Scene::processEvents(e);
 	if (e.type == sf::Event::Closed)
 	{
+        ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
+		AppWindow::getInstance().close();
+
 		AppWindow::getInstance().close();
 	}
 	else if (e.type == sf::Event::KeyPressed)
@@ -327,23 +382,38 @@ void GameScene::processEvents(sf::Event& e)
 			(*l)->onKeyPressed(e.key.code);
 		}
 
-		vessel->detectMove();
-
 		// ALL OF THE FOLLOWING IS TEMPORARY
-		switch (e.key.code)
-		{
-		case sf::Keyboard::Return:
-		{
-			break;
-		}
 
-		case sf::Keyboard::Space:
 		{
-			// Generate the game map
-			gMap->generateMap();
-			generateWater();
-			break;
-		}
+			/*float camSpeed = 15;
+			switch (e.key.code)
+			{
+
+				case sf::Keyboard::A:
+				{
+					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::D:
+				{
+					viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::W:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
+					break;
+				}
+				case sf::Keyboard::S:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
+					break;
+				}
+			    case sf::Keyboard::Return:
+			    {
+				    break;
+			    }
+			}*/
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
@@ -360,7 +430,7 @@ void GameScene::processEvents(sf::Event& e)
 		// update views
 		updateMainView(viewMain);
 		viewUI = AppWindow::getInstance().getCurrentView();
-		positionButtons();
+		positionUI();
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
@@ -370,6 +440,8 @@ void GameScene::processEvents(sf::Event& e)
 			current.play();
 		}
 	}
+
+
 
 	tb->process(e);
 }
@@ -412,6 +484,8 @@ void GameScene::draw()
 	renderer.draw(b4);
 	renderer.draw(b5);
 	renderer.draw(b6);
+	renderer.draw(hb, true);
+	renderer.draw(levelInd);
 
 	renderer.end();
 
@@ -428,6 +502,35 @@ void GameScene::rmKeyListener(KeyListener* listener)
 	keyListeners.erase(listener);
 }
 
+void GameScene::generateMap(int seed)
+{
+    gMap->generateMap(seed);
+}
+
+
+/******************************************************************************
+*	FUNCTION: generateWater
+*
+*	DATE: March 11, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*				Lewis Scott
+*
+*	INTERFACE: generateWater
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function generates the water map, assigns it specific tiles,
+*		and applies a water shader to it.
+******************************************************************************/
 void GameScene::generateWater()
 {
 	// Setup the wave shader
@@ -457,6 +560,30 @@ void GameScene::generateWater()
 		}
 	}
 
+	// Set the water cliff tiles
+	vector<CellTile> waterCliffTiles({ WATER_C1, WATER_C2 });
+
+	int vWaterOffset = waterMap->getHeight() - (WATER_BUFFER / 2);
+	int hWaterOffset = (WATER_BUFFER / 2) + 1;
+
+	// Buffer cliff tiles so it doesn't look weird
+	for (int i = 0; i < gMap->getWidth() - 2; i++)
+	{
+		randomWater = rand() % 2;
+		waterMap->getCell(hWaterOffset + i, vWaterOffset - 1)->setTileId(GRASS_C1);
+	}
+
+	// Actual water cliff tiles
+	for (int i = 0; i < gMap->getWidth() - 2; i++)
+	{
+		randomWater = rand() % 2;
+		waterMap->getCell(hWaterOffset + i, vWaterOffset)->setTileId(waterCliffTiles[randomWater]);
+	}
+
+	waterMap->getCell(hWaterOffset, vWaterOffset)->setTileId(WATER_CL);
+	waterMap->getCell(hWaterOffset + gMap->getWidth() - 3, vWaterOffset)->setTileId(WATER_CR);
+
+
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
 
@@ -464,6 +591,7 @@ void GameScene::generateWater()
 	waterMap->trans = sf::Transform::Identity;
 	waterMap->trans.translate(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 }
+
 
 void GameScene::generateUI()
 {
@@ -480,6 +608,31 @@ void GameScene::generateUI()
 	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
+	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+
+	// Create health bar (If statement here if vessel or deity)
+	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
+	hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
+
+	imageSize = Manager::TextureManager::get(hbgSprite)->getSize();
+	width = imageSize.x;
+	height = imageSize.y;
+
+	sf::Vector2f healthSize = sf::Vector2f(width, height);
+
+	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
+
+	pubHB = hb;
+	
+	// Create level indicator
+	
+	sf::Font *arial = new sf::Font();
+	arial->loadFromFile("Assets/Fonts/arial.ttf");
+	
+	levelInd = new GUI::TextBox(nullptr, nullptr);
+	levelInd->toggleSelected(true);
+	levelInd->text().setFont(*arial);
+	levelInd->setText("01");
+	pubLevelInd = levelInd;
 }

@@ -1,16 +1,26 @@
 #include "ClientMux.h"
 
-#include "../../Network/NetworkEntityMultiplexer.h"
 #include "../NetworkEntityPairs.h"
 #include "../GameScene.h"
+
+#include "../../Network/NetworkEntityMultiplexer.h"
+
 #include "../../Engine/Map.h"
 #include "../../Engine/Controller.h"
-#include "ProperEntity.h"
-#include "CommandEntity.h"
-#include "NetworkControllerEntity.h"
 
-ClientMux::ClientMux(GameScene *scene)
-    : scene(scene)
+#include "../EntityFactory.h"
+#include "../EnemyControllerInit.h"
+#include "../EntityTypes.h"
+
+#include "CommandEntity.h"
+#include "ClientGameState.h"
+#include "ClientNetworkController.h"
+
+#include <cstring>
+
+ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene)
+    :_gameScene(gameScene)
+    ,_lobbyScene(lobbyScene)
 {
 }
 
@@ -18,27 +28,49 @@ ClientMux::~ClientMux()
 {
 }
 
-NetworkEntity* ClientMux::onRegister(int id,
-                                     int entityType,
-                                     Session* session,
-                                     Message msg)
+NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
+    Message msg)
 {
     NetworkEntity* ret;
+    this->session = session;
 
-    switch(entityType)
+    switch((NetworkEntityPair)entityType)
     {
-        case NET_ENT_PAIR_PLAYER_COMMAND:
-            ret = new CommandEntity(id, scene);
+        case NetworkEntityPair::PLAYER_COMMAND:
+        {
+            command = new CommandEntity(id,_gameScene);
+            ret = command;
             break;
+        }
 
-        // later, should parse the message to figure out what kind of game
-        // entity to create that is being controlled by the NetworkController.
-        case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
-            ret = new NetworkControllerEntity(id);
-            Marx::Map* cMap = ((GameScene*)scene)->getcMap();
-            new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+        case NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER:
+        {
+            ClientNetworkController* c = new ClientNetworkController(id);
+            ret = c;
+            Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
+            Entity *entity = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,c);
+            if(msg.type == (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME)
+            {
+                 _gameScene->setPlayerVessel(static_cast<Vessel*>(entity));
+            }
             break;
+        }
+
+        case NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE:
+        {
+            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene);
+            ret = gameState;
+            break;
+        }
     }
 
     return ret;
+}
+
+void ClientMux::shutdown()
+{
+    Message msg;
+    memset(&msg,0,sizeof(msg));
+
+    command->unregisterSession(session, msg);
 }

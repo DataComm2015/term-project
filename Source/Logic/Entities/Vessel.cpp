@@ -26,21 +26,24 @@ Vessel::Vessel( SGO &_sprite,
 	Marx::Map * gmap,
 	float x,
 	float y,
-	Marx::Controller* controller,
+	Marx::Controller* controller_,
 	float height,
 	float width
 	/*, job_class jobClass, Ability* abilityList*/ )
-			: Marx::VEntity(_sprite, gmap, x, y, NULL, 1.0, 1.0 )
-			,_controller(controller)
+			: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 )
+			//,_controller(controller)
 {
+
 	direction = 1; //start facing right
 
 	resetEXP();
-	xPosition = x;
-	yPosition = y;
-	xSpeed = 0;
-	ySpeed = 0;
-	moving = false;
+	xSpeed = 0.1;
+	ySpeed = 0.1;
+	movingLeft = false;
+    movingRight = false;
+    movingUp = false;
+    movingDown = false;
+	attackPower = 0;
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -90,51 +93,48 @@ Vessel::Vessel( SGO &_sprite,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
-	std::vector< Marx::Event > eventQueue = _controller->getEvents();
-	_controller->clearEvents();
-	for( std::vector< Marx::Event >::iterator it = eventQueue.begin()
-		; it != eventQueue.end()
+	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
+		; it != eventQueue->end()
 		; ++it )
 	{
-			// switch on type
-			switch(it->type)
-			{
+
+		// switch on type
+		switch((*it)->type)
+		{
 			case ::Marx::MOVE:
-					MoveEvent* ev = (MoveEvent*) (&(*it));
-					printf( "move: x:%f y:%f force:%d\n",
-							ev->getX(), ev->getY(), ev->forced() );
-					move( ev->getX(), ev->getY(), ev->forced() );
-					break;
-			}
+				MoveEvent* ev = (MoveEvent*) (*it);
+                int xDir = ev->getXDir();
+                int yDir = ev->getYDir();
+
+                movingLeft = (xDir < 0);
+                movingRight = (xDir > 0);
+                movingUp = (yDir < 0);
+                movingDown = (yDir > 0);
+				break;
+		}
 	}
-	eventQueue.clear();
+	getController()->clearEvents();
+
+    float newXSpeed = 0;
+    float newYSpeed = 0;
+
+	if (movingLeft)
+        newXSpeed = -xSpeed;
+    else if (movingRight)
+        newXSpeed = xSpeed;
+
+    if (movingUp)
+        newYSpeed = -ySpeed;
+    else if (movingDown)
+        newYSpeed = ySpeed;
+
+    if (isMoving())
+    {
+        Entity::rMove(newXSpeed, newYSpeed,false);
+    }
 }
 
-void Vessel::turn()
-{
-
-}
-
-/*Marx::Entity* Vessel::move(float, float, bool)
-{
-
-}*/
-
-std::set<Marx::Cell*> Vessel::getCell()
-{
-
-}
-
-void Vessel::onCreate()
-{
-
-}
-
-
-void Vessel::onDestroy()
-{
-
-}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel destructor
@@ -158,33 +158,6 @@ Vessel::~Vessel()
 {
 	if( abilities != NULL )
 		delete[] abilities;
-}
-
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: setPosition
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sebastian Pelka
---
--- PROGRAMMER: Sebastian Pelka
---
--- INTERFACE: void Vessel::setPosition( int x, int y )
--- int x, int y: the coordinates to set the Vessel on the map
---
--- RETURNS: nothing
---
--- NOTES:
--- This function is used to directly position a Vessel on a map, can be used for teleportation.
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::setPosition( float x, float y )
-{
-	xPosition = x;
-	yPosition = y;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -780,127 +753,6 @@ void Vessel::die()
 
 }
 
-
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: detectMove
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee, Sebastian Pelka
---
--- PROGRAMMER: Sanders Lee, Sebastian Pelka
---
--- INTERFACE: void Vessel::detectMove()
---
--- RETURNS: nothing
---
--- NOTES:
--- This function sets the vessel to a moving state and changes velocity
--- according to key presses.
---
--- Bookmarks:
--- http://en.sfml-dev.org/forums/index.php?topic=11539.0
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::detectMove()
-{
-	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
-	std::cout << "Movement: " << xPosition << " " << yPosition << std::endl;
-	fflush(stdout);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition-1, false)));
-		move(yPosition-0.1, xPosition, false);
-		yPosition -= 0.1;
-		moving = true;
-		ySpeed = -travelSpeed;
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition, yPosition+1, false)));
-		move(yPosition+0.1, xPosition, false);
-		yPosition += 0.1;
-		moving = true;
-		ySpeed = travelSpeed;
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition-1, yPosition, false)));
-		move(yPosition, xPosition-0.1, false);
-		xPosition -= 0.1;
-		moving = true;
-		xSpeed = -travelSpeed;
-		direction = 0;	//signal to animate left facing sprite
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		//_controller->addEvent(*(new MoveEvent(xPosition+1, yPosition, false)));
-		move(yPosition, xPosition+0.1, false);
-		xPosition += 0.1;
-		moving = true;
-		xSpeed = travelSpeed;
-		direction = 1; //signal to animate right facing sprite
-	}
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: move
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: void Vessel::move()
---
--- RETURNS: nothing
---
--- NOTES:
--- Moves the vessel's coordinates according to velocity.
-----------------------------------------------------------------------------------------------------------------------*/
-/*void Vessel::move()
-{
-	//setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed ); //updates internal positioning
-	//Entity::move( getXPosition(), getYPosition(), false ); //updates position on Map
-}*/
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: stop
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: void Vessel::stop( int keyReleased )
--- int keyReleased: the key code for the key that was released
---
--- RETURNS: nothing
---
--- NOTES:
--- Stops moving in a particular direction depending on the direction key released.
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::stop( int keyReleased )
-{
-	if( (keyReleased == sf::Keyboard::D) || (keyReleased == sf::Keyboard::A) )
-		xSpeed = 0;
-	if( (keyReleased == sf::Keyboard::W) || (keyReleased == sf::Keyboard::S) )
-		ySpeed = 0;
-	moving = false;
-}
-
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: normalAttack
 --
@@ -948,54 +800,6 @@ void Vessel::normalAttack( int x, int y )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Entity parameter for abilities that target an entity, such as healing
 {
-}
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getXPosition
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: float Vessel::getXPosition()
---
--- RETURNS: x positon as float
---
--- NOTES:
--- Returns the x position of the vessel.
-----------------------------------------------------------------------------------------------------------------------*/
-float Vessel::getXPosition()
-{
-	return xPosition;
-}
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getYPosition
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: float Vessel::getYPosition()
---
--- RETURNS: y position as float
---
--- NOTES:
--- Returns the y position of the vessel.
-----------------------------------------------------------------------------------------------------------------------*/
-float Vessel::getYPosition()
-{
-	return yPosition;
 }
 
 
@@ -1066,7 +870,7 @@ int Vessel::getYSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::isMoving()
 {
-	return moving;
+	return (movingLeft || movingRight || movingUp || movingDown);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -1114,4 +918,82 @@ int Vessel::getDirection()
 job_class Vessel::getJobClass()
 {
 	return jobClass;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setHealth
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void setHealth(int health)
+-- int attack: the amount to set health to
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- This function provides a common interface for setting health for
+-- all Creatures.
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::setHealth(int health)
+{
+    currentHealth = health;
+
+    if (currentHealth < 0)
+        currentHealth = 0;
+    else if (currentHealth > maxHealth)
+        currentHealth = maxHealth;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setAttack
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void setAttack(int attack)
+-- int attack: the amount to set attack power to
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- This function provides a common interface for increasing attack power for
+-- all Creatures.
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::setAttack(int attack)
+{
+    attackPower = attack;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setAttack
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: Entity *getEntity()
+--
+-- RETURNS: The Entity associated with the Creature
+--
+-- NOTES:
+-- This function provides a method for retrieving the Entity from the Creature.
+----------------------------------------------------------------------------------------------------------------------*/
+Entity *Vessel::getEntity()
+{
+    return this;
 }

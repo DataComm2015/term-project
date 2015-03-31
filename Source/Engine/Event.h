@@ -10,8 +10,7 @@
 --
 -- REVISIONS:
 --
--- DESIGNER: Marc Rafanan
---           Marc Vouve
+-- DESIGNER:   Marc Vouve
 --
 -- PROGRAMMER: Marc Rafanan
 --             Marc Vouve
@@ -32,7 +31,9 @@ namespace Marx
      */
     enum EventType
     {
-        MOVE
+        MOVE,
+	R_MOVE,
+	A_MOVE
     };
 
     /*
@@ -41,7 +42,9 @@ namespace Marx
     class Event
     {
     public:
-        EventType type;
+        Event(EventType e):type(e) {};
+        Event(const Event& other):type(other.type) {};
+        const EventType type;
     };
 }
 

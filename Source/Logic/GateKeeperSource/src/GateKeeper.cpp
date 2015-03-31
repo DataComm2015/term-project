@@ -1,34 +1,28 @@
+/********************************************************************************
+**	SOURCE FILE:	GateKeeper.cpp -  	GateKeeper class implementation. Parent class
+**                                    for the enemies.
+**
+**	PROGRAM:	Term_Project
+**
+**	DATE: 		February 15, 2015
+**
+**
+**	DESIGNER: 	Filip Gutica A00781910
+**
+**	PROGRAMMER: Filip Gutica A00781910
+**
+***********************************************************************************/
 #include "GateKeeper.h"
 #include "../../Event.h"
+
 
 GateKeeper::~GateKeeper()
 {
 
 }
 
-void GateKeeper::update(const sf::Time& t)
+void GateKeeper::onUpdate()
 {
-  std::vector< Marx::Event > eventQueue = controller->getEvents();
-
-  for( std::vector< Marx::Event >::iterator it = eventQueue.begin()
-     ; it != eventQueue.end()
-     ; ++it )
-  {
-      // switch on type
-      switch(it->type)
-      {
-      case ::Marx::MOVE:
-          MoveEvent* ev = (MoveEvent*) (&*it);
-          printf( "move: x:%f y:%f force:%d\n",
-              ev->getX(), ev->getY(), ev->forced() );
-          move( ev->getX(), ev->getY(), ev->forced() );
-          MoveEvent me(ev->getX(),ev->getY(),ev->forced());
-          controller->addEvent(me);
-          break;
-      }
-  }
-
-  eventQueue.clear();
 }
 
 void GateKeeper::detectPlayers()
@@ -86,6 +80,21 @@ void GateKeeper::setCooldown(/*Timer*/)
 
 }
 
+void GateKeeper::setPosition(float x, float y)
+{
+
+}
+
+void GateKeeper::setXSpeed(float x)
+{
+
+}
+
+void GateKeeper::setYSpeed(float y)
+{
+
+}
+
 int GateKeeper::getRange()
 {
   return _range;
@@ -131,12 +140,30 @@ void GateKeeper::onDestroy()
 
 }
 
-void GateKeeper::onUpdate()
-{
-
-}
-
 bool GateKeeper::operator==(const VEntity&)
 {
   return true;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getEntity
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: Entity *getEntity()
+--
+-- RETURNS: The Entity associated with the Creature
+--
+-- NOTES:
+-- This function provides a method for retrieving the Entity from the Creature.
+----------------------------------------------------------------------------------------------------------------------*/
+Entity *GateKeeper::getEntity()
+{
+    return this;
 }

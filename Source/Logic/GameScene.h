@@ -19,6 +19,7 @@
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
+#include "../Multimedia/gui/HealthBar.h"
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
 #include "../Engine/VEntity.h"
@@ -53,9 +54,11 @@ class GameScene : public Scene
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
 
+        	void generateMap(int seed);
 		void generateWater();
 		void generateUI();
-		void positionButtons();
+		void positionUI();
+		void setPlayerVessel(Vessel *vessel);
 		
 	private:
 		/**
@@ -63,6 +66,7 @@ class GameScene : public Scene
 		 *   keyboard event occurs.
 		 */
 		std::set<KeyListener*> keyListeners;
+
 
 		GameMap *gMap;
 
@@ -78,6 +82,8 @@ class GameScene : public Scene
 		id_resource maskSprite;
 		id_resource wepSprite;
 		id_resource butSprite;
+		id_resource hbarSprite;
+		id_resource hbgSprite;
 		id_resource scat_music;
 		id_resource chick_sound;
 		id_resource placeholderSprite;
@@ -87,13 +93,13 @@ class GameScene : public Scene
 
 		// Game Objects
 		Vessel *vessel;
+		Vessel *myVessel;
 
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
 		Marx::Projectile * p;
 
 		SGO championSGO;
-		SGO championSGO2;
 		SGO maskSGO;
 		SGO wepSGO;
 		SGO placeHolderSGO;
@@ -108,6 +114,8 @@ class GameScene : public Scene
 		GUI::Button *b5;
 		GUI::Button *b6;
 		GUI::TextBox *tb;
+		GUI::HealthBar *hb;
+		GUI::TextBox *levelInd;
 };
 
 #endif

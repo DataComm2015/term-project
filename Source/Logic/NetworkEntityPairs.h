@@ -1,3 +1,6 @@
+#ifndef NETWORK_ENTITY_PAIRS
+#define NETWORK_ENTITY_PAIRS
+
 /**
  * this file contains {NetworkEntity} pairs which defines which subclass of a
  *   {NetworkEntity} instance server side is logically linked to which subclass
@@ -17,67 +20,138 @@
 // network entity pair types //
 ///////////////////////////////
 
-/**
- * a {Player} instance on the server side is connected to a {Command} instance
- *   on the client side.
- */
-#define NET_ENT_PAIR_PLAYER_COMMAND 0
-
-/**
- * a {PlayerController} instance on the server side is connected to a {Command}
- *   instance on the client side.
- */
-#define NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER 1
+enum class NetworkEntityPair
+{
+    /**
+     * a {Player} instance on the server side is connected to a {Command} instance
+     *   on the client side.
+     */
+    PLAYER_COMMAND,
+    /**
+     * a {PlayerController} instance on the server side is connected to a {Command}
+     *   instance on the client side.
+     */
+    SERVERCONTROLLER_NETCONTROLLER,
+    /**
+     * a {ServerGameState} instance on the server side is connected to a
+     *   {ClientGameState} instance on the client side.
+     */
+    SERVERGAMESTATE_CLIENTGAMESTATE
+};
 
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {Player} {NetworkEntity} and a {Command} //
 // {NetworkEntity}.                                                         //
 //////////////////////////////////////////////////////////////////////////////
 
-/**
- * {Command} instance is sending a "start moving left" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_START_MV_LEFT_COMMAND 0
+enum class PlayerCommandMsgType
+{
+    /**
+     * {Command} instance is sending a "start moving left" command to the {Player}
+     *   instance.
+     */
+    START_MV_LEFT_COMMAND,
+    /**
+     * {Command} instance is sending a "start moving right" command to the {Player}
+     *   instance.
+     */
+    START_MV_RIGHT_COMMAND,
+    /**
+     * {Command} instance is sending a "start moving up" command to the {Player}
+     *   instance.
+     */
+    START_MV_UP_COMMAND,
+    /**
+     * {Command} instance is sending a "start moving down" command to the {Player}
+     *   instance.
+     */
+    START_MV_DOWN_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving left" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_LEFT_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving right" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_RIGHT_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving up" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_UP_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving down" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_DOWN_COMMAND,
+    /**
+     * Server message sent to clients to change their player mode (VESSEL, DEITY, GHOST)
+     */
+    SET_MODE,
+    /**
+     * Client -> Server Message informing server of client lobby option selections
+     */
+    SELECT_LOBBY_OPTIONS
+};
 
-/**
- * {Command} instance is sending a "start moving right" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_START_MV_RIGHT_COMMAND 1
+/////////////////////////////////////////////////////////////////////
+// message types used to between a {ServerNetworkController} and a //
+// {ClientNetoworkController}.                                     //
+/////////////////////////////////////////////////////////////////////
 
-/**
- * {Command} instance is sending a "start moving up" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_START_MV_UP_COMMAND 2
+enum class ServerNetworkControllerClientNetworkControllerMsgType
+{
+    /**
+     * request from server to client, asking it to create an entity
+     */
+    NORMAL,
+    /**
+     * request from server to client, asking it to create & follow the passed entity
+     *   with the viewport
+     */
+    FOLLOW_ME
+};
 
-/**
- * {Command} instance is sending a "start moving down" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND 3
+////////////////////////////////////////////////////////////////////////////////
+// message types used to between a {ServerGameState} and a {ClientGameState}. //
+////////////////////////////////////////////////////////////////////////////////
 
-/**
- * {Command} instance is sending a "stop moving left" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_LEFT_COMMAND 4
+enum class ServerGameStateClientGameStateMsgType
+{
+    /**
+     * {ServerGameState} instance is sending a "start game scene" command to the
+     *   {ClientGameState} instance.
+     */
+    START_GAME_SCENE,
+    /**
+     * {ServerGameState} instance is sending a "start lobby scene" command to the
+     *   {ClientGameState} instance.
+     */
+    START_LOBBY_SCENE,
+    /**
+     * Server message sent to clients to indicate that a new player has connected.
+     */
+    PLAYER_CONNECTED,
+    /**
+     * Server message sent to clients to indicate that a player has disconnected.
+     */
+    PLAYER_DISCONNECTED,
+    /**
+     * Server message sent to clients to indicate that lobby countdown is
+     * continuing.
+     */
+    LOBBY_COUNTDOWN_START,
+    /**
+     * Server message sent to clients to indicate that lobby countdown is
+     * paused.
+     */
+    LOBBY_COUNTDOWN_STOP,
+    /**
+     * Server -> Client Request options before starting game
+     */
+    READY_FOR_GAME
+};
 
-/**
- * {Command} instance is sending a "stop moving right" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_RIGHT_COMMAND 5
-
-/**
- * {Command} instance is sending a "stop moving up" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_UP_COMMAND 6
-
-/**
- * {Command} instance is sending a "stop moving down" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND 7
+#endif

@@ -35,7 +35,9 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     arial->loadFromFile("Assets/Fonts/arial.ttf");
 
     textBoxes[ SERVER_TXT ]   = new GUI::TextBox( nextTextBox, this );
+    textBoxes[ SERVER_TXT ]   ->setText("localhost");
     textBoxes[ PORT_TXT ]     = new GUI::TextBox( nextTextBox, this );
+    textBoxes[ PORT_TXT ]     ->setText("7000");
     textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this );
 
     curTextBox = 0;
@@ -75,7 +77,7 @@ void MainMenuScene::onLoad()
     textBoxes[ SERVER_TXT ]->text().move(50, 0);
     textBoxes[ PORT_TXT ]->text().move(50, 15);
     textBoxes[ NICKNAME_TXT ]->text().move(50, 30);
-    
+
     connectBtn->sprite().setPosition(100, 200);
 
     /* Set the active view */
@@ -89,20 +91,21 @@ void MainMenuScene::update(sf::Time t)
 
 void MainMenuScene::processEvents(sf::Event& e)
 {
+    Scene::processEvents(e);
     textBoxes[ curTextBox ]->process(e);
 }
 
 void MainMenuScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
-    
+
     window.clear(sf::Color::Blue);
 
     window.setView(viewMain);
 
     renderer.begin();
 
-    renderer.draw( background, true );  
+    renderer.draw( background, true );
 
     // draw the objects
     renderer.draw( serverLbl );
@@ -111,7 +114,7 @@ void MainMenuScene::draw()
 
     for( int i = 0; i < TEXT_BOXES; ++i )
         renderer.draw( textBoxes[ i ] );
-  
+
     renderer.draw( connectBtn );
 
     renderer.end();
@@ -121,20 +124,16 @@ void MainMenuScene::draw()
 
 void MainMenuScene::onClick()
 {
-    
-    GameScene * gameScene = new GameScene();
-    ClientMux * clientmux = new ClientMux(gameScene);
+    GameScene* gameScene = new GameScene();
+    ClientLobbyScene* lobbyScene = new ClientLobbyScene();
+    ClientMux* clientmux = new ClientMux(gameScene,lobbyScene);
     NetworkEntityMultiplexer::setInstance(clientmux);
 
     Client* client = new Client();
     short port = atoi( MainMenuScene::getInstance()->textBoxes[ PORT_TXT ]->getText().c_str() );
     client->connect( (char *)MainMenuScene::getInstance()->textBoxes[ SERVER_TXT ]->getText().c_str(), port);
 
-    ClientLobbyScene *scene = new ClientLobbyScene(client, gameScene, clientmux);
-    AppWindow::getInstance().removeScene(1);
-    AppWindow::getInstance().setVerticalSyncEnabled(true);
-    AppWindow::getInstance().addScene(scene);
-    AppWindow::getInstance().run();
+    printf("connected\n");
 }
 
 void MainMenuScene::updateMainView(sf::View& v)
