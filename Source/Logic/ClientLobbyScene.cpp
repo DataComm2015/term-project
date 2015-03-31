@@ -241,6 +241,8 @@ void ClientLobbyScene::update(sf::Time t)
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::processEvents(sf::Event& e)
 {
+    Scene::processEvents(e);
+
     if (e.type == sf::Event::Closed)
 	{
 	    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();

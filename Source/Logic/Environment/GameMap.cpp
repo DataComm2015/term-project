@@ -109,9 +109,12 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 	// Create a block map
 	if (!createBlockMap())
 	{
-		cout << "Failed :[" << endl;
+		cout << "Failed to generate block map" << endl;
 		return false;
 	}
+
+	// Set cell boundaries
+	setCellBoundaries();
 
 	// Define map zones
 	generateZones();
@@ -135,8 +138,10 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 	// Generate miscellaneous objects
 
 	// Generate tiles
-	generateTiles();
-
+	if (gameScene == NULL)
+	{
+		generateTiles();
+	}
 
 	return true;
 }
@@ -221,6 +226,24 @@ bool GameMap::createBlockMap()
 	}
 
 	return true;
+}
+
+
+
+void GameMap::setCellBoundaries()
+{
+	// Set vertical boundaries
+	for (int i = 0; i < height; i++)
+	{
+		cellMap->getCell(0, i)->setBlocking(true);
+		cellMap->getCell(width - 1, i)->setBlocking(true);
+	}
+
+	for (int i = 0; i < width; i++)
+	{
+		cellMap->getCell(i, 0)->setBlocking(true);
+		cellMap->getCell(i, height - 1)->setBlocking(true);
+	}
 }
 
 
