@@ -487,6 +487,30 @@ void GameScene::generateMap(int seed)
     gMap->generateMap(seed);
 }
 
+
+/******************************************************************************
+*	FUNCTION: generateWater
+*
+*	DATE: March 11, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*				Lewis Scott
+*
+*	INTERFACE: generateWater
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function generates the water map, assigns it specific tiles,
+*		and applies a water shader to it.
+******************************************************************************/
 void GameScene::generateWater()
 {
 	// Setup the wave shader
@@ -516,6 +540,30 @@ void GameScene::generateWater()
 		}
 	}
 
+	// Set the water cliff tiles
+	vector<CellTile> waterCliffTiles({ WATER_C1, WATER_C2 });
+
+	int vWaterOffset = waterMap->getHeight() - (WATER_BUFFER / 2);
+	int hWaterOffset = (WATER_BUFFER / 2) + 1;
+
+	// Buffer cliff tiles so it doesn't look weird
+	for (int i = 0; i < gMap->getWidth() - 2; i++)
+	{
+		randomWater = rand() % 2;
+		waterMap->getCell(hWaterOffset + i, vWaterOffset - 1)->setTileId(GRASS_C1);
+	}
+
+	// Actual water cliff tiles
+	for (int i = 0; i < gMap->getWidth() - 2; i++)
+	{
+		randomWater = rand() % 2;
+		waterMap->getCell(hWaterOffset + i, vWaterOffset)->setTileId(waterCliffTiles[randomWater]);
+	}
+
+	waterMap->getCell(hWaterOffset, vWaterOffset)->setTileId(WATER_CL);
+	waterMap->getCell(hWaterOffset + gMap->getWidth() - 3, vWaterOffset)->setTileId(WATER_CR);
+
+
 	// Set the water map texture
 	waterMap->setTexture(tilemap);
 
@@ -523,6 +571,7 @@ void GameScene::generateWater()
 	waterMap->trans = sf::Transform::Identity;
 	waterMap->trans.translate(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 }
+
 
 void GameScene::generateUI()
 {
