@@ -59,6 +59,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	gMap = new GameMap(cMap);
 	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
 
+	myVessel = NULL;
+
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
 
@@ -131,10 +133,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
 
-	std::cout << "before vesesl made" << std::endl;
-	// vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, new Marx::Controller(), 1.0F, 1.0F);
-
-
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
@@ -171,7 +169,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 void GameScene::onLoad()
 {
 	// update views
-	myVessel = NULL;
 	updateMainView(viewMain);
 	viewUI = AppWindow::getInstance().getCurrentView();
 
@@ -278,9 +275,9 @@ void GameScene::update(sf::Time t)
 		// }
 	}
 
-	if (myVessel != NULL)
+	if (myVessel != 0)
 	{
-		viewMain.setCenter(myVessel->left + myVessel->width / 2.0, myVessel->top + myVessel->height / 2.0);
+		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left)*32.0F, (myVessel->top)*32.0F));
 	}
 
 	// listEntity = false;
@@ -350,9 +347,6 @@ void GameScene::update(sf::Time t)
 //	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	//viewMain.setCenter(
-	//	vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
-
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
 	waveShader.setParameter("wave_phase", phase);
@@ -378,7 +372,7 @@ void GameScene::processEvents(sf::Event& e)
 		// ALL OF THE FOLLOWING IS TEMPORARY
 
 		{
-			float camSpeed = 15;
+			/*float camSpeed = 15;
 			switch (e.key.code)
 			{
 
@@ -406,7 +400,7 @@ void GameScene::processEvents(sf::Event& e)
 			    {
 				    break;
 			    }
-			}
+			}*/
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
