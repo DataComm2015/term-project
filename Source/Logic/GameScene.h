@@ -113,6 +113,7 @@ class GameScene : public Scene
 		GUI::Button *b6;
 		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
+		GUI::TextBox *levelInd;
 };
 
 #endif
