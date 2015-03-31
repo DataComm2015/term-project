@@ -43,9 +43,11 @@ class ClientLobbyScene : public Scene
         static void onVesselTwoClick();
         static void onDeityOneClick();
         static void onDeityTwoClick();
+        static void easterEggClick();
         void updateMainView(sf::View& v);
         static int vesselChoice;
         static int deityChoice;
+        static int click;
 
         void startTimer(int remainingTime);
         void stopTimer(int remainingTime);
@@ -60,6 +62,9 @@ class ClientLobbyScene : public Scene
         SGO *background;
         id_resource backgroundImg;
 
+        GUI::Button *easterEggBtn;
+        id_resource easterEggImg;
+
         id_resource circle;
         GUI::TextBox * countdownBox;
         GUI::TextBox * playerBox;
@@ -71,6 +76,7 @@ class ClientLobbyScene : public Scene
 
         SGO *vesselOneSGO;
         SGO *vesselTwoSGO;
+        SGO *easterEggSGO;
 
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;

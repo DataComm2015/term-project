@@ -15,6 +15,7 @@ int ClientLobbyScene::deityChoice;
 sf::Clock ClientLobbyScene::clck;
 bool ClientLobbyScene::timego;
 float ClientLobbyScene::currentTime;
+int ClientLobbyScene::click;
 
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -47,6 +48,7 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     vesselChoice = 1;
     deityChoice = 1;
     timego = false;
+    click = 0;
 
     circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/boxOutline.png"));
 
@@ -61,6 +63,8 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
+    easterEggImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/easteregg.png"));
+
     leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
     /* Initialize buttons */
@@ -73,10 +77,12 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onLeaveClick);
 
+    easterEggBtn = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, easterEggClick);
 
     /*Init artwork*/
     vesselOneSGO = new SGO(*Manager::TextureManager::get(vesselOneArt));
     vesselTwoSGO = new SGO(*Manager::TextureManager::get(vesselTwoArt));
+    easterEggSGO = new SGO(*Manager::TextureManager::get(easterEggImg));
 
     vesselOneCircleSGO = new SGO(*Manager::TextureManager::get(circle));
     vesselTwoCircleSGO = new SGO(*Manager::TextureManager::get(circle));
@@ -91,13 +97,11 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     countdownBox = new GUI::TextBox();
     countdownBox->text().setScale(1, 1);
-    //countdownBox->text().move(30, 5);
     countdownBox->toggleSelected(false);
     countdownBox->text().setFont(*arial);
 
     playerBox = new GUI::TextBox();
     playerBox->text().setScale(1, 1);
-    //playerBox->text().move(30, 20);
     playerBox->toggleSelected(false);
     playerBox->text().setFont(*arial);
 
@@ -173,8 +177,11 @@ void ClientLobbyScene::onLoad()
 
     leaveBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, SCN_HEIGHT * 0.20);
 
-    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT- VESSEL_ART_WH);
-    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT- VESSEL_ART_WH);
+    easterEggBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, 3*SCN_HEIGHT/4);
+
+    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2, SCN_HEIGHT);
+//    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT- VESSEL_ART_WH);
+//    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT- VESSEL_ART_WH);
 
     /* Set the active view */
     updateMainView(viewMain);
@@ -205,6 +212,7 @@ void ClientLobbyScene::update(sf::Time t)
     aspectOneBtn->update(t);
     aspectTwoBtn->update(t);
     leaveBtn->update(t);
+    easterEggBtn->update(t);
 
     if(timego && currentTime > 0)
     {
@@ -292,15 +300,24 @@ void ClientLobbyScene::draw()
     renderer.draw(*countdownBox);
     renderer.draw(*playerBox);
 
+    renderer.draw(*easterEggBtn);
+
+    if(click > 0)
+    {
+//        click--;
+    }
+    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT+ click * -25);
+    renderer.draw(*easterEggSGO);
+
     if(vesselChoice == 1)
     {
-        renderer.draw(*vesselOneSGO);
+        //renderer.draw(*vesselOneSGO);
         renderer.draw(*vesselOneCircleSGO);
     }
 
     if(vesselChoice == 2)
     {
-        renderer.draw(*vesselTwoSGO);
+        //renderer.draw(*vesselTwoSGO);
         renderer.draw(*vesselTwoCircleSGO);
     }
 
@@ -440,6 +457,14 @@ void ClientLobbyScene::onDeityTwoClick()
 {
     deityChoice = 2;
     cout << "Deity 2 clicked" << endl;
+}
+
+void ClientLobbyScene::easterEggClick()
+{
+      if(click<18)
+      {
+        click++;
+      }
 }
 
 /*------------------------------------------------------------------------------------------------------------------
