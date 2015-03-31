@@ -96,6 +96,24 @@ enum class PlayerCommandMsgType
     SELECT_LOBBY_OPTIONS
 };
 
+/////////////////////////////////////////////////////////////////////
+// message types used to between a {ServerNetworkController} and a //
+// {ClientNetoworkController}.                                     //
+/////////////////////////////////////////////////////////////////////
+
+enum class ServerNetworkControllerClientNetworkControllerMsgType
+{
+    /**
+     * request from server to client, asking it to create an entity
+     */
+    NORMAL,
+    /**
+     * request from server to client, asking it to create & follow the passed entity
+     *   with the viewport
+     */
+    FOLLOW_ME
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // message types used to between a {ServerGameState} and a {ClientGameState}. //
 ////////////////////////////////////////////////////////////////////////////////

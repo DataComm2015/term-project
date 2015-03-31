@@ -171,6 +171,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 void GameScene::onLoad()
 {
 	// update views
+	myVessel = NULL;
 	updateMainView(viewMain);
 	viewUI = AppWindow::getInstance().getCurrentView();
 
@@ -216,6 +217,11 @@ void GameScene::positionButtons()
 
 	// position healthbar
 	hb->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 4*buttonHeight);
+}
+
+void GameScene::setPlayerVessel(Vessel *vessel)
+{
+	myVessel = vessel;
 }
 
 void GameScene::unLoad()
@@ -271,6 +277,12 @@ void GameScene::update(sf::Time t)
 			// printf("Address of Controller in GameScene: %p\n",(*it)->getController());
 		// }
 	}
+
+	if (myVessel != NULL)
+	{
+		viewMain.setCenter(myVessel->left + myVessel->width / 2.0, myVessel->top + myVessel->height / 2.0);
+	}
+
 	// listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 

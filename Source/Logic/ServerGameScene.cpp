@@ -173,7 +173,6 @@ void ServerGameScene::createPlayers()
                 initData.y = (float) vesselY;
 
                 Message msg;
-                msg.type = 1;
                 msg.data = (void*) &initData;
                 msg.len = sizeof(initData);
 
@@ -181,10 +180,11 @@ void ServerGameScene::createPlayers()
                 Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
 
                 // register the server controller with the player
+                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME;
                 cont->registerSession(currSession,msg);
 
                 // register the server controller with clients
-                msg.type = 0;
+                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::NORMAL;
                 command->getGameState()->registerWithAllPlayers(cont,&msg);
                 break;
             }

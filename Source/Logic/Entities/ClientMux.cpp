@@ -48,7 +48,11 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             ClientNetworkController* c = new ClientNetworkController(id);
             ret = c;
             Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
-            EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,c);
+            Entity *entity = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,c);
+            if(msg.type == (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME)
+            {
+                 _gameScene->setPlayerVessel(static_cast<Vessel*>(entity));
+            }
             break;
         }
 
