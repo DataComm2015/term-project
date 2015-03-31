@@ -26,13 +26,14 @@ Vessel::Vessel( SGO &_sprite,
 	Marx::Map * gmap,
 	float x,
 	float y,
-	Marx::Controller* controller,
+	Marx::Controller* controller_,
 	float height,
 	float width
 	/*, job_class jobClass, Ability* abilityList*/ )
-			: Marx::VEntity(_sprite, gmap, x, y, NULL, 1.0, 1.0 )
-			,_controller(controller)
+			: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 )
+			//,_controller(controller)
 {
+
 	direction = 1; //start facing right
 
 	resetEXP();
@@ -91,25 +92,25 @@ Vessel::Vessel( SGO &_sprite,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
-	std::vector< Marx::Event > eventQueue = _controller->getEvents();
-	_controller->clearEvents();
-	for( std::vector< Marx::Event >::iterator it = eventQueue.begin()
-		; it != eventQueue.end()
+    // printf("Vessel::onUpdate:cont: %p:%d\n",getController(),getController()->getEvents()->size());
+	// // /*((Controller*) */getController()/*)*/->testData = 50;
+	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
+		; it != eventQueue->end()
 		; ++it )
 	{
-			// switch on type
-			switch(it->type)
-			{
+
+		// switch on type
+		switch((*it)->type)
+		{
 			case ::Marx::MOVE:
-					MoveEvent* ev = (MoveEvent*) (&(*it));
-					printf( "move: x:%f y:%f force:%d\n",
-							ev->getX(), ev->getY(), ev->forced() );
-					// move();
-					setPosition( ev->getX(), ev->getY() );
-					Entity::move( getXPosition(), getYPosition(), false );
-					break;
-			}
+				MoveEvent* ev = (MoveEvent*) (*it);
+				setPosition(getXPosition()+ev->getX(),getYPosition()+ev->getY());
+				Entity::move(getXPosition(),getYPosition(),false);
+				break;
+		}
 	}
+	getController()->clearEvents();
 
 	// moving = false;	//if no movement buttons were pressed in the last frame, stop moving
 	// std::cout << "Movement: " << xPosition << " " << yPosition << std::endl;
@@ -151,36 +152,8 @@ void Vessel::onUpdate()
 	// 	xSpeed = travelSpeed;
 	// 	direction = 1; //signal to animate right facing sprite
 	// }
-
-
-	eventQueue.clear();
 }
 
-void Vessel::turn()
-{
-
-}
-
-/*Marx::Entity* Vessel::move(float, float, bool)
-{
-
-}*/
-
-std::set<Marx::Cell*> Vessel::getCell()
-{
-
-}
-
-void Vessel::onCreate()
-{
-
-}
-
-
-void Vessel::onDestroy()
-{
-
-}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel destructor
@@ -1116,7 +1089,7 @@ job_class Vessel::getJobClass()
 void Vessel::setHealth(int health)
 {
     currentHealth = health;
-    
+
     if (currentHealth < 0)
         currentHealth = 0;
     else if (currentHealth > maxHealth)

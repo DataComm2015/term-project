@@ -10,7 +10,7 @@
 using namespace std;
 
 int Networking::NetworkEntity::nextId = 0;
-int getType();
+
 Networking::NetworkEntity::NetworkEntity( int type )
     :NetworkEntity(nextId++,type)
 {
@@ -35,10 +35,10 @@ Networking::NetworkEntity::NetworkEntity( int type )
 --
 -- NOTES:           Creates a NetworkEntity object
 -----------------------------------------------------------------------------------------------*/
-Networking::NetworkEntity::NetworkEntity( int id, int type )
+Networking::NetworkEntity::NetworkEntity( int id_, int type_ )
+    : id(id_)
+    , type(type_)
 {
-    this->id = id;
-    this->type = type;
     this->mux = NetworkEntityMultiplexer::getInstance();
 
     // add this entity to the multiplexer

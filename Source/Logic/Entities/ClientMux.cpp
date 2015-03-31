@@ -8,13 +8,14 @@
 #include "../../Engine/Map.h"
 #include "../../Engine/Controller.h"
 
-#include "ProperEntity.h"
+#include "../EntityFactory.h"
+#include "../EnemyControllerInit.h"
+#include "../EntityTypes.h"
+
 #include "CommandEntity.h"
 #include "ClientGameState.h"
-#include "NetworkControllerEntity.h"
-#include "ClientEnemyController.h"
-#include "../EnemyControllerInit.h"
-#include "../EnemyTypes.h"
+#include "ClientNetworkController.h"
+
 #include <cstring>
 
 ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene)
@@ -33,37 +34,31 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
     NetworkEntity* ret;
     this->session = session;
 
-    switch(entityType)
+    switch((NetworkEntityPair)entityType)
     {
-        case NET_ENT_PAIR_PLAYER_COMMAND:
+        case NetworkEntityPair::PLAYER_COMMAND:
         {
             command = new CommandEntity(id,_gameScene);
             ret = command;
             break;
         }
 
-        // later, should parse the message to figure out what kind of game
-        // entity to create that is being controlled by the NetworkController.
-        case NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER:
+        case NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER:
         {
-            ret = new NetworkControllerEntity(id);
+            ClientNetworkController* c = new ClientNetworkController(id);
+            ret = c;
+            printf("ClientMux::onRegister:ret %p:%d\n",c,c->getEvents()->size());
             Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
-            new ProperEntity(cMap,0.0F,0.0F,(::Marx::Controller*)ret,1.0,1.0);
+            EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,c);
             break;
         }
 
-        case NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE:
+        case NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE:
         {
             gameState = new ClientGameState(id, command, _gameScene, _lobbyScene);
             ret = gameState;
             break;
         }
-
-        case NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER:
-            printf("Creating Enemy\r\n");
-            EnemyControllerInit *init = (EnemyControllerInit*) msg.data;
-            ret = new ClientEnemyController(id, init, _gameScene);
-            return ret;
     }
 
     return ret;

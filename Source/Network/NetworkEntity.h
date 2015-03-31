@@ -22,17 +22,17 @@ namespace Networking
     public:
         NetworkEntity(int id, int type);
         NetworkEntity(int type);
-        ~NetworkEntity();
+        virtual ~NetworkEntity();
         void update(Message message);
         void registerSession(Session * session, Message message);
         void unregisterSession(Session * session, Message message);
         int getType();
-        int type;
-        int id;
     protected:
         virtual void onRegister(Session *session);
         virtual void onUnregister(Session * session, Message message);
         virtual void onUpdate(Message message);
+        const int type;
+        const int id;
     private:
         void silentRegister(Session* session);
         void silentUnregister(Session* session);

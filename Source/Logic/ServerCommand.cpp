@@ -6,7 +6,7 @@
 
 #include "../Network/Session.h"
 #include "NetworkEntityPairs.h"
-#include "Entities/ServerCommandEntity.h"
+#include "Entities/ServerNetworkController.h"
 #include "../Network/Message.h"
 #include "../Multimedia/manager/ResourceManager.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -34,8 +34,7 @@ void ServerCommand::onConnect(Session* session)
 
     // create an entity that the new connection can use to communicate
     // commands to the server
-    ServerCommandEntity* ctrlr = new ServerCommandEntity();
-    PlayerEntity* player = new PlayerEntity(this, ctrlr);
+    PlayerEntity* player = new PlayerEntity(this);
 
     // create an empty message because we need one
     Message msg;
@@ -60,7 +59,7 @@ void ServerCommand::onConnect(Session* session)
     // If game is in progress -> go to game scene as ghost
     else
     {
-        player->setMode(GHOST);
+        player->setMode(PLAYER_MODE::GHOST);
         gameState->goToGame(gameScene->getWorldSeed());
     }
 

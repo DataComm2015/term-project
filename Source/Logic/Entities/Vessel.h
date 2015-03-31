@@ -107,13 +107,6 @@ class Vessel : public Marx::VEntity, public Creature
 		//inherited methods
 		virtual ~Vessel();
 		virtual void onUpdate();
-		virtual void turn();
-		//virtual Marx::Entity* move(float, float, bool);
-		virtual std::set<Marx::Cell*> getCell();
-		virtual void onCreate();
-		virtual void onDestroy();
-
-		Marx::Controller* _controller;
 
 		void setPosition( float x, float y );
 		float getXPosition();
@@ -159,7 +152,7 @@ class Vessel : public Marx::VEntity, public Creature
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
-		
+
 		virtual void setHealth(int health);
 		virtual void setAttack(int attack);
 		virtual Entity *getEntity();

@@ -26,9 +26,9 @@ GUI::HealthBar *pubHB;
 void onclickHealthTest()
 {
 	static float health = 1.0;
-	
+
 	health = health - .10;
-	
+
 	if(health >= 0)
 		pubHB->update(health);
 }
@@ -132,7 +132,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
 
 	std::cout << "before vesesl made" << std::endl;
-	vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, NULL, 1.0F, 1.0F);
+	// vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, new Marx::Controller(), 1.0F, 1.0F);
 
 
 	sf::Font *arial = new sf::Font();
@@ -213,7 +213,7 @@ void GameScene::positionButtons()
 	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
 	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
 	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
-	
+
 	// position healthbar
 	hb->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 4*buttonHeight);
 }
@@ -255,6 +255,8 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+
+	// static int listEntity = 100;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
 	{
@@ -263,11 +265,13 @@ void GameScene::update(sf::Time t)
 		  exceptions to be thrown. This solution is really janky and should
 		  probably be investigated further once the game is running.
 			- Eric & Sebastian*/
-		if(it != --entities.end())
-		{
-           // (*it)->onUpdate();
-		}
+		// if(--listEntity > 0)
+		// {
+			(*it)->onUpdate();
+			// printf("Address of Controller in GameScene: %p\n",(*it)->getController());
+		// }
 	}
+	// listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 
 	/*
@@ -345,35 +349,6 @@ void GameScene::update(sf::Time t)
 void GameScene::processEvents(sf::Event& e)
 {
 	Scene::processEvents(e);
-	float camSpeed = 15;
-        switch (e.key.code)
-        {
-
-                case sf::Keyboard::W:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
-                        break;
-                }
-                case sf::Keyboard::A:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
-                        break;
-                }
-                case sf::Keyboard::S:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
-                        break;
-                }
-                case sf::Keyboard::D:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
-                        break;
-                }
-            case sf::Keyboard::Return:
-            {
-                    break;
-            }
-        }
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
@@ -389,12 +364,37 @@ void GameScene::processEvents(sf::Event& e)
 		}
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
-		switch (e.key.code)
+
 		{
-		    case sf::Keyboard::Return:
-		    {
-			    break;
-		    }
+			float camSpeed = 15;
+			switch (e.key.code)
+			{
+
+				case sf::Keyboard::A:
+				{
+					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::D:
+				{
+					viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::W:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
+					break;
+				}
+				case sf::Keyboard::S:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
+					break;
+				}
+			    case sf::Keyboard::Return:
+			    {
+				    break;
+			    }
+			}
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
@@ -541,7 +541,7 @@ void GameScene::generateUI()
 	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
-	
+
 	// Create health bar (If statement here if vessel or deity)
 	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 	hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
@@ -553,6 +553,6 @@ void GameScene::generateUI()
 	sf::Vector2f healthSize = sf::Vector2f(width, height);
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
-	
+
 	pubHB = hb;
 }

@@ -20,6 +20,8 @@ class MoveEvent: public ::Marx::Event
 {
 public:
     MoveEvent(float _x, float _y, bool f=false);
+    MoveEvent(MoveEvent&& other);
+    MoveEvent(const MoveEvent& other);
     float getX();
     float getY();
     bool forced();

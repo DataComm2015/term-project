@@ -43,6 +43,7 @@ namespace Marx
     {
     public:
         Event(EventType e):type(e) {};
+        Event(const Event& other):type(other.type) {};
         const EventType type;
     };
 }
