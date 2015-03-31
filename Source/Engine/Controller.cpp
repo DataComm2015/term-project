@@ -21,6 +21,8 @@
 
 #include "Controller.h"
 
+#include <cstdio>
+
 using namespace Marx;
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: std::vector<Event> Controller::getEvents()
@@ -42,12 +44,29 @@ using namespace Marx;
 --        This function returns the eventQueue member of the Controller object
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-std::vector<Event> Controller::getEvents()
+std::vector<Event*>* Controller::getEvents()
 {
-    return eventQueue;
+    return &eventQueue;
 }
 
-void Controller::addEvent(Event event)
+void Controller::addEvent(Event *event)
 {
     eventQueue.push_back(event);
+}
+
+void Controller::clearEvents()
+{
+    while (eventQueue.size() != 0)
+    {
+        delete eventQueue.back();
+        eventQueue.pop_back();
+    }
+}
+
+Controller::Controller()
+{
+}
+
+Controller::~Controller()
+{
 }

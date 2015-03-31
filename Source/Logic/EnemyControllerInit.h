@@ -1,11 +1,11 @@
 #ifndef _ENEMY_CONTROLLER_INIT_H_
 #define _ENEMY_CONTROLLER_INIT_H_
 
-#include "EnemyTypes.h"
+#include "EntityTypes.h"
 
 struct EnemyControllerInit
 {
-    ENEMY_TYPES type;
+    ENTITY_TYPES type;
     float x;
     float y;
 };
