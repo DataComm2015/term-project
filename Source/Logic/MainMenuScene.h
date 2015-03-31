@@ -14,6 +14,7 @@
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
+#include "CreditScene.h"
 
 #define BTN_SIZE 200
 #define BANNER_W 400

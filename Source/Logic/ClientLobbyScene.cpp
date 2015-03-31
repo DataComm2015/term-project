@@ -91,13 +91,13 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     countdownBox = new GUI::TextBox();
     countdownBox->text().setScale(1, 1);
-    countdownBox->text().move(5, 5);
+    //countdownBox->text().move(30, 5);
     countdownBox->toggleSelected(false);
     countdownBox->text().setFont(*arial);
 
     playerBox = new GUI::TextBox();
     playerBox->text().setScale(1, 1);
-    playerBox->text().move(5, 20);
+    //playerBox->text().move(30, 20);
     playerBox->toggleSelected(false);
     playerBox->text().setFont(*arial);
 
@@ -155,6 +155,9 @@ void ClientLobbyScene::onLoad()
 {
     /* Set btntest positions */
     background->sprite().setPosition(0,0);
+
+    countdownBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10);
+    playerBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10 + SCN_HEIGHT*1/30);
 
     vesselOneBtn->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
     vesselTwoBtn->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
@@ -225,7 +228,8 @@ void ClientLobbyScene::update(sf::Time t)
 -- RETURNS: void
 --
 -- NOTES:
--- Closes network connection
+-- Processes network messages
+-- Either shuts down/ starts countdown
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::processEvents(sf::Event& e)
 {
@@ -267,6 +271,9 @@ void ClientLobbyScene::draw()
     window.setView(viewMain);
 
     renderer.begin();
+
+    //Background has to go first
+    renderer.draw(*background);
 
     if (timego)
     {
@@ -328,11 +335,15 @@ void ClientLobbyScene::draw()
 -- RETURNS: void
 --
 -- NOTES:
--- TODO: Add return to previous screen
+-- TODO: Add networking logic for leaving a lobby
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLeaveClick()
 {
+    AppWindow::getInstance().removeScene(1);
 
+    AppWindow::getInstance().addScene(new MainMenuScene());
+
+    AppWindow::getInstance().run();
 }
 
 /*------------------------------------------------------------------------------------------------------------------

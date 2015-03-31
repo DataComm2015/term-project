@@ -20,7 +20,7 @@ FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameSc
 			          Logic/Entities/ProperEntity.o Logic/Entities/PlayerEntity.o Logic/Entities/ServerCommandEntity.o \
 								Logic/GateKeeperSource/src/GateKeeper.o \
 			          Logic/ServerCommand.o Logic/ClientLobbyScene.o Logic/MainMenuScene.o Logic/Entities/ClientGameState.o Logic/Entities/ServerGameState.o \
-			          Logic/Creature.o Logic/EnemySpawner.o Logic/Entities/ServerEnemyController.o Logic/Entities/ClientEnemyController.o
+			          Logic/Creature.o Logic/EnemySpawner.o Logic/Entities/ServerEnemyController.o Logic/Entities/ClientEnemyController.o Logic/CreditScene.o \
 
 
 FILES_NETWORK=		Network/Client.o Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o \

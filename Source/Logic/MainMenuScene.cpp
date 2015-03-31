@@ -83,14 +83,10 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBoxes[ PORT_TXT ]     = new GUI::TextBox( nextTextBox, this );
     textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this );
 
-    curTextBox = 0;
-    textBoxes[ SERVER_TXT ]->toggleSelected(true);
-    textBoxes[ PORT_TXT ]->toggleSelected(false);
-    textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
-
     textBoxes[ SERVER_TXT ]->text().setFont(*arial);
     textBoxes[ PORT_TXT ]->text().setFont(*arial);
     textBoxes[ NICKNAME_TXT ]->text().setFont(*arial);
+
     /* Get texture assets */
     // as art assets are created for these, add them
     connectImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
@@ -106,6 +102,7 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     serverTextBackgroundBox = new SGO(*Manager::TextureManager::get(textBackgroundBoxImg));
     portTextBackgroundBox = new SGO(*Manager::TextureManager::get(textBackgroundBoxImg));
     nicknameTextBackgroundBox = new SGO(*Manager::TextureManager::get(textBackgroundBoxImg));
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -137,6 +134,7 @@ MainMenuScene::~MainMenuScene()
     // delete nicknameLbl;
 
     delete connectBtn;
+    delete creditBtn;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -175,12 +173,17 @@ void MainMenuScene::onLoad()
     portLbl               ->text().setPosition(0, 0);
     nicknameLbl           ->text().setPosition(0, 0);
 
-    textBoxes[ SERVER_TXT ]   ->text().move(textw/2+5, text1_h/2 - 3);
-    textBoxes[ PORT_TXT ]     ->text().move(textw/2+5, text2_h/2 - 3);
-    textBoxes[ NICKNAME_TXT ] ->text().move(textw/2+5, text3_h/2 - 3);
+    textBoxes[ SERVER_TXT ]   ->text().setPosition(textw/2+5, text1_h/2 - 3);
+    textBoxes[ PORT_TXT ]     ->text().setPosition(textw/2+5, text2_h/2 - 3);
+    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text3_h/2 - 3);
 
     connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
     creditBtn->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH/2, SCN_HEIGHT*.75);
+
+    curTextBox = 0;
+    textBoxes[ SERVER_TXT ]->toggleSelected(true);
+    textBoxes[ PORT_TXT ]->toggleSelected(false);
+    textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
 
     /* Set the active view */
     updateMainView(viewMain);
@@ -362,7 +365,13 @@ void MainMenuScene::onClick()
 ----------------------------------------------------------------------------------------------------------------------*/
 void MainMenuScene::onClickCredit()
 {
+    CreditScene* creditscene = new CreditScene(MainMenuScene::getInstance());
 
+    AppWindow::getInstance().removeScene(1);
+
+    AppWindow::getInstance().addScene(creditscene); 
+
+    AppWindow::getInstance().run();
 }
 
 /*------------------------------------------------------------------------------------------------------------------
