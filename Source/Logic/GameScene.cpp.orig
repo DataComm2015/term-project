@@ -265,7 +265,7 @@ void GameScene::update(sf::Time t)
 			- Eric & Sebastian*/
 		if(it != --entities.end())
 		{
-           // (*it)->onUpdate();
+		    (*it)->onUpdate();
 		}
 	}
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
@@ -344,7 +344,9 @@ void GameScene::update(sf::Time t)
 
 void GameScene::processEvents(sf::Event& e)
 {
-	Scene::processEvents(e);
+<<<<<<< HEAD
+    Scene::processEvents(e);
+=======
 	float camSpeed = 15;
         switch (e.key.code)
         {
@@ -374,6 +376,7 @@ void GameScene::processEvents(sf::Event& e)
                     break;
             }
         }
+>>>>>>> 35c713d55a3589834a87d2b95a9ac711711dc219
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
