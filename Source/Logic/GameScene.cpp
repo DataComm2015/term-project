@@ -334,8 +334,8 @@ void GameScene::update(sf::Time t)
 //	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	viewMain.setCenter(
-		vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
+	//viewMain.setCenter(
+	//	vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
@@ -344,6 +344,35 @@ void GameScene::update(sf::Time t)
 
 void GameScene::processEvents(sf::Event& e)
 {
+	float camSpeed = 15;
+        switch (e.key.code)
+        {
+
+                case sf::Keyboard::W:
+                {
+                        viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
+                        break;
+                }
+                case sf::Keyboard::A:
+                {
+                        viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
+                        break;
+                }
+                case sf::Keyboard::S:
+                {
+                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
+                        break;
+                }
+                case sf::Keyboard::D:
+                {
+                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
+                        break;
+                }
+            case sf::Keyboard::Return:
+            {
+                    break;
+            }
+        }
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
@@ -391,6 +420,8 @@ void GameScene::processEvents(sf::Event& e)
 			current.play();
 		}
 	}
+
+
 
 	tb->process(e);
 }
