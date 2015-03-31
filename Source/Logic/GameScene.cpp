@@ -175,7 +175,7 @@ void GameScene::onLoad()
 	viewUI = AppWindow::getInstance().getCurrentView();
 
 	// position buttons
-	positionUI();
+	positionButtons();
 
 	// Enable buttons
 	b1->toggleEnabled(true);
@@ -186,8 +186,7 @@ void GameScene::onLoad()
 	b6->toggleEnabled(true);
 }
 
-
-void GameScene::positionUI()
+void GameScene::positionButtons()
 {
 	// Get Window size
 	sf::Vector2u windowSize = AppWindow::getInstance().getSize();
@@ -214,13 +213,9 @@ void GameScene::positionUI()
 	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
 	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
 	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
-
-	// Scale healthbar
-	hb->sprite().setScale(3, 3);
-		
+	
 	// position healthbar
-	hb->sprite().setPosition(20, 20);
-
+	hb->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 4*buttonHeight);
 }
 
 void GameScene::unLoad()
@@ -416,7 +411,7 @@ void GameScene::processEvents(sf::Event& e)
 		// update views
 		updateMainView(viewMain);
 		viewUI = AppWindow::getInstance().getCurrentView();
-		positionUI();
+		positionButtons();
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{

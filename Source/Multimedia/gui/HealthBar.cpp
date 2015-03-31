@@ -27,7 +27,7 @@ namespace GUI
 		barSize = bartexture.getSize();
 		
 		bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x, barSize.y));
-		bar.sprite().setPosition(45, 0);
+		bar.sprite().setPosition(45, 10);
 		
 		this->add(bar);
 	}
