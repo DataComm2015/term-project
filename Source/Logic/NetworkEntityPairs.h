@@ -131,6 +131,21 @@
  */
 #define MSG_T_PLAYER_READY_FOR_GAME 16
 
+ /**
+ * Clients sends the selected nickname to the server
+ */
+#define MSG_T_SERVER_SELECTED_NICKNAME 17
+
+ /**
+ * Clients sends the selected type of vessel to the server
+ */
+#define MSG_T_SERVER_SELECTED_VESSEL 18
+
+ /**
+ * Clients sends the selected type of deity to the server
+ */
+#define MSG_T_SERVER_SELECTED_DEITY 19
+
 
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {ServerController} {NetworkEntity} and a //

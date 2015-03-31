@@ -1,8 +1,12 @@
 #include "../AppWindow.h"
 #include "../Network/Client.h"
+#include "../Network/Message.h"
+#include "NetworkEntityPairs.h"
 #include "Entities/ClientMux.h"
 #include "MainMenuScene.h"
 #include <iostream>
+#include <stdlib.h>
+#include <string.h>
 
 using std::cout;
 using std::cerr;
@@ -11,6 +15,7 @@ using namespace Marx;
 
 using Networking::NetworkEntityMultiplexer;
 using Networking::Client;
+using Networking::Message;
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: MainMenuScene * MainMenuScene::getInstance()
@@ -335,6 +340,15 @@ void MainMenuScene::onClick()
       ClientLobbyScene* lobbyScene = new ClientLobbyScene();
       ClientMux* clientmux = new ClientMux(gameScene,lobbyScene);
       NetworkEntityMultiplexer::setInstance(clientmux);
+
+      char* nickname_text = (char *)MainMenuScene::getInstance()->textBoxes[ NICKNAME_TXT ]->getText().c_str();
+      
+      clientmux->message.type = MSG_T_SERVER_SELECTED_NICKNAME;
+      clientmux->message.len = strlen(nickname_text);
+      //clientmux->message.data = (char*)"TEST";
+      char* hello = new char[16];
+      memcpy(hello, nickname_text, strlen(nickname_text));
+      clientmux->message.data = hello;
 
       Client* client = new Client();
       short port = atoi( MainMenuScene::getInstance()->textBoxes[ PORT_TXT ]->getText().c_str() );
