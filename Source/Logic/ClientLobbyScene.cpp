@@ -288,8 +288,8 @@ void ClientLobbyScene::draw()
 
     if(currScrollHeight < MAX_SCROLL)
     {
-        //Time scrollTime = clck.getElapsedTime();
-        //currScrollHeight = scrollTime.asSeconds();
+        sf::Time scrollTime = clck.getElapsedTime();
+        currScrollHeight = scrollTime.asSeconds();
     }
 
 
