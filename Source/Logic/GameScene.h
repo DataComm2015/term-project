@@ -57,7 +57,7 @@ class GameScene : public Scene
         	void generateMap(int seed);
 		void generateWater();
 		void generateUI();
-		void positionButtons();
+		void positionUI();
 		void setPlayerVessel(Vessel *vessel);
 		
 	private:

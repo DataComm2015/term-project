@@ -51,6 +51,7 @@ class GameMap
 
 	private:
 		bool createBlockMap();
+		void setCellBoundaries();
 		void generateZones();
 		void generateMiniBosses();
 		void generatePlayers();
