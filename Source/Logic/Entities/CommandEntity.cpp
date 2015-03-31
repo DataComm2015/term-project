@@ -92,7 +92,6 @@ void CommandEntity::onKeyReleased(int key)
     switch(key)
     {
         case sf::Keyboard::Left:
-	    printf("LEFT UP\n");
             command = (int)PlayerCommandMsgType::STOP_MV_LEFT_COMMAND;
             break;
         case sf::Keyboard::Right:

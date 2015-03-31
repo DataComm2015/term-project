@@ -23,28 +23,6 @@ GateKeeper::~GateKeeper()
 
 void GateKeeper::onUpdate()
 {
-  printf("Gatekeeper::onUpdate:cont: %p:%d\n",getController(),getController()->getEvents()->size());
-  // std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
-
-  // for( std::vector< Marx::Event* >::iterator it = eventQueue->begin()
-  //    ; it != eventQueue->end()
-  //    ; ++it )
-  // {
-  //     // switch on type
-  //     switch((*it)->type)
-  //     {
-  //     case ::Marx::MOVE:
-  //         MoveEvent* ev = (MoveEvent*) (*it);
-  //         printf( "move: x:%f y:%f force:%d\n",
-  //             ev->getX(), ev->getY(), ev->forced() );
-  //         move( ev->getX(), ev->getY(), ev->forced() );
-  //         MoveEvent *me = new MoveEvent(ev->getX(),ev->getY(),ev->forced());
-  //         getController()->addEvent(me);
-  //         break;
-  //     }
-  // }
-
-  // getController()->clearEvents();
 }
 
 void GateKeeper::detectPlayers()

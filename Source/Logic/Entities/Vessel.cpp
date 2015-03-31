@@ -93,8 +93,6 @@ Vessel::Vessel( SGO &_sprite,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
-    // printf("Vessel::onUpdate:cont: %p:%d\n",getController(),getController()->getEvents()->size());
-	// // /*((Controller*) */getController()/*)*/->testData = 50;
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
@@ -125,7 +123,7 @@ void Vessel::onUpdate()
         newXSpeed = -xSpeed;
     else if (movingRight)
         newXSpeed = xSpeed;
-    
+
     if (movingUp)
         newYSpeed = -ySpeed;
     else if (movingDown)
@@ -133,7 +131,6 @@ void Vessel::onUpdate()
 
     if (isMoving())
     {
-        printf("MOVING! xspeed:%f, yspeed:%f, xpseed:%f, yspeed:%f\n", newXSpeed, newYSpeed, xSpeed, ySpeed);
         Entity::rMove(newXSpeed, newYSpeed,false);
     }
 }

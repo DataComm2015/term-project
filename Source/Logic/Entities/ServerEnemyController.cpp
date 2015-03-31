@@ -19,8 +19,6 @@ void ServerEnemyController::init()
 {
     if (behaviour)
         behaviour->init();
-
-    printf("I AM TYPE: %d\r\n", type);
 }
 
 void ServerEnemyController::updateBehaviour(float deltaTime)

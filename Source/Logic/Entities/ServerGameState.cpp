@@ -42,7 +42,6 @@ void ServerGameState::playerJoined(Session *session, PlayerEntity *player)
 
 void ServerGameState::playerLeft(Session *session)
 {
-    printf("PLAYER LEFT\r\n");
     int playerCount;
 
     Message msg;

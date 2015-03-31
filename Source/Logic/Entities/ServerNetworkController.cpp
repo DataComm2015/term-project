@@ -14,7 +14,6 @@ ServerNetworkController::ServerNetworkController()
 ServerNetworkController::ServerNetworkController(int type)
     :NetworkEntity(type)
 {
-    printf("TYPE: %d, ID: %d\r\n", type, id);
 }
 
 ServerNetworkController::~ServerNetworkController()
@@ -51,8 +50,6 @@ void ServerNetworkController::sendEventMessage(Event *event)
             message.len  = sizeof(MoveMessage);
             message.type = ::Marx::MOVE;
 
-            //printf("sending:   x: %f  y:%f xDir:%d yDir%d \n",mm.x,mm.y, mm.xDir, mm.yDir);
-
             // send the network event
             update(message);
             break;
@@ -76,56 +73,48 @@ void ServerNetworkController::onUpdate(Message msg)
         case PlayerCommandMsgType::START_MV_LEFT_COMMAND:
         {
             MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::START_MV_RIGHT_COMMAND:
         {
             MoveEvent *event = new MoveEvent(1,0,1,0,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::START_MV_UP_COMMAND:
         {
             MoveEvent *event = new MoveEvent(0,-1,0,-1,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::START_MV_DOWN_COMMAND:
         {
             MoveEvent *event = new MoveEvent(0,1,0,1,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_LEFT_COMMAND:
         {
             MoveEvent *event = new MoveEvent(0,0,0,0,0);
-            printf("receiving: x: %f  y: %f  xDir:%d yDir:%d\n",event->getX(),event->getY(), event->getXDir(), event->getYDir());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_RIGHT_COMMAND:
         {
             MoveEvent *event = new MoveEvent(0,0,0,0,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_UP_COMMAND:
         {
             MoveEvent *event = new MoveEvent(0,0,0,0,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_DOWN_COMMAND:
         {
             MoveEvent *event = new MoveEvent(0,0,0,0,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }

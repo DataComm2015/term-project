@@ -215,7 +215,7 @@ void GameScene::positionUI()
 
 	// Scale healthbar
 	hb->sprite().setScale(3, 3);
-		
+
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
@@ -268,16 +268,7 @@ void GameScene::update(sf::Time t)
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
 	{
-		/*we have to break out one iterator early because the last iterator
-		  was in a REALLY WIERD memory address and was causing bad_alloc()
-		  exceptions to be thrown. This solution is really janky and should
-		  probably be investigated further once the game is running.
-			- Eric & Sebastian*/
-		// if(--listEntity > 0)
-		// {
-			(*it)->onUpdate();
-			// printf("Address of Controller in GameScene: %p\n",(*it)->getController());
-		// }
+		(*it)->onUpdate();
 	}
 
 	if (myVessel != 0)

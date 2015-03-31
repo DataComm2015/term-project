@@ -51,7 +51,6 @@ std::vector<Event*>* Controller::getEvents()
 
 void Controller::addEvent(Event *event)
 {
-    printf("Got event type: %d\r\n", event->type);
     eventQueue.push_back(event);
 }
 

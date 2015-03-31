@@ -139,7 +139,6 @@ void  Entity::turn()
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::rMove(float x, float y, bool force = false)
 {
-	printf("RMOVE: x%f y:%f\n top:%f left:%f", x, y, top, left);
 	return aMove(x + left, y + top, force);
 }
 
@@ -211,7 +210,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		}
     }
 
-	
+
 
 	// loop through all cells in the temporary array. looping for
     for(Cell *c : tempCell)
@@ -252,10 +251,10 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 
 			return nullptr;
 		}
-	
+
 	occupiedCells = tempCell;
 
-	
+
 
 	return nullptr;
 }

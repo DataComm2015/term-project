@@ -30,8 +30,6 @@ ServerCommand::ServerCommand()
 
 void ServerCommand::onConnect(Session* session)
 {
-    printf("new connection\n");
-
     // create an entity that the new connection can use to communicate
     // commands to the server
     PlayerEntity* player = new PlayerEntity(this);

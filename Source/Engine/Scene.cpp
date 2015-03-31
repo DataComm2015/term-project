@@ -49,10 +49,6 @@ void Scene::onLoad()
 ------------------------------------------------------------------------------*/
 void Scene::processEvents(sf::Event & e)
 {
-    //printf("Update NULL Scene\n");
-    //printf("before handling\n");
-    // Networking::handleSessionMessages();
-   // printf("after handling\n");
 	return;
 }
 

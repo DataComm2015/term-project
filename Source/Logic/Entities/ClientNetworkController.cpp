@@ -104,7 +104,6 @@ void ClientNetworkController::parseEventMessage( Message& message )
         // create event from message data
         MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->xDir, mm->yDir, mm->forced);
 
-        printf("receiving:   x: %f  y:%f xDir:%d yDir%d \n",mm->x,mm->y, mm->xDir, mm->yDir);
         // add event to event queue
         addEvent(ev);\
         break;
