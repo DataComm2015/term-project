@@ -65,7 +65,7 @@ void ServerGameScene::update(sf::Time)
 
 void ServerGameScene::processEvents(sf::Event& e)
 {
-
+        Scene::processEvents(e);
 }
 
 void ServerGameScene::draw()

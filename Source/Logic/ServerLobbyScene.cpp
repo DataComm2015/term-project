@@ -26,6 +26,7 @@ ServerLobbyScene::~ServerLobbyScene()
 
 void ServerLobbyScene::update(sf::Time time)
 {
+    Networking::handleSessionMessages();
 	if (timerRunning && !waitingToStart)
 	{
 	    timer -= time.asSeconds();

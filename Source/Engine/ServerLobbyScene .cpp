@@ -25,7 +25,7 @@ void ServerLobbyScene::update(sf::Time)
 
 void ServerLobbyScene::processEvents(sf::Event& e)
 {
-	
+    Scene::processEvents(e);
 }
 
 void ServerLobbyScene::draw()
