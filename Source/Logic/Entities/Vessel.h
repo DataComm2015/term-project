@@ -84,12 +84,13 @@ class Vessel : public Marx::VEntity, public Creature
 		int defaultSpeed;
 		int travelSpeed;
 		int attackPower;
-		float xPosition;
-		float yPosition;
 		int xSpeed;
 		int ySpeed;
 		int direction;	//0 = right, 1 = left //why not a bool?
-		bool moving;
+		bool movingLeft;
+        bool movingRight;
+		bool movingUp;
+        bool movingDown;
 		Weapon* weapon;
 		Ability* abilities;	//3 abilities for each Vessel
 		//TO DO: pointer to the game map needed in the future

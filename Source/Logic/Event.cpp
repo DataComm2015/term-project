@@ -9,11 +9,13 @@
  * @param _y new y position that the entity should move to
  * @param f whatever forced means
  */
-MoveEvent::MoveEvent(float _x, float _y, bool f)
+MoveEvent::MoveEvent(float _x, float _y, int _xDir, int _yDir, bool f)
     :Event(Marx::MOVE)
 {
     x = _x;
     y = _y;
+    x = _xDir;
+    y = _yDir;
     force = f;
 }
 
@@ -43,6 +45,16 @@ float MoveEvent::getX()
 float MoveEvent::getY()
 {
     return y;
+}
+
+int MoveEvent::getXDir()
+{
+    return xDir;
+}
+
+int MoveEvent::getYDir()
+{
+    return yDir;
 }
 
 /**
