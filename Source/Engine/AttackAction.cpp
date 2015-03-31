@@ -6,9 +6,9 @@ Action(_TTL), damage(_damage)
 		
 }
 
-void AttackAction::onUpdate(sf::Time time)
+void AttackAction::onUpdate(Entity * me, sf::Time time)
 {
-	
+	me->getController()->addEvent(
 }
 
 void AttackAction::onHit(Entity *e)

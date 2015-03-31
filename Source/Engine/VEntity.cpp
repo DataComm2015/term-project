@@ -6,8 +6,11 @@
 
 void Marx::VEntity::draw(Renderer& renderer, sf::RenderStates states) const
 {
-	sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
-	states.transform.translate(left * tile->width, (top + height) * tile->height);
+	if(drawable)
+	{
+		sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
+		states.transform.translate(left * tile->width, (top + height) * tile->height);
 
-	renderer.draw(sprite, states);
+		renderer.draw(sprite, states);
+	}
 }

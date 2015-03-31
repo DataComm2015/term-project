@@ -41,6 +41,7 @@ namespace Marx
 		virtual void turn();
 		Entity * move(float, float, bool);
 		Entity * rMove(float, float, bool);
+		Entity * rMove(sf::Vector2f &, float, bool);
 		Entity * aMove(float, float, bool);
 		Controller *getController();
 		virtual std::set<Cell*> getCell();
