@@ -48,6 +48,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
         case NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER:
         {
             ret = new ClientNetworkController(id);
+            printf("Address of Controller in MUX: %p\n", ret);
             Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
             EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,(Controller*)ret);
             break;

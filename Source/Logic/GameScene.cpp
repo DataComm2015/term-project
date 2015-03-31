@@ -255,6 +255,8 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+
+	static bool listEntity = true;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
 	{
@@ -263,11 +265,13 @@ void GameScene::update(sf::Time t)
 		  exceptions to be thrown. This solution is really janky and should
 		  probably be investigated further once the game is running.
 			- Eric & Sebastian*/
-		// if(it != --entities.end())
-		// {
-		//     (*it)->onUpdate();
-		// }
+		if(listEntity)
+		{
+			(*it)->onUpdate();
+			// printf("Address of Controller in GameScene: %p\n",(*it)->getController());
+		}
 	}
+	listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 
 	/*
@@ -334,8 +338,8 @@ void GameScene::update(sf::Time t)
 //	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	viewMain.setCenter(
-		vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
+	//viewMain.setCenter(
+	//	vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
 
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
@@ -359,13 +363,36 @@ void GameScene::processEvents(sf::Event& e)
 		}
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
-		switch (e.key.code)
-		{
-		    case sf::Keyboard::Return:
-		    {
-			    break;
-		    }
-		}
+
+		{float camSpeed = 15;
+				switch (e.key.code)
+				{
+
+					case sf::Keyboard::A:
+					{
+						viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
+						break;
+					}
+					case sf::Keyboard::D:
+					{
+						viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
+						break;
+					}
+					case sf::Keyboard::W:
+					{
+						viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
+						break;
+					}
+					case sf::Keyboard::S:
+					{
+						viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
+						break;
+					}
+				    case sf::Keyboard::Return:
+				    {
+					    break;
+				    }
+				}}
 	}
 	else if (e.type == sf::Event::KeyReleased)
 	{

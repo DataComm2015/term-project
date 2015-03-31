@@ -17,6 +17,14 @@ MoveEvent::MoveEvent(float _x, float _y, bool f)
     force = f;
 }
 
+MoveEvent::MoveEvent(const MoveEvent& other)
+    :Event(other.type)
+{
+    x = 12.0F;//other.x;
+    y = 12.0F;//other.y;
+    force = 12.0F;//other.force;
+}
+
 /**
  * returns the x property of the move event.
  *

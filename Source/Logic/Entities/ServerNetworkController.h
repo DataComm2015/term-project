@@ -32,10 +32,10 @@ class ServerNetworkController : public Controller, public Networking::NetworkEnt
     public:
         ServerNetworkController();
         virtual ~ServerNetworkController();
-        virtual void addEvent(Event event);
+        virtual void addEvent(Event *event);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message msg);
-        void sendEventMessage(Event event);
+        void sendEventMessage(Event *event);
 
     protected:
         ServerNetworkController(int type);

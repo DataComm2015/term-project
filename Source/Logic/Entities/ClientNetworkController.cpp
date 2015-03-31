@@ -95,10 +95,13 @@ void ClientNetworkController::parseEventMessage( Message& message )
         MoveMessage* mm = (MoveMessage*) message.data;
 
         // create event from message data
-        MoveEvent ev(mm->x, mm->y, mm->forced);
+        MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->forced);
 
+        printf("receiving:   x: %f  y:%f \n",mm->x,mm->y);
+        printf("Address of Controller in Controller: %p\n", this);
         // add event to event queue
         addEvent(ev);
+        printf("size of queue after add: %d\n", eventQueue.size());
         break;
     }
     default:

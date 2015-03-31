@@ -10,25 +10,25 @@ ProperEntity::ProperEntity( Marx::Map * map, float x, float y, Marx::Controller 
 
 void ProperEntity::onUpdate()
 {
-    std::vector< Marx::Event > eventQueue = controller->getEvents();
+    std::vector<Marx::Event*>* eventQueue = controller->getEvents();
 
-    for( std::vector< Marx::Event >::iterator it = eventQueue.begin()
-       ; it != eventQueue.end()
+    for( std::vector< Marx::Event* >::iterator it = eventQueue->begin()
+       ; it != eventQueue->end()
        ; ++it )
     {
         // switch on type
-        switch(it->type)
+        switch((*it)->type)
         {
         case ::Marx::MOVE:
-            MoveEvent* ev = (MoveEvent*) (&*it);
+            MoveEvent* ev = (MoveEvent*) (*it);
             printf( "move: x:%f y:%f force:%d\n",
                 ev->getX(), ev->getY(), ev->forced() );
             move( ev->getX(), ev->getY(), ev->forced() );
-            MoveEvent me(ev->getX(),ev->getY(),ev->forced());
+            MoveEvent *me = new MoveEvent(ev->getX(),ev->getY(),ev->forced());
             controller->addEvent(me);
             break;
         }
     }
 
-    eventQueue.clear();
+    eventQueue->clear();
 }

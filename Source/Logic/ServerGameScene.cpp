@@ -84,7 +84,7 @@ void ServerGameScene::enterScene()
     // Generate the game map
 	gMap->generateMap(worldSeed, this);
 
-    // createPlayers();
+    createPlayers();
 	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
 	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
 	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
@@ -111,24 +111,24 @@ int ServerGameScene::getWorldSeed()
 
 void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y)
 {
-    EnemyControllerInit initData;
-	initData.type = type;
-	initData.x = x;
-	initData.y = y;
+ //    EnemyControllerInit initData;
+	// initData.type = type;
+	// initData.x = x;
+	// initData.y = y;
 
-    printf("X: %f, Y: %f\n", x, y);
+ //    printf("X: %f, Y: %f\n", x, y);
 
-	Message msg;
-	msg.type = 0;
-	msg.data = (void*) &initData;
-	msg.len = sizeof(initData);
+	// Message msg;
+	// msg.type = 0;
+	// msg.data = (void*) &initData;
+	// msg.len = sizeof(initData);
 
-	// Create the enemy
-	ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
-	enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
-	enemyController->init();
-	printf("ENEMY ENTITY TYPE: %d\r\n", enemyController->getType());
-	command->getGameState()->registerWithAllPlayers(enemyController, &msg);
+	// // Create the enemy
+	// ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
+	// enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
+	// enemyController->init();
+	// printf("ENEMY ENTITY TYPE: %d\r\n", enemyController->getType());
+	// command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
 
 /**
@@ -142,28 +142,25 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
 void ServerGameScene::createPlayers()
 {
     std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
-    PlayerEntity* p;
+    PlayerEntity* currPlayer;
     PLAYER_MODE mode;
-
-    int i = 0;
 
     // make ServerNetworkController for each vessel
     for(auto it = players.begin(); it != players.end(); ++it)
     {
-        p = it->second;
-        mode = p->getMode();
-
-        printf("I am a player%d!\n",++i);
+        currPlayer = it->second;
+        mode = currPlayer->getMode();
 
         switch(mode)
         {
-        case PLAYER_MODE::VESSEL:
+            case PLAYER_MODE::VESSEL:
             {
-                ServerVesselController* cont = new ServerVesselController();
-                p->setController(cont);
+                // create the controller, and bind it with the player
+                ServerNetworkController* cont = new ServerNetworkController();
+                currPlayer->setController(cont);
 
                 // create vessel, pass it server vessel controller too
-                EntityFactory::getInstance()->makeEntity(ENTITY_TYPES::VESSEL,cont,cMap,12,12);
+                EntityFactory::getInstance()->makeEntity(ENTITY_TYPES::VESSEL,cont,cMap,0,0);
 
                 // register the vessel controller with all clients
                 Message msg;
@@ -171,11 +168,11 @@ void ServerGameScene::createPlayers()
                 command->getGameState()->registerWithAllPlayers(cont,&msg);
                 break;
             }
-        case PLAYER_MODE::GHOST:
+            case PLAYER_MODE::GHOST:
             {
                 break;
             }
-        case PLAYER_MODE::DEITY:
+            case PLAYER_MODE::DEITY:
             {
                 //SeverDeityController* deityController = new DeityController();
                 //p->setController(deityController);
