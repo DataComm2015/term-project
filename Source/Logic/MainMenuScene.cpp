@@ -89,6 +89,7 @@ void MainMenuScene::update(sf::Time t)
 
 void MainMenuScene::processEvents(sf::Event& e)
 {
+    Scene::processEvents(e);
     textBoxes[ curTextBox ]->process(e);
 }
 
