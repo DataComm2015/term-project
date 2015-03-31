@@ -23,6 +23,9 @@
 #define CLASS_BTN_WIDTH 48
 #define CLASS_BTN_HEIGHT 49
 
+#define CLASS_BTN_WIDTH_B 52
+#define CLASS_BTN_HEIGHT_B 52
+
 /*
 *   This is the Lobby scene.
 */
@@ -41,14 +44,12 @@ class ClientLobbyScene : public Scene
         static void onVesselTwoClick();
         static void onDeityOneClick();
         static void onDeityTwoClick();
-
-        static int getDeityChoice();
-        static int getVesselChoice();
-
+        static void easterEggClick();
         void updateMainView(sf::View& v);
         static int vesselChoice;
         static int deityChoice;
-        
+        static int click;
+
         void startTimer(int remainingTime);
         void stopTimer(int remainingTime);
         void updatePlayerCount(int numPlayers);
@@ -62,6 +63,9 @@ class ClientLobbyScene : public Scene
         SGO *background;
         id_resource backgroundImg;
 
+        GUI::Button *easterEggBtn;
+        id_resource easterEggImg;
+
         id_resource circle;
         GUI::TextBox * countdownBox;
         GUI::TextBox * playerBox;
@@ -73,12 +77,13 @@ class ClientLobbyScene : public Scene
 
         SGO *vesselOneSGO;
         SGO *vesselTwoSGO;
+        SGO *easterEggSGO;
 
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;
 
-        GUI::Button * aspectOneBtn;
-        GUI::Button * aspectTwoBtn;
+        GUI::Button * deityOneBtn;
+        GUI::Button * deityTwoBtn;
 
         GUI::Button * leaveBtn;
 
@@ -88,8 +93,8 @@ class ClientLobbyScene : public Scene
         id_resource vesselOneImg;
         id_resource vesselTwoImg;
 
-        id_resource aspectOneImg;
-        id_resource aspectTwoImg;
+        id_resource deityOneImg;
+        id_resource deityTwoImg;
 
         id_resource leaveImg;
 
@@ -99,7 +104,12 @@ class ClientLobbyScene : public Scene
         const int CIRCLE_WH = 200;
         const int VESSEL_ART_WH = 400;
 
+        const int MAX_SCROLL = 1000;
+
         static sf::Clock clck;
+
+        static int currScrollHeight;
+
         static bool timego;
         static float currentTime;
         int playerCount;
