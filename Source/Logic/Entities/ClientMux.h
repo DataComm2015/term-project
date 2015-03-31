@@ -26,6 +26,7 @@ class CommandEntity;
 class ClientMux : public Networking::NetworkEntityMultiplexer
 {
     public:
+        Message message;
         ClientMux(GameScene* scene, ClientLobbyScene* lobbyScene);
         virtual ~ClientMux();
         virtual NetworkEntity* onRegister(int id, int entityType,
