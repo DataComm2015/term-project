@@ -165,6 +165,9 @@ void AppWindow::run()
 		// LOOP
 		while (isOpen())
 		{
+			// process networking messages
+			Networking::handleSessionMessages();
+
 			// TIME UPDATES
 			m_elapsedTime = clock.restart();
 			m_timeSinceLastUpdate += m_elapsedTime;

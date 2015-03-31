@@ -1,18 +1,25 @@
 #include "ClientNetworkController.h"
 
+#include "../../Engine/Event.h"
+
+#include "../../Network/Message.h"
+#include "../../Network/Session.h"
+
+#include "../NetworkEntityPairs.h"
+
+#include "../Event.h"
+
 #include <stdio.h>
 
+using ::Marx::Event;
+using Marx::Controller;
 using Networking::Message;
 using Networking::Session;
 using Networking::NetworkEntity;
 
 ClientNetworkController::ClientNetworkController(int id)
-    :NetworkEntity(id,(int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
-{
-}
-
-ClientNetworkController::ClientNetworkController(int id, int type)
-    :NetworkEntity(id,type)
+    : Controller()
+    , NetworkEntity(id,(int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 
@@ -101,7 +108,7 @@ void ClientNetworkController::parseEventMessage( Message& message )
         printf("Address of Controller in Controller: %p\n", this);
         // add event to event queue
         addEvent(ev);
-        printf("size of queue after add: %d\n", eventQueue.size());
+        printf("size of queue after add: %d\n", getEvents()->size());
         break;
     }
     default:

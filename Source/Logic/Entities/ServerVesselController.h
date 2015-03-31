@@ -1,4 +1,4 @@
-#ifndef SERVERVESSELCONTROLLER_H
+/*#ifndef SERVERVESSELCONTROLLER_H
 #define SERVERVESSELCONTROLLER_H
 
 #include "ServerNetworkController.h"
@@ -12,3 +12,4 @@ public:
 };
 
 #endif // SERVERVESSELCONTROLLER_H
+*/

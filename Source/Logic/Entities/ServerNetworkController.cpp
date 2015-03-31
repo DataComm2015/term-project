@@ -6,7 +6,8 @@
 #include <cstring>
 
 ServerNetworkController::ServerNetworkController()
-    :NetworkEntity((int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
+    :Controller()
+    ,NetworkEntity((int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 
@@ -22,7 +23,6 @@ ServerNetworkController::~ServerNetworkController()
 
 void ServerNetworkController::addEvent(Event *event)
 {
-    MoveEvent* me = (MoveEvent*) event;
     sendEventMessage(event);
     Controller::addEvent(event);
 }
@@ -71,28 +71,28 @@ void ServerNetworkController::onUpdate(Message msg)
     {
         case PlayerCommandMsgType::START_MV_LEFT_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(-5,0,0);
+            MoveEvent *event = new MoveEvent(-1,0,0);
             printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::START_MV_RIGHT_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(5,0,0);
+            MoveEvent *event = new MoveEvent(1,0,0);
             printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::START_MV_UP_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(0,-5,0);
+            MoveEvent *event = new MoveEvent(0,-1,0);
             printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::START_MV_DOWN_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(0,5,0);
+            MoveEvent *event = new MoveEvent(0,1,0);
             printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
             addEvent(event);
             break;

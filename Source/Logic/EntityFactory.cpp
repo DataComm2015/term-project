@@ -75,22 +75,23 @@ Entity* EntityFactory::makeEntity(
 {
     Entity* entity;
 
+
     switch(type)
     {
         case ENTITY_TYPES::BASIC_TYPE:
+            printf("EntityFactory::makeEntity:GateKeeper:ctrl: %p:%d\n",cont,cont->getEvents()->size());
             entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
             break;
         case ENTITY_TYPES::VESSEL:
+            printf("EntityFactory::makeEntity:Vessel:ctrl: %p:%d\n",cont,cont->getEvents()->size());
             entity = new Vessel(gkSGO,map,x,y,cont,1,1);
             break;
         case ENTITY_TYPES::I_DONT_KNOW:
-            // CREATE NEW ENEMY OF GIVEN TYPE
-            // RETURN ENEMY
-            break;
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         case ENTITY_TYPES::MINI_BOSS:
         default:
+            printf("EntityFactory::makeEntity:ProperEntity:ctrl: %p:%d\n",cont,cont->getEvents()->size());
             entity = new ProperEntity(map,x,y,cont,1.0,1.0);
             break;
     }

@@ -11,19 +11,14 @@ namespace Marx
     */
     class Controller
     {
-    protected:
-        std::vector<Event*> eventQueue;
     public:
-        std::vector<Event*>* getEvents();
+        Controller();
+        virtual ~Controller();
+        virtual std::vector<Event*>* getEvents();
         virtual void addEvent(Event *ev);
-        void clearEvents()
-        {
-            while (eventQueue.size() != 0)
-            {
-                delete eventQueue.back();
-                eventQueue.pop_back();
-            }
-        }
+        virtual void clearEvents();
+    private:
+        std::vector<Event*> eventQueue;
     };
 }
 

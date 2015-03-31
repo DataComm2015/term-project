@@ -92,27 +92,21 @@ Vessel::Vessel( SGO &_sprite,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
-	// /*((Controller*) */getController()/*)*/->testData = 50;
+    // printf("Vessel::onUpdate:cont: %p:%d\n",getController(),getController()->getEvents()->size());
+	// // /*((Controller*) */getController()/*)*/->testData = 50;
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
 		; ++it )
 	{
-		printf("i foundn nan eeeeeeeeeeeeeeeeeeeeeeevent\n");
 
 		// switch on type
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
 				MoveEvent* ev = (MoveEvent*) (*it);
-				printf( "move: x:%f y:%f force:%d\n",
-						ev->getX(), ev->getY(), ev->forced() );
-				// move();
-				// setPosition( ev->getX(), ev->getY() );
-				Entity::move(
-					getXPosition()+ev->getX(),
-					getYPosition()+ev->getY(),
-					false);
+				setPosition(getXPosition()+ev->getX(),getYPosition()+ev->getY());
+				Entity::move(getXPosition(),getYPosition(),false);
 				break;
 		}
 	}
@@ -158,9 +152,6 @@ void Vessel::onUpdate()
 	// 	xSpeed = travelSpeed;
 	// 	direction = 1; //signal to animate right facing sprite
 	// }
-
-
-	eventQueue->clear();
 }
 
 

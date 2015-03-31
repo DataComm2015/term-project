@@ -132,7 +132,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
 
 	std::cout << "before vesesl made" << std::endl;
-	vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, new Marx::Controller(), 1.0F, 1.0F);
+	// vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, new Marx::Controller(), 1.0F, 1.0F);
 
 
 	sf::Font *arial = new sf::Font();
@@ -256,7 +256,7 @@ GameScene::~GameScene()
 void GameScene::update(sf::Time t)
 {
 
-	static bool listEntity = true;
+	// static int listEntity = 100;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
 	{
@@ -265,13 +265,13 @@ void GameScene::update(sf::Time t)
 		  exceptions to be thrown. This solution is really janky and should
 		  probably be investigated further once the game is running.
 			- Eric & Sebastian*/
-		if(listEntity)
-		{
+		// if(--listEntity > 0)
+		// {
 			(*it)->onUpdate();
 			// printf("Address of Controller in GameScene: %p\n",(*it)->getController());
-		}
+		// }
 	}
-	listEntity = false;
+	// listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 
 	/*
@@ -349,35 +349,6 @@ void GameScene::update(sf::Time t)
 void GameScene::processEvents(sf::Event& e)
 {
 	Scene::processEvents(e);
-	float camSpeed = 15;
-        switch (e.key.code)
-        {
-
-                case sf::Keyboard::W:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
-                        break;
-                }
-                case sf::Keyboard::A:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
-                        break;
-                }
-                case sf::Keyboard::S:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
-                        break;
-                }
-                case sf::Keyboard::D:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
-                        break;
-                }
-            case sf::Keyboard::Return:
-            {
-                    break;
-            }
-        }
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
@@ -394,35 +365,37 @@ void GameScene::processEvents(sf::Event& e)
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
 
-		{float camSpeed = 15;
-				switch (e.key.code)
-				{
+		{
+			float camSpeed = 15;
+			switch (e.key.code)
+			{
 
-					case sf::Keyboard::A:
-					{
-						viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
-						break;
-					}
-					case sf::Keyboard::D:
-					{
-						viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
-						break;
-					}
-					case sf::Keyboard::W:
-					{
-						viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
-						break;
-					}
-					case sf::Keyboard::S:
-					{
-						viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
-						break;
-					}
-				    case sf::Keyboard::Return:
-				    {
-					    break;
-				    }
-				}}
+				case sf::Keyboard::A:
+				{
+					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::D:
+				{
+					viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::W:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
+					break;
+				}
+				case sf::Keyboard::S:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
+					break;
+				}
+			    case sf::Keyboard::Return:
+			    {
+				    break;
+			    }
+			}
+		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
 	{

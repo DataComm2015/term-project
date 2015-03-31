@@ -61,6 +61,9 @@ void run(ServerCommand *server)
         // LOOP
         while (isRunning)
         {
+            // process network messages
+            Networking::handleSessionMessages();
+
             // TIME UPDATES
             m_elapsedTime = clock.restart();
             m_timeSinceLastUpdate += m_elapsedTime;

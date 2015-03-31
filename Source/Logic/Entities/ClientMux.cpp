@@ -43,14 +43,13 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             break;
         }
 
-        // later, should parse the message to figure out what kind of game
-        // entity to create that is being controlled by the NetworkController.
         case NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER:
         {
-            ret = new ClientNetworkController(id);
-            printf("Address of Controller in MUX: %p\n", ret);
+            ClientNetworkController* c = new ClientNetworkController(id);
+            ret = c;
+            printf("ClientMux::onRegister:ret %p:%d\n",c,c->getEvents()->size());
             Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
-            EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,(Controller*)ret);
+            EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,c);
             break;
         }
 

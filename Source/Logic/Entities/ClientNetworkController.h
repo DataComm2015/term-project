@@ -2,12 +2,20 @@
 #define _NETWORK_CONTROLLER_ENTITY
 
 #include "../../Engine/Controller.h"
-#include "../../Network/Message.h"
-#include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
-#include "../NetworkEntityPairs.h"
-#include "../Event.h"
 
+namespace Marx
+{
+    class Event;
+    class Controller;
+}
+
+namespace Networking
+{
+    class NetworkEntity;
+    class Session;
+    struct Message;
+}
 
 /**
  * the {ServerNetworkController} class on the server is logically mapped to a
@@ -29,8 +37,7 @@ class ClientNetworkController
 {
 public:
     ClientNetworkController(int id);
-    ClientNetworkController(int id, int type);
-    ~ClientNetworkController();
+    virtual ~ClientNetworkController();
     virtual void onUpdate(Networking::Message message);
     virtual void onUnregister(Networking::Session* session,
         Networking::Message message);

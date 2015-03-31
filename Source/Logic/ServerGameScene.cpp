@@ -159,12 +159,21 @@ void ServerGameScene::createPlayers()
                 ServerNetworkController* cont = new ServerNetworkController();
                 currPlayer->setController(cont);
 
-                // create vessel, pass it server vessel controller too
-                EntityFactory::getInstance()->makeEntity(ENTITY_TYPES::VESSEL,cont,cMap,0,0);
-
                 // register the vessel controller with all clients
+                EnemyControllerInit initData;
+                initData.type = ENTITY_TYPES::VESSEL;
+                initData.x = 32;
+                initData.y = 32;
+
                 Message msg;
-                memset(&msg,0,sizeof(msg));
+                msg.type = 0;
+                msg.data = (void*) &initData;
+                msg.len = sizeof(initData);
+
+                // create vessel, pass it server vessel controller too
+                Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
+
+                // register the server controller with clients
                 command->getGameState()->registerWithAllPlayers(cont,&msg);
                 break;
             }

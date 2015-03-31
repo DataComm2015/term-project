@@ -54,3 +54,20 @@ void Controller::addEvent(Event *event)
     printf("Got event type: %d\r\n", event->type);
     eventQueue.push_back(event);
 }
+
+void Controller::clearEvents()
+{
+    while (eventQueue.size() != 0)
+    {
+        delete eventQueue.back();
+        eventQueue.pop_back();
+    }
+}
+
+Controller::Controller()
+{
+}
+
+Controller::~Controller()
+{
+}

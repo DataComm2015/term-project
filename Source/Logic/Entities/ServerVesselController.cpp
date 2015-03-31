@@ -1,4 +1,4 @@
-#include "ServerVesselController.h"
+/*#include "ServerVesselController.h"
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 
@@ -65,3 +65,4 @@ void ServerVesselController::onUpdate(Message msg)
         }
     }
 }
+*/
