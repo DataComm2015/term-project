@@ -14,7 +14,7 @@
     -- INTERFACE: int createSem(int sid)
     -- key: key for the semaphore to create
     --
-    -- RETURNS: id of the semaphore, -1 on failure
+    -- RETURNS: id of the semaphore, -0 on failure
     --
     -- NOTES: allows process to gain access to a semaphore object.  blocking.
     -----------------------------------------------------------------------------------------------*/
@@ -22,18 +22,17 @@
     {
         int sid, result;
 
-        if( (sid = semget(key, 1, IPC_CREAT)) < 0)
+        if( (sid = semget(key, 1, IPC_CREAT|0660)) < 0)
         {
             perror("error creating semaphore");
             return 0;
         }
-        printf("semid after semget %d", sid);
+
         if( (result = semctl(sid, 0, SETVAL, 0) ) == -1)
         {
             perror("error initializing semaphore");
             return 0;
         }
-        printf("semid after semctl %d", sid);
         return sid;
     }
     /*----------------------------------------------------------------------------------------------
@@ -130,5 +129,18 @@
         }
         free(sembuf_ptr);
         return true;
+    }
+
+    int initSessionSem(int key)
+    {
+        int x = createSem(key);
+        if(x == 0)
+        {
+            printf("Semaphore error SESSIONS sem, throwing\n");
+            throw;
+        }
+
+        releaseSem(x);
+        return x;
     }
 

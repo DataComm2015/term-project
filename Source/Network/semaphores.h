@@ -17,6 +17,7 @@ bool releaseSem(int sid);
 bool accessSem(int sid);
 bool deleteSem(int sid);
 int createSem(int key);
+int initSessionSem(int key);
 
 
 #endif // SEMAPHORES_H

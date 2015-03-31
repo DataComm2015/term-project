@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "../Network/Session.h"
 
 using namespace Marx;
 
@@ -41,12 +42,17 @@ void Scene::onLoad()
 --
 -- NOTES: This function is called when a scene needs to be unLoaded. The default
 --		  Scene does not get deleted this must be done when the scene is extended.
+
+          calls handleSessionMessages which deals with all the queued messages
+          for all sessions this scene has.
 -- 
 ------------------------------------------------------------------------------*/
 void Scene::processEvents(sf::Event & e)
 {
-	//printf("Event");
-	// no Implementation
+    //printf("Update NULL Scene\n");
+    //printf("before handling\n");
+    Networking::handleSessionMessages();
+   // printf("after handling\n");
 	return;
 }
 
@@ -70,7 +76,6 @@ void Scene::processEvents(sf::Event & e)
 ------------------------------------------------------------------------------*/
 void Scene::update(sf::Time)
 {
-	//printf("Update NULL Scene\n");
 
 	return;
 }

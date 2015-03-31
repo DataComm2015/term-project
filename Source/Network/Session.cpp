@@ -21,6 +21,7 @@ Session::Session(int socket)
     this->socket    = socket;
     this->entityMux = NetworkEntityMultiplexer::getInstance();
     this->messagesSem = createSem(MESSAGE_SEM_KEY--);
+    releaseSem(messagesSem);
 
     accessSem(SESSION_SEM);
     SESSIONS.insert(this);
@@ -38,10 +39,11 @@ Session::~Session()
     {
          auto it = messages.front();
         m = it;
-        free( m );
+        free(m->data);
+        delete m;
         messages.pop_front();
     }
-
+    deleteSem(messagesSem);
     disconnect();
 }
 
@@ -118,23 +120,31 @@ void Session::handleMessages()
     accessSem(messagesSem);
     Message* m;
 
-    for(auto it = messages.begin(); it != messages.end(); it++)
+  //  printf("actual mesages %d\n", messages.size());
+    while(messages.size() > 0)
     {
-        m = *it;
+        m = messages[0];
+       // printf("before entitymux onMessage\n");
         entityMux->onMessage(this, *m);
-        free(*it);
-        it = messages.erase(it);
+       // printf("after entitymux onMessage\n");
+        free(m->data);
+        delete m;
+        messages.erase(messages.begin());
     }
 
     releaseSem(messagesSem);
+   // printf("end actual messages");
 }
 
-void handleSessionMessages()
+void Networking::handleSessionMessages()
 {
     accessSem(SESSION_SEM);
+   // printf("this sessions size: %d\n", SESSIONS.size());
     for(auto it = SESSIONS.begin(); it != SESSIONS.end(); it++)
     {
+      //  printf("handle session messages call\n");
         (*it)->handleMessages();
+      //  printf(" after handle session messages call\n");
     }
     releaseSem(SESSION_SEM);
 }
