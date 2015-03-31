@@ -33,7 +33,19 @@ void onclickHealthTest()
 		pubHB->update(health);
 }
 
-
+GUI::TextBox *pubLevelInd;
+void onclickLevelup()
+{
+	static int level = 1;
+	std::string slevel;
+	
+	// level should be double digits
+	if(level < 10)
+		slevel = "0" + std::to_string(level++);
+	else
+		slevel = std::to_string(level++);
+	pubLevelInd->setText(slevel);
+}
 
 void updateMainView(sf::View& v)
 {
@@ -218,6 +230,11 @@ void GameScene::positionUI()
 
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
+
+	// position and scale level indicator
+	levelInd->text().move(14, 10);
+	levelInd->text().setScale(1.5, 1.5);
+
 
 }
 
@@ -468,6 +485,7 @@ void GameScene::draw()
 	renderer.draw(b5);
 	renderer.draw(b6);
 	renderer.draw(hb, true);
+	renderer.draw(levelInd);
 
 	renderer.end();
 
@@ -590,7 +608,7 @@ void GameScene::generateUI()
 	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
 	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
 
 	// Create health bar (If statement here if vessel or deity)
@@ -606,4 +624,15 @@ void GameScene::generateUI()
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
 
 	pubHB = hb;
+	
+	// Create level indicator
+	
+	sf::Font *arial = new sf::Font();
+	arial->loadFromFile("Assets/Fonts/arial.ttf");
+	
+	levelInd = new GUI::TextBox(nullptr, nullptr);
+	levelInd->toggleSelected(true);
+	levelInd->text().setFont(*arial);
+	levelInd->setText("01");
+	pubLevelInd = levelInd;
 }
