@@ -10,7 +10,7 @@ namespace GUI
 	class TextBox : public TGO
 	{
 		public:
-			TextBox(std::function<void(void *)> c = NULL, void * data = NULL, unsigned int l = 0);
+			TextBox(std::function<void(void *)> c = NULL, void * data = NULL, unsigned int l = 128);
 			virtual ~TextBox();
 			void toggleSelected(bool s);
 			void process(sf::Event& e);
