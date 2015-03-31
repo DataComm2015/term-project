@@ -34,8 +34,8 @@ namespace Networking
         const int type;
         const int id;
     private:
-        void silentRegister(Session* session);
-        void silentUnregister(Session* session);
+        int silentRegister(Session* session);
+        int silentUnregister(Session* session);
         static int nextId;
         NetworkEntityMultiplexer* mux;
         std::set< Session * > registeredSessions;

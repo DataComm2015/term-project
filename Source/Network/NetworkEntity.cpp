@@ -159,8 +159,10 @@ void Networking::NetworkEntity::registerSession( Session * session, Message mess
     printf("\")\n");
     #endif
 
-    silentRegister(session);
-    mux->registerSession(id, type, session, message);
+    if(silentRegister(session))
+    {
+        mux->registerSession(id, type, session, message);
+    }
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -193,8 +195,10 @@ void Networking::NetworkEntity::unregisterSession( Session * session, Message me
     printf("\")\n");
     #endif
 
-    silentUnregister(session);
-    mux->unregisterSession(id, session, message);
+    if(silentUnregister(session))
+    {
+        mux->unregisterSession(id, session, message);
+    }
 }
 
 int Networking::NetworkEntity::getType()
@@ -268,10 +272,15 @@ void Networking::NetworkEntity::onUnregister( Session * session, Message message
 --
 -- NOTES:           registers this session from this entity
 -----------------------------------------------------------------------------------------------*/
-void Networking::NetworkEntity::silentRegister( Session* session )
+int Networking::NetworkEntity::silentRegister( Session* session )
 {
-    registeredSessions.insert(session);
-    session->registeredEntities.insert(this);
+    int hasSession = (registeredSessions.find(session) == registeredSessions.end());
+    if(hasSession)
+    {
+        registeredSessions.insert(session);
+        session->registeredEntities.insert(this);
+    }
+    return hasSession;
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -292,9 +301,14 @@ void Networking::NetworkEntity::silentRegister( Session* session )
 --
 -- NOTES:           unregisters this session from this entity
 -----------------------------------------------------------------------------------------------*/
-void Networking::NetworkEntity::silentUnregister( Session* session )
+int Networking::NetworkEntity::silentUnregister( Session* session )
 {
-    registeredSessions.erase(session);
-    session->registeredEntities.erase(this);
+    int hasSession = (registeredSessions.find(session) != registeredSessions.end());
+    if(hasSession)
+    {
+        registeredSessions.erase(session);
+        session->registeredEntities.erase(this);
+    }
+    return hasSession;
 }
 

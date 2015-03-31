@@ -21,6 +21,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using Networking::Message;
+using Networking::Session;
 using namespace Marx;
 
 ServerGameScene::ServerGameScene(ServerCommand *command)
@@ -143,12 +144,17 @@ void ServerGameScene::createPlayers()
 {
     std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
     PlayerEntity* currPlayer;
+    Session* currSession;
     PLAYER_MODE mode;
+    int vesselNo = 0;
+    int vesselX = 0;
+    int vesselY = 0;
 
     // make ServerNetworkController for each vessel
     for(auto it = players.begin(); it != players.end(); ++it)
     {
         currPlayer = it->second;
+        currSession = it->first;
         mode = currPlayer->getMode();
 
         switch(mode)
@@ -162,18 +168,23 @@ void ServerGameScene::createPlayers()
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
                 initData.type = ENTITY_TYPES::VESSEL;
-                initData.x = 32;
-                initData.y = 32;
+		        gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
+                initData.x = (float) vesselX;
+                initData.y = (float) vesselY;
 
                 Message msg;
-                msg.type = 0;
                 msg.data = (void*) &initData;
                 msg.len = sizeof(initData);
 
                 // create vessel, pass it server vessel controller too
                 Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
 
+                // register the server controller with the player
+                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME;
+                cont->registerSession(currSession,msg);
+
                 // register the server controller with clients
+                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::NORMAL;
                 command->getGameState()->registerWithAllPlayers(cont,&msg);
                 break;
             }
