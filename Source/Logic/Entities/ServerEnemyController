@@ -1,8 +1,0 @@
-#ifndef _SERVER_ENEMY_CONTROLLER_H_
-#define _SERVER_ENEMY_CONTROLLER_H_
-
-class ServerEnemyController
-{
-};
-
-#endif

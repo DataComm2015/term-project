@@ -54,10 +54,11 @@ class GameScene : public Scene
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
 
-        void generateMap(int seed);
+        	void generateMap(int seed);
 		void generateWater();
 		void generateUI();
 		void positionUI();
+		void setPlayerVessel(Vessel *vessel);
 		
 	private:
 		/**
@@ -92,6 +93,7 @@ class GameScene : public Scene
 
 		// Game Objects
 		Vessel *vessel;
+		Vessel *myVessel;
 
 		Marx::Map *cMap;
 		Marx::Map *waterMap;

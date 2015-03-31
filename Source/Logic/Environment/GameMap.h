@@ -3,7 +3,7 @@
 
 #include "../../Engine/Map.h"
 #include "Block.h"
-#include "../EnemyTypes.h"
+#include "../EntityTypes.h"
 
 /* The number of human players in a round */
 #define NUM_PLAYERS 4
@@ -29,7 +29,7 @@
 
 class ServerGameScene;
 
-/* 
+/*
 *	The GameMap class contains a list of cells, blocks, and functions
 *	for generating a map and placing entities into the map.
 */
@@ -39,7 +39,7 @@ class GameMap
 		GameMap(Marx::Map *cMap);
 		~GameMap();
 		bool generateMap(int seed, ServerGameScene *scene = NULL);
-		
+
 		Marx::Map* getCellMap();
 		Block** getBlockMap();
 		int getWidth();
@@ -60,7 +60,7 @@ class GameMap
 		void generatePlaceholderBlocks();
 		void generateTiles();
 		BlockType makeBlockType(BlockZone z, int rRoll);
-		ENEMY_TYPES getEnemyType(std::string enemy);
+		ENTITY_TYPES getEnemyType(std::string enemy);
 
 		Marx::Map *cellMap;
 		Block** blockMap;

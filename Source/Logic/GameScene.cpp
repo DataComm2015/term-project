@@ -26,9 +26,9 @@ GUI::HealthBar *pubHB;
 void onclickHealthTest()
 {
 	static float health = 1.0;
-	
+
 	health = health - .10;
-	
+
 	if(health >= 0)
 		pubHB->update(health);
 }
@@ -70,6 +70,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	}
 	gMap = new GameMap(cMap);
 	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
+
+	myVessel = NULL;
 
 	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
 	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
@@ -142,10 +144,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
-
-	std::cout << "before vesesl made" << std::endl;
-	vessel = new Vessel(championSGO, cMap, 45.0F, 45.0F, NULL, 1.0F, 1.0F);
-
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
@@ -229,7 +227,7 @@ void GameScene::positionUI()
 
 	// Scale healthbar
 	hb->sprite().setScale(3, 3);
-		
+
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
@@ -238,6 +236,11 @@ void GameScene::positionUI()
 	levelInd->text().setScale(1.5, 1.5);
 
 
+}
+
+void GameScene::setPlayerVessel(Vessel *vessel)
+{
+	myVessel = vessel;
 }
 
 void GameScene::unLoad()
@@ -277,19 +280,20 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+
+	// static int listEntity = 100;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
 	{
-		/*we have to break out one iterator early because the last iterator
-		  was in a REALLY WIERD memory address and was causing bad_alloc()
-		  exceptions to be thrown. This solution is really janky and should
-		  probably be investigated further once the game is running.
-			- Eric & Sebastian*/
-		if(it != --entities.end())
-		{
-           // (*it)->onUpdate();
-		}
+		(*it)->onUpdate();
 	}
+
+	if (myVessel != 0)
+	{
+		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left)*32.0F, (myVessel->top)*32.0F));
+	}
+
+	// listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 
 	/*
@@ -356,9 +360,6 @@ void GameScene::update(sf::Time t)
 //	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
-	//viewMain.setCenter(
-	//	vessel->getGlobalTransform().transformPoint(vessel->getXPosition()*32.0F, vessel->getYPosition()*32.0F));
-
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
 	waveShader.setParameter("wave_phase", phase);
@@ -367,35 +368,6 @@ void GameScene::update(sf::Time t)
 void GameScene::processEvents(sf::Event& e)
 {
 	Scene::processEvents(e);
-	float camSpeed = 15;
-        switch (e.key.code)
-        {
-
-                case sf::Keyboard::W:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
-                        break;
-                }
-                case sf::Keyboard::A:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
-                        break;
-                }
-                case sf::Keyboard::S:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
-                        break;
-                }
-                case sf::Keyboard::D:
-                {
-                        viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
-                        break;
-                }
-            case sf::Keyboard::Return:
-            {
-                    break;
-            }
-        }
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
@@ -411,12 +383,37 @@ void GameScene::processEvents(sf::Event& e)
 		}
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
-		switch (e.key.code)
+
 		{
-		    case sf::Keyboard::Return:
-		    {
-			    break;
-		    }
+			/*float camSpeed = 15;
+			switch (e.key.code)
+			{
+
+				case sf::Keyboard::A:
+				{
+					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::D:
+				{
+					viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
+					break;
+				}
+				case sf::Keyboard::W:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
+					break;
+				}
+				case sf::Keyboard::S:
+				{
+					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
+					break;
+				}
+			    case sf::Keyboard::Return:
+			    {
+				    break;
+			    }
+			}*/
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
@@ -613,7 +610,7 @@ void GameScene::generateUI()
 	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
 	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
-	
+
 	// Create health bar (If statement here if vessel or deity)
 	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 	hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
