@@ -148,7 +148,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
-	tb = new GUI::TextBox(nullptr, nullptr);
+	tb = new GUI::TextBox(NULL, NULL);
 	tb->text().setScale(0.5, 0.5);
 	tb->text().move(0, -5);
 	tb->toggleSelected(true);

@@ -50,7 +50,6 @@ ClientScoreboardScene::ClientScoreboardScene()
             scoreboard[rows][cols].text().move(SCORE_X + (cols * OFFSET_X), SCORE_Y + (rows * OFFSET_Y));
             scoreboard[rows][cols].toggleSelected(false);
             scoreboard[rows][cols].text().setFont(*arial);
-            scoreboard[rows][cols].setText(SCORE_ELEMENTS[cols]); // comment out this line when the score data fill is implemented
         }
     }
     
@@ -116,13 +115,11 @@ void ClientScoreboardScene::draw()
     // draw the objects
     renderer.draw(*background);
     
-    for (int rows = 0; rows < SCORE_ROWS; rows++)
+    for (int rows = 1; rows < SCORE_ROWS; rows++)
     {
-        for (int cols = 0; cols < SCORE_COLS; cols++)
-        {
-            // IMPLEMENT SCOREBOARD ELEMENT FILLING HERE
-            // scoreboard[rows][cols]
-        }
+        scoreboard[rows][0].setText("bob\0");
+        scoreboard[rows][1].setText("vessel\0");
+        scoreboard[rows][2].setText("1000\0");
     }
     
     for (int rows = 0; rows < SCORE_ROWS; rows++)

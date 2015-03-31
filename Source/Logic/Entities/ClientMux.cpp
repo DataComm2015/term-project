@@ -40,6 +40,9 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
         {
             command = new CommandEntity(id,_gameScene);
             ret = command;
+            fprintf(stdout, "THIS: %s\n", message.data);
+            fflush(stdout);
+            ret->update(message);
             break;
         }
 
