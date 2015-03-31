@@ -122,7 +122,7 @@ void Vessel::onUpdate()
     float newYSpeed = 0;
 
 	if (movingLeft)
-        newXSpeed = - xSpeed;
+        newXSpeed = -xSpeed;
     else if (movingRight)
         newXSpeed = xSpeed;
     
@@ -131,8 +131,11 @@ void Vessel::onUpdate()
     else if (movingDown)
         newYSpeed = ySpeed;
 
-    if (newXSpeed != 0 || newYSpeed != 0)
+    if (isMoving())
+    {
+        printf("MOVING! xspeed:%f, yspeed:%f, xpseed:%f, yspeed:%f\n", newXSpeed, newYSpeed, xSpeed, ySpeed);
         Entity::rMove(newXSpeed, newYSpeed,false);
+    }
 }
 
 

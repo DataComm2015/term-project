@@ -14,8 +14,8 @@ MoveEvent::MoveEvent(float _x, float _y, int _xDir, int _yDir, bool f)
 {
     x = _x;
     y = _y;
-    x = _xDir;
-    y = _yDir;
+    xDir = _xDir;
+    yDir = _yDir;
     force = f;
 }
 
@@ -24,6 +24,8 @@ MoveEvent::MoveEvent(const MoveEvent& other)
 {
     x = other.x;
     y = other.y;
+    xDir = other.xDir;
+    yDir = other.yDir;
     force = other.force;
 }
 

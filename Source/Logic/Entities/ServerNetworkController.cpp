@@ -51,7 +51,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
             message.len  = sizeof(MoveMessage);
             message.type = ::Marx::MOVE;
 
-            printf("sending:   x: %f  y:%f xDir:%d yDir%d \n",mm.x,mm.y, mm.xDir, mm.yDir);
+            //printf("sending:   x: %f  y:%f xDir:%d yDir%d \n",mm.x,mm.y, mm.xDir, mm.yDir);
 
             // send the network event
             update(message);
@@ -104,7 +104,7 @@ void ServerNetworkController::onUpdate(Message msg)
         case PlayerCommandMsgType::STOP_MV_LEFT_COMMAND:
         {
             MoveEvent *event = new MoveEvent(0,0,0,0,0);
-            printf("receiving: x: %f  y: %f\n",event->getX(),event->getY());
+            printf("receiving: x: %f  y: %f  xDir:%d yDir:%d\n",event->getX(),event->getY(), event->getXDir(), event->getYDir());
             addEvent(event);
             break;
         }

@@ -139,6 +139,7 @@ void  Entity::turn()
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::rMove(float x, float y, bool force = false)
 {
+	printf("RMOVE: x%f y:%f\n top:%f left:%f", x, y, top, left);
 	return aMove(x + left, y + top, force);
 }
 
@@ -195,10 +196,10 @@ Entity * Entity::move(float x, float y, bool force = false)
 Entity * Entity::aMove(float x, float y, bool force = false)
 {
     std::set<Cell*> tempCell;
-	int temp_x = left;
-	int temp_y = top;
-	top = x;
-	left = y;
+	float temp_x = left;
+	float temp_y = top;
+	top = y;
+	left = x;
 	blocking = !force;
 
 	// loop through collecting all cells that this entity will be contained in.

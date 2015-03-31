@@ -92,6 +92,7 @@ void CommandEntity::onKeyReleased(int key)
     switch(key)
     {
         case sf::Keyboard::Left:
+	    printf("LEFT UP\n");
             command = (int)PlayerCommandMsgType::STOP_MV_LEFT_COMMAND;
             break;
         case sf::Keyboard::Right:
@@ -111,7 +112,7 @@ void CommandEntity::onKeyReleased(int key)
 
     // put the command into a message to be sent over the network
     Message msg;
-    msg.type = 0;
+    msg.type = command;
     msg.data = &command;
     msg.len  = sizeof(command);
 

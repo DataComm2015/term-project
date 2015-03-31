@@ -84,8 +84,8 @@ class Vessel : public Marx::VEntity, public Creature
 		int defaultSpeed;
 		int travelSpeed;
 		int attackPower;
-		int xSpeed;
-		int ySpeed;
+		float xSpeed;
+		float ySpeed;
 		int direction;	//0 = right, 1 = left //why not a bool?
 		bool movingLeft;
         bool movingRight;
