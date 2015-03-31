@@ -2,11 +2,12 @@
 
 namespace GUI
 {
-	TextBox::TextBox(std::function<void(void *)> c, void * data)
+	TextBox::TextBox(std::function<void(void *)> c, void * data, unsigned int l)
 	{
 		selected = false;
 		complete = c;
 		usrDataOnComplete = data;
+		limit = l;
 	}
 
 	TextBox::~TextBox(){}
@@ -33,7 +34,7 @@ namespace GUI
 					complete(usrDataOnComplete);
 			}
 		}
-		else if(selected && e.type == sf::Event::TextEntered)
+		else if(selected && e.type == sf::Event::TextEntered && (getText().length() <= limit))
 		{
 			//So we don't get backspace chars in our text
 			if(e.text.unicode >= ' ')
