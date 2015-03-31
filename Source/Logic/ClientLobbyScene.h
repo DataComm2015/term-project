@@ -25,6 +25,7 @@
 
 #define CLASS_BTN_WIDTH_B 52
 #define CLASS_BTN_HEIGHT_B 52
+ 
 /*
 *   This is the Lobby scene.
 */
@@ -81,8 +82,8 @@ class ClientLobbyScene : public Scene
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;
 
-        GUI::Button * aspectOneBtn;
-        GUI::Button * aspectTwoBtn;
+        GUI::Button * deityOneBtn;
+        GUI::Button * deityTwoBtn;
 
         GUI::Button * leaveBtn;
 
@@ -92,8 +93,8 @@ class ClientLobbyScene : public Scene
         id_resource vesselOneImg;
         id_resource vesselTwoImg;
 
-        id_resource aspectOneImg;
-        id_resource aspectTwoImg;
+        id_resource deityOneImg;
+        id_resource deityTwoImg;
 
         id_resource leaveImg;
 

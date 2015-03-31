@@ -60,8 +60,8 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
-    aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
-    aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
+    deityOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
+    deityTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
     easterEggImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/easteregg.png"));
 
@@ -72,8 +72,8 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onVesselTwoClick);
 
-    aspectOneBtn = new GUI::Button(*Manager::TextureManager::get(aspectOneImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityOneClick);
-    aspectTwoBtn = new GUI::Button(*Manager::TextureManager::get(aspectTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityTwoClick);
+    deityOneBtn = new GUI::Button(*Manager::TextureManager::get(deityOneImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityOneClick);
+    deityTwoBtn = new GUI::Button(*Manager::TextureManager::get(deityTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityTwoClick);
 
     leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onLeaveClick);
 
@@ -130,8 +130,8 @@ ClientLobbyScene::~ClientLobbyScene()
     delete vesselOneBtn;
     delete vesselTwoBtn;
 
-    delete aspectOneBtn;
-    delete aspectTwoBtn;
+    delete deityOneBtn;
+    delete deityTwoBtn;
 
     delete leaveBtn;
 }
@@ -158,7 +158,7 @@ ClientLobbyScene::~ClientLobbyScene()
 void ClientLobbyScene::onLoad()
 {
     /* Set btntest positions */
-    background->sprite().setPosition(0,0);
+    background->sprite().setPosition(SCN_WIDTH*.33,SCN_HEIGHT*.33);
 
     countdownBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10);
     playerBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10 + SCN_HEIGHT*1/30);
@@ -169,8 +169,8 @@ void ClientLobbyScene::onLoad()
     vesselOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT_B/2);
     vesselTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT_B/2);
 
-    aspectOneBtn->sprite().setPosition((0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
-    aspectTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
+    deityOneBtn->sprite().setPosition((0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
+    deityTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
 
     deityOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
     deityTwoCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2 );
@@ -209,8 +209,8 @@ void ClientLobbyScene::update(sf::Time t)
 {
     vesselOneBtn->update(t);
     vesselTwoBtn->update(t);
-    aspectOneBtn->update(t);
-    aspectTwoBtn->update(t);
+    deityOneBtn->update(t);
+    deityTwoBtn->update(t);
     leaveBtn->update(t);
     easterEggBtn->update(t);
 
@@ -294,8 +294,8 @@ void ClientLobbyScene::draw()
     renderer.draw(*background);
     renderer.draw(*vesselOneBtn);
     renderer.draw(*vesselTwoBtn);
-    renderer.draw(*aspectOneBtn);
-    renderer.draw(*aspectTwoBtn);
+    renderer.draw(*deityOneBtn);
+    renderer.draw(*deityTwoBtn);
     renderer.draw(*leaveBtn);
     renderer.draw(*countdownBox);
     renderer.draw(*playerBox);
