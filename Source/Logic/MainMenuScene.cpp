@@ -85,8 +85,16 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     arial->loadFromFile("Assets/Fonts/arial.ttf");
 
     textBoxes[ SERVER_TXT ]   = new GUI::TextBox( nextTextBox, this, 16 );
+    textBoxes[ SERVER_TXT ]   ->setText("localhost");
     textBoxes[ PORT_TXT ]     = new GUI::TextBox( nextTextBox, this, 4 );
     textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this, 16 );
+    textBoxes[ PORT_TXT ]     ->setText("7000");
+    textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this );
+
+    curTextBox = 0;
+    textBoxes[ SERVER_TXT ]->toggleSelected(true);
+    textBoxes[ PORT_TXT ]->toggleSelected(false);
+    textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
 
     textBoxes[ SERVER_TXT ]->text().setFont(*arial);
     textBoxes[ PORT_TXT ]->text().setFont(*arial);
