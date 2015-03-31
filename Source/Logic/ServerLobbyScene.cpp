@@ -86,6 +86,11 @@ void ServerLobbyScene::enterScene()
     }
 }
 
+void ServerLobbyScene::leaveScene()
+{
+    
+}
+
 void ServerLobbyScene::startTimer()
 {
     timerRunning = true;

@@ -48,6 +48,7 @@ namespace Marx
 		Entity * move(float, float, bool);
 		Entity * rMove(float, float, bool);
 		Entity * aMove(float, float, bool);
+		Controller *getController();
 		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();

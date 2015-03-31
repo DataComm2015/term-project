@@ -30,13 +30,13 @@ ClientLobbyScene::ClientLobbyScene()
 
     circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/circleOutline.png"));
 
-    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/lobby-background.jpg"));
+    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby-background.png"));
 
     vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-one.png"));
     vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-two.png"));
 
-    vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
-    vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
+    vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
+    vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
     aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
     aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
@@ -44,8 +44,9 @@ ClientLobbyScene::ClientLobbyScene()
     leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
 
     /* Initialize buttons */
-    vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onVesselOneClick);
-    vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onVesselTwoClick);
+    vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onVesselOneClick);
+
+    vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onVesselTwoClick);
 
     aspectOneBtn = new GUI::Button(*Manager::TextureManager::get(aspectOneImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onDeityOneClick);
     aspectTwoBtn = new GUI::Button(*Manager::TextureManager::get(aspectTwoImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onDeityTwoClick);
@@ -95,8 +96,9 @@ ClientLobbyScene::~ClientLobbyScene()
 void ClientLobbyScene::onLoad()
 {
     /* Set btntest positions */
-    vesselOneBtn->sprite().setPosition( (0 + SCN_WIDTH/4 - BTN_WIDTH/2)         , SCN_HEIGHT/2 - BTN_HEIGHT/2);
-    vesselTwoBtn->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/4 - BTN_WIDTH/2) , SCN_HEIGHT/2 - BTN_HEIGHT/2);
+    vesselOneBtn->sprite().setPosition( (0 + SCN_WIDTH/4 - CLASS_BTN_WIDTH/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
+
+    vesselTwoBtn->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/4 - CLASS_BTN_WIDTH/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
 
     vesselOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/4 - CIRCLE_WH/2)         , SCN_HEIGHT/2 - CIRCLE_WH/2);
     vesselTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/4 - CIRCLE_WH/2) , SCN_HEIGHT/2 - CIRCLE_WH/2);
@@ -234,6 +236,10 @@ void ClientLobbyScene::onDeityTwoClick()
 void ClientLobbyScene::updateMainView(sf::View& v)
 {
     v = AppWindow::getInstance().getCurrentView();
+
+	//needs to be 3X scale eventually
+	//v.zoom(0.66);
+
 }
 
 int ClientLobbyScene::getDeityChoice()

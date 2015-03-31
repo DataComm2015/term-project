@@ -20,8 +20,9 @@
 #include "../../../Engine/Map.h"
 #include "../../../Engine/Cell.h"
 #include "../../../Engine/Controller.h"
+#include "../../Creature.h"
 
-class GateKeeper : public Marx::VEntity
+class GateKeeper : public Marx::VEntity, public Creature
 {
 
 	public:
@@ -37,10 +38,15 @@ class GateKeeper : public Marx::VEntity
 				_movementSpeed = 1;
 				_incombat = false;
 				_cooldown = 1;
+				_xPos = x;
+				_yPos = y;
+				_xSpeed = 0;
+				_ySpeed = 0;
+				_moving = false;
+
 			};
 
 		virtual ~GateKeeper();
-		virtual void update(const sf::Time& t) override;
 		virtual void detectPlayers();
 		virtual void enterCombat();
 		virtual void leaveCombat();
@@ -52,6 +58,9 @@ class GateKeeper : public Marx::VEntity
 		virtual void setMovementSPed(int ms);
 		virtual void setTarget(/*Player*/);
 		virtual void setCooldown(/*Timer*/);
+		virtual void setPosition(float x, float y);
+		virtual void setXSpeed(float x);
+		virtual void setYSpeed(float y);
 		virtual int getRange();
 		virtual int getHealth();
 		virtual int getAttack();
@@ -64,7 +73,7 @@ class GateKeeper : public Marx::VEntity
 		virtual void onDestroy();
 		virtual void onUpdate();
 		virtual bool operator==(const VEntity&);
-
+        virtual Entity* getEntity();
 
 	private:
 		int _range;
@@ -73,7 +82,13 @@ class GateKeeper : public Marx::VEntity
 		int _attack;
 		int _attackSpeed;
 		int _movementSpeed;
+		int _xSpeed;
+		int _ySpeed;
+		int _direction;
+		float _xPos;
+		float _yPos;
 		bool _incombat;
+		bool _moving;
 		time_t _cooldown;
 		//Player _target;
 		//PatrolRadius _radius;
