@@ -19,9 +19,9 @@ ClientScoreboardScene::ClientScoreboardScene()
 {
     /* Get texture assets */
     
-    SCORE_ELEMENTS[0] = "NAME\0";
-    SCORE_ELEMENTS[1] = "ROLE\0";
-    SCORE_ELEMENTS[2] = "SCORE\0";
+    SCORE_ELEMENTS[0] = (char *)"NAME\0";
+    SCORE_ELEMENTS[1] = (char *)"ROLE\0";
+    SCORE_ELEMENTS[2] = (char *)"SCORE\0";
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/scoreboard-background.png"));
 
