@@ -171,6 +171,13 @@ void Block::setDeco(vector<CellTile> *tiles)
 }
 
 
+Cell* Block::getRandomCell()
+{
+	int cellNum = rand() % (BLOCK_WIDTH * BLOCK_HEIGHT);
+	return (*cellMap)[cellNum];
+}
+
+
 /******************************************************************************
 *	FUNCTION: getType
 *

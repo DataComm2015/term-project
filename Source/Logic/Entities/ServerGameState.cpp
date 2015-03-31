@@ -193,6 +193,31 @@ void ServerGameState::assignPlayerModes()
     }
 }
 
+void ServerGameState::registerWithAllPlayers(Networking::NetworkEntity *entity, Message *msg)
+{
+    std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
+    while (itr != players.end())
+    {
+        printf("REGISTERING ENEMY\r\n");
+        printf("ENTITY TYPE: %d\r\n", entity->type);
+        entity->registerSession(itr->first, *msg);
+        itr++;
+    }
+}
+
+void ServerGameState::unregisterFromAllPlayers(Networking::NetworkEntity *entity)
+{
+    Message msg;
+    memset(&msg, 0, sizeof(msg));
+
+    std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
+    while (itr != players.end())
+    {
+        entity->unregisterSession(itr->first, msg);
+        itr++;
+    }
+}
+
 
 
 

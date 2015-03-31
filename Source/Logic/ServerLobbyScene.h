@@ -27,6 +27,7 @@ class ServerLobbyScene : public Scene
         void onclick();
         
         void enterScene();
+        void leaveScene();
         void addPlayer();
         void removePlayer();
 
