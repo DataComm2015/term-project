@@ -20,8 +20,8 @@
 #define BTN_HEIGHT 75
 #define COUNTDOWN 4
 
-#define CLASS_BTN_WIDTH 46
-#define CLASS_BTN_HEIGHT 47
+#define CLASS_BTN_WIDTH 48
+#define CLASS_BTN_HEIGHT 49
 
 /*
 *   This is the Lobby scene.
