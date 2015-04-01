@@ -25,12 +25,12 @@ EntityFactory::EntityFactory()
 {
     // initialize instance variables
     gkSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
+        Manager::TextureManager::load("Assets/Art/Player/Idle/Body/vessel-idle.png")
     );
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    gkSGO.sprite().setScale(2, 2);
+    gkSGO.sprite().setScale(1, 1);
     gkSGO.middleAnchorPoint(true);
 }
 
