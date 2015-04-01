@@ -173,6 +173,7 @@ MainMenuScene::~MainMenuScene()
 
     delete connectBtn;
     delete creditBtn;
+    delete name_sent;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -381,9 +382,9 @@ void MainMenuScene::onClick()
       MainMenuScene::getInstance()->clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
       MainMenuScene::getInstance()->clientmux->message.len = strlen(nickname_text);
       //clientmux->message.data = (char*)"TEST";
-      char* hello = new char[16];
-      memcpy(hello, nickname_text, strlen(nickname_text));
-      MainMenuScene::getInstance()->clientmux->message.data = hello;
+      MainMenuScene::getInstance()->name_sent = new char[16];
+      memcpy(MainMenuScene::getInstance()->name_sent, nickname_text, strlen(nickname_text));
+      MainMenuScene::getInstance()->clientmux->message.data = MainMenuScene::getInstance()->name_sent;
 
       short port = atoi( MainMenuScene::getInstance()->textBoxes[ PORT_TXT ]->getText().c_str() );
       if (MainMenuScene::getInstance()->client->connect( (char *)MainMenuScene::getInstance()->textBoxes[ SERVER_TXT ]->getText().c_str(), port) <= 0)
@@ -396,8 +397,6 @@ void MainMenuScene::onClick()
       {
          printf("connected\n");
       }
-
-      delete hello;
     }
 
 }
