@@ -11,6 +11,7 @@
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
 #include "Entities/ServerVesselController.h"
+#include "../GameSettings.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -63,8 +64,32 @@ ServerGameScene::~ServerGameScene()
 
 void ServerGameScene::update(sf::Time time)
 {
+    if (timer > 0)
+    {
   for (int i = 0; i < enemyControllers.size(); i++)
     enemyControllers[i]->updateBehaviour(time.asSeconds());
+
+        timer -= time.asSeconds();
+    }
+    else
+    {
+        if (lobtimer == SCOREBOARD_LENGTH_SECONDS)
+        {
+            command->goToScoreboard();
+        }
+
+        if (lobtimer > 0)
+        {
+            lobtimer -= time.asSeconds();
+        }
+        else
+        {
+            command->goToLobby();
+        }
+    }
+
+
+
 
 	return;
 }
@@ -82,6 +107,8 @@ void ServerGameScene::draw()
 void ServerGameScene::enterScene()
 {
     worldSeed = rand();
+    timer = GAME_ROUND_LENGTH_SECONDS;
+    lobtimer = SCOREBOARD_LENGTH_SECONDS;
 
     // Generate the game map
 	  gMap->generateMap(worldSeed, this);

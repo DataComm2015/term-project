@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <map>
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Time.hpp>
 #include "../Engine/Scene.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
@@ -47,6 +48,8 @@ class ServerGameScene : public Scene
         sf::View viewMain;
         ServerCommand *command;
         int worldSeed;
+        float timer;
+        float lobtimer;
         std::vector<Creature*> enemies;
         std::vector<ServerEnemyController*> enemyControllers;
 };
