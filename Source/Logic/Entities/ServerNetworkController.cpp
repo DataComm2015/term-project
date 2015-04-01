@@ -83,7 +83,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
 			// parse attack event into move message
 			SkillAttackMessage am;
-			am.srcid 		= ae->getSrc();
+			am.srcid 	= ae->getSrc();
 			am.action	= ae->getAction();
 			am.destx	= ae->getDestX();
 			am.desty	= ae->getDestY();

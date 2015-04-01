@@ -97,8 +97,6 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         case ENTITY_TYPES::MINI_BOSS:
-		case ENTITY_TYPES::PROJECTILE:
-			
 			break;
         default:
             entity = new ProperEntity(map,x,y,cont,1.0,1.0);
