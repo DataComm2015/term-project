@@ -13,6 +13,7 @@
  */
 
 #include "SGO.h"
+#include <iostream>
 
 #include "../Renderer.h"
 
@@ -142,5 +143,6 @@ void SGO::middleAnchorPoint(bool arg)
  */
 void SGO::draw(Renderer& renderer, sf::RenderStates states) const
 {
+	std::cout << "SGO draw called" << std::endl;
 	renderer.draw(*this, states);
 }
