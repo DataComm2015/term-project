@@ -82,12 +82,15 @@ class Vessel : public Marx::VEntity, public Creature
 		int defaultSpeed;
 		int travelSpeed;
 		int attackPower;
-		float xPosition;
-		float yPosition;
-		int xSpeed;
-		int ySpeed;
+		float xSpeed;
+		float ySpeed;
 		int direction;	//0 = right, 1 = left //why not a bool?
-		bool moving;
+
+		bool movingLeft;
+        bool movingRight;
+		bool movingUp;
+        bool movingDown;
+		Weapon* weapon;
 		Ability* abilities;	//3 abilities for each Vessel
 		//TO DO: pointer to the game map needed in the future
 
@@ -104,13 +107,6 @@ class Vessel : public Marx::VEntity, public Creature
 		//inherited methods
 		virtual ~Vessel();
 		virtual void onUpdate();
-		virtual void turn();
-		//virtual Marx::Entity* move(float, float, bool);
-		virtual std::set<Marx::Cell*> getCell();
-		virtual void onCreate();
-		virtual void onDestroy();
-
-		Marx::Controller* _controller;
 
 		void setPosition( float x, float y );
 		float getXPosition();

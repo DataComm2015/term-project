@@ -26,10 +26,11 @@ ServerLobbyScene::~ServerLobbyScene()
 
 void ServerLobbyScene::update(sf::Time time)
 {
+    // Networking::handleSessionMessages();
 	if (timerRunning && !waitingToStart)
 	{
 	    timer -= time.asSeconds();
-	    
+
 	    if (timer <= 0)
 	    {
             waitingToStart = true;
@@ -54,7 +55,7 @@ void ServerLobbyScene::draw(){}
 void ServerLobbyScene::addPlayer()
 {
     playerCount++;
-    
+
     if (playerCount >= MIN_REQUIRED_PLAYERS)
     {
         startTimer();
@@ -79,7 +80,7 @@ void ServerLobbyScene::enterScene()
     waitingToStart = false;
     timerRunning = false;
     timer = SERVER_INITIAL_TIMER_VALUE;
-    
+
     if (playerCount >= MIN_REQUIRED_PLAYERS)
     {
         startTimer();
@@ -88,7 +89,7 @@ void ServerLobbyScene::enterScene()
 
 void ServerLobbyScene::leaveScene()
 {
-    
+
 }
 
 void ServerLobbyScene::startTimer()

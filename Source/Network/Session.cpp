@@ -20,10 +20,30 @@ Session::Session(int socket)
     // initialize instance variables
     this->socket    = socket;
     this->entityMux = NetworkEntityMultiplexer::getInstance();
+    this->messagesSem = createSem(MESSAGE_SEM_KEY--);
+    releaseSem(messagesSem);
+
+    accessSem(SESSION_SEM);
+    SESSIONS.insert(this);
+    releaseSem(SESSION_SEM);
 }
 
 Session::~Session()
 {
+    accessSem(SESSION_SEM);
+    SESSIONS.erase(this);
+    releaseSem(SESSION_SEM);
+
+    Message* m;
+    while(!messages.empty())
+    {
+         auto it = messages.front();
+        m = it;
+        free(m->data);
+        delete m;
+        messages.pop_front();
+    }
+    deleteSem(messagesSem);
     disconnect();
 }
 
@@ -40,7 +60,17 @@ void Session::disconnect()
 {
     close(socket);
 }
-
+/**
+ * @brief Session::onMessage
+ *          takes a message from the network and adds it to the
+ *          queue for later use.
+ * @param msg
+ *          pointer to the message received
+ *
+ * @designer Network Teams
+ *
+ * @author Jeff Bayntun, Eric Tsang
+ */
 void Session::onMessage(Message* msg)
 {
     #ifdef DEBUG
@@ -51,7 +81,16 @@ void Session::onMessage(Message* msg)
     }
     printf("\n");
     #endif
-    entityMux->onMessage(this,*msg);
+
+    Message* message = new Message;
+    message->type = msg->type;
+    message->len = msg->len;
+    message->data = malloc(message->len);
+    memcpy(message->data, msg->data, message->len);
+
+    accessSem(messagesSem);
+    messages.push_back(message);
+    releaseSem(messagesSem);
 }
 
 void Session::onDisconnect(int remote)
@@ -67,3 +106,48 @@ void Session::onDisconnect(int remote)
         (*entity)->silentUnregister(this);
     }
 }
+/**
+ * @brief Session::handleMessages
+ *              passes all queued messages to the mux
+ *              should messages be deleted after mux pass??
+ *
+ * @designer Jeff Baytun
+ * @author   Jeff Bayntun
+ *
+ */
+void Session::handleMessages()
+{
+    accessSem(messagesSem);
+    Message* m;
+
+  //  printf("actual mesages %d\n", messages.size());
+    while(messages.size() > 0)
+    {
+        m = messages[0];
+       // printf("before entitymux onMessage\n");
+        entityMux->onMessage(this, *m);
+       // printf("after entitymux onMessage\n");
+        free(m->data);
+        delete m;
+        messages.erase(messages.begin());
+    }
+
+    releaseSem(messagesSem);
+   // printf("end actual messages");
+}
+
+void Networking::handleSessionMessages()
+{
+    accessSem(SESSION_SEM);
+   // printf("this sessions size: %d\n", SESSIONS.size());
+    for(auto it = SESSIONS.begin(); it != SESSIONS.end(); it++)
+    {
+      //  printf("handle session messages call\n");
+        (*it)->handleMessages();
+      //  printf(" after handle session messages call\n");
+    }
+    releaseSem(SESSION_SEM);
+}
+
+
+

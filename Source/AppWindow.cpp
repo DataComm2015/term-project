@@ -165,6 +165,9 @@ void AppWindow::run()
 		// LOOP
 		while (isOpen())
 		{
+			// process networking messages
+			Networking::handleSessionMessages();
+
 			// TIME UPDATES
 			m_elapsedTime = clock.restart();
 			m_timeSinceLastUpdate += m_elapsedTime;
@@ -193,7 +196,7 @@ void AppWindow::run()
 	}
 }
 
-AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(1366, 768), "The Game", sf::Style::Default, sf::ContextSettings(0,0,0))
+AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(1366, 768), "The Game", sf::Style::Close, sf::ContextSettings(0,0,0))
 {
 	Scene *s = new Scene;
 	scene.emplace_back(s);

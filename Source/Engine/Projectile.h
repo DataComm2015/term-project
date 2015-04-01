@@ -24,6 +24,8 @@
 ----------------------------------------------------------------------------------------------------------------------*/
 
 #include <functional>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Time.hpp>
 #include "VEntity.h"
 #include "ProjectileManager.h"
 #include "Map.h"
@@ -34,12 +36,9 @@ namespace Marx
 	{
 		private:
 			float _speed;
-			float _delta_x;
-			float _delta_y;
-			float _TTL;
-			int _attack_power;
-			std::function<void(Entity*, int)> onHit;
-
+			std::function<void(Entity*)> onHit;
+			sf::Vector2f heading;
+			sf::Time TimeToLive;
 		public:
 			Projectile(SGO&, Map*, float, float, Controller *, float, float);
 
