@@ -76,6 +76,8 @@ class Vessel : public Marx::VEntity, public Creature
 {
 	protected:
 		job_class jobClass;
+		int currentHealth;
+		int maxHealth;
 		int currentEXP;
 		int nextLevelEXP;
 		int currentLevel;
@@ -85,7 +87,6 @@ class Vessel : public Marx::VEntity, public Creature
 		float xSpeed;
 		float ySpeed;
 		int direction;	//0 = right, 1 = left //why not a bool?
-
 		bool movingLeft;
         bool movingRight;
 		bool movingUp;
@@ -96,13 +97,13 @@ class Vessel : public Marx::VEntity, public Creature
 
 	public:
 		Vessel( SGO &_sprite,
-			Marx::Map * gmap,
-			float x,
-			float y,
-			Marx::Controller* controller,
-			float height,
-			float width
-			/*, job_class jobClass, Ability* abilityList*/ );
+		Marx::Map * gmap,
+		float x,
+		float y,
+		Marx::Controller* controller,
+		float height,
+		float width
+		/*, job_class jobClass, Ability* abilityList*/ );
 
 		//inherited methods
 		virtual ~Vessel();
@@ -122,6 +123,9 @@ class Vessel : public Marx::VEntity, public Creature
 		int  getEXP();
     int  getNextLevelEXP();
 		int  getLevel();
+		void increaseLevel();
+
+		job_class getJobClass();
 
 		void resetHP();
 		void increaseHP( int hp );
@@ -130,27 +134,22 @@ class Vessel : public Marx::VEntity, public Creature
 		int  getMaxHP();
 
 		void resetAttackPower();
-		void attackPowerUp( int attackPower );
-		void attackPowerDown( int attackPower );
+		void attackPowerUp( int attackpower );
+		void attackPowerDown( int attackpower );
 		int  getAttackPower();
 		int  getDefaultAttackPower();
 
-		void  resetSpeed();
-		void  speedUp( float speed );
-		void  speedDown( float speed );
-		float getSpeed();
-		float getDefaultSpeed();
-
-		float getXSpeed();
-		float getYSpeed();
-		bool  isMoving();
-		int   getDirection();
+		void resetSpeed();
+		void speedUp( int speed );
+		void speedDown( int speed );
+		int  getSpeed();
+		int  getDefaultSpeed();
 
 		bool checkDeath();
 		void die();
 
 		void move();
-		void stop( int key );
+		void stop(int key);
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );

@@ -64,6 +64,7 @@ void GateKeeper::onUpdate()
                 movingRight = (xDir > 0);
                 movingUp = (yDir < 0);
                 movingDown = (yDir > 0);
+                printf("%d %d", xDir, yDir); 
 				break;
 		}
   }

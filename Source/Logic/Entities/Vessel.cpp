@@ -495,7 +495,6 @@ int Vessel::getMaxHP()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::resetAttackPower()
 {
-	attackPower = defaultAttackPower;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -517,9 +516,8 @@ void Vessel::resetAttackPower()
 -- NOTES:
 -- This function increases the Vessel's attack power. Used as a power up function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::attackPowerUp( int attackPower )
+void Vessel::attackPowerUp( int attackpower )
 {
-	currentAttackPower += attackPower;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -541,10 +539,8 @@ void Vessel::attackPowerUp( int attackPower )
 -- NOTES:
 -- This function decreases the Vessel's attack power, but not below 0.. Used as a power down function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::attackPowerDown( int attackPower )
+void Vessel::attackPowerDown( int attackpower )
 {
-	if(currentAttackPower > 1)
-		currentAttackPower -= attackPower;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -627,15 +623,15 @@ void Vessel::resetSpeed()
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: void Vessel::speedUp( float speed )
--- float speed: the amount of speed to increase by
+-- INTERFACE: void Vessel::speedUp( int speed )
+-- int speed: the amount of speed to increase by
 --
 -- RETURNS: nothing
 --
 -- NOTES:
 -- This function increases the Vessel's speed. Used as a power up function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::speedUp( float speed )
+void Vessel::speedUp( int speed )
 {
 	travelSpeed++;
 }
@@ -651,16 +647,17 @@ void Vessel::speedUp( float speed )
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: void Vessel::speedDown( float speed )
--- float speed: the amount of speed to decrease by
+-- INTERFACE: void Vessel::speedDown( int speed )
+-- int speed: the amount of speed to decrease by
 --
 -- RETURNS: nothing
 --
 -- NOTES:
 -- This function decreases the Vessel's speed, but not below 0. Used as a power down function.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::speedDown( float speed )
+void Vessel::speedDown( int speed )
 {
+	if( travelSpeed > 1 )
 		speed--;
 }
 
@@ -675,14 +672,14 @@ void Vessel::speedDown( float speed )
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: float Vessel::getSpeed()
+-- INTERFACE: int Vessel::getSpeed()
 --
 -- RETURNS: current speed as an integer
 --
 -- NOTES:
 -- This function returns the current speed the Vessel has
 ----------------------------------------------------------------------------------------------------------------------*/
-float Vessel::getSpeed()
+int Vessel::getSpeed()
 {
     return travelSpeed;
 }
@@ -698,14 +695,14 @@ float Vessel::getSpeed()
 --
 -- PROGRAMMER:	Sanders Lee
 --
--- INTERFACE: float Vessel::getDefaultSpeed()
+-- INTERFACE: int Vessel::getDefaultSpeed()
 --
 -- RETURNS: default speed for the level as an integer
 --
 -- NOTES:
 -- This function returns the default speed for the current level
 ----------------------------------------------------------------------------------------------------------------------*/
-float Vessel::getDefaultSpeed()
+int Vessel::getDefaultSpeed()
 {
 	return defaultSpeed;
 }
@@ -763,32 +760,21 @@ void Vessel::die()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER:  Sanders Lee
+-- DESIGNER:
 --
--- PROGRAMMER:  Sanders Lee
+-- PROGRAMMER:
 --
--- INTERFACE: void Vessel::normalAttack( float x, float y )
--- float x, float y: the target position of the attack
+-- INTERFACE: void Vessel::normalAttack( int x, int y )
+-- int x, int y: the target position of the attack
 --
 -- RETURNS: nothing
 --
 -- NOTES:
--- This function attempts to launch a normal attack at the target coordinate.
--- The attack may not necessarily hit the target if too far away.
+-- This function attempts to launch a normal attack at the target coordinate. Depending on normal weapon type, the
+-- attack may fail because the target is out of range.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::normalAttack( float x, float y )
+void Vessel::normalAttack( int x, int y )
 {
-	float delta_x = x - xPosition;
-	float delta_y = y - yPosition;
-
-	if (!(currentAttackCoolDown > 0.0))
-	{
-		// get projectile p
-		// p.setVelocity(attackSpeed, delta_x, delta_y);
-		// p.setAttackPower(attackPower);
-		// p.setTimeToLive(ttl);
-		currentAttackCooldown = maxAttackCooldown;
-	}
 }
 
 
@@ -803,46 +789,19 @@ void Vessel::normalAttack( float x, float y )
 --
 -- PROGRAMMER:
 --
--- INTERFACE: void useAbility( int abilityNum, float x, float y )
+-- INTERFACE: void useAbility( int abilityNum, int x, int y )
 -- abilityNum: the position of the ability in the Vessel's ability array
--- float x, float y: the target position of the attack
+-- int x, int y: the target position of the attack
 --
 -- RETURNS: nothing
 --
 -- NOTES:
 -- This function attempts use an ability on the designated X, Y coordinates.
 ----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::useAbility( int abilityNum, float x, float y )		//possibly need an Entity parameter for abilities that target an entity, such as healing
+void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Entity parameter for abilities that target an entity, such as healing
 {
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: normalAttack
---
--- DATE:
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER:  Sanders Lee
---
--- PROGRAMMER:  Sanders Lee
---
--- INTERFACE: void Vessel::coolDownAttack( float delta_t )
--- float delta_t: the time passed since last frame
---
--- RETURNS: nothing
---
--- NOTES:
--- This function cools down your attacks
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::coolDownAttack( float delta_t )
-{
-	if (currentAttackCoolDown > 0.0)
-		currentAttackCoolDown -= delta_t;
-
-	if (currentAttackCoolDown < 0.0)
-		currentAttackCoolDown = 0;
-}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getXSpeed
