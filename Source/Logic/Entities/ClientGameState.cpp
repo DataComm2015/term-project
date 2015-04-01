@@ -186,6 +186,7 @@ void ClientGameState::onUpdate(Message msg)
             break;
 
         case ServerGameStateClientGameStateMsgType::START_SCORE_SCENE:
+            memcpy(_scoreScene->data_received, msg.data, sizeof(Player) * 12);  
             AppWindow::getInstance().removeScene(1);
             AppWindow::getInstance().addScene(_scoreScene);
             break;

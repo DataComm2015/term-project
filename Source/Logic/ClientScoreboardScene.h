@@ -37,6 +37,8 @@ class ClientScoreboardScene : public Scene
 {
     public:
 
+        Player* data_received;
+
         ClientScoreboardScene();
         virtual void update(sf::Time);
         virtual void processEvents(sf::Event&);
@@ -48,7 +50,7 @@ class ClientScoreboardScene : public Scene
         
         static ClientScoreboardScene * getInstance();
 
-        void setScoreboard(char ** newBoard[]);
+        void setScoreboard(Player* players);
 
     private:
 
