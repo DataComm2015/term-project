@@ -20,12 +20,15 @@
 #define SCORE_ROWS 13 // max players + 1
 #define SCORE_COLS  3 // name, (deity or vessel), score
 
-#define SCORE_X  200 // starting position for the scoreboard
-#define SCORE_Y  20  // starting position for the scoreboard
+#define SCORE_X  310 // starting position for the scoreboard
+#define SCORE_Y  100  // starting position for the scoreboard
 #define OFFSET_X 100 // offset for each col in the scoreboard
 #define OFFSET_Y 20 // offset for eacg row in the scoreboard
 
-#define TEXTBOX_SCALE 1
+#define C_BOX_X 200
+#define C_BOX_Y 100
+
+#define TEXTBOX_SCALE 0.6
 
 /*
 *   This is the Lobby scene.
@@ -44,6 +47,8 @@ class ClientScoreboardScene : public Scene
         void updateMainView(sf::View& v);
         
         static ClientScoreboardScene * getInstance();
+
+        void setScoreboard(char ** newBoard[]);
 
     private:
 

@@ -64,6 +64,7 @@
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
 #include "../Creature.h"
+#include "../../Engine/TileManager.h"
 
 #define MAX_LEVEL 10;
 
@@ -91,12 +92,13 @@ class Vessel : public Marx::VEntity, public Creature
         bool movingRight;
 		bool movingUp;
         bool movingDown;
-		Weapon* weapon;
 		Ability* abilities;	//3 abilities for each Vessel
+		SGO &mask_sprite;
+		SGO &weapon_sprite;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
-		Vessel( SGO &_sprite,
+		Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 			Marx::Map * gmap,
 			float x,
 			float y,
@@ -108,6 +110,7 @@ class Vessel : public Marx::VEntity, public Creature
 		//inherited methods
 		virtual ~Vessel();
 		virtual void onUpdate();
+		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
 
 		void setPosition( float x, float y );
 		float getXPosition();
