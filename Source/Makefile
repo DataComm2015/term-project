@@ -49,10 +49,12 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/Entities/ServerNetworkController.o \
 				Logic/ServerCommand.o \
 				Logic/ClientLobbyScene.o \
+				Logic/ClientScoreboardScene.o \
 				Logic/MainMenuScene.o \
 				Logic/Entities/ClientGameState.o \
 				Logic/GateKeeperSource/src/GateKeeper.o \
 				Logic/Entities/ServerGameState.o \
+				Logic/CreditScene.o \
 				Logic/Creature.o \
 				Logic/EntityFactory.o \
 				Logic/Entities/ServerEnemyController.o \

@@ -93,7 +93,22 @@ enum class PlayerCommandMsgType
     /**
      * Client -> Server Message informing server of client lobby option selections
      */
-    SELECT_LOBBY_OPTIONS
+    SELECT_LOBBY_OPTIONS,
+
+     /**
+ * Clients sends the selected nickname to the server
+ */
+    MSG_T_SERVER_SELECTED_NICKNAME,
+
+ /**
+ * Clients sends the selected type of vessel to the server
+ */
+    MSG_T_SERVER_SELECTED_VESSEL,
+
+ /**
+ * Clients sends the selected type of deity to the server
+ */
+    MSG_T_SERVER_SELECTED_DEITY
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -107,6 +122,8 @@ enum class ServerNetworkControllerClientNetworkControllerMsgType
      * request from server to client, asking it to create an entity
      */
     NORMAL,
+
+
     /**
      * request from server to client, asking it to create & follow the passed entity
      *   with the viewport
