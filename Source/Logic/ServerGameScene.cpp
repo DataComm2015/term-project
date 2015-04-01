@@ -70,8 +70,24 @@ void ServerGameScene::update(sf::Time time)
     }
     else
     {
-        command->goToScoreboard();
+        if (lobtimer == SCOREBOARD_LENGTH_SECONDS)
+        {
+            command->goToScoreboard();
+        }
+
+        if (lobtimer > 0)
+        {
+            lobtimer -= time.asSeconds();
+        }
+        else
+        {
+            command->goToLobby();
+        }
     }
+
+
+
+
 	return;
 }
 
@@ -89,6 +105,7 @@ void ServerGameScene::enterScene()
 {
     worldSeed = rand();
     timer = GAME_ROUND_LENGTH_SECONDS;
+    lobtimer = SCOREBOARD_LENGTH_SECONDS;
 
     // Generate the game map
 	gMap->generateMap(worldSeed, this);
