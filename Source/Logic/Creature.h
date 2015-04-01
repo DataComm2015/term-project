@@ -16,7 +16,9 @@ class Creature
     public:
         virtual void setHealth(int health);
         virtual void setAttack(int attack);
-        virtual Entity *getEntity();
+		virtual int getHealth();
+		virtual int getAttack();
+        virtual Entity * getEntity();
 };
 
 #endif

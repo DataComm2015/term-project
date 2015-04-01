@@ -39,9 +39,13 @@ namespace Manager
 		private:
 			static std::set<Marx::Projectile*> projectile_pool;
 		public:
-			static Marx::Projectile* getProjectile(SGO&, Marx::Map*, float, float, Marx::Controller *, float, float);
+			static bool SERVER;
+			static Marx::Projectile* getProjectile(SGO&, Marx::Map*, float, float, Action &, sf::Vector2f &, Marx::Controller *, float, float);
 			static void enqueue(Marx::Projectile*);
 			static void dequeue(Marx::Projectile*);
+			static void setServer(bool serv);
+			static bool getServer();
+
 	};
 };
 

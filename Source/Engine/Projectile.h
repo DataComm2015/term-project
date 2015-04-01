@@ -37,8 +37,9 @@ namespace Marx
 			std::function<void(Entity*)> onHit;
 			sf::Vector2f heading;
 			sf::Time TimeToLive;
+			Action & act;
 		public:
-			Projectile(SGO&, Map*, float, float, Controller *, float, float);
+			Projectile(SGO&, Map*, float, float, Controller *, sf::Vector2f, float, float);
 
 			Entity * move(float, float, bool);
 			void setSpeed(float);
