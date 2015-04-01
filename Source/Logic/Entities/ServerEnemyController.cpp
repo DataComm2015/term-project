@@ -8,8 +8,8 @@
 
 
 ServerEnemyController::ServerEnemyController(Behaviour *behaviour)
-    : ServerNetworkController((int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
-     ,behaviour(behaviour)
+    : ServerNetworkController()
+    , behaviour(behaviour)
 {
   moving = false;
 }
