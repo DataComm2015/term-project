@@ -1,3 +1,6 @@
+#ifndef NETWORK_ENTITY_PAIRS
+#define NETWORK_ENTITY_PAIRS
+
 /**
  * this file contains {NetworkEntity} pairs which defines which subclass of a
  *   {NetworkEntity} instance server side is logically linked to which subclass
@@ -17,144 +20,155 @@
 // network entity pair types //
 ///////////////////////////////
 
-/**
- * a {Player} instance on the server side is connected to a {Command} instance
- *   on the client side.
- */
-#define NET_ENT_PAIR_PLAYER_COMMAND 0
-
-/**
- * a {PlayerController} instance on the server side is connected to a {Command}
- *   instance on the client side.
- */
-#define NET_ENT_PAIR_SERVERCONTROLLER_NETCONTROLLER 1
-
-/**
- * a {ServerGameState} instance on the server side is connected to a
- *   {ClientGameState} instance on the client side.
- */
-#define NET_ENT_PAIR_SERVERGAMESTATE_CLIENTGAMESTATE 2
-
-/**
- * a {ServerEnemyController} instance on the server side is connected to a
- *   {ClientEnemyController} instance on the client side.
- */
-#define NET_ENT_PAIR_SERVERENEMYCONTROLLER_CLIENTENEMYCONTROLLER 3
+enum class NetworkEntityPair
+{
+    /**
+     * a {Player} instance on the server side is connected to a {Command} instance
+     *   on the client side.
+     */
+    PLAYER_COMMAND,
+    /**
+     * a {PlayerController} instance on the server side is connected to a {Command}
+     *   instance on the client side.
+     */
+    SERVERCONTROLLER_NETCONTROLLER,
+    /**
+     * a {ServerGameState} instance on the server side is connected to a
+     *   {ClientGameState} instance on the client side.
+     */
+    SERVERGAMESTATE_CLIENTGAMESTATE
+};
 
 //////////////////////////////////////////////////////////////////////////////
 // message types used to between a {Player} {NetworkEntity} and a {Command} //
 // {NetworkEntity}.                                                         //
 //////////////////////////////////////////////////////////////////////////////
 
-/**
- * {Command} instance is sending a "start moving left" command to the {Player}
- *   instance.
+enum class PlayerCommandMsgType
+{
+    /**
+     * {Command} instance is sending a "start moving left" command to the {Player}
+     *   instance.
+     */
+    START_MV_LEFT_COMMAND,
+    /**
+     * {Command} instance is sending a "start moving right" command to the {Player}
+     *   instance.
+     */
+    START_MV_RIGHT_COMMAND,
+    /**
+     * {Command} instance is sending a "start moving up" command to the {Player}
+     *   instance.
+     */
+    START_MV_UP_COMMAND,
+    /**
+     * {Command} instance is sending a "start moving down" command to the {Player}
+     *   instance.
+     */
+    START_MV_DOWN_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving left" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_LEFT_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving right" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_RIGHT_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving up" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_UP_COMMAND,
+    /**
+     * {Command} instance is sending a "stop moving down" command to the {Player}
+     *   instance.
+     */
+    STOP_MV_DOWN_COMMAND,
+    /**
+     * Server message sent to clients to change their player mode (VESSEL, DEITY, GHOST)
+     */
+    SET_MODE,
+    /**
+     * Client -> Server Message informing server of client lobby option selections
+     */
+    SELECT_LOBBY_OPTIONS,
+
+     /**
+ * Clients sends the selected nickname to the server
  */
-#define MSG_T_PLAYER_COMMAND_START_MV_LEFT_COMMAND 0
+    MSG_T_SERVER_SELECTED_NICKNAME,
 
-/**
- * {Command} instance is sending a "start moving right" command to the {Player}
- *   instance.
+ /**
+ * Clients sends the selected type of vessel to the server
  */
-#define MSG_T_PLAYER_COMMAND_START_MV_RIGHT_COMMAND 1
+    MSG_T_SERVER_SELECTED_VESSEL,
 
-/**
- * {Command} instance is sending a "start moving up" command to the {Player}
- *   instance.
+ /**
+ * Clients sends the selected type of deity to the server
  */
-#define MSG_T_PLAYER_COMMAND_START_MV_UP_COMMAND 2
+    MSG_T_SERVER_SELECTED_DEITY
+};
 
-/**
- * {Command} instance is sending a "start moving down" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND 3
+/////////////////////////////////////////////////////////////////////
+// message types used to between a {ServerNetworkController} and a //
+// {ClientNetoworkController}.                                     //
+/////////////////////////////////////////////////////////////////////
 
-/**
- * {Command} instance is sending a "stop moving left" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_LEFT_COMMAND 4
-
-/**
- * {Command} instance is sending a "stop moving right" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_RIGHT_COMMAND 5
-
-/**
- * {Command} instance is sending a "stop moving up" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_UP_COMMAND 6
-
-/**
- * {Command} instance is sending a "stop moving down" command to the {Player}
- *   instance.
- */
-#define MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND 7
-
-/**
- * Server message sent to clients to indicate that a new player has connected.
- */
-#define MSG_T_PLAYER_CONNECTED 10
-
-/**
- * Server message sent to clients to indicate that a player has disconnected.
- */
-#define MSG_T_PLAYER_DISCONNECTED 11
-
-/**
- * Server message sent to clients to indicate that lobby countdown is
- * continuing.
- */
-#define MSG_T_LOBBY_COUNTDOWN_START 12
-
-/**
- * Server message sent to clients to indicate that lobby countdown is
- * paused.
- */
-#define MSG_T_LOBBY_COUNTDOWN_STOP 13
-
-/**
- * Server message sent to clients to change their player mode (VESSEL, DEITY, GHOST)
- */
-#define MSG_T_PLAYER_SET_MODE 14
-
-/**
- * Client -> Server Message informing server of client lobby option selections
- */
-#define MSG_T_PLAYER_SELECT_LOBBY_OPTIONS 15
-
-/**
- * Server -> Client Request options before starting game
- */
-#define MSG_T_PLAYER_READY_FOR_GAME 16
+enum class ServerNetworkControllerClientNetworkControllerMsgType
+{
+    /**
+     * request from server to client, asking it to create an entity
+     */
+    NORMAL,
 
 
-//////////////////////////////////////////////////////////////////////////////
-// message types used to between a {ServerController} {NetworkEntity} and a //
-// {NetworkController} {NetworkEntity}.                                     //
-//////////////////////////////////////////////////////////////////////////////
-
-/**
- * server is sending a "make a vessel" command to the client using onRegister,
- *   registering the {ServerCommandEntity} with the client.
- */
-#define MSG_T_SERVERCONTROLLER_NETCONTROLLER_MAKE_VESSEL 0
+    /**
+     * request from server to client, asking it to create & follow the passed entity
+     *   with the viewport
+     */
+    FOLLOW_ME
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // message types used to between a {ServerGameState} and a {ClientGameState}. //
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
- * {ServerGameState} instance is sending a "start game scene" command to the
- *   {ClientGameState} instance.
- */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_GAME_SCENE 1
+enum class ServerGameStateClientGameStateMsgType
+{
+    /**
+     * {ServerGameState} instance is sending a "start game scene" command to the
+     *   {ClientGameState} instance.
+     */
+    START_GAME_SCENE,
+    /**
+     * {ServerGameState} instance is sending a "start lobby scene" command to the
+     *   {ClientGameState} instance.
+     */
+    START_LOBBY_SCENE,
+    /**
+     * Server message sent to clients to indicate that a new player has connected.
+     */
+    PLAYER_CONNECTED,
+    /**
+     * Server message sent to clients to indicate that a player has disconnected.
+     */
+    PLAYER_DISCONNECTED,
+    /**
+     * Server message sent to clients to indicate that lobby countdown is
+     * continuing.
+     */
+    LOBBY_COUNTDOWN_START,
+    /**
+     * Server message sent to clients to indicate that lobby countdown is
+     * paused.
+     */
+    LOBBY_COUNTDOWN_STOP,
+    /**
+     * Server -> Client Request options before starting game
+     */
+    READY_FOR_GAME
+};
 
-/**
- * {ServerGameState} instance is sending a "start lobby scene" command to the
- *   {ClientGameState} instance.
- */
-#define MSG_T_SERVERGAMESTATE_CLIENTGAMESTATE_START_LOBBY_SCENE 0
+#endif
