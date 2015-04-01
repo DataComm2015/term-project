@@ -18,7 +18,7 @@ ClientScoreboardScene::ClientScoreboardScene()
     : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
-    
+
     SCORE_ELEMENTS[0] = (char *)"NAME\0";
     SCORE_ELEMENTS[1] = (char *)"ROLE\0";
     SCORE_ELEMENTS[2] = (char *)"SCORE\0";
@@ -38,7 +38,7 @@ ClientScoreboardScene::ClientScoreboardScene()
         scoreboard[0][i].text().move(SCORE_X + (i * OFFSET_X), SCORE_Y);
         scoreboard[0][i].toggleSelected(false);
         scoreboard[0][i].text().setFont(*arial);
-        
+
         scoreboard[0][i].setText(SCORE_ELEMENTS[i]);
     }
 
@@ -53,7 +53,7 @@ ClientScoreboardScene::ClientScoreboardScene()
             scoreboard[rows][cols].setText(SCORE_ELEMENTS[cols]); // comment out this line when the score data fill is implemented
         }
     }
-    
+
     countdownBox = new GUI::TextBox();
     countdownBox->text().setScale(1, 1);
     countdownBox->text().move(5, 5);
@@ -62,12 +62,7 @@ ClientScoreboardScene::ClientScoreboardScene()
 }
 
 ClientScoreboardScene::~ClientScoreboardScene()
-{
-    for (int rows = 0; rows < SCORE_ROWS; rows++)
-    {
-        delete[] scoreboard[rows];
-    }
-    
+{    
     delete background;
 }
 
@@ -99,7 +94,7 @@ void ClientScoreboardScene::processEvents(sf::Event& e)
 	    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
 		AppWindow::getInstance().close();
 	}
-	
+
 	countdownBox->process(e);
 }
 
@@ -115,7 +110,7 @@ void ClientScoreboardScene::draw()
 
     // draw the objects
     renderer.draw(*background);
-    
+
     for (int rows = 0; rows < SCORE_ROWS; rows++)
     {
         for (int cols = 0; cols < SCORE_COLS; cols++)
@@ -124,7 +119,7 @@ void ClientScoreboardScene::draw()
             // scoreboard[rows][cols]
         }
     }
-    
+
     for (int rows = 0; rows < SCORE_ROWS; rows++)
     {
         for (int cols = 0; cols < SCORE_COLS; cols++)
@@ -132,7 +127,7 @@ void ClientScoreboardScene::draw()
             renderer.draw(scoreboard[rows][cols]);
         }
     }
-    
+
     countdownBox->setText(std::to_string((int)currentTime) + "s" );
     renderer.draw(*countdownBox);
 

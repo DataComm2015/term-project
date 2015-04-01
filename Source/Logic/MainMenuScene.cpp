@@ -215,7 +215,7 @@ void MainMenuScene::onLoad()
 
     textBoxes[ SERVER_TXT ]   ->text().setPosition(textw/2+5, text1_h/2 - 3);
     textBoxes[ PORT_TXT ]     ->text().setPosition(textw/2+5, text2_h/2 - 3);
-    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text2_h/2 - 3);
+    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text3_h/2 - 3);
     connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
 
     connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
