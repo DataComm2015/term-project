@@ -95,20 +95,20 @@ enum class PlayerCommandMsgType
      */
     SELECT_LOBBY_OPTIONS,
 
-     /**
- * Clients sends the selected nickname to the server
- */
-    MSG_T_SERVER_SELECTED_NICKNAME,
+    /**
+     * Clients sends the selected nickname to the server
+     */
+    SERVER_SELECTED_NICKNAME,
 
- /**
- * Clients sends the selected type of vessel to the server
- */
-    MSG_T_SERVER_SELECTED_VESSEL,
+    /**
+     * Clients sends the selected type of vessel to the server
+     */
+    SERVER_SELECTED_VESSEL,
 
- /**
- * Clients sends the selected type of deity to the server
- */
-    MSG_T_SERVER_SELECTED_DEITY
+    /**
+     * Clients sends the selected type of deity to the server
+     */
+    SERVER_SELECTED_DEITY
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -168,7 +168,12 @@ enum class ServerGameStateClientGameStateMsgType
     /**
      * Server -> Client Request options before starting game
      */
-    READY_FOR_GAME
+    READY_FOR_GAME,
+    /**
+     * {ServerGameState} instance is sending a "start score scene" command to the
+     *   {ClientGameState} instance.
+     */
+    START_SCORE_SCENE
 };
 
 #endif

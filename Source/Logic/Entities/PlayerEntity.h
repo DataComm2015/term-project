@@ -34,6 +34,7 @@ class PlayerEntity : public NetworkEntity
 
         void setController(ServerNetworkController* controller);
         void unsetController();
+        char* getNickname();
 
     protected:
         virtual void onUnregister(Session* session, Message msg);
@@ -41,6 +42,7 @@ class PlayerEntity : public NetworkEntity
         void clearControllerEvents();
 
     private:
+        char* nickname;
         ServerNetworkController* controller;
         ServerCommand *server;
         PLAYER_MODE mode;

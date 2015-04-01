@@ -346,12 +346,13 @@ void MainMenuScene::onClick()
     {
       GameScene* gameScene = new GameScene();
       ClientLobbyScene* lobbyScene = new ClientLobbyScene();
-      ClientMux* clientmux = new ClientMux(gameScene,lobbyScene);
+      ClientScoreboardScene* scoreScene = new ClientScoreboardScene();
+      ClientMux* clientmux = new ClientMux(gameScene,lobbyScene, scoreScene);
       NetworkEntityMultiplexer::setInstance(clientmux);
 
       char* nickname_text = (char *)MainMenuScene::getInstance()->textBoxes[ NICKNAME_TXT ]->getText().c_str();
 
-      clientmux->message.type = (int)PlayerCommandMsgType::MSG_T_SERVER_SELECTED_NICKNAME;
+      clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
       clientmux->message.len = strlen(nickname_text);
       //clientmux->message.data = (char*)"TEST";
       char* hello = new char[16];

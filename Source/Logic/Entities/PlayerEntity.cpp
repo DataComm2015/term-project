@@ -12,7 +12,7 @@
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
  *   class over the network, which is on the client side.
- *
+ * 
  * the client sends command using {Command::update} such as move commands or
  *   others like choosing their character to the Server. such commands are
  *   handled in the {Player::onUpdate} method. and sent using the.
@@ -22,11 +22,13 @@ PlayerEntity::PlayerEntity(ServerCommand *server)
     : server(server), NetworkEntity((int)NetworkEntityPair::PLAYER_COMMAND)
 {
     this->controller = 0;
+    nickname = 0;
 }
 
 PlayerEntity::~PlayerEntity()
 {
     delete controller;
+    delete nickname;
 }
 
 void PlayerEntity::setMode(PLAYER_MODE mode)
@@ -82,6 +84,13 @@ void PlayerEntity::onUpdate(Message msg)
             server->getGameState()->notifyReadyForGame();
         }
 
+        case PlayerCommandMsgType::SERVER_SELECTED_NICKNAME:
+        {
+            char* username = new char[16];
+            memcpy(username, msg.data, strlen((char*)msg.data));
+            nickname = username;
+        }
+
         // if the player entity doesn't understand the network message, it
         // forwards it to the controller which controls a vessel, or deity
         default:
@@ -93,4 +102,9 @@ void PlayerEntity::onUpdate(Message msg)
             break;
         }
     }
+}
+
+char* PlayerEntity::getNickname()
+{
+    return nickname;
 }

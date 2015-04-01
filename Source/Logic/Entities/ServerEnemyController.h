@@ -2,6 +2,8 @@
 #define _SERVER_ENEMY_CONTROLLER_H_
 
 #include "ServerNetworkController.h"
+#include "../Artificial Intelligence/Behaviour.h"
+#include "../Event.h"
 
 class Behaviour;
 
@@ -16,6 +18,7 @@ class ServerEnemyController : public ServerNetworkController
 
     private:
         Behaviour *behaviour;
+        bool moving;
 };
 
 #endif

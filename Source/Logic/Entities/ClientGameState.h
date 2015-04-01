@@ -12,6 +12,7 @@ using Networking::Session;
 
 class GameScene;
 class ClientLobbyScene;
+class ClientScoreboardScene;
 class CommandEntity;
 
 /**
@@ -25,7 +26,7 @@ class CommandEntity;
 class ClientGameState : public NetworkEntity
 {
     public:
-        ClientGameState(int id, CommandEntity *command, GameScene *scene, ClientLobbyScene* lobbyScene);
+        ClientGameState(int id, CommandEntity *command, GameScene *scene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
         ~ClientGameState();
 
     protected:
@@ -33,6 +34,7 @@ class ClientGameState : public NetworkEntity
         virtual void onUpdate(Message message);
 
     private:
+        ClientScoreboardScene* _scoreScene;
         GameScene* _gameScene;
         ClientLobbyScene* _lobbyScene;
         CommandEntity *command;
