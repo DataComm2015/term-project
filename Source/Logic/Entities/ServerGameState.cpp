@@ -263,12 +263,12 @@ void ServerGameState::goToScoreboard()
 
     for(i = 0; i < 12; i++)
     {
-        strcpy(player_stats[i].name, "999");
-        player_stats[i].type = 999;
-        player_stats[i].score = 999;
+        strcpy(player_stats[i].name, "");
+        player_stats[i].type = -1;
+        player_stats[i].score = 0;
     }
 
-    i = 0;
+    i = 0;  
 
     for(auto entry = players.begin(); entry != players.end(); ++entry)
     {
@@ -277,7 +277,7 @@ void ServerGameState::goToScoreboard()
         fprintf(stdout, "SERVER NICKNAME: %s\n", playerEntity->getNickname());
         fflush(stdout);
         player_stats[i].type = (int) playerEntity->getMode();
-        player_stats[i].score = 123;
+        player_stats[i].score = 999;
         i++;
     }
 
