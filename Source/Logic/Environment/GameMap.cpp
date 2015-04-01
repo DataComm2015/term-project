@@ -229,7 +229,28 @@ bool GameMap::createBlockMap()
 }
 
 
-
+/******************************************************************************
+*	FUNCTION: setCellBoundaries
+*
+*	DATE: March 31, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: void setCellBoundaries();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function sets the outer rim of the game map to be non-
+*		traversible.
+******************************************************************************/
 void GameMap::setCellBoundaries()
 {
 	// Set vertical boundaries

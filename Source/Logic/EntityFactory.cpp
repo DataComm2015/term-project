@@ -34,7 +34,7 @@ EntityFactory::EntityFactory()
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    gkSGO.sprite().setScale(2, 2);
+    gkSGO.sprite().setScale(1, 1);
     gkSGO.middleAnchorPoint(true);
 
     vesselSGO.sprite().setTexture(*Manager::TextureManager::get(vesselSprite));
