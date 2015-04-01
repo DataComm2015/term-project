@@ -102,7 +102,6 @@ class ClientLobbyScene : public Scene
         const int SCN_HEIGHT = 768;
 
         const int CIRCLE_WH = 200;
-
         const int VESSEL_ART_H = 56;
         const int VESSEL_ART_W = 64;
 
@@ -110,7 +109,12 @@ class ClientLobbyScene : public Scene
 
         const int MAX_SCROLL = 188;
 
-        const int MAX_SCROLL = 1000;
+        const int VESSEL_ART_H = 56;
+        const int VESSEL_ART_W = 64;
+
+        const int EASTER_ART_HW = 400;
+
+        const int MAX_SCROLL = 188;
 
         static sf::Clock clck;
 

@@ -186,8 +186,7 @@ void CommandEntity::onKeyReleased(int key)
 }
 
 void CommandEntity::onRegister(Session *session)
-{
-
+{    
     fprintf(stdout, "THIS: %s\n", clientmux->message.data);
     fflush(stdout);
     update(clientmux->message);

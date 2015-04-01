@@ -256,11 +256,36 @@ std::map<Session*, PlayerEntity*> ServerGameState::getPlayers()
 ------------------------------------------------------------------------------*/
 void ServerGameState::goToScoreboard()
 {
+
+    Player player_stats[12];
+    auto players = getPlayers();
+    int i = 0;
+
+    for(i = 0; i < 12; i++)
+    {
+        strcpy(player_stats[i].name, "");
+        player_stats[i].type = -1;
+        player_stats[i].score = 0;
+    }
+
+    i = 0;  
+
+    for(auto entry = players.begin(); entry != players.end(); ++entry)
+    {
+        PlayerEntity* playerEntity = entry->second;
+        strcpy(player_stats[i].name, playerEntity->getNickname());
+        fprintf(stdout, "SERVER NICKNAME: %s\n", playerEntity->getNickname());
+        fflush(stdout);
+        player_stats[i].type = (int) playerEntity->getMode();
+        player_stats[i].score = 999;
+        i++;
+    }
+
     Message msg;
     memset(&msg,0,sizeof(msg));
     msg.type = (int)ServerGameStateClientGameStateMsgType::START_SCORE_SCENE;
-    msg.data = (void*) "GO TO SCORE";
-    msg.len = strlen((char*)msg.data);
+    msg.data = (void*) player_stats;
+    msg.len = sizeof(Player) * 12;
 
     update(msg);
 }

@@ -329,13 +329,13 @@ void ClientLobbyScene::draw()
 
     if(vesselChoice == 1)
     {
-        //renderer.draw(*vesselOneSGO);
+        renderer.draw(*vesselOneSGO);
         renderer.draw(*vesselOneCircleSGO);
     }
 
     if(vesselChoice == 2)
     {
-        //renderer.draw(*vesselTwoSGO);
+        renderer.draw(*vesselTwoSGO);
         renderer.draw(*vesselTwoCircleSGO);
     }
 

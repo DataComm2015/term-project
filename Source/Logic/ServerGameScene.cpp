@@ -11,7 +11,6 @@
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
 #include "../GameSettings.h"
-#include "../GameSettings.h"
 
 #include <iostream>
 #include <cstdlib>
