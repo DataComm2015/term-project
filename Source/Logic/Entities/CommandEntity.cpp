@@ -16,15 +16,18 @@
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"
 
+#include "ClientMux.h"
+
 #include <cstdio>
 #include <cstring>
 
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene* gameScene)
+CommandEntity::CommandEntity(int id, GameScene* gameScene, ClientMux * client)
     :NetworkEntity(id,(int)NetworkEntityPair::PLAYER_COMMAND)
     ,_gameScene(gameScene)
 {
+    clientmux = client;
     _gameScene->addKeyListener(this);
     playerMode = PLAYER_MODE::GHOST;
 }
@@ -121,6 +124,10 @@ void CommandEntity::onKeyReleased(int key)
 
 void CommandEntity::onRegister(Session *session)
 {
+
+    fprintf(stdout, "THIS: %s\n", clientmux->message.data);
+    fflush(stdout);
+    update(clientmux->message);
 }
 
 void CommandEntity::onUnregister(Session* session, Message msg)

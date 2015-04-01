@@ -21,11 +21,12 @@
 
 using Networking::Client;
 
-ClientGameState::ClientGameState(int id, CommandEntity *command, GameScene* gameScene, ClientLobbyScene* lobbyScene)
+ClientGameState::ClientGameState(int id, CommandEntity *command, GameScene* gameScene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
     : command(command)
     ,NetworkEntity(id,(int)NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE)
     ,_gameScene(gameScene)
     ,_lobbyScene(lobbyScene)
+    ,_scoreScene(scoreScene)
 {
 }
 
@@ -90,6 +91,11 @@ void ClientGameState::onUpdate(Message msg)
 
         case ServerGameStateClientGameStateMsgType::LOBBY_COUNTDOWN_STOP:
             _lobbyScene->stopTimer(*((int*)msg.data));
+            break;
+
+        case ServerGameStateClientGameStateMsgType::START_SCORE_SCENE:
+            AppWindow::getInstance().removeScene(1);
+            AppWindow::getInstance().addScene(_scoreScene);
             break;
     }
 }
