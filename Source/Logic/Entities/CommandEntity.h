@@ -6,6 +6,9 @@
 #include "../../Network/Message.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
+#include "../Event.h"
+
+class ClientMux;
 
 #include "PlayerEntity.h"
 #include "../ClientLobbyScene.h"
@@ -28,7 +31,7 @@ struct PlayerLobbyChoices;
 class CommandEntity : public NetworkEntity, public KeyListener, public ClickListener
 {
     public:
-        CommandEntity(int id, GameScene *gameScene);
+        CommandEntity(int id, GameScene *gameScene, ClientMux* client);
         ~CommandEntity();
 
         PLAYER_MODE getPlayerMode();
@@ -37,12 +40,13 @@ class CommandEntity : public NetworkEntity, public KeyListener, public ClickList
     protected:
         virtual void onKeyPressed(int key);
         virtual void onKeyReleased(int key);
-	virtual void onMouseClick(int key, int srcid, float xpos, float ypos);
+	virtual void onMouseClick(int key, int srcid, enum ActionType action, float xpos, float ypos);
         virtual void onRegister(Session *session);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message message);
 
     private:
+        ClientMux* clientmux;
         GameScene* _gameScene;
         PLAYER_MODE playerMode;
 };

@@ -83,4 +83,10 @@ private:
 	int desty;
 };
 
+class UpdateEvent: public ::Marx::Event
+{
+public:
+  UpdateEvent() : Event(Marx::UPDATE){}
+};
+
 #endif

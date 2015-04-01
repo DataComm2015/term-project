@@ -11,6 +11,7 @@
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
 #include "Entities/ServerVesselController.h"
+#include "../GameSettings.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -61,8 +62,35 @@ ServerGameScene::~ServerGameScene()
 	delete cMap;
 }
 
-void ServerGameScene::update(sf::Time)
+void ServerGameScene::update(sf::Time time)
 {
+    if (timer > 0)
+    {
+        for (int i = 0; i < enemyControllers.size(); i++)
+            enemyControllers[i]->updateBehaviour(time.asSeconds());
+
+        timer -= time.asSeconds();
+    }
+    else
+    {
+        if (lobtimer == SCOREBOARD_LENGTH_SECONDS)
+        {
+            command->goToScoreboard();
+        }
+
+        if (lobtimer > 0)
+        {
+            lobtimer -= time.asSeconds();
+        }
+        else
+        {
+            command->goToLobby();
+        }
+    }
+
+
+
+
 	return;
 }
 
@@ -79,16 +107,14 @@ void ServerGameScene::draw()
 void ServerGameScene::enterScene()
 {
     worldSeed = rand();
+    timer = GAME_ROUND_LENGTH_SECONDS;
+    lobtimer = SCOREBOARD_LENGTH_SECONDS;
 
     // Generate the game map
-	gMap->generateMap(worldSeed, this);
+	  gMap->generateMap(worldSeed, this);
 
     createPlayers();
-	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
-	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
-	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
-	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
-	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
+	  createEnemy(BASIC_TYPE, NULL, 48, 48);
 }
 
 void ServerGameScene::leaveScene()
@@ -122,9 +148,61 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
 
     // Create the enemy
     ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
+    enemyControllers.push_back(enemyController);
     enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
+}
+
+void ServerGameScene::createProjectile(Marx::Action &action, float x, float y)
+{
+    EnemyControllerInit initData;
+    initData.type = type;
+    initData.x = x;
+    initData.y = y;
+
+    Message msg;
+    msg.type = 0;
+    msg.data = (void*) &initData;
+    msg.len = sizeof(initData);
+
+    // Create the enemy
+    ServerNetworkController *networkController = new ServerNetworkController();
+    enemyControllers.push_back(enemyController);
+    enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
+    enemyController->init();
+    command->getGameState()->registerWithAllPlayers(enemyController, &msg);
+				std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+				PlayerEntity* currPlayer;
+				Session* currSession;
+				PLAYER_MODE mode;
+				int vesselNo = 0;
+				int vesselX = 0;
+				int vesselY = 0;
+				ServerNetworkController* cont = new ServerNetworkController();
+                currPlayer->setController(cont);
+
+                // register the vessel controller with all clients
+                EnemyControllerInit initData;
+                initData.type = ENTITY_TYPES::PROJECTILE;
+                initData.x = x;
+                initData.y = y;
+
+                Message msg;
+                msg.data = (void*) &initData;
+                msg.len = sizeof(initData);
+
+                // create vessel, pass it server vessel controller too
+                Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
+
+                // register the server controller with the player
+                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME;
+                cont->registerSession(currSession,msg);
+
+                // register the server controller with clients
+                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::NORMAL;
+                command->getGameState()->registerWithAllPlayers(cont,&msg);
+
 }
 
 /**

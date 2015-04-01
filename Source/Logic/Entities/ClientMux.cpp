@@ -18,9 +18,10 @@
 
 #include <cstring>
 
-ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene)
+ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
     :_gameScene(gameScene)
     ,_lobbyScene(lobbyScene)
+    ,_scoreScene(scoreScene)
 {
 }
 
@@ -38,7 +39,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
     {
         case NetworkEntityPair::PLAYER_COMMAND:
         {
-            command = new CommandEntity(id,_gameScene);
+            command = new CommandEntity(id,_gameScene, this);
             ret = command;
             break;
         }
@@ -58,7 +59,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 
         case NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE:
         {
-            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene);
+            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene, _scoreScene);
             ret = gameState;
             break;
         }

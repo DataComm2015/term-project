@@ -42,7 +42,8 @@ namespace Marx
 	R_MOVE,
 	A_MOVE,
 	ATTACK,
-	SK_ATTACK
+	SK_ATTACK,
+        UPDATE
     };
 
     /*

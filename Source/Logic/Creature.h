@@ -16,7 +16,10 @@ class Creature
     public:
         virtual void setHealth(int health);
         virtual void setAttack(int attack);
+		virtual Marx::Projectile* createAttack(int, enum ActionType, float, float);
         virtual Entity *getEntity();
+	private:
+		std::map<enum ActionType, Marx::Action*> actionList;
 };
 
 #endif

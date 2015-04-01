@@ -117,31 +117,27 @@ void ServerNetworkController::onUpdate(Message msg)
     {
         case PlayerCommandMsgType::START_MV_LEFT_COMMAND:
         {
-			moveValues = (int*)msg.data;
-            MoveEvent *event = new MoveEvent(moveValues[0], moveValues[1], moveValues[2], moveValues[3], moveValues[4]);
-            addEvent(event);
-            break;
+			MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
+			addEvent(event);
+			break;
         }
         case PlayerCommandMsgType::START_MV_RIGHT_COMMAND:
         {
-			moveValues = (int*)msg.data;
-            MoveEvent *event = new MoveEvent(moveValues[0], moveValues[1], moveValues[2], moveValues[3], moveValues[4]);
-            addEvent(event);
-            break;
+			MoveEvent *event = new MoveEvent(1,0,1,0,0);
+			addEvent(event);
+			break;
         }
         case PlayerCommandMsgType::START_MV_UP_COMMAND:
         {
-			moveValues = (int*)msg.data;
-            MoveEvent *event = new MoveEvent(moveValues[0], moveValues[1], moveValues[2], moveValues[3], moveValues[4]);
-            addEvent(event);
-            break;
+			MoveEvent *event = new MoveEvent(0,-1,0,-1,0);
+			addEvent(event);
+			break;
         }
         case PlayerCommandMsgType::START_MV_DOWN_COMMAND:
         {
-			moveValues = (int*)msg.data;
-            MoveEvent *event = new MoveEvent(moveValues[0], moveValues[1], moveValues[2], moveValues[3], moveValues[4]);
-            addEvent(event);
-            break;
+			MoveEvent *event = new MoveEvent(0,1,0,1,0);
+			addEvent(event);
+			break;
         }
         case PlayerCommandMsgType::STOP_MV_LEFT_COMMAND:
         {
@@ -169,12 +165,16 @@ void ServerNetworkController::onUpdate(Message msg)
         }
 		case PlayerCommandMsgType::START_ATT_COMMAND:
 		{
-			
+			AttackMessage *mesg = (AttackMessage*) msg.data;
+			AttackEvent *aevent = new AttackEvent(mesg->srcid, mesg->action, mesg->cellx, mesg->celly);
+			addEvent(aevent);
 			break;
 		}
 		case PlayerCommandMsgType::START_SK_ATT_COMMAND:
 		{
-			
+			SkillAttackMessage *smesg = (SkillAttackMessage*) msg.data;
+			SkillAttackEvent *saevent = new SkillAttackEvent(smesg->srcid, smesg->action, smesg->destx, smesg->desty);
+			addEvent(saevent);
 			break;
 		}
     }

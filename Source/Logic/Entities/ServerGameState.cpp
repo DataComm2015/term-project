@@ -91,6 +91,17 @@ std::map<Session*, PlayerEntity*> ServerGameState::getPlayers()
     return players;
 }
 
+void ServerGameState::goToScoreboard()
+{
+    Message msg;
+    memset(&msg,0,sizeof(msg));
+    msg.type = (int)ServerGameStateClientGameStateMsgType::START_SCORE_SCENE;
+    msg.data = (void*) "GO TO SCORE";
+    msg.len = strlen((char*)msg.data);
+
+    update(msg);
+}
+
 void ServerGameState::goToLobby()
 {
     Message msg;
