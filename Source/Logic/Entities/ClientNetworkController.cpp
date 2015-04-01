@@ -108,6 +108,30 @@ void ClientNetworkController::parseEventMessage( Message& message )
         addEvent(ev);
         break;
     }
+	case ::Marx::ATTACK:
+	{
+		// case message payload
+		AttackMessage* mm = (AttackMessage*) message.data;
+
+		// create event from message data
+		AttackEvent *ev = new AttackEvent(mm->srcid, mm->action, mm->cellx, mm->celly);
+
+		// add event to event queue
+		addEvent(ev);
+		break;
+	}
+	case ::Marx::SK_ATTACK:
+	{
+		// case message payload
+		SkillAttackMessage* mm = (SkillAttackMessage*) message.data;
+
+		// create event from message data
+		SkillAttackEvent *ev = new SkillAttackEvent(mm->srcid, mm->action, mm->destx, mm->desty);
+
+		// add event to event queue
+		addEvent(ev);
+		break;
+	}
     default:
     {
         printf("WARNING: ClientNetworkController::parseEventMessage received an "

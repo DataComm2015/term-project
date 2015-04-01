@@ -37,6 +37,58 @@ private:
     bool force;
 };
 
+struct AttackMessage
+{
+	int srcid; // Entity id source
+	enum ActionType action; // Type of attack to take
+	int cellx; // Coordinates of the cell you're attacking.
+	int celly;
+};
+class UpdateEvent: public ::Marx::Event
+{
+	int celly;
+public:
+	UpdateEvent() : Event(Marx::UPDATE){}
+};
+
+class AttackEvent : public ::Marx::Event
+{
+public:
+	AttackEvent(int _srcid, enum ActionType type, int _cellx, int _celly);
+	int getSrc();
+	enum ActionType getAction();
+	int getCellX();
+	int getCellY();
+private:
+	int srcid;
+	enum ActionType action;
+	int cellx;
+	int celly;
+};
+
+struct SkillAttackMessage
+{
+	int srcid; // Entity id source
+	enum ActionType action; // Type of attack to take
+	float destx;
+	float desty;
+};
+
+class SkillAttackEvent : public ::Marx::Event
+{
+public:
+	SkillAttackEvent(int _srcid, enum ActionType type, int _destx, int _desty);
+	int getSrc();
+	enum ActionType getAction();
+	int getDestX();
+	int getDestY();
+private:
+	int srcid;
+	enum ActionType action;
+	int destx;
+	int desty;
+};
+
 class UpdateEvent: public ::Marx::Event
 {
 public:

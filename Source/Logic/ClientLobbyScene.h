@@ -110,6 +110,8 @@ class ClientLobbyScene : public Scene
 
         const int MAX_SCROLL = 188;
 
+        const int MAX_SCROLL = 1000;
+
         static sf::Clock clck;
 
         static int currScrollHeight;

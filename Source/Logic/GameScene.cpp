@@ -435,11 +435,15 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
-		if (e.mouseButton.button == sf::Mouse::Left)
+		sf::Vector2i mouse = sf::Mouse::getPosition();
+		sf::Vector2f viewVector = viewMain.getCenter();
+		for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
 		{
-			current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
-			current.play();
+			(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(), 
+				ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
 		}
+		current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+		current.play();
 	}
 
 
@@ -501,6 +505,16 @@ void GameScene::addKeyListener(KeyListener* listener)
 void GameScene::rmKeyListener(KeyListener* listener)
 {
 	keyListeners.erase(listener);
+}
+
+void GameScene::addClickListener(ClickListener* listener)
+{
+	clickListeners.insert(listener);
+}
+
+void GameScene::rmClickListener(ClickListener* listener)
+{
+	clickListeners.erase(listener);
 }
 
 void GameScene::generateMap(int seed)

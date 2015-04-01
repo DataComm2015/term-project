@@ -21,6 +21,6 @@ namespace Marx
 			virtual void onHit(Entity * me, Entity * e ) = 0;
 			sf::Time getTTL(){ return TTL; };
 	};
-}
+};
 
 #endif //_ACTION_H_

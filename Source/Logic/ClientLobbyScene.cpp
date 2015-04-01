@@ -181,6 +181,7 @@ void ClientLobbyScene::onLoad()
     deityTwoCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2 );
 
     leaveBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, SCN_HEIGHT * 0.20);
+    leaveBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, SCN_HEIGHT * 0.20);
 
     easterEggBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, 3*SCN_HEIGHT/4);
 
@@ -328,13 +329,13 @@ void ClientLobbyScene::draw()
 
     if(vesselChoice == 1)
     {
-        renderer.draw(*vesselOneSGO);
+        //renderer.draw(*vesselOneSGO);
         renderer.draw(*vesselOneCircleSGO);
     }
 
     if(vesselChoice == 2)
     {
-        renderer.draw(*vesselTwoSGO);
+        //renderer.draw(*vesselTwoSGO);
         renderer.draw(*vesselTwoCircleSGO);
     }
 
@@ -508,7 +509,6 @@ void ClientLobbyScene::updateMainView(sf::View& v)
 
 	//needs to be 3X scale eventually
 	v.zoom(0.66);
-
 }
 
 /*------------------------------------------------------------------------------------------------------------------

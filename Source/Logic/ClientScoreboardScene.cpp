@@ -14,7 +14,8 @@ sf::Clock ClientScoreboardScene::clock;
 float ClientScoreboardScene::currentTime;
 
 
-ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance(), 48400)
+ClientScoreboardScene::ClientScoreboardScene()
+    : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
     
@@ -49,6 +50,7 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
             scoreboard[rows][cols].text().move(SCORE_X + (cols * OFFSET_X), SCORE_Y + (rows * OFFSET_Y));
             scoreboard[rows][cols].toggleSelected(false);
             scoreboard[rows][cols].text().setFont(*arial);
+            scoreboard[rows][cols].setText(SCORE_ELEMENTS[cols]); // comment out this line when the score data fill is implemented
         }
     }
     
@@ -61,10 +63,12 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
 
 ClientScoreboardScene::~ClientScoreboardScene()
 {
+    for (int rows = 0; rows < SCORE_ROWS; rows++)
+    {
+        delete[] scoreboard[rows];
+    }
+    
     delete background;
-    delete gameScene;
-    delete clientMux;
-    delete countdownBox;
 }
 
 void ClientScoreboardScene::onLoad()
@@ -111,23 +115,15 @@ void ClientScoreboardScene::draw()
 
     // draw the objects
     renderer.draw(*background);
-
-    /* this block shows what is needed to set the scoreboard */
-    char ** newBoard[SCORE_ROWS - 1]; // should be 12
-    for (int rows = 0; rows < (SCORE_ROWS - 1); rows++)
-    {
-        // all arrays should at least have a "\0"
-        newBoard[rows] = new char*[SCORE_COLS]; // should be 3
-        newBoard[rows][0] = new char[8]; // 8 is an arbitrariy number
-        strcpy(newBoard[rows][0], "bob\0");
-        newBoard[rows][1] = new char[8];
-        strcpy(newBoard[rows][1], "vessel\0");
-        newBoard[rows][2] = new char[8];
-        strcpy(newBoard[rows][2], "1000\0");
-    }
     
-    setScoreboard(newBoard);
-    /* end block */
+    for (int rows = 0; rows < SCORE_ROWS; rows++)
+    {
+        for (int cols = 0; cols < SCORE_COLS; cols++)
+        {
+            // IMPLEMENT SCOREBOARD ELEMENT FILLING HERE
+            // scoreboard[rows][cols]
+        }
+    }
     
     for (int rows = 0; rows < SCORE_ROWS; rows++)
     {
@@ -150,21 +146,11 @@ void ClientScoreboardScene::updateMainView(sf::View& v)
     v = AppWindow::getInstance().getCurrentView();
 
 	//needs to be 3X scale eventually
-	v.zoom(0.66);
+	//v.zoom(0.66);
 }
 
 ClientScoreboardScene * ClientScoreboardScene::getInstance()
 {
     static ClientScoreboardScene * scene = new ClientScoreboardScene();
     return scene;
-}
-
-void ClientScoreboardScene::setScoreboard(char ** newBoard[])
-{
-    for (int rows = 1; rows < SCORE_ROWS; rows++)
-    {
-        scoreboard[rows][0].setText(newBoard[rows - 1][0]);
-        scoreboard[rows][1].setText(newBoard[rows - 1][1]);
-        scoreboard[rows][2].setText(newBoard[rows - 1][2]);
-    }
 }

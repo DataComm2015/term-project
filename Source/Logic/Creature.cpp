@@ -8,6 +8,7 @@ void Creature::setAttack(int attack)
 {
 }
 
+
 int Creature::getAttack()
 {
 	return 0;
@@ -16,6 +17,18 @@ int Creature::getAttack()
 int Creature::getHealth()
 {
 	return 0;
+}
+
+Marx::Projectile* Creature::createAttack(AttackEvent & event, float x, float y)
+{
+	Marx::Action *action = actionList[event.getAction()];
+	return Manager::ProjectileManager::getProjectile(x, y, action, event.getCellX(), event.getCellY());
+}
+
+Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, float x, float y)
+{
+	Marx::Action *action = actionList[event.getAction()];
+	return Manager::ProjectileManager::getProjectile(x, y, action, event.getDestX(), event.getDestY());
 }
 
 Entity *Creature::getEntity()

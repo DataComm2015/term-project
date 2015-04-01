@@ -2,6 +2,7 @@
 
 #include "../Engine/Event.h"
 
+/* ------------------------------- Move Event ----------------------------------- */
 /**
  * constructs a new move event
  *
@@ -68,3 +69,59 @@ bool MoveEvent::forced()
 {
     return force;
 }
+
+/* ------------------------------- Attack Event ----------------------------------- */
+AttackEvent::AttackEvent(int _srcid, enum ActionType type, int _cellx, int _celly) :
+	Event(Marx::ATTACK), srcid(_srcid), action(type), cellx(_cellx), celly(_celly)
+{
+}
+
+int AttackEvent::getSrc()
+{
+	return srcid;
+}
+
+enum ActionType AttackEvent::getAction()
+{
+	return action;
+}
+
+int AttackEvent::getCellX()
+{
+	return cellx;
+}
+
+int AttackEvent::getCellY()
+{
+	return celly;
+}
+
+
+/* ------------------------------- Skill Attack Event ----------------------------------- */
+SkillAttackEvent::SkillAttackEvent(int _srcid, enum ActionType type, int _destx, int _desty) :
+	Event(Marx::SK_ATTACK), srcid(_srcid), action(type), destx(_destx), desty(_desty)
+{
+}
+
+int SkillAttackEvent::getSrc()
+{
+	return srcid;
+}
+
+enum ActionType SkillAttackEvent::getAction()
+{
+	return action;
+}
+
+int SkillAttackEvent::getDestX()
+{
+	return destx;
+}
+
+int SkillAttackEvent::getDestY()
+{
+	return desty;
+}
+
+
+
