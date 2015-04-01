@@ -8,16 +8,16 @@ void Creature::setAttack(int attack)
 {
 }
 
-Marx::Projectile* createAttack(int srcid, enum ActionType actionType, float destx, float desty)
+Marx::Projectile* Creature::createAttack(AttackEvent& event, float x, float y)
 {
-	float x, y;
-	if (getEntity != NULL)
-	{
-		x = getEntity.left;
-		y = getEntity.top;
-	}
-	Marx::Action *action = actionList[actionType];
-	return Manager::ProjectileManager::getProjectile(x, y, action, destx, desty);
+	Marx::Action *action = actionList[event.getAction()];
+	return Manager::ProjectileManager::getProjectile(x, y, action, event.getCellX(), event.getCellY());
+}
+
+Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, float x, float y)
+{
+	Marx::Action *action = actionList[event.getAction()];
+	return Manager::ProjectileManager::getProjectile(x, y, action, event.getDestX(), event.getDestY());
 }
 
 Entity *Creature::getEntity()

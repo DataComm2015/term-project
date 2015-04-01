@@ -103,6 +103,7 @@ void Vessel::onUpdate()
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
+			{
 				MoveEvent* ev = (MoveEvent*) (*it);
                 int xDir = ev->getXDir();
                 int yDir = ev->getYDir();
@@ -112,6 +113,19 @@ void Vessel::onUpdate()
                 movingUp = (yDir < 0);
                 movingDown = (yDir > 0);
 				break;
+			}
+			case ::Marx::ATTACK:
+			{
+				AttackEvent* aev = (AttackEvent*) (*it);
+
+				createAttack(*aev, getXPosition(), getYPosition());
+			}
+			case ::Marx::SK_ATTACK:
+			{
+				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+
+				createSkAttack(*saev, getXPosition(), getYPosition());
+			}
 		}
 	}
 	getController()->clearEvents();

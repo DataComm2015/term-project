@@ -61,7 +61,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
 			// parse attack event into move message
 			AttackMessage am;
-			am.srcid 		= ae->getSrc();
+			am.srcid 	= ae->getSrc();
 			am.action	= ae->getAction();
 			am.cellx	= ae->getCellX();
 			am.celly	= ae->getCellY();
@@ -179,3 +179,4 @@ void ServerNetworkController::onUpdate(Message msg)
 		}
     }
 }
+

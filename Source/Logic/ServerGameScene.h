@@ -39,6 +39,7 @@ class ServerGameScene : public Scene
         void leaveScene();
         int getWorldSeed();
         void createPlayers();
+	//void createProjectile(Marx::Action&, float, float);
         void createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y);
 
     private:

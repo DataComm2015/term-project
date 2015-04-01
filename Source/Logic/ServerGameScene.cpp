@@ -154,10 +154,10 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
 
-void ServerGameScene::createProjectile(Marx::Action &action, float x, float y)
+/*void ServerGameScene::createProjectile(Marx::Action &action, float x, float y)
 {
     EnemyControllerInit initData;
-    initData.type = type;
+    initData.type = ENTITY_TYPES::PROJECTILE;
     initData.x = x;
     initData.y = y;
 
@@ -167,43 +167,19 @@ void ServerGameScene::createProjectile(Marx::Action &action, float x, float y)
     msg.len = sizeof(initData);
 
     // Create the enemy
-    ServerNetworkController *networkController = new ServerNetworkController();
-    enemyControllers.push_back(enemyController);
-    enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
-    enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
-				std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
-				PlayerEntity* currPlayer;
-				Session* currSession;
-				PLAYER_MODE mode;
-				int vesselNo = 0;
-				int vesselX = 0;
-				int vesselY = 0;
-				ServerNetworkController* cont = new ServerNetworkController();
-                currPlayer->setController(cont);
 
-                // register the vessel controller with all clients
-                EnemyControllerInit initData;
-                initData.type = ENTITY_TYPES::PROJECTILE;
-                initData.x = x;
-                initData.y = y;
+	std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+	PlayerEntity* currPlayer;
 
-                Message msg;
-                msg.data = (void*) &initData;
-                msg.len = sizeof(initData);
+    // create vessel, pass it server vessel controller too
+    Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
 
-                // create vessel, pass it server vessel controller too
-                Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
+    cont->registerSession(currSession,msg);
 
-                // register the server controller with the player
-                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME;
-                cont->registerSession(currSession,msg);
+    command->getGameState()->registerWithAllPlayers(cont,&msg);
 
-                // register the server controller with clients
-                msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::NORMAL;
-                command->getGameState()->registerWithAllPlayers(cont,&msg);
-
-}
+}*/
 
 /**
 
