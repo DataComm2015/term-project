@@ -82,24 +82,21 @@ void PlayerEntity::onUpdate(Message msg)
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
             server->getGameState()->notifyReadyForGame();
+
+            break;
         }
 
         case PlayerCommandMsgType::SERVER_SELECTED_NICKNAME:
         {
+            
+            char* username = new char[16];
+            memcpy(username, msg.data, strlen((char*)msg.data));
+            nickname = username;
+            fprintf(stdout, "PLAYER USERNAME: %s\n", username);
+            fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
+            fflush(stdout); 
 
-            static int flag = 1;
-            
-            if (flag)
-            {
-                char* username = new char[16];
-                memcpy(username, msg.data, strlen((char*)msg.data));
-                nickname = username;
-                fprintf(stdout, "PLAYER USERNAME: %s\n", username);
-                fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
-                fflush(stdout);
-                flag = 0;
-            }
-            
+            break;
         }
 
         // if the player entity doesn't understand the network message, it

@@ -167,8 +167,24 @@ void ClientScoreboardScene::setScoreboard(Player* players)
 {
     for (int rows = 1; rows < SCORE_ROWS; rows++)
     {
-        scoreboard[rows][0].setText(players[rows-1].name);
-        scoreboard[rows][1].setText(std::to_string(players[rows - 1].type));
-        scoreboard[rows][2].setText(std::to_string(players[rows - 1].score));
+        if(players[rows-1].type > -1)
+        {
+            scoreboard[rows][0].setText(players[rows-1].name);
+            switch(players[rows-1].type)
+            {
+                case 0:
+                    scoreboard[rows][1].setText("Vessel");
+                    break;
+
+                case 1:
+                    scoreboard[rows][1].setText("Ghost");
+                    break;
+
+                case 2:
+                    scoreboard[rows][1].setText("Deity");
+                    break;
+            }                     
+            scoreboard[rows][2].setText(std::to_string(players[rows - 1].score));
+        }
     }
 }
