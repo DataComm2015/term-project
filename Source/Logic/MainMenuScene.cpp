@@ -173,6 +173,7 @@ MainMenuScene::~MainMenuScene()
 
     delete connectBtn;
     delete creditBtn;
+    delete name_sent;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -215,7 +216,7 @@ void MainMenuScene::onLoad()
 
     textBoxes[ SERVER_TXT ]   ->text().setPosition(textw/2+5, text1_h/2 - 3);
     textBoxes[ PORT_TXT ]     ->text().setPosition(textw/2+5, text2_h/2 - 3);
-    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text2_h/2 - 3);
+    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text3_h/2 - 3);
     connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
 
     connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
@@ -381,9 +382,9 @@ void MainMenuScene::onClick()
       MainMenuScene::getInstance()->clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
       MainMenuScene::getInstance()->clientmux->message.len = strlen(nickname_text);
       //clientmux->message.data = (char*)"TEST";
-      char* hello = new char[16];
-      memcpy(hello, nickname_text, strlen(nickname_text));
-      MainMenuScene::getInstance()->clientmux->message.data = hello;
+      MainMenuScene::getInstance()->name_sent = new char[16];
+      memcpy(MainMenuScene::getInstance()->name_sent, nickname_text, strlen(nickname_text));
+      MainMenuScene::getInstance()->clientmux->message.data = MainMenuScene::getInstance()->name_sent;
 
       short port = atoi( MainMenuScene::getInstance()->textBoxes[ PORT_TXT ]->getText().c_str() );
       if (MainMenuScene::getInstance()->client->connect( (char *)MainMenuScene::getInstance()->textBoxes[ SERVER_TXT ]->getText().c_str(), port) <= 0)
@@ -396,8 +397,6 @@ void MainMenuScene::onClick()
       {
          printf("connected\n");
       }
-
-      delete hello;
     }
 
 }

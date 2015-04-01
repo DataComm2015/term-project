@@ -86,9 +86,20 @@ void PlayerEntity::onUpdate(Message msg)
 
         case PlayerCommandMsgType::SERVER_SELECTED_NICKNAME:
         {
-            char* username = new char[16];
-            memcpy(username, msg.data, strlen((char*)msg.data));
-            nickname = username;
+
+            static int flag = 1;
+            
+            if (flag)
+            {
+                char* username = new char[16];
+                memcpy(username, msg.data, strlen((char*)msg.data));
+                nickname = username;
+                fprintf(stdout, "PLAYER USERNAME: %s\n", username);
+                fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
+                fflush(stdout);
+                flag = 0;
+            }
+            
         }
 
         // if the player entity doesn't understand the network message, it
@@ -106,5 +117,7 @@ void PlayerEntity::onUpdate(Message msg)
 
 char* PlayerEntity::getNickname()
 {
+    fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
+    fflush(stdout);
     return nickname;
 }

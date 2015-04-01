@@ -108,6 +108,8 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
         {
             command = new CommandEntity(id,_gameScene, this);
             ret = command;
+            fprintf(stdout, "MUX NICKNAME: %s\n", message.data);
+            fflush(stdout);
             break;
         }
 

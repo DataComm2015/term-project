@@ -65,6 +65,8 @@ class MainMenuScene : public Scene
         sf::View viewMain;
         Renderer renderer;
 
+        char* name_sent;
+
         SGO *background;
         SGO *serverTextBackground;
         SGO *portTextBackground;
