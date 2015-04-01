@@ -11,6 +11,7 @@
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
 #include "Entities/ServerVesselController.h"
+#include "../GameSettings.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -61,8 +62,16 @@ ServerGameScene::~ServerGameScene()
 	delete cMap;
 }
 
-void ServerGameScene::update(sf::Time)
+void ServerGameScene::update(sf::Time time)
 {
+    if (timer > 0)
+    {
+        timer -= time.asSeconds();
+    }
+    else
+    {
+        command->goToScoreboard();
+    }
 	return;
 }
 
@@ -79,6 +88,7 @@ void ServerGameScene::draw()
 void ServerGameScene::enterScene()
 {
     worldSeed = rand();
+    timer = GAME_ROUND_LENGTH_SECONDS;
 
     // Generate the game map
 	gMap->generateMap(worldSeed, this);
