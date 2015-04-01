@@ -14,6 +14,8 @@
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/graphics/object/TGO.h"
+#include "../Network/Client.h"
+#include "Entities/ClientMux.h"
 #include "CreditScene.h"
 
 #define BTN_SIZE 200
@@ -30,6 +32,10 @@
 
 #define WIDE_BUTTONS_W 64
 #define WIDE_BUTTONS_H 31
+
+class GameScene;
+class ClientLobbyScene;
+class ClientScoreboardScene;
 
 /*
 *   This is the Lobby scene.
@@ -51,6 +57,11 @@ class MainMenuScene : public Scene
         friend void nextTextBox( void * );
 
     private:
+        Networking::Client *client;
+        GameScene *gameScene;
+        ClientLobbyScene *lobbyScene;
+        ClientScoreboardScene* scoreScene;
+        ClientMux* clientmux;
         sf::View viewMain;
         Renderer renderer;
 
