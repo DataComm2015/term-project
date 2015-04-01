@@ -16,6 +16,7 @@
 --             Marc Vouve
 --             Jeff Bayntun
 --             Eric Tsang
+--             Thomas Tallentire
 --
 -- NOTES:
 -- This file defines the Event class members
@@ -23,6 +24,12 @@
 ----------------------------------------------------------------------------------------------------------------------*/
 #ifndef EVENT_H_
 #define EVENT_H_
+
+enum ActionType
+{
+	normalAttack = 0x11, specialAttack
+};
+
 namespace Marx
 {
 
@@ -33,7 +40,10 @@ namespace Marx
     {
         MOVE,
 	R_MOVE,
-	A_MOVE
+	A_MOVE,
+	ATTACK,
+	SK_ATTACK,
+        UPDATE
     };
 
     /*
@@ -43,6 +53,7 @@ namespace Marx
     {
     public:
         Event(EventType e):type(e) {};
+        Event(const Event& other):type(other.type) {};
         const EventType type;
     };
 }

@@ -4,8 +4,7 @@
 
 #include "Engine/Scene.h"
 #include "Logic/ServerCommand.h"
-#include "Logic/Entities/ServerCommandEntity.h"
-#include "Network/NetworkController.h"
+#include "Logic/Entities/ServerNetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 
 #include <string.h>
@@ -13,7 +12,6 @@
 
 // namespace
 using Networking::NetworkEntityMultiplexer;
-using Networking::NetworkController;
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
@@ -30,9 +28,9 @@ int main( int argc, char ** argv )
 {
     printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
     fflush(stdout);
-    
+
     ServerCommand server;
-    
+
     server.startServer(atoi(argv[1]));
     run(&server);
 
@@ -50,7 +48,7 @@ void run(ServerCommand *server)
     sf::Time m_timeSinceLastUpdate;
     sf::Time m_sleepTime;
 
-    m_sleepTime = sf::seconds(1.0/75);
+    //m_sleepTime = sf::seconds(1.0/60);
     m_timePerFrame = sf::seconds(1.0/60);
 
     if (!isRunning)
@@ -63,6 +61,9 @@ void run(ServerCommand *server)
         // LOOP
         while (isRunning)
         {
+            // process network messages
+            Networking::handleSessionMessages();
+
             // TIME UPDATES
             m_elapsedTime = clock.restart();
             m_timeSinceLastUpdate += m_elapsedTime;
@@ -73,11 +74,11 @@ void run(ServerCommand *server)
                 m_timeSinceLastUpdate -= m_timePerFrame;
                 server->getActiveScene()->update(m_timePerFrame);
 
-                sf::sleep(m_sleepTime);
+                //sf::sleep(m_sleepTime);
             }
         }
 
-        
+
         isRunning = false;
     }
 }
