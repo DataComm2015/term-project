@@ -10,7 +10,6 @@
 #include "EnemyControllerInit.h"
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
-#include "Entities/ServerVesselController.h"
 #include "../GameSettings.h"
 
 #include <iostream>
@@ -66,8 +65,8 @@ void ServerGameScene::update(sf::Time time)
 {
     if (timer > 0)
     {
-  for (int i = 0; i < enemyControllers.size(); i++)
-    enemyControllers[i]->updateBehaviour(time.asSeconds());
+        for (int i = 0; i < enemyControllers.size(); i++)
+            enemyControllers[i]->updateBehaviour(time.asSeconds());
 
         timer -= time.asSeconds();
     }
