@@ -53,7 +53,7 @@ void run(ServerCommand *server)
     sf::Time m_timeSinceLastUpdate;
     sf::Time m_sleepTime;
 
-    m_sleepTime = sf::seconds(1.0/75);
+    //m_sleepTime = sf::seconds(1.0/60);
     m_timePerFrame = sf::seconds(1.0/60);
 
     if (!isRunning)
@@ -79,7 +79,7 @@ void run(ServerCommand *server)
                 m_timeSinceLastUpdate -= m_timePerFrame;
                 server->getActiveScene()->update(m_timePerFrame);
 
-                sf::sleep(m_sleepTime);
+                //sf::sleep(m_sleepTime);
             }
         }
 

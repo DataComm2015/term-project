@@ -15,10 +15,32 @@ int ClientLobbyScene::deityChoice;
 sf::Clock ClientLobbyScene::clck;
 bool ClientLobbyScene::timego;
 float ClientLobbyScene::currentTime;
+int ClientLobbyScene::click;
+int ClientLobbyScene::currScrollHeight;
 
 
-ClientLobbyScene::ClientLobbyScene()
-    : renderer(AppWindow::getInstance(), 48400)
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel, Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Calvin Rempel, Alex Lam and Michael Chimick
+--
+-- INTERFACE: ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Initalizes GUI
+-- Loads in artwork
+-- Creates background, buttons and textboxes
+-- Sets up lobby network logic
+----------------------------------------------------------------------------------------------------------------------*/
+ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
     // as art assets are created for these, add them
@@ -27,35 +49,41 @@ ClientLobbyScene::ClientLobbyScene()
     vesselChoice = 1;
     deityChoice = 1;
     timego = false;
+    click = 0;
 
-    circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/circleOutline.png"));
+    circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/boxOutline.png"));
 
-    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby-background.png"));
+    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
 
-    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-one.png"));
-    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-two.png"));
+    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
+    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
 
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
-    aspectOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
-    aspectTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
+    deityOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
+    deityTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
-    leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/btnTest.png"));
+    easterEggImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/easteregg.png"));
+
+    leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
     /* Initialize buttons */
     vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onVesselOneClick);
 
     vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onVesselTwoClick);
 
-    aspectOneBtn = new GUI::Button(*Manager::TextureManager::get(aspectOneImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onDeityOneClick);
-    aspectTwoBtn = new GUI::Button(*Manager::TextureManager::get(aspectTwoImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onDeityTwoClick);
+    deityOneBtn = new GUI::Button(*Manager::TextureManager::get(deityOneImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityOneClick);
+    deityTwoBtn = new GUI::Button(*Manager::TextureManager::get(deityTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityTwoClick);
 
-    leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(BTN_WIDTH, BTN_HEIGHT), viewMain, onLeaveClick);
+    leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onLeaveClick);
+
+    easterEggBtn = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, easterEggClick);
 
     /*Init artwork*/
     vesselOneSGO = new SGO(*Manager::TextureManager::get(vesselOneArt));
     vesselTwoSGO = new SGO(*Manager::TextureManager::get(vesselTwoArt));
+    easterEggSGO = new SGO(*Manager::TextureManager::get(easterEggImg));
 
     vesselOneCircleSGO = new SGO(*Manager::TextureManager::get(circle));
     vesselTwoCircleSGO = new SGO(*Manager::TextureManager::get(circle));
@@ -64,76 +92,159 @@ ClientLobbyScene::ClientLobbyScene()
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
+    //tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
+
     sf::Font *arial = new sf::Font();
     arial->loadFromFile("Assets/Fonts/arial.ttf");
 
 
-    countdownBox = new GUI::TextBox();
+    countdownBox = new GUI::TextBox(NULL,NULL);
     countdownBox->text().setScale(1, 1);
-    countdownBox->text().move(5, 5);
     countdownBox->toggleSelected(false);
     countdownBox->text().setFont(*arial);
 
-    playerBox = new GUI::TextBox();
+    playerBox = new GUI::TextBox(NULL,NULL);
     playerBox->text().setScale(1, 1);
-    playerBox->text().move(5, 20);
     playerBox->toggleSelected(false);
     playerBox->text().setFont(*arial);
-
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: ClientLobbyScene::~ClientLobbyScene()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: ClientLobbyScene::~ClientLobbyScene()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Deconstructs ClientLobbyScene and cleans up
+----------------------------------------------------------------------------------------------------------------------*/
 ClientLobbyScene::~ClientLobbyScene()
 {
     delete vesselOneBtn;
     delete vesselTwoBtn;
 
-    delete aspectOneBtn;
-    delete aspectTwoBtn;
+    delete deityOneBtn;
+    delete deityTwoBtn;
 
     delete leaveBtn;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::onLoad()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::onLoad()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Sets position of buttons, textboxes and sprites
+-- updates main view
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLoad()
 {
+    clck.restart();
+
     /* Set btntest positions */
-    vesselOneBtn->sprite().setPosition( (0 + SCN_WIDTH/4 - CLASS_BTN_WIDTH/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
+    background->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6);
+    background->sprite().setScale(2, 2);
 
-    vesselTwoBtn->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/4 - CLASS_BTN_WIDTH/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
+    countdownBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10);
+    playerBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10 + SCN_HEIGHT*1/30);
 
-    vesselOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/4 - CIRCLE_WH/2)         , SCN_HEIGHT/2 - CIRCLE_WH/2);
-    vesselTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/4 - CIRCLE_WH/2) , SCN_HEIGHT/2 - CIRCLE_WH/2);
+    vesselOneBtn->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
+    vesselTwoBtn->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
 
-    aspectOneBtn->sprite().setPosition((0 + SCN_WIDTH/4 - BTN_WIDTH/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - BTN_HEIGHT/2);
-    aspectTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/4 - BTN_WIDTH/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - BTN_HEIGHT/2);
+    vesselOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT_B/2);
+    vesselTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT_B/2);
 
-    deityOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/4 - CIRCLE_WH/2)         , SCN_HEIGHT/2 + SCN_HEIGHT/4- CIRCLE_WH/2);
-    deityTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/4 - CIRCLE_WH/2) , SCN_HEIGHT/2 + SCN_HEIGHT/4- CIRCLE_WH/2);
+    deityOneBtn->sprite().setPosition((0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
+    deityTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
 
-    leaveBtn->sprite().setPosition((SCN_WIDTH - BTN_WIDTH), 0);
+    deityOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
+    deityTwoCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2 );
 
-    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,0);
-    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,0);
+    leaveBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, SCN_HEIGHT * 0.20);
 
-    background->sprite().setPosition(0,0);
+    easterEggBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, 3*SCN_HEIGHT/4);
+
+    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - EASTER_ART_HW/2, SCN_HEIGHT);
+
+    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2);
+    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2);
 
     /* Set the active view */
     updateMainView(viewMain);
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::update(sf::Time t)
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::update(sf::Time t)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- updates buttons
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::update(sf::Time t)
 {
     vesselOneBtn->update(t);
     vesselTwoBtn->update(t);
-    aspectOneBtn->update(t);
-    aspectTwoBtn->update(t);
+    deityOneBtn->update(t);
+    deityTwoBtn->update(t);
     leaveBtn->update(t);
-    
+    easterEggBtn->update(t);
+
     if(timego && currentTime > 0)
     {
         currentTime -= t.asSeconds();
     }
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::processEvents(sf::Event& e)
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: void ClientLobbyScene::processEvents(sf::Event& e)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Processes network messages
+-- Either shuts down/ starts countdown
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::processEvents(sf::Event& e)
 {
     Scene::processEvents(e);
@@ -147,6 +258,26 @@ void ClientLobbyScene::processEvents(sf::Event& e)
     countdownBox->process(e);
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::draw()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::draw()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Renders the buttons, textboxes and sprites
+-- Creates border around currently selected buttons
+-- Updates timer if countdown is ongoing
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
@@ -157,22 +288,43 @@ void ClientLobbyScene::draw()
 
     renderer.begin();
 
+    //Background has to go first
+
+    if(currScrollHeight < MAX_SCROLL*100/3)
+    {
+        sf::Time scrollTime = clck.getElapsedTime();
+        currScrollHeight = scrollTime.asMilliseconds();
+
+    }
+    background->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6 + currScrollHeight*6 / 100);
+
+    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2 - MAX_SCROLL + currScrollHeight*6 / 100);
+    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2 - MAX_SCROLL + currScrollHeight*6 / 100);
+
+
+    renderer.draw(*background);
+
     if (timego)
     {
         countdownBox->setText(std::to_string((int)currentTime) + "s" );
     }
-    
+
     playerBox->setText(std::to_string(playerCount) + " player(s)");
 
     // draw the objects
     renderer.draw(*background);
     renderer.draw(*vesselOneBtn);
     renderer.draw(*vesselTwoBtn);
-    renderer.draw(*aspectOneBtn);
-    renderer.draw(*aspectTwoBtn);
+    renderer.draw(*deityOneBtn);
+    renderer.draw(*deityTwoBtn);
     renderer.draw(*leaveBtn);
     renderer.draw(*countdownBox);
     renderer.draw(*playerBox);
+
+    renderer.draw(*easterEggBtn);
+
+    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - EASTER_ART_HW/2,SCN_HEIGHT+ click * -25);
+    renderer.draw(*easterEggSGO);
 
     if(vesselChoice == 1)
     {
@@ -201,76 +353,254 @@ void ClientLobbyScene::draw()
     window.display();
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::onLeaveClick()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::onLeaveClick()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- TODO: Add networking logic for leaving a lobby
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLeaveClick()
 {
+    AppWindow::getInstance().removeScene(1);
 
-    //TEMPORARY LOCATION FOR CLOCk
-    clck.restart();
-    timego = true;
+    AppWindow::getInstance().addScene(new MainMenuScene());
 
-    cout << "Button clicked" << endl;
+    AppWindow::getInstance().run();
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::onVesselOneClick()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::onVesselOneClick()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Sets vessel choice to Vessel 1
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onVesselOneClick()
 {
     vesselChoice = 1;
     cout << "Vessel 1 clicked" << endl;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::onVesselTwoClick()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::onVesselTwoClick()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Sets vessel choice to Vessel 2
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onVesselTwoClick()
 {
     vesselChoice = 2;
     cout << "Vessel 2 clicked" << endl;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::onDeityOneClick()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::onDeityOneClick()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Sets vessel choice to Deity 1
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onDeityOneClick()
 {
     deityChoice = 1;
     cout << "Deity 1 clicked" << endl;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::onDeityTwoClick()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::onDeityTwoClick()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Sets vessel choice to Deity 2
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onDeityTwoClick()
 {
     deityChoice = 2;
     cout << "Deity 2 clicked" << endl;
 }
 
+void ClientLobbyScene::easterEggClick()
+{
+      if(click<18)
+      {
+        click++;
+      }
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::updateMainView(sf::View& v)
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam and Michael Chimick
+--
+-- INTERFACE: void ClientLobbyScene::updateMainView(sf::View& v)
+--            v = main view
+-- RETURNS: void
+--
+-- NOTES:
+-- Sets zoom
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::updateMainView(sf::View& v)
 {
     v = AppWindow::getInstance().getCurrentView();
 
 	//needs to be 3X scale eventually
-	//v.zoom(0.66);
+	v.zoom(0.66);
 
 }
 
-int ClientLobbyScene::getDeityChoice()
-{
-    return deityChoice;
-}
-
-int ClientLobbyScene::getVesselChoice()
-{
-    return vesselChoice;
-}
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::startTimer(int remainingTime)
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: void ClientLobbyScene::startTimer(int remainingTime)
+--            remainingTime = the remainder time before the game starts
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Starts timer
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::startTimer(int remainingTime)
 {
     timego = true;
     currentTime = remainingTime;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::stopTimer(int remainingTime)
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: void ClientLobbyScene::stopTimer(int remainingTime)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Stops timer
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::stopTimer(int remainingTime)
 {
     timego = false;
     currentTime = remainingTime;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void ClientLobbyScene::updatePlayerCount(int numPlayers)
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: void ClientLobbyScene::updatePlayerCount(int numPlayers)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Updates player count
+----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::updatePlayerCount(int numPlayers)
 {
     playerCount = numPlayers;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: PlayerLobbyChoices *ClientLobbyScene::getSelections()
+--
+-- DATE: Mar 30, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: PlayerLobbyChoices *ClientLobbyScene::getSelections()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Get choices from lobby
+----------------------------------------------------------------------------------------------------------------------*/
 PlayerLobbyChoices *ClientLobbyScene::getSelections()
 {
     playerSelections.vesselChoice = vesselChoice;
@@ -278,14 +608,3 @@ PlayerLobbyChoices *ClientLobbyScene::getSelections()
 
     return &playerSelections;
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -37,4 +37,10 @@ private:
     bool force;
 };
 
+class UpdateEvent: public ::Marx::Event
+{
+public:
+  UpdateEvent() : Event(Marx::UPDATE){}
+};
+
 #endif

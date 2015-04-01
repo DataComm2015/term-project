@@ -18,16 +18,84 @@
 
 #include <cstring>
 
-ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene)
+/*------------------------------------------------------------------------------
+-- FUNCTION:        ClientMux::ClientMux
+--
+-- DATE:            March 31, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Team
+--
+-- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--
+-- INTERFACE:       ClientMux::ClientMux(GameScene* gameScene,
+--                      ClientLobbyScene* lobbyScene)
+--                  gameScene  - pointer to the singleton {GameScene}.
+--                  lobbyScene - pointer to the singleton {ClientLobbyScene}.
+--
+-- RETURNS:         void
+--
+-- NOTES:           constructs a new client side {CLientMux} which inherits from
+--                  {NetworkEntityMultiplexer} used to handle onRegister
+--                  messages from the server.
+------------------------------------------------------------------------------*/
+ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
     :_gameScene(gameScene)
     ,_lobbyScene(lobbyScene)
+    ,_scoreScene(scoreScene)
 {
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        ClientMux::~ClientMux
+--
+-- DATE:            March 31, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Team
+--
+-- PROGRAMMER:      Calvin Rempel
+--
+-- INTERFACE:       ClientMux::~ClientMux()
+--
+-- RETURNS:         void
+--
+-- NOTES:           destroys the {ClientMux} instance.
+------------------------------------------------------------------------------*/
 ClientMux::~ClientMux()
 {
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        ClientMux::onRegister
+--
+-- DATE:            March 31, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Team
+--
+-- PROGRAMMER:      Jeff Bayntun, Calvin Rempel, Eric Tsang
+--
+-- INTERFACE:       NetworkEntity* ClientMux::onRegister(int id, int entityType,
+--                      Session* session, Message msg)
+--                  id         - id of the {NetworkEntity} to return.
+--                  entityType - indicates what kind of
+--                  session    -
+--                  msg        -
+--
+-- RETURNS:         NetworkEntity
+--
+-- NOTES:           handles {onRegister} type messages from the server. this
+--                  should use the passed parameters to instantiate a
+--                  {NetworkEntity}, and return it back to the {ClientMux}.
+--
+--                  it's not possible to call update from within this function,
+--                  if you want to call update after onRegister, call update
+--                  within the {NetworkEntity::onRegister} instead.
+------------------------------------------------------------------------------*/
 NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
     Message msg)
 {
@@ -38,7 +106,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
     {
         case NetworkEntityPair::PLAYER_COMMAND:
         {
-            command = new CommandEntity(id,_gameScene);
+            command = new CommandEntity(id,_gameScene, this);
             ret = command;
             break;
         }
@@ -58,7 +126,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 
         case NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE:
         {
-            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene);
+            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene, _scoreScene);
             ret = gameState;
             break;
         }
@@ -67,10 +135,30 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
     return ret;
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        ClientMux::shutdown
+--
+-- DATE:            March 31, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Team
+--
+-- PROGRAMMER:      Calvin Rempel
+--
+-- INTERFACE:       void ClientMux::shutdown()
+--
+-- RETURNS:         void
+--
+-- NOTES:           unregisters the session used to connect with the server from
+--                  the server.
+------------------------------------------------------------------------------*/
 void ClientMux::shutdown()
 {
+    // create empty network message
     Message msg;
     memset(&msg,0,sizeof(msg));
 
+    // unregister our {Session} from the server
     command->unregisterSession(session, msg);
 }

@@ -29,7 +29,7 @@ namespace Marx
 		}
 
 	protected:
-		void draw(Renderer& renderer, sf::RenderStates states) const override;
+		virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
 		bool drawable;
 		SGO& sprite;
 	};

@@ -25,13 +25,40 @@ EntityFactory::EntityFactory()
 {
     // initialize instance variables
     gkSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
+        Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
+    );
+
+    vesselSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Player/Idle/Body/vessel-idle.png")
+    );
+
+    maskSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Player/Idle/Masks/vessel-idle-mask01.png")
+    );
+
+    spearSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Player/Idle/Weapons/spear-idle.png")
     );
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    gkSGO.sprite().setScale(2, 2);
+    gkSGO.sprite().setScale(1, 1);
     gkSGO.middleAnchorPoint(true);
+
+    vesselSGO.sprite().setTexture(*Manager::TextureManager::get(vesselSprite));
+    vesselSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    vesselSGO.sprite().setScale(2, 2);
+    vesselSGO.middleAnchorPoint(true);
+
+    maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
+    maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    maskSGO.sprite().setScale(2, 2);
+    maskSGO.middleAnchorPoint(true);
+
+    spearSGO.sprite().setTexture(*Manager::TextureManager::get(spearSprite));
+    spearSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    spearSGO.sprite().setScale(2, 2);
+    spearSGO.middleAnchorPoint(true);
 }
 
 EntityFactory::~EntityFactory()
@@ -82,7 +109,7 @@ Entity* EntityFactory::makeEntity(
             entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
             break;
         case ENTITY_TYPES::VESSEL:
-            entity = new Vessel(gkSGO,map,x,y,cont,1,1);
+            entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:

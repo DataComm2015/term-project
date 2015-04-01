@@ -6,6 +6,8 @@
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
 
+class ClientMux;
+
 #include "PlayerEntity.h"
 #include "../ClientLobbyScene.h"
 
@@ -27,7 +29,7 @@ struct PlayerLobbyChoices;
 class CommandEntity : public NetworkEntity, public KeyListener
 {
     public:
-        CommandEntity(int id, GameScene *gameScene);
+        CommandEntity(int id, GameScene *gameScene, ClientMux* client);
         ~CommandEntity();
 
         PLAYER_MODE getPlayerMode();
@@ -41,6 +43,7 @@ class CommandEntity : public NetworkEntity, public KeyListener
         virtual void onUpdate(Message message);
 
     private:
+        ClientMux* clientmux;
         GameScene* _gameScene;
         PLAYER_MODE playerMode;
 };

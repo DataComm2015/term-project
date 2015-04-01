@@ -30,18 +30,27 @@ class ServerGameState : public Networking::NetworkEntity
         void prepareForGameState();
         void notifyReadyForGame();
         void goToGame(int worldSeed);
+        void goToScoreboard();
 
         void registerWithAllPlayers(Networking::NetworkEntity *entity, Message *msg);
         void unregisterFromAllPlayers(Networking::NetworkEntity *entity);
 
     protected:
-        virtual void onUnregister(Networking::Session *session,
-                                  Networking::Message message);
-        virtual void onUpdate(Networking::Message message);
         void assignPlayerModes();
-        
+
+        /**
+         * pointer to the singleton {ServerCommand} instance.
+         */
         ServerCommand *command;
-    	std::map<Session*, PlayerEntity*> players;
+
+        /**
+         * map of connected players.
+         */
+        std::map<Session*, PlayerEntity*> players;
+
+        /**
+         * number of players waiting for the game to start.
+         */
         int playersWaitingToLaunch;
 };
 

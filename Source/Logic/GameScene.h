@@ -59,7 +59,7 @@ class GameScene : public Scene
 		void generateUI();
 		void positionUI();
 		void setPlayerVessel(Vessel *vessel);
-		
+
 	private:
 		/**
 		 * set of registered key listeners that should be notified whenever a

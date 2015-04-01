@@ -100,6 +100,11 @@ void ServerCommand::goToLobby()
     gameState->goToLobby();
 }
 
+void ServerCommand::goToScoreboard()
+{
+    gameState->goToScoreboard();
+}
+
 void ServerCommand::prepareForGameState()
 {
     gameState->prepareForGameState();

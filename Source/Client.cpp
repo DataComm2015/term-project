@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
     AppWindow::getInstance().setVerticalSyncEnabled(true);
 
     AppWindow::getInstance().addScene(MainMenuScene::getInstance());
+    //AppWindow::getInstance().addScene(ClientScoreboardScene::getInstance());
 
     AppWindow::getInstance().run();
 

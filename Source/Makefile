@@ -41,6 +41,7 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/Event.o \
 				Logic/ServerGameScene.o \
 				Logic/ServerLobbyScene.o \
+				Logic/ClientScoreboardScene.o \
 				Logic/Entities/CommandEntity.o \
 				Logic/Entities/ClientMux.o \
 				Logic/Entities/ClientNetworkController.o \
@@ -53,11 +54,10 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/Entities/ClientGameState.o \
 				Logic/GateKeeperSource/src/GateKeeper.o \
 				Logic/Entities/ServerGameState.o \
+				Logic/CreditScene.o \
 				Logic/Creature.o \
 				Logic/EntityFactory.o \
-				Logic/Entities/ServerEnemyController.o \
-				Logic/Entities/ServerVesselController.o
-
+				Logic/Entities/ServerEnemyController.o
 
 FILES_NETWORK=	Network/Client.o \
 				Network/Server.o \
