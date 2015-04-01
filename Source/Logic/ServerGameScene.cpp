@@ -189,7 +189,7 @@ void ServerGameScene::createPlayers()
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
                 initData.type = ENTITY_TYPES::VESSEL;
-		        gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
+		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;
 

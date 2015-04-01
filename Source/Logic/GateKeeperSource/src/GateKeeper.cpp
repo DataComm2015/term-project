@@ -17,6 +17,7 @@
 #include "../../Entities/ServerEnemyController.h"
 #include <typeinfo>
 
+// bug fix by Sanders Lee
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
   VEntity(sprite, map, x, y, ctrl, h, w)
 //  _ctrl(ctrl)
@@ -33,7 +34,7 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     _yPos = y;
     _xSpeed = 0.01;
     _ySpeed = 0.01;
-    _moving = false;
+    movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
   };
 
@@ -56,16 +57,15 @@ void GateKeeper::onUpdate()
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
-				MoveEvent* ev = (MoveEvent*) (*it);
-                int xDir = ev->getXDir();
-                int yDir = ev->getYDir();
-
-                movingLeft = (xDir < 0);
-                movingRight = (xDir > 0);
-                movingUp = (yDir < 0);
-                movingDown = (yDir > 0);
-                printf("%d %d", xDir, yDir); 
-				break;
+			  MoveEvent* ev = (MoveEvent*) (*it);
+        int xDir = ev->getXDir();
+        int yDir = ev->getYDir();
+        printf("GateKeeper --- xDir:%d yDir:%d\n", xDir, yDir);
+        movingLeft = (xDir < 0);
+        movingRight = (xDir > 0);
+        movingUp = (yDir < 0);
+        movingDown = (yDir > 0);
+			break;
 		}
   }
 
@@ -75,7 +75,7 @@ void GateKeeper::onUpdate()
   float newYSpeed = 0;
 
   if (movingLeft)
-        newXSpeed = -_xSpeed;
+      newXSpeed = -_xSpeed;
   else if (movingRight)
       newXSpeed = _xSpeed;
 
@@ -84,10 +84,10 @@ void GateKeeper::onUpdate()
   else if (movingDown)
       newYSpeed = _ySpeed;
 
-    if (isMoving())
-    {
-        Entity::rMove(newXSpeed, newYSpeed,false);
-    }
+  if (isMoving())
+  {
+      Entity::rMove(newXSpeed, newYSpeed,false);
+  }
 }
 
 bool GateKeeper::isMoving()
