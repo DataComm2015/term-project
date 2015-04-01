@@ -55,8 +55,7 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/Entities/ServerGameState.o \
 				Logic/Creature.o \
 				Logic/EntityFactory.o \
-				Logic/Entities/ServerEnemyController.o \
-				Logic/Entities/ServerVesselController.o
+				Logic/Entities/ServerEnemyController.o
 
 
 FILES_NETWORK=	Network/Client.o \

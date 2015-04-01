@@ -10,7 +10,6 @@
 #include "EnemyControllerInit.h"
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
-#include "Entities/ServerVesselController.h"
 
 #include <iostream>
 #include <cstdlib>
