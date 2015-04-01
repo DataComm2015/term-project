@@ -50,6 +50,7 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/Entities/ServerNetworkController.o \
 				Logic/ServerCommand.o \
 				Logic/ClientLobbyScene.o \
+				Logic/ClientScoreboardScene.o \
 				Logic/MainMenuScene.o \
 				Logic/Entities/ClientGameState.o \
 				Logic/GateKeeperSource/src/GateKeeper.o \
