@@ -7,13 +7,13 @@
 #include "../../Network/NetworkEntity.h"
 #include "../PlayerMode.h"
 #include "../PlayerLobbyChoices.h"
+#include "ServerNetworkController.h"
 
 class ServerCommand;
 
 using Networking::NetworkEntity;
 using Networking::Session;
 using Networking::Message;
-using Marx::Controller;
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -26,17 +26,24 @@ using Marx::Controller;
 class PlayerEntity : public NetworkEntity
 {
     public:
-        PlayerEntity(ServerCommand *server, Controller* serverController);
+        PlayerEntity(ServerCommand *server);
         virtual ~PlayerEntity();
 
         void setMode(PLAYER_MODE mode);
         PLAYER_MODE getMode();
 
+        void setController(ServerNetworkController* controller);
+        void unsetController();
+        char* getNickname();
+
     protected:
         virtual void onUnregister(Session* session, Message msg);
         virtual void onUpdate(Message msg);
+        void clearControllerEvents();
+
     private:
-        Controller* serverController;
+        char* nickname;
+        ServerNetworkController* controller;
         ServerCommand *server;
         PLAYER_MODE mode;
         PlayerLobbyChoices lobbyChoices;

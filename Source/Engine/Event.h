@@ -32,8 +32,9 @@ namespace Marx
     enum EventType
     {
         MOVE,
-	R_MOVE,
-	A_MOVE
+      	R_MOVE,
+      	A_MOVE,
+        UPDATE
     };
 
     /*
@@ -43,6 +44,7 @@ namespace Marx
     {
     public:
         Event(EventType e):type(e) {};
+        Event(const Event& other):type(other.type) {};
         const EventType type;
     };
 }

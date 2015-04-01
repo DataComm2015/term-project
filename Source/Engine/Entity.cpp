@@ -53,11 +53,11 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) : 
+Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
     map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
 	occupiedCells = std::set<Cell*>();
-	
+
     for(int i = floor(x); i < width + floor(x); i++)
     {
         for(int j = floor(y); j < height + floor(y); j++)
@@ -66,7 +66,7 @@ Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h =
 			map->getCell(floor(i),floor(j))->addEntity(this);
         }
     }
-}   
+}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Entity::~Entity
@@ -175,7 +175,7 @@ Entity * Entity::move(float x, float y, bool force = false)
 --
 -- DATE: March 29th
 --
--- REVISIONS: 
+-- REVISIONS:
 --
 -- DESIGNER: Marc Vouve
 --
@@ -195,10 +195,10 @@ Entity * Entity::move(float x, float y, bool force = false)
 Entity * Entity::aMove(float x, float y, bool force = false)
 {
     std::set<Cell*> tempCell;
-	int temp_x = left;
-	int temp_y = top;
-	top = x;
-	left = y;
+	float temp_x = left;
+	float temp_y = top;
+	top = y;
+	left = x;
 	blocking = !force;
 
 	// loop through collecting all cells that this entity will be contained in.
@@ -209,10 +209,10 @@ Entity * Entity::aMove(float x, float y, bool force = false)
             tempCell.emplace(map->getCell(i, j));
 		}
     }
-	
-	
 
-	// loop through all cells in the temporary array. looping for 
+
+
+	// loop through all cells in the temporary array. looping for
     for(Cell *c : tempCell)
 	{
 		std::set<Entity*> entities = c->getEntity();
@@ -231,17 +231,17 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 			}
 		}
 	}
-	
+
 	for(Cell * c: occupiedCells )
 	{
 		c->removeEntity(this);
 	}
-	
+
 	for(Cell * c : tempCell )
 	{
 		c->addEntity(this);
 	}
-	
+
 	// checks if any cells are blocking.
 	for(Cell *c : tempCell)
 		if( c->getBlocking() )	// This doesn't return anything.
@@ -251,11 +251,11 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 
 			return nullptr;
 		}
-	
+
 	occupiedCells = tempCell;
 
-	
-	
+
+
 	return nullptr;
 }
 

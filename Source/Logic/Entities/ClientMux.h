@@ -12,6 +12,7 @@ using Networking::NetworkEntityMultiplexer;
 
 class GameScene;
 class ClientLobbyScene;
+class ClientScoreboardScene;
 class ClientGameState;
 class CommandEntity;
 
@@ -26,7 +27,8 @@ class CommandEntity;
 class ClientMux : public Networking::NetworkEntityMultiplexer
 {
     public:
-        ClientMux(GameScene* scene, ClientLobbyScene* lobbyScene);
+        Message message;
+        ClientMux(GameScene* scene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
         virtual ~ClientMux();
         virtual NetworkEntity* onRegister(int id, int entityType,
             Session* session, Message msg);
@@ -36,6 +38,7 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
         Session *session;
         GameScene* _gameScene;
         ClientLobbyScene* _lobbyScene;
+        ClientScoreboardScene* _scoreScene;
         CommandEntity *command;
         ClientGameState *gameState;
 };

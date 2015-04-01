@@ -16,17 +16,20 @@
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"
 
+#include "ClientMux.h"
+
 #include <cstdio>
 #include <cstring>
 
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene* gameScene)
-    :NetworkEntity(id,NET_ENT_PAIR_PLAYER_COMMAND)
+CommandEntity::CommandEntity(int id, GameScene* gameScene, ClientMux * client)
+    :NetworkEntity(id,(int)NetworkEntityPair::PLAYER_COMMAND)
     ,_gameScene(gameScene)
 {
+    clientmux = client;
     _gameScene->addKeyListener(this);
-    playerMode = GHOST;
+    playerMode = PLAYER_MODE::GHOST;
 }
 
 CommandEntity::~CommandEntity()
@@ -43,7 +46,7 @@ void CommandEntity::notifyServerLobbySelections(PlayerLobbyChoices *selections)
 {
     // put the command into a message to be sent over the network
     Message msg;
-    msg.type = MSG_T_PLAYER_SELECT_LOBBY_OPTIONS;
+    msg.type = (int)PlayerCommandMsgType::SELECT_LOBBY_OPTIONS;
     msg.data = (void*)selections;
     msg.len  = sizeof(PlayerLobbyChoices);
 
@@ -58,16 +61,16 @@ void CommandEntity::onKeyPressed(int key)
     switch(key)
     {
         case sf::Keyboard::Left:
-            command = MSG_T_PLAYER_COMMAND_START_MV_LEFT_COMMAND;
+            command = (int)PlayerCommandMsgType::START_MV_LEFT_COMMAND;
             break;
         case sf::Keyboard::Right:
-            command = MSG_T_PLAYER_COMMAND_START_MV_RIGHT_COMMAND;
+            command = (int)PlayerCommandMsgType::START_MV_RIGHT_COMMAND;
             break;
         case sf::Keyboard::Up:
-            command = MSG_T_PLAYER_COMMAND_START_MV_UP_COMMAND;
+            command = (int)PlayerCommandMsgType::START_MV_UP_COMMAND;
             break;
         case sf::Keyboard::Down:
-            command = MSG_T_PLAYER_COMMAND_START_MV_DOWN_COMMAND;
+            command = (int)PlayerCommandMsgType::START_MV_DOWN_COMMAND;
             break;
 
         // bail out if we don't recognize the command
@@ -92,16 +95,16 @@ void CommandEntity::onKeyReleased(int key)
     switch(key)
     {
         case sf::Keyboard::Left:
-            command = MSG_T_PLAYER_COMMAND_STOP_MV_LEFT_COMMAND;
+            command = (int)PlayerCommandMsgType::STOP_MV_LEFT_COMMAND;
             break;
         case sf::Keyboard::Right:
-            command = MSG_T_PLAYER_COMMAND_STOP_MV_RIGHT_COMMAND;
+            command = (int)PlayerCommandMsgType::STOP_MV_RIGHT_COMMAND;
             break;
         case sf::Keyboard::Up:
-            command = MSG_T_PLAYER_COMMAND_STOP_MV_UP_COMMAND;
+            command = (int)PlayerCommandMsgType::STOP_MV_UP_COMMAND;
             break;
         case sf::Keyboard::Down:
-            command = MSG_T_PLAYER_COMMAND_STOP_MV_DOWN_COMMAND;
+            command = (int)PlayerCommandMsgType::STOP_MV_DOWN_COMMAND;
             break;
 
         // bail out if we don't recognize the command
@@ -111,7 +114,7 @@ void CommandEntity::onKeyReleased(int key)
 
     // put the command into a message to be sent over the network
     Message msg;
-    msg.type = 0;
+    msg.type = command;
     msg.data = &command;
     msg.len  = sizeof(command);
 
@@ -121,6 +124,10 @@ void CommandEntity::onKeyReleased(int key)
 
 void CommandEntity::onRegister(Session *session)
 {
+
+    fprintf(stdout, "THIS: %s\n", clientmux->message.data);
+    fflush(stdout);
+    update(clientmux->message);
 }
 
 void CommandEntity::onUnregister(Session* session, Message msg)
@@ -130,11 +137,11 @@ void CommandEntity::onUnregister(Session* session, Message msg)
 
 void CommandEntity::onUpdate(Message msg)
 {
-    switch (msg.type)
+    switch ((PlayerCommandMsgType)msg.type)
     {
-        case MSG_T_PLAYER_SET_MODE:
+        case PlayerCommandMsgType::SET_MODE:
             playerMode = *((PLAYER_MODE*) msg.data);
-            
+
             break;
     }
 }
