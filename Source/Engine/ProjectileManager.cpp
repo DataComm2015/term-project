@@ -24,7 +24,7 @@ using namespace Manager;
 -- handle this function.
 -- ---------------------------------------------------------------------------*/
 Marx::Projectile* ProjectileManager::
-getProjectile(SGO &_sprite, Marx::Map *map, float x, float y, float h = 1.0, float w = 1.0)
+getProjectile(SGO &_sprite, Marx::Map *map,  float x, float y, Marx::Action *, sf::Vector2f & v, float h = 1.0, float w = 1.0)
 {
 	Marx::Projectile *temp;
 	Marx::Controller * cont;
@@ -36,10 +36,11 @@ getProjectile(SGO &_sprite, Marx::Map *map, float x, float y, float h = 1.0, flo
 		}
 		else
 		{
-			cont = new ClientNetworkController();
+			// TODO: Ask Eric about how to get this ID here.
+			cont = new ClientNetworkController(0);
 		}
 
-		return new Marx::Projectile(_sprite, map, x, y, cont, h, w);
+		return new Marx::Projectile(_sprite, map, x, y, cont, v, h, w);
 	} else
 	{
 		temp = *projectile_pool.begin();

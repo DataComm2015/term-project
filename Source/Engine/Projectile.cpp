@@ -1,10 +1,10 @@
-#include "Projectile.h"
+ #include "Projectile.h"
 #include <iostream>
 
 using namespace Marx;
 
-Projectile::Projectile(SGO &_sprite, Map *map, float x, float y, Action * _act, Controller * ctrl = NULL, float h = 1.0, float w = 1.0) :
-	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act)
+Projectile::Projectile(SGO &_sprite, Map *map, float x, float y, Action * _act, sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0) :
+	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
 	_speed = 0;
 }
@@ -38,29 +38,32 @@ void Projectile::onCreate()
 
 void Projectile::onDestroy()
 {
+	setCurrentPos(-1, -1);
+	drawable = false;
+
 	Manager::ProjectileManager::enqueue(this);
 }
 
 
 void Projectile::onUpdate(sf::Time t)
 {
-	Action.onUpdate(this, t);
+	act->onUpdate(this, t);
 	TimeToLive -= t;
 }
 
 void Projectile::setTarget(sf::Vector2f t)
 {
-	heading = t
+	heading = t;
 }
 
 void Projectile::setCurrentPos(float x, float y )
 {
-	this.x = x;
-	this.y = y;
+	this->left = x;
+	this->top = y;
 }
 
-void Projectile::setAct(Action & act)
+void Projectile::setAct(Action * act)
 {
-	Action & act = act;
+	act = act;
 	TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
 }

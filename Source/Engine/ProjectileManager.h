@@ -26,6 +26,10 @@
 #include <set>
 #include "Projectile.h"
 #include "VEntity.h"
+#include "Action.h"
+#include "../Logic/Entities/ServerNetworkController.h"
+#include "../Logic/Entities/ClientNetworkController.h"
+#include <SFML/System/Vector2.hpp>
 
 namespace Marx
 {
@@ -40,7 +44,7 @@ namespace Manager
 			static std::set<Marx::Projectile*> projectile_pool;
 		public:
 			static bool SERVER;
-			static Marx::Projectile* getProjectile(SGO&, Marx::Map*, float, float, Action &, sf::Vector2f &, Marx::Controller *, float, float);
+			static Marx::Projectile* getProjectile(SGO &, Marx::Map *,  float, float, Marx::Action *, sf::Vector2f &, float, float);
 			static void enqueue(Marx::Projectile*);
 			static void dequeue(Marx::Projectile*);
 			static void setServer(bool serv);
