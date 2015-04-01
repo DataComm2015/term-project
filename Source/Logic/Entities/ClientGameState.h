@@ -12,6 +12,7 @@ using Networking::Session;
 
 class GameScene;
 class ClientLobbyScene;
+class ClientScoreboardScene;
 class CommandEntity;
 
 /**
@@ -25,13 +26,17 @@ class CommandEntity;
 class ClientGameState : public NetworkEntity
 {
     public:
-        ClientGameState(int id, CommandEntity *command, GameScene *scene, ClientLobbyScene* lobbyScene);
+        ClientGameState(int id, CommandEntity *command, GameScene *scene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
         ~ClientGameState();
 
     protected:
         virtual void onUpdate(Message message);
 
     private:
+        /**
+         * pointer to the singleton {ClientScoreboardScene} instance.
+         */
+        ClientScoreboardScene* _scoreScene;
         /**
          * pointer to the singleton {GameScene} instance.
          */

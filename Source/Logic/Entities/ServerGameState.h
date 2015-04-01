@@ -30,6 +30,7 @@ class ServerGameState : public Networking::NetworkEntity
         void prepareForGameState();
         void notifyReadyForGame();
         void goToGame(int worldSeed);
+        void goToScoreboard();
 
         void registerWithAllPlayers(Networking::NetworkEntity *entity, Message *msg);
         void unregisterFromAllPlayers(Networking::NetworkEntity *entity);

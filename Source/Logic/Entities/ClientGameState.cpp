@@ -46,10 +46,11 @@ using Networking::Client;
 --                  instance variables, and calls the {NetworkEntity} base
 --                  constructor.
 ------------------------------------------------------------------------------*/
-ClientGameState::ClientGameState(int id, CommandEntity *command, GameScene* gameScene, ClientLobbyScene* lobbyScene)
+ClientGameState::ClientGameState(int id, CommandEntity *command, GameScene* gameScene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
     : NetworkEntity(id,(int)NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE)
     , _lobbyScene(lobbyScene)
     , _gameScene(gameScene)
+    , _scoreScene(scoreScene)
     , command(command)
 {
 }
@@ -182,6 +183,11 @@ void ClientGameState::onUpdate(Message msg)
          */
         case ServerGameStateClientGameStateMsgType::LOBBY_COUNTDOWN_STOP:
             _lobbyScene->stopTimer(*((int*)msg.data));
+            break;
+
+        case ServerGameStateClientGameStateMsgType::START_SCORE_SCENE:
+            AppWindow::getInstance().removeScene(1);
+            AppWindow::getInstance().addScene(_scoreScene);
             break;
     }
 }

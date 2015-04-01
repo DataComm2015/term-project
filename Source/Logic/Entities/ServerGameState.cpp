@@ -237,6 +237,35 @@ std::map<Session*, PlayerEntity*> ServerGameState::getPlayers()
 }
 
 /*------------------------------------------------------------------------------
+-- FUNCTION:        ServerGameState::goToScoreboard
+--
+-- DATE:            March 28, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Manuel Gonzales
+--
+-- PROGRAMMER:      Manuel Gonzales
+--
+-- INTERFACE:       void ServerGameState::goToScoreboard()
+--
+-- RETURNS:         void
+--
+-- NOTES:           tells the clients that they should go to the scoreboard
+--                  scene.
+------------------------------------------------------------------------------*/
+void ServerGameState::goToScoreboard()
+{
+    Message msg;
+    memset(&msg,0,sizeof(msg));
+    msg.type = (int)ServerGameStateClientGameStateMsgType::START_SCORE_SCENE;
+    msg.data = (void*) "GO TO SCORE";
+    msg.len = strlen((char*)msg.data);
+
+    update(msg);
+}
+
+/*------------------------------------------------------------------------------
 -- FUNCTION:        ServerGameState::goToLobby
 --
 -- DATE:            March 28, 2015
