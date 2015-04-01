@@ -436,6 +436,13 @@ void GameScene::processEvents(sf::Event& e)
 	{
 		if (e.mouseButton.button == sf::Mouse::Left)
 		{
+			
+			current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+			current.play();
+		}
+		if (e.mouseButton.button == sf::Mouse::Right)
+		{
+			
 			current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
 			current.play();
 		}

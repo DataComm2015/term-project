@@ -128,7 +128,7 @@ NetworkEntityMultiplexer::~NetworkEntityMultiplexer()
 -- NOTES:
 -- Function returns NetworkEntity corresponding to given ID if it exists.
 ----------------------------------------------------------------------------------------------------------------------*/
-NetworkEntity* getEntityById(int id)
+NetworkEntity* NetworkEntityMultiplexer::getEntityById(int id)
 {
 	try
 	{
@@ -499,3 +499,4 @@ void NetworkEntityMultiplexer::onUnregister(int id, Session* session, Message ms
 {
     entities[id]->onUnregister(session,msg);
 }
+

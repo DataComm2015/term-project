@@ -2,6 +2,7 @@
 #define _COMMAND_ENTITY_H_
 
 #include "../KeyListener.h"
+#include "../ClickListener.h"
 #include "../../Network/Message.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
@@ -24,7 +25,7 @@ struct PlayerLobbyChoices;
  *   others like choosing their character to the Server. such commands are
  *   handled in the {Player::onUpdate} method. and sent using the. .
  */
-class CommandEntity : public NetworkEntity, public KeyListener
+class CommandEntity : public NetworkEntity, public KeyListener, public ClickListener
 {
     public:
         CommandEntity(int id, GameScene *gameScene);
@@ -36,6 +37,7 @@ class CommandEntity : public NetworkEntity, public KeyListener
     protected:
         virtual void onKeyPressed(int key);
         virtual void onKeyReleased(int key);
+	virtual void onMouseClick(int key, int srcid, float xpos, float ypos);
         virtual void onRegister(Session *session);
         virtual void onUnregister(Session* session, Message message);
         virtual void onUpdate(Message message);

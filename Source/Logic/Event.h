@@ -38,32 +38,49 @@ private:
 };
 
 struct AttackMessage
-{	
-	// Entity id destination
-	int dest;
-	float damage;
+{
+	int srcid; // Entity id source
+	enum ActionType action; // Type of attack to take
+	int cellx; // Coordinates of the cell you're attacking.
+	int celly;
 };
 
 class AttackEvent : public ::Marx::Event
 {
 public:
-	
+	AttackEvent(int _srcid, enum ActionType type, int _cellx, int _celly);
+	int getSrc();
+	enum ActionType getAction();
+	int getCellX();
+	int getCellY();
 private:
-	int dest;
-	
+	int srcid;
+	enum ActionType action;
+	int cellx;
+	int celly;
 };
 
 struct SkillAttackMessage
 {
+	int srcid; // Entity id source
+	enum ActionType action; // Type of attack to take
 	float destx;
 	float desty;
-	float speed;
-	float damage;
 };
 
 class SkillAttackEvent : public ::Marx::Event
 {
-	
+public:
+	SkillAttackEvent(int _srcid, enum ActionType type, int _destx, int _desty);
+	int getSrc();
+	enum ActionType getAction();
+	int getDestX();
+	int getDestY();
+private:
+	int srcid;
+	enum ActionType action;
+	int destx;
+	int desty;
 };
 
 #endif

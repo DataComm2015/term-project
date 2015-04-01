@@ -12,6 +12,8 @@
 #include "../Engine/TextureManager.h"
 #include "../Engine/TileManager.h"
 #include "../Engine/ProjectileManager.h"
+#include "../Engine/VEntity.h"
+#include "../Engine/EGTheSpinner.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -22,11 +24,10 @@
 #include "../Multimedia/gui/HealthBar.h"
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
-#include "../Engine/VEntity.h"
-#include "../Engine/EGTheSpinner.h"
+#include "../Network/NetworkEntity.h"
 #include "Entities/Vessel.h"
-
 #include "KeyListener.h"
+#include "ClickListener.h"
 
 /* The water buffer around the island */
 #define WATER_BUFFER 20
@@ -53,6 +54,8 @@ class GameScene : public Scene
 
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
+		void addClickListener(ClickListener* listener);
+		void rmClickListener(ClickListener* listener);
 
         	void generateMap(int seed);
 		void generateWater();
@@ -66,6 +69,7 @@ class GameScene : public Scene
 		 *   keyboard event occurs.
 		 */
 		std::set<KeyListener*> keyListeners;
+		std::set<ClickListener*> clickListeners;
 
 
 		GameMap *gMap;
