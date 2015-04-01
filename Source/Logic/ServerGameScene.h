@@ -17,6 +17,7 @@
 #include "Environment/GameMap.h"
 #include "PlayerMode.h"
 
+class ServerEnemyController;
 class ServerCommand;
 class Creature;
 class Behaviour;
@@ -48,7 +49,9 @@ class ServerGameScene : public Scene
         ServerCommand *command;
         int worldSeed;
         float timer;
+        float lobtimer;
         std::vector<Creature*> enemies;
+        std::vector<ServerEnemyController*> enemyControllers;
 };
 
 #endif

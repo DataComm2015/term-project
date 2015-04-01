@@ -66,12 +66,31 @@ void ServerGameScene::update(sf::Time time)
 {
     if (timer > 0)
     {
+        for (int i = 0; i < enemyControllers.size(); i++)
+            enemyControllers[i]->updateBehaviour(time.asSeconds());
+
         timer -= time.asSeconds();
     }
     else
     {
-        command->goToScoreboard();
+        if (lobtimer == SCOREBOARD_LENGTH_SECONDS)
+        {
+            command->goToScoreboard();
+        }
+
+        if (lobtimer > 0)
+        {
+            lobtimer -= time.asSeconds();
+        }
+        else
+        {
+            command->goToLobby();
+        }
     }
+
+
+
+
 	return;
 }
 
@@ -89,16 +108,13 @@ void ServerGameScene::enterScene()
 {
     worldSeed = rand();
     timer = GAME_ROUND_LENGTH_SECONDS;
+    lobtimer = SCOREBOARD_LENGTH_SECONDS;
 
     // Generate the game map
-	gMap->generateMap(worldSeed, this);
+	  gMap->generateMap(worldSeed, this);
 
     createPlayers();
-	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
-	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
-	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
-	createEnemy(I_DONT_KNOW, NULL, 12.5, 12.5);
-	createEnemy(BASIC_TYPE, NULL, 12.5, 12.5);
+	  createEnemy(BASIC_TYPE, NULL, 48, 48);
 }
 
 void ServerGameScene::leaveScene()
@@ -132,6 +148,7 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
 
     // Create the enemy
     ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
+    enemyControllers.push_back(enemyController);
     enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
