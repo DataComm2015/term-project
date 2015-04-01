@@ -14,11 +14,12 @@ namespace Marx
 	{
 	public:
 		VEntity(SGO &_sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w) :
-			sprite(_sprite), Entity(_map, x, y, ctrl, h, w)
+			sprite(_sprite), Entity(_map, x, y, ctrl, h, w), drawable(true)
 		{
 			const sf::FloatRect &bounds = sprite.sprite().getLocalBounds();
 			sprite.sprite().setOrigin(bounds.width * 0.5f, bounds.height);
 			_map->add(*this);
+			
 		}
 
 		// this should get removed
@@ -28,8 +29,8 @@ namespace Marx
 		}
 
 	protected:
-		void draw(Renderer& renderer, sf::RenderStates states) const override;
-
+		virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
+		bool drawable;
 		SGO& sprite;
 	};
 

@@ -20,9 +20,11 @@ class Creature
     public:
         virtual void setHealth(int health);
         virtual void setAttack(int attack);
+		virtual int getHealth();
+		virtual int getAttack();
 		virtual Marx::Projectile* createAttack(AttackEvent&, float x, float y);
 		virtual Marx::Projectile* createSkAttack(SkillAttackEvent& event, float x, float y);
-        virtual Entity *getEntity();
+        virtual Entity * getEntity();
 	private:
 		std::map<enum ActionType, Marx::Action*> actionList;
 };

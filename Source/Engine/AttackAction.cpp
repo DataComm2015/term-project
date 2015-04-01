@@ -6,12 +6,15 @@ Action(_TTL), damage(_damage)
 		
 }
 
-void AttackAction::onUpdate(sf::Time time)
+void AttackAction::onUpdate(Entity * me, sf::Time time)
 {
+	me->setTTL(me->getTTL() - sf::Time time);
+	MoveEvent * m = new MoveEvent(left, top, me->getVector().x * 100, me->getVector().y * 100, true);
 	
+	me->getController()->addEvent(m);
 }
 
-void AttackAction::onHit(Entity *e)
+void AttackAction::onHit(Entity * me, entity *e)
 {
-	e->takeDamage(damage);
+	// give damage / point score event.
 }

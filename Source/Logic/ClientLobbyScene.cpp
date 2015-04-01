@@ -53,10 +53,10 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/boxOutline.png"));
 
-    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby-background.png"));
+    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
 
-    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-one.png"));
-    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-two.png"));
+    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
+    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
 
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
@@ -159,8 +159,11 @@ ClientLobbyScene::~ClientLobbyScene()
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLoad()
 {
+    clck.restart();
+
     /* Set btntest positions */
-    background->sprite().setPosition(SCN_WIDTH*.33,SCN_HEIGHT*.33);
+    background->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6);
+    background->sprite().setScale(2, 2);
 
     countdownBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10);
     playerBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10 + SCN_HEIGHT*1/30);
@@ -178,12 +181,14 @@ void ClientLobbyScene::onLoad()
     deityTwoCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2 );
 
     leaveBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, SCN_HEIGHT * 0.20);
+    leaveBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, SCN_HEIGHT * 0.20);
 
     easterEggBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, 3*SCN_HEIGHT/4);
 
-    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2, SCN_HEIGHT);
-//    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT- VESSEL_ART_WH);
-//    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT- VESSEL_ART_WH);
+    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - EASTER_ART_HW/2, SCN_HEIGHT);
+
+    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2);
+    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2);
 
     /* Set the active view */
     updateMainView(viewMain);
@@ -286,11 +291,16 @@ void ClientLobbyScene::draw()
 
     //Background has to go first
 
-    if(currScrollHeight < MAX_SCROLL)
+    if(currScrollHeight < MAX_SCROLL*100/3)
     {
         sf::Time scrollTime = clck.getElapsedTime();
-        currScrollHeight = scrollTime.asSeconds();
+        currScrollHeight = scrollTime.asMilliseconds();
+
     }
+    background->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6 + currScrollHeight*6 / 100);
+
+    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2 - MAX_SCROLL + currScrollHeight*6 / 100);
+    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2 - MAX_SCROLL + currScrollHeight*6 / 100);
 
 
     renderer.draw(*background);
@@ -314,18 +324,18 @@ void ClientLobbyScene::draw()
 
     renderer.draw(*easterEggBtn);
 
-    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_WH/2,SCN_HEIGHT+ click * -25);
+    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - EASTER_ART_HW/2,SCN_HEIGHT+ click * -25);
     renderer.draw(*easterEggSGO);
 
     if(vesselChoice == 1)
     {
-        //renderer.draw(*vesselOneSGO);
+        renderer.draw(*vesselOneSGO);
         renderer.draw(*vesselOneCircleSGO);
     }
 
     if(vesselChoice == 2)
     {
-        //renderer.draw(*vesselTwoSGO);
+        renderer.draw(*vesselTwoSGO);
         renderer.draw(*vesselTwoCircleSGO);
     }
 
@@ -499,7 +509,6 @@ void ClientLobbyScene::updateMainView(sf::View& v)
 
 	//needs to be 3X scale eventually
 	v.zoom(0.66);
-
 }
 
 /*------------------------------------------------------------------------------------------------------------------

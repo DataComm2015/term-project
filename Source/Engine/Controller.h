@@ -12,7 +12,6 @@ namespace Marx
     class Controller
     {
     public:
-        Controller();
         virtual ~Controller();
         virtual std::vector<Event*>* getEvents();
         virtual void addEvent(Event *ev);

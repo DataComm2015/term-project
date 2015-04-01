@@ -18,6 +18,8 @@
 -- to be taken when the projectile's on update and onHit are called.
 --
 ----------------------------------------------------------------------------------------------------------------------*/
+#ifndef _ATTACKACTION_H_
+#define _ATTACKACTION_H_
 
 #include <SFML/System/Time.hpp>
 
@@ -33,3 +35,5 @@ namespace Marx
 			float damage;
 	}
 }
+
+#endif

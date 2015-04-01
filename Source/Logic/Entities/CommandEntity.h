@@ -10,6 +10,8 @@
 
 class ClientMux;
 
+class ClientMux;
+
 #include "PlayerEntity.h"
 #include "../ClientLobbyScene.h"
 

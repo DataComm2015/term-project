@@ -8,7 +8,18 @@ void Creature::setAttack(int attack)
 {
 }
 
-Marx::Projectile* Creature::createAttack(AttackEvent& event, float x, float y)
+
+int Creature::getAttack()
+{
+	return 0;
+}
+
+int Creature::getHealth()
+{
+	return 0;
+}
+
+Marx::Projectile* Creature::createAttack(AttackEvent & event, float x, float y)
 {
 	Marx::Action *action = actionList[event.getAction()];
 	return Manager::ProjectileManager::getProjectile(x, y, action, event.getCellX(), event.getCellY());

@@ -44,6 +44,12 @@ struct AttackMessage
 	int cellx; // Coordinates of the cell you're attacking.
 	int celly;
 };
+class UpdateEvent: public ::Marx::Event
+{
+	int celly;
+public:
+	UpdateEvent() : Event(Marx::UPDATE){}
+};
 
 class AttackEvent : public ::Marx::Event
 {

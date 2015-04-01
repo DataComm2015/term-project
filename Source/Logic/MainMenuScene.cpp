@@ -17,6 +17,8 @@ using Networking::NetworkEntityMultiplexer;
 using Networking::Client;
 using Networking::Message;
 
+bool MainMenuScene::connectFailed;
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: MainMenuScene * MainMenuScene::getInstance()
 --
@@ -67,6 +69,8 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     // backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
     // background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
+    connectFailed = false;
+
     client = new Client();
     gameScene = new GameScene();
     lobbyScene = new ClientLobbyScene();
@@ -74,7 +78,7 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     clientmux = new ClientMux(gameScene,lobbyScene, scoreScene);
     NetworkEntityMultiplexer::setInstance(clientmux);
 
-    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/couch.jpg"));
+    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
     textBackgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/textBackground.png"));
     textBackgroundBoxImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/textBackgroundBox.png"));
     bannerImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-one.png"));
@@ -82,12 +86,13 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
     banner = new SGO(*Manager::TextureManager::get(bannerImg));
 
-    background = new SGO(*Manager::TextureManager::get(backgroundImg));
-    background->sprite().setScale(5, 5);
+    //background = new SGO(*Manager::TextureManager::get(backgroundImg));
+    background->sprite().setScale(2, 2);
 
-    serverLbl   = new GUI::Label( background, std::string("Server:") );
-    portLbl     = new GUI::Label( background, std::string("Port:" ) );
-    nicknameLbl = new GUI::Label( background, std::string("Nickname:" ) );
+    //background = new SGO(*Manager::TextureManager::get(backgroundImg));
+    background->sprite().setScale(2, 2);
+
+
     sf::Font *arial = new sf::Font();
     arial->loadFromFile("Assets/Fonts/arial.ttf");
 
@@ -98,6 +103,8 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBoxes[ PORT_TXT ]     ->setText("7000");
     textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this );
 
+
+
     curTextBox = 0;
     textBoxes[ SERVER_TXT ]->toggleSelected(true);
     textBoxes[ PORT_TXT ]->toggleSelected(false);
@@ -106,6 +113,20 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBoxes[ SERVER_TXT ]->text().setFont(*arial);
     textBoxes[ PORT_TXT ]->text().setFont(*arial);
     textBoxes[ NICKNAME_TXT ]->text().setFont(*arial);
+
+    serverLbl   = new GUI::Label( background, std::string("Server:") );
+    portLbl     = new GUI::Label( background, std::string("Port:" ) );
+    nicknameLbl = new GUI::Label( background, std::string("Nickname:" ) );
+
+    serverLbl     ->text().setFont(*arial);
+    portLbl       ->text().setFont(*arial);
+    nicknameLbl   ->text().setFont(*arial);
+
+    connectFailedText = new GUI::TextBox( NULL, this );
+    connectFailedText ->setText(connectFailErr);
+    connectFailedText ->text().setFont(*arial);
+    connectFailedText ->text().setScale(0.8, 0.8);
+
 
     /* Get texture assets */
     // as art assets are created for these, add them
@@ -155,6 +176,7 @@ MainMenuScene::~MainMenuScene()
 
     delete connectBtn;
     delete creditBtn;
+    delete name_sent;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -181,6 +203,8 @@ void MainMenuScene::onLoad()
     /* Set button positions */
     banner->sprite().setPosition(SCN_WIDTH/2 - BANNER_W/2, SCN_HEIGHT/10);
 
+    background            ->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6);
+
     serverTextBackground  ->sprite().setPosition(textw, text1_h);
     portTextBackground    ->sprite().setPosition(textw, text2_h);
     nicknameTextBackground->sprite().setPosition(textw, text3_h);
@@ -189,13 +213,31 @@ void MainMenuScene::onLoad()
     portTextBackgroundBox->sprite().setPosition(text_b_w, text2_b_h);
     nicknameTextBackgroundBox->sprite().setPosition(text_b_w, text3_b_h);
 
-    serverLbl             ->text().setPosition(0, 0);
-    portLbl               ->text().setPosition(0, 0);
-    nicknameLbl           ->text().setPosition(0, 0);
+    serverLbl             ->text().setPosition(textw/2+5 - 100, text1_h/2 - 3);
+    portLbl               ->text().setPosition(textw/2+5 - 100, text2_h/2 - 3);
+    nicknameLbl           ->text().setPosition(textw/2+5 - 100, text3_h/2 - 3);
 
     textBoxes[ SERVER_TXT ]   ->text().setPosition(textw/2+5, text1_h/2 - 3);
     textBoxes[ PORT_TXT ]     ->text().setPosition(textw/2+5, text2_h/2 - 3);
     textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text3_h/2 - 3);
+    connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
+
+    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
+    creditBtn->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH/2, SCN_HEIGHT*.75);
+
+    curTextBox = 0;
+    textBoxes[ SERVER_TXT ]->toggleSelected(true);
+    textBoxes[ PORT_TXT ]->toggleSelected(false);
+    textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
+
+    serverLbl             ->text().setPosition(textw/2+5 - 100, text1_h/2 - 3);
+    portLbl               ->text().setPosition(textw/2+5 - 100, text2_h/2 - 3);
+    nicknameLbl           ->text().setPosition(textw/2+5 - 100, text3_h/2 - 3);
+
+    textBoxes[ SERVER_TXT ]   ->text().setPosition(textw/2+5, text1_h/2 - 3);
+    textBoxes[ PORT_TXT ]     ->text().setPosition(textw/2+5, text2_h/2 - 3);
+    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text2_h/2 - 3);
+    connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
 
     connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
     creditBtn->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH/2, SCN_HEIGHT*.75);
@@ -294,9 +336,9 @@ void MainMenuScene::draw()
     renderer.draw(*portTextBackground);
     renderer.draw(*nicknameTextBackground);
 
-    renderer.draw( serverLbl );
-    renderer.draw( portLbl );
-    renderer.draw( nicknameLbl );
+    renderer.draw( *serverLbl );
+    renderer.draw( *portLbl );
+    renderer.draw( *nicknameLbl );
 
     if(textBoxes[SERVER_TXT]->getSelected())
     {
@@ -311,6 +353,28 @@ void MainMenuScene::draw()
       renderer.draw(*nicknameTextBackgroundBox);
     }
 
+    if(connectFailed)
+    {
+      renderer.draw(*connectFailedText);
+    }
+
+    if(textBoxes[SERVER_TXT]->getSelected())
+    {
+      renderer.draw(*serverTextBackgroundBox);
+    }
+    if(textBoxes[PORT_TXT]->getSelected())
+    {
+      renderer.draw(*portTextBackgroundBox);
+    }
+    if(textBoxes[NICKNAME_TXT]->getSelected())
+    {
+      renderer.draw(*nicknameTextBackgroundBox);
+    }
+
+    if(connectFailed)
+    {
+      renderer.draw(*connectFailedText);
+    }
 
     for( int i = 0; i < TEXT_BOXES; ++i )
         renderer.draw( textBoxes[ i ] );
@@ -360,18 +424,24 @@ void MainMenuScene::onClick()
       memcpy(hello, nickname_text, strlen(nickname_text));
       MainMenuScene::getInstance()->clientmux->message.data = hello;
 
+      MainMenuScene::getInstance()->clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
+      MainMenuScene::getInstance()->clientmux->message.len = strlen(nickname_text);
+      //clientmux->message.data = (char*)"TEST";
+      MainMenuScene::getInstance()->name_sent = new char[16];
+      memcpy(MainMenuScene::getInstance()->name_sent, nickname_text, strlen(nickname_text));
+      MainMenuScene::getInstance()->clientmux->message.data = MainMenuScene::getInstance()->name_sent;
+
       short port = atoi( MainMenuScene::getInstance()->textBoxes[ PORT_TXT ]->getText().c_str() );
       if (MainMenuScene::getInstance()->client->connect( (char *)MainMenuScene::getInstance()->textBoxes[ SERVER_TXT ]->getText().c_str(), port) <= 0)
       {
           printf("not connected\n");
+          connectFailed = true;
           // Show Error Message
       }
       else
       {
-         printf("connected\n");  
+         printf("connected\n");
       }
-
-      delete hello;
     }
 
 }

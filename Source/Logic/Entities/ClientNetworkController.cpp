@@ -44,7 +44,7 @@ ClientNetworkController::~ClientNetworkController()
 -- RETURNS:         void
 --
 -- NOTES:           parses the message and where it is added to the eventQueue
-----------------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 void ClientNetworkController::onUpdate( Message message )
 {
     parseEventMessage(message);
@@ -68,7 +68,7 @@ void ClientNetworkController::onUpdate( Message message )
 -- RETURNS:         void
 --
 -- NOTES:           unregisters session and handles message
-----------------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 void ClientNetworkController::onUnregister( Session * session, Message message )
 {
     parseEventMessage(message);
@@ -91,7 +91,7 @@ void ClientNetworkController::onUnregister( Session * session, Message message )
 -- RETURNS:         void
 --
 -- NOTES:           convinience method to handle messages
----------------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 void ClientNetworkController::parseEventMessage( Message& message )
 {
     switch(message.type)

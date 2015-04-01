@@ -39,7 +39,7 @@ namespace Marx
     enum EventType
     {
         MOVE,
-	R_MOVE,
+      	R_MOVE,
 	A_MOVE,
 	ATTACK,
 	SK_ATTACK,

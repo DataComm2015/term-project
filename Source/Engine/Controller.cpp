@@ -63,10 +63,7 @@ void Controller::clearEvents()
     }
 }
 
-Controller::Controller()
-{
-}
-
 Controller::~Controller()
 {
+    clearEvents();
 }
