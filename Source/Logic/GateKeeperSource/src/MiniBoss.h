@@ -19,7 +19,16 @@
 class MiniBoss : public GateKeeper
 {
 	public:
-		MiniBoss() : GateKeeper();
+		MiniBoss(SGO &sprite,
+			Marx::Map* map,
+			float x,
+			float y,
+			Marx::Controller* ctrl,
+			float h,
+			float w) : GateKeeper(sprite, map, x, y, ctrl, h, w);
+
+		~MiniBoss();
+
 		void updateNPC();
 		void detectPlayers();
 		void enterCombat();
@@ -40,18 +49,7 @@ class MiniBoss : public GateKeeper
 		void getTarget();
 		void getCooldown();
 
-	private:
-		int _range;
-		int _type;
-		int _health;
-		int _attack;
-		int _attackSpeed;
-		int _movementSpeed;
-		bool _incombat;
-		//Player _target;
-		//PatrolRadius _radius;
-		//Timer _cooldownTimer;
-		//AI _ai;
+
 
 };
 #ENDIF
