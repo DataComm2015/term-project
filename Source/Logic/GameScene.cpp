@@ -53,6 +53,7 @@ void updateMainView(sf::View& v)
 	v.zoom(0.66);
 }
 
+
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
 	// Create the maps

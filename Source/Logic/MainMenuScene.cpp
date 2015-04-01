@@ -1,6 +1,6 @@
 #include "../AppWindow.h"
-#include "../Network/Client.h"
 #include "../Network/Message.h"
+#include "../Network/Client.h"
 #include "NetworkEntityPairs.h"
 #include "Entities/ClientMux.h"
 #include "MainMenuScene.h"
@@ -66,6 +66,13 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     // trying to create a background
     // backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Multimedia/Assets/button.png"));
     // background = new SGO(*Manager::TextureManager::get(backgroundImg));
+
+    client = new Client();
+    gameScene = new GameScene();
+    lobbyScene = new ClientLobbyScene();
+    scoreScene = new ClientScoreboardScene();
+    clientmux = new ClientMux(gameScene,lobbyScene, scoreScene);
+    NetworkEntityMultiplexer::setInstance(clientmux);
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/couch.jpg"));
     textBackgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/textBackground.png"));
@@ -344,25 +351,27 @@ void MainMenuScene::onClick()
 
     if(port != 0 && 1) //TODO: add check for address filled in
     {
-      GameScene* gameScene = new GameScene();
-      ClientLobbyScene* lobbyScene = new ClientLobbyScene();
-      ClientMux* clientmux = new ClientMux(gameScene,lobbyScene);
-      NetworkEntityMultiplexer::setInstance(clientmux);
-
       char* nickname_text = (char *)MainMenuScene::getInstance()->textBoxes[ NICKNAME_TXT ]->getText().c_str();
 
-      clientmux->message.type = (int)PlayerCommandMsgType::MSG_T_SERVER_SELECTED_NICKNAME;
-      clientmux->message.len = strlen(nickname_text);
+      MainMenuScene::getInstance()->clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
+      MainMenuScene::getInstance()->clientmux->message.len = strlen(nickname_text);
       //clientmux->message.data = (char*)"TEST";
       char* hello = new char[16];
       memcpy(hello, nickname_text, strlen(nickname_text));
-      clientmux->message.data = hello;
+      MainMenuScene::getInstance()->clientmux->message.data = hello;
 
-      Client* client = new Client();
       short port = atoi( MainMenuScene::getInstance()->textBoxes[ PORT_TXT ]->getText().c_str() );
-      client->connect( (char *)MainMenuScene::getInstance()->textBoxes[ SERVER_TXT ]->getText().c_str(), port);
+      if (MainMenuScene::getInstance()->client->connect( (char *)MainMenuScene::getInstance()->textBoxes[ SERVER_TXT ]->getText().c_str(), port) <= 0)
+      {
+          printf("not connected\n");
+          // Show Error Message
+      }
+      else
+      {
+         printf("connected\n");  
+      }
 
-      printf("connected\n");
+      delete hello;
     }
 
 }

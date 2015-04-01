@@ -36,6 +36,7 @@ class ServerCommand : public Server
         void goToLobby();
         void prepareForGameState();
         void goToGame();
+        void goToScoreboard();
         
         void playerLeft(Session *session);
 

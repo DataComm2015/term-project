@@ -5,27 +5,117 @@
 #include <stdio.h>
 #include <cstring>
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        ServerNetworkController::ServerNetworkController
+--
+-- DATE:            April 1, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Eric Tsang
+--
+-- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--
+-- INTERFACE:       ServerNetworkController::ServerNetworkController()
+--
+-- RETURNS:         void
+--
+-- NOTES:           constructor for the {ServerGameState} class.
+------------------------------------------------------------------------------*/
 ServerNetworkController::ServerNetworkController()
     :Controller()
     ,NetworkEntity((int)NetworkEntityPair::SERVERCONTROLLER_NETCONTROLLER)
 {
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        ServerNetworkController::ServerNetworkController
+--
+-- DATE:            April 1, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Eric Tsang
+--
+-- PROGRAMMER:      Calvin Rempel
+--
+-- INTERFACE:       ServerNetworkController::ServerNetworkController(int type)
+--                  type - the
+--
+-- RETURNS:         void
+--
+-- NOTES:           destructor for the {ServerGameState} class.
+------------------------------------------------------------------------------*/
 ServerNetworkController::ServerNetworkController(int type)
     :NetworkEntity(type)
 {
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        ServerNetworkController::~ServerNetworkController
+--
+-- DATE:            April 1, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Eric Tsang
+--
+-- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--
+-- INTERFACE:       ServerNetworkController::~ServerNetworkController()
+--
+-- RETURNS:         void
+--
+-- NOTES:           constructor for the {ServerGameState} class.
+------------------------------------------------------------------------------*/
 ServerNetworkController::~ServerNetworkController()
 {
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        void ServerNetworkController::addEvent
+--
+-- DATE:            April 1, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Eric Tsang
+--
+-- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--
+-- INTERFACE:       void ServerNetworkController::addEvent(Event *event)
+--
+-- RETURNS:         void
+--
+-- NOTES:           adds an even into the event queue, but since this is the
+--                  server side, it will send the event to the clients first,
+--                  so that they can enqueue it into their own event queue, and
+--                  then the server enqueues the event into its event queue.
+------------------------------------------------------------------------------*/
 void ServerNetworkController::addEvent(Event *event)
 {
     sendEventMessage(event);
     Controller::addEvent(event);
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION:        void ServerNetworkController::sendEventMessage
+--
+-- DATE:            April 1, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Eric Tsang
+--
+-- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--
+-- INTERFACE:       void ServerNetworkController::sendEventMessage(Event *event)
+--
+-- RETURNS:         void
+--
+-- NOTES:           converts an event into a message that can be sent over the
+--                  network.
+------------------------------------------------------------------------------*/
 void ServerNetworkController::sendEventMessage(Event *event)
 {
     // create network message from event
@@ -62,10 +152,25 @@ void ServerNetworkController::sendEventMessage(Event *event)
     }
 }
 
-void ServerNetworkController::onUnregister(Session* session, Message message)
-{
-}
-
+/*------------------------------------------------------------------------------
+-- FUNCTION:        void ServerNetworkController::onUpdate
+--
+-- DATE:            April 1, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Eric Tsang
+--
+-- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--
+-- INTERFACE:       void ServerNetworkController::onUpdate(Message msg)
+--                  msg - message received from the update
+--
+-- RETURNS:         void
+--
+-- NOTES:           parses the message received in the update, creates the Event
+--                  equivalent, and enqueues it into its event queue.
+------------------------------------------------------------------------------*/
 void ServerNetworkController::onUpdate(Message msg)
 {
     switch((PlayerCommandMsgType)msg.type)
