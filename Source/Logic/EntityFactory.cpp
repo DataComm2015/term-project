@@ -25,6 +25,10 @@ EntityFactory::EntityFactory()
 {
     // initialize instance variables
     gkSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
+    );
+
+    vesselSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
     );
 
@@ -32,6 +36,11 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
     gkSGO.sprite().setScale(2, 2);
     gkSGO.middleAnchorPoint(true);
+
+    vesselSGO.sprite().setTexture(*Manager::TextureManager::get(vesselSprite));
+    vesselSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    vesselSGO.sprite().setScale(2, 2);
+    vesselSGO.middleAnchorPoint(true);
 }
 
 EntityFactory::~EntityFactory()
@@ -82,7 +91,7 @@ Entity* EntityFactory::makeEntity(
             entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
             break;
         case ENTITY_TYPES::VESSEL:
-            entity = new Vessel(gkSGO,map,x,y,cont,1,1);
+            entity = new Vessel(vesselSGO,map,x,y,cont,1,1);
             break;
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:

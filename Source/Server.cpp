@@ -48,7 +48,7 @@ void run(ServerCommand *server)
     sf::Time m_timeSinceLastUpdate;
     sf::Time m_sleepTime;
 
-    m_sleepTime = sf::seconds(1.0/75);
+    m_sleepTime = sf::seconds(1.0/60);
     m_timePerFrame = sf::seconds(1.0/60);
 
     if (!isRunning)

@@ -32,8 +32,9 @@ namespace Marx
     enum EventType
     {
         MOVE,
-	R_MOVE,
-	A_MOVE
+      	R_MOVE,
+      	A_MOVE,
+        UPDATE
     };
 
     /*
