@@ -100,7 +100,8 @@ int make_tcp_client_socket(char* remoteName, long remoteAddr, short remotePort, 
     // create TCP socket
     if((clntSock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
-        fatal_error("failed to create TCP socket");
+        printf("failed to create TCP socket");
+        return -1;
     }
 
     // bind socket to local host if a local port is specified
@@ -109,7 +110,8 @@ int make_tcp_client_socket(char* remoteName, long remoteAddr, short remotePort, 
         local = make_sockaddr(0, INADDR_ANY, localPort);
         if(bind(clntSock, (struct sockaddr*) &local, sizeof(local)) == -1)
         {
-            fatal_error("failed to bind socket to local host");
+            printf("failed to bind socket to local host");
+            return -1;
         }
     }
 
@@ -117,7 +119,8 @@ int make_tcp_client_socket(char* remoteName, long remoteAddr, short remotePort, 
     remote = make_sockaddr(remoteName, remoteAddr, remotePort);
     if(connect(clntSock, (struct sockaddr*) &remote, sizeof(remote)) == -1)
     {
-        fatal_error("failed to connect to remote host");
+        printf("failed to connect to remote host");
+        return -1;
     }
 
     // return...
@@ -181,7 +184,7 @@ struct sockaddr make_sockaddr(char* hostName, long hostAddr, short hostPort)
         struct hostent* host;
         if((host = gethostbyname(hostName)) == 0)
         {
-            fatal_error("failed to resolve host");
+            printf("failed to resolve host");
         }
 
         // set address structure's address from query results

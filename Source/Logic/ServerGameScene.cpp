@@ -66,8 +66,8 @@ void ServerGameScene::update(sf::Time time)
 {
     if (timer > 0)
     {
-  for (int i = 0; i < enemyControllers.size(); i++)
-    enemyControllers[i]->updateBehaviour(time.asSeconds());
+        for (int i = 0; i < enemyControllers.size(); i++)
+            enemyControllers[i]->updateBehaviour(time.asSeconds());
 
         timer -= time.asSeconds();
     }
