@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "EnemyHierarchy.h"
+#include "../Entities/Structure.h"
 
 using std::cout;
 using std::endl;
@@ -612,6 +613,64 @@ void GameMap::getVesselPosition(int vesselNum, int *xPos, int *yPos)
 				*yPos = tempCell->getY();
 
 				return;
+			}
+		}
+	}
+}
+
+
+/******************************************************************************
+*   FUNCTION: generateStructures
+*
+*   DATE: April 1, 2015
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: Chris Klassen
+*
+*   PROGRAMMER: Chris Klassen
+*
+*   INTERFACE: void generateStructures();
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+*		This function creates structures on the map.
+******************************************************************************/
+void GameMap::generateStructures()
+{
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			// If this block is a structures block
+			if (blockMap[j][i].getType() == STRUCTURE)
+			{
+				// Determine the number of structures to generate
+				int numStructs = (rand() % MAX_STRUCTURE_GROUP) + MIN_STRUCTURE_GROUP;
+
+				for (int i = 0; i < numStructs; i++)
+				{
+					// Get the destination cell
+					Cell *destCell;
+					destCell = blockMap[j][i].getRandomCell();
+
+					// Place the structure
+					SGO structSprite;
+					id_resource structImage;
+					structImage = Manager::TextureManager::store(
+				        Manager::TextureManager::load("Assets/Art/Environment/rock.png")
+				    );
+
+				    structSprite.sprite().setTexture(*Manager::TextureManager::get(structImage));
+				    structSprite.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+				    structSprite.sprite().setScale(1, 1);
+				    structSprite.middleAnchorPoint(false);
+
+					Entity *e = new Structure(structSprite, cellMap, destCell->getX(), destCell->getY(), NULL, 1.0, 1.0);
+				}
 			}
 		}
 	}
