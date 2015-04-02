@@ -39,10 +39,15 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 			: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
 			mask_sprite(_mask),
 			weapon_sprite(_weapon)
+			/*atk_sprite(_mask),
+			satk_sprite(_mask)*/
 			//,_controller(controller)
 {
 
 	direction = 1; //start facing right
+
+	atk_sprite = *(new SGO());
+	satk_sprite = *(new SGO());
 
 	resetEXP();
 	xSpeed = 0.1;
@@ -52,7 +57,6 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
     movingUp = false;
     movingDown = false;
 	attackPower = 0;
-
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -128,15 +132,17 @@ void Vessel::onUpdate()
 			}
 			case ::Marx::ATTACK:
 			{
+				
 				AttackEvent* aev = (AttackEvent*) (*it);
 
-				createAttack(*aev, getXPosition(), getYPosition());
+				createAttack(*aev, atk_sprite, getXPosition(), getYPosition());
 			}
 			case ::Marx::SK_ATTACK:
 			{
+				
 				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
 
-				createSkAttack(*saev, getXPosition(), getYPosition());
+				createSkAttack(*saev, satk_sprite, getXPosition(), getYPosition());
 			}
 		}
 	}

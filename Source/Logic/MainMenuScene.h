@@ -117,10 +117,6 @@ class MainMenuScene : public Scene
 
         const char* connectFailErr = "Failed to connect";
 
-        static bool connectFailed;
-
-        const char* connectFailErr = "Failed to connect";
-
 };
 void nextTextBox( void * data );
 
