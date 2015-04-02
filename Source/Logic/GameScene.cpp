@@ -50,7 +50,7 @@ void onclickLevelup()
 void updateMainView(sf::View& v)
 {
 	v = AppWindow::getInstance().getCurrentView();
-	v.zoom(0.5);
+	v.zoom(0.33);
 }
 
 
@@ -93,17 +93,17 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	cMap->setTexture(tilemap);
 	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
 	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO.sprite().setScale(2, 2);
+	championSGO.sprite().setScale(1, 1);
 	championSGO.middleAnchorPoint(true);
 
 	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
 	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	maskSGO.sprite().setScale(2, 2);
+	maskSGO.sprite().setScale(1, 1);
 	maskSGO.middleAnchorPoint(true);
 
 	wepSGO.sprite().setTexture(*Manager::TextureManager::get(wepSprite));
 	wepSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	wepSGO.sprite().setScale(2, 2);
+	wepSGO.sprite().setScale(1, 1);
 	wepSGO.middleAnchorPoint(true);
 
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
