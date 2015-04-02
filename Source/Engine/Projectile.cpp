@@ -47,8 +47,15 @@ void Projectile::onDestroy()
 
 void Projectile::onUpdate(sf::Time t)
 {
-	act->onUpdate(this, t);
-	TimeToLive -= t;
+	if(TimeToLive > sf::seconds(0))
+	{
+		act->onUpdate(this, t);
+		TimeToLive -= t;
+	}
+	else
+	{
+        onDestroy();
+	}
 }
 
 void Projectile::setTarget(sf::Vector2f t)
