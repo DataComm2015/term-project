@@ -132,17 +132,17 @@ void Vessel::onUpdate()
 			}
 			case ::Marx::ATTACK:
 			{
-				
+
 				AttackEvent* aev = (AttackEvent*) (*it);
 
-				createAttack(*aev, atk_sprite, getXPosition(), getYPosition());
+				createAttack(*aev, atk_sprite, left, top);
 			}
 			case ::Marx::SK_ATTACK:
 			{
-				
+
 				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
 
-				createSkAttack(*saev, satk_sprite, getXPosition(), getYPosition());
+				createSkAttack(*saev, satk_sprite, left, top);
 			}
 		}
 	}

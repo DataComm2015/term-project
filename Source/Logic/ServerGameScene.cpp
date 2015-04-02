@@ -61,13 +61,13 @@ ServerGameScene::~ServerGameScene()
 	delete cMap;
 }
 
+
 void ServerGameScene::update(sf::Time time)
 {
     if (timer > 0)
     {
         for (int i = 0; i < enemyControllers.size(); i++)
             enemyControllers[i]->updateBehaviour(time.asSeconds());
-
         timer -= time.asSeconds();
     }
     else
@@ -76,21 +76,6 @@ void ServerGameScene::update(sf::Time time)
         {
             command->goToScoreboard();
         }
-
-        if (lobtimer > 0)
-    {
-        for (int i = 0; i < enemyControllers.size(); i++)
-            enemyControllers[i]->updateBehaviour(time.asSeconds());
-
-        timer -= time.asSeconds();
-    }
-    else
-    {
-        if (lobtimer == SCOREBOARD_LENGTH_SECONDS)
-        {
-            command->goToScoreboard();
-        }
-
         if (lobtimer > 0)
         {
             lobtimer -= time.asSeconds();
@@ -100,12 +85,8 @@ void ServerGameScene::update(sf::Time time)
             command->goToLobby();
         }
     }
-
-
-
-
-	return;
 }
+
 
 void ServerGameScene::processEvents(sf::Event& e)
 {
