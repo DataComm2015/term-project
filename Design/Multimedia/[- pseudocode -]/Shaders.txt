@@ -1,0 +1,90 @@
+ blur
+{
+	calculate the vertical and horizontal offset
+	calculate the blur kernel based on input parameter
+	
+	add each texture location in the kernel to the pixel color
+	multiply each texture location by it's kernel mutator
+	
+	set the fragment color based on pixel (divide by kernel size)
+}
+
+huesat
+{
+	set the pixel color to the corresponding texture location
+	convert the RGB of the pixel to HSV and apply it to fragHSV
+	
+	add hue input parameter to the hue subset of fragHSV
+	
+	convert fragHSV to RGB format and apply it to pixel
+	add brightness parameter to each subset of pixel
+	
+	clamp each subset of pixel
+	apply contrast parameter to each subset of pixel
+	
+	set fragcolour to pixel
+}
+
+lighting
+{
+	set basedistance to the fragment location
+	invert the y element of basedistance //to correct for SFML inverted y-axis
+	
+	set distance to origin parameter - basedistance
+	set distance to the length of the line represented by distance
+	
+	set attenuation to the reciprical of (attenuation parameter * distance) * 2
+	set frag colour elements R,G and B to attenuation, A to 1;
+	set frag colour to frag colour * lightcolour parameter
+}
+
+pound
+{
+	set vertex to vertex * modelviewmatrix
+	set offset to vertex - poundposition parameter
+	set length to the length of the line represented by offset
+	
+	if length is less than poundfinalradius parameter
+		set pushdistance to poundinitialradius + length / poundtotalradius * (poundtotalradius - poundinitialradius)
+		set vertex to poundposition parameter + normalized offset * pushdistance
+		
+	if length is equal to poundfinalradius parameter
+		set pushdistance to poundinitialradius + length / poundinitialradius squared
+		set vertex to poundposition parameter + normalized offset * pushdistance
+
+	if vertex x element is equal to poundposition parameter x element
+		square vertex x element
+	if vertex y element is equal to poundposition paremeter y element
+		square vertex y element
+		
+	set position to vertex * projection matrix
+	set texture coordinate to texture martrix * projection texture coord matrix
+	set the vertex front colour to the vertex colour
+}
+
+wave
+{
+	set vertex x element to cosine of (vertex y element * phase constant + phase parameter * x cos constant)
+	multiply vertex x element by amplitude parameter
+	add to vertex x element: sine of (vertex y element * phase constant + phase paremeter * x sin constant)
+	multiply vertex x element by amplitude parameter
+	
+	set vertex y element to sine of (vertex y element * phase constant + phase parameter * y sin constant)
+	multiply vertex y element by amplitude parameter
+	add to vertex y element: cosine of (vertex y element * phase constant + phase paremeter * y cos constant)
+	multiply vertex y element by amplitude parameter
+	
+	set poisition to model view projection matrix * vertex position
+	set texture coordinate to texture martix * projection texture coordinate matrix
+	set the vertex front colour to the vertex colour
+}
+
+colourize
+{
+	if multiply parameter is true
+		multiply fragment colour by colour parameter
+	if multiply parameter is false
+		add colour parameter to fragment colour
+		
+	subtract offset parameter from fragment colour
+}

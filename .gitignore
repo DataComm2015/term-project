@@ -4,6 +4,12 @@
 *.o
 *.obj
 
+# Gedit Temp Fiels
+*.*~
+
+# Merged Original Files
+*.*.orig
+
 # Precompiled Headers
 *.gch
 *.pch
@@ -26,3 +32,6 @@
 *.exe
 *.out
 *.app
+
+app
+serv

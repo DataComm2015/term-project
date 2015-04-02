@@ -1,0 +1,115 @@
+BaseParticleSystem
+{
+	BaseParticleSystem(uint amount)
+	{
+		initialize my own public variables;
+		assign builder;
+		create particles and vertices holder;
+	}
+	~BaseParticleSystem()
+	{
+		delete/free particles and vertices;
+	}
+
+	void draw(Batch, sf::RenderStates states)
+	{
+		if I have a texture
+		{
+			if I'm just drawing points
+				assign states' texture to nothing;
+			else
+				assign states' texture to my texture;
+
+			increment the batch's drawcalls;
+
+			use batch's renderer to draw myself;
+		}
+	}
+	
+	void addCollisionRect(sf::FloatRect rect)
+	{
+		add rect to collisionrects
+	}
+	
+	void clearCollisionRects()
+	{
+		empty collisionrects
+	}
+	
+	void update(sf::Time&)
+	{
+		spawn and update particles till you can't spawn anymore;
+
+		update remaining particles;
+
+		build vertices;
+
+		update status; // total particle count
+	}
+	
+	void detectCollisions(Particle& p)
+	{
+		for each collision rectangle
+			if the vertex is in the rectangle
+				collide particle p
+	}
+	
+	void collide(Particle& p, sf::FloatRect rect)
+	{
+		//empty
+	}
+
+	void setTexture(TextureData newtexture)
+	{
+		assign my texture to newtexture;
+		update my texture size variables;
+	}
+	void setBuilder(Builder& newbuilder)
+	{
+		if the newbuilder's count is bigger than the count I can handle
+			throw an error;
+		set my builder to the new one;
+		update my builder variables;
+	}
+
+	void clear()
+	{
+		set all of my particles' lifetime to 0;
+	}
+	uint getParticleCount()
+	{
+		return vertices count / individual vertex count;
+	}
+	bool isDead(Particle& p)
+	{
+		if particle p's lifetime is 0 or less
+			return true;
+		else
+			return false;
+	}
+
+	void updateParticle(sf::Time&, Particle&)
+	{
+		// empty
+	}
+}
+
+// the particle builder interface
+
+ParticleBuilder
+{
+	void build(const ParticleSystem &ps, const unsigned int &m_particleCount, const ParticleSystem::Particle *m_particles, sf::Vertex *m_vertices, unsigned int &m_drawCount)
+	{
+		// empty
+	}
+
+	sf::PrimitiveType getType()
+	{
+		// empty
+	}
+
+	sf::Uint8 getCount()
+	{
+		// empty
+	}
+}

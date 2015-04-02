@@ -1,0 +1,23 @@
+Scene
+{
+	OnLoad
+	{
+		// Logic implementation
+	}
+	unLoad
+	{
+		// If no scenes in queue, add blank scene
+	}
+	events
+	{
+		process events in game
+	}
+	update
+	{
+		update scene	// logic implementation
+	}
+	draw
+	{
+		// Draws window, multimedia Implementation
+	}
+}
