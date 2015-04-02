@@ -74,31 +74,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	myVessel = NULL;
 
-	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
-	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
-
-	/*std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
-
- p = new Projectile(cMap, 10, 10, NULL, 1, 1);
-	//				   map, x, y, controller, height, width
-	Projectile p2 = Projectile(cMap, 20, 20, NULL, 1, 1);
-
-	std::cout << "projectile 1 " << p << std::endl;
-	std::cout << "projectile 2 " << &p2 << std::endl;
-
-	// move the second projectile to collide with the first.
-	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
-	// Entities all extend sf::Rect so you can get their x, y by checking the top left.
-	// As a side note, both entities and cells are FloatRects so are view ports intersect can be used to
-	// see if an entity or cell should be visible on the map.
-	// this should be useful for figuring out what needs to be rendered down the road.
-	std::cout << "Projectile 1 hit: " << p->move(p->top + 10, p->left + 10, false) << std::endl;
-	std::cout << "Projectile 1 hit: " << p->move(p->top + 20, p->left + 10, false) << std::endl;
-	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
-
-	delete p;
-*/
-	/* END SAMPLE CREATION */
 
 	std::cout << "making tileset" << std::endl;
 	// Load the tileset
@@ -114,15 +89,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	placeholderSprite = Manager::TextureManager::store(
 		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
 		);
-
-	// an example, obviously...
-	/*
-	v = new Vessel(SHAMAN, nullptr, 0, 0);
-
-	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
-	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
-	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
-	*/
 
 	cMap->setTexture(tilemap);
 	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
@@ -160,7 +126,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	// Link game objects (not everything is linked, for example purposes only)
 	// as of now, the hierarchy system is barely used in this example
-	maskSGO.add(*tb);
+	//maskSGO.add(*tb);
 
 	// Generate stuff
 
@@ -235,8 +201,6 @@ void GameScene::positionUI()
 	// position and scale level indicator
 	levelInd->text().move(14, 10);
 	levelInd->text().setScale(1.5, 1.5);
-
-
 }
 
 void GameScene::setPlayerVessel(Vessel *vessel)
@@ -291,7 +255,11 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != 0)
 	{
-		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left)*32.0F, (myVessel->top)*32.0F));
+		cout << myVessel->left << ", " << myVessel->top << endl;
+
+		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left), (myVessel->top)));
+
+		cout << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
 	}
 
 	// listEntity = false;
@@ -358,7 +326,7 @@ void GameScene::update(sf::Time t)
 	b5->update(t);
 	b6->update(t);
 
-//	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
 	// Increment the wave phase
@@ -464,7 +432,7 @@ void GameScene::draw()
 	renderer.draw(cMap, true);
 
 	renderer.end();
-/*
+
 	renderer.begin();
 
 	// draw the objects
@@ -489,7 +457,7 @@ void GameScene::draw()
 	renderer.draw(levelInd);
 
 	renderer.end();
-*/
+
 	window.display();
 }
 
