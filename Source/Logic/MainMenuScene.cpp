@@ -79,15 +79,15 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     NetworkEntityMultiplexer::setInstance(clientmux);
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
-    textBackgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/textBackground.png"));
-    textBackgroundBoxImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/textBackgroundBox.png"));
-    bannerImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/vessel-one.png"));
+    textBackgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/textBackground.png"));
+    textBackgroundBoxImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/textBackgroundBox.png"));
+    bannerImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/easteregg.png"));
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
     banner = new SGO(*Manager::TextureManager::get(bannerImg));
 
     //background = new SGO(*Manager::TextureManager::get(backgroundImg));
-    background->sprite().setScale(2, 2);
+    background->sprite().setScale(1, 1);
 
 
     sf::Font *arial = new sf::Font();
@@ -198,9 +198,9 @@ MainMenuScene::~MainMenuScene()
 void MainMenuScene::onLoad()
 {
     /* Set button positions */
-    banner->sprite().setPosition(SCN_WIDTH/2 - BANNER_W/2, SCN_HEIGHT/10);
+    //banner->sprite().setPosition(SCN_WIDTH / 3 - BANNER_W / 2, SCN_HEIGHT/10);
 
-    background            ->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6);
+    background->sprite().setPosition(SCN_WIDTH / 3 - 8, SCN_HEIGHT / 3 - 188);
 
     serverTextBackground  ->sprite().setPosition(textw, text1_h);
     portTextBackground    ->sprite().setPosition(textw, text2_h);
@@ -210,16 +210,16 @@ void MainMenuScene::onLoad()
     portTextBackgroundBox->sprite().setPosition(text_b_w, text2_b_h);
     nicknameTextBackgroundBox->sprite().setPosition(text_b_w, text3_b_h);
 
-    serverLbl             ->text().setPosition(textw/2+5 - 100, text1_h/2 - 3);
-    portLbl               ->text().setPosition(textw/2+5 - 100, text2_h/2 - 3);
-    nicknameLbl           ->text().setPosition(textw/2+5 - 100, text3_h/2 - 3);
+    serverLbl->text().setPosition(textw / 2 + 5 - 100, text1_h / 2 - 3);
+    portLbl->text().setPosition(textw/ 2 + 5 - 100, text2_h / 2 - 3);
+    nicknameLbl->text().setPosition(textw / 2 + 5 - 100, text3_h / 2 - 3);
 
-    textBoxes[ SERVER_TXT ]   ->text().setPosition(textw/2+5, text1_h/2 - 3);
-    textBoxes[ PORT_TXT ]     ->text().setPosition(textw/2+5, text2_h/2 - 3);
-    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text3_h/2 - 3);
+    textBoxes[ SERVER_TXT ]   ->text().setPosition(textw / 2 + 5, text1_h / 2 - 3);
+    textBoxes[ PORT_TXT ]     ->text().setPosition(textw / 2 + 5, text2_h / 2 - 3);
+    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw / 2 + 5, text3_h / 2 - 3);
     connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
 
-    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
+    connectBtn->sprite().setPosition(SCN_WIDTH/3 - CLASS_BTN_WIDTH * 1.5 + 128, SCN_HEIGHT / 3 + 128);
     creditBtn->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH/2, SCN_HEIGHT*.75);
 
     curTextBox = 0;
@@ -453,7 +453,7 @@ void MainMenuScene::onClickCredit()
 void MainMenuScene::updateMainView(sf::View& v)
 {
     v = AppWindow::getInstance().getCurrentView();
-    v.zoom(0.66);
+    v.zoom(0.33);
 }
 
 /*------------------------------------------------------------------------------------------------------------------

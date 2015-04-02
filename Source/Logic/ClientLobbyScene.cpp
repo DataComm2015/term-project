@@ -51,22 +51,24 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     timego = false;
     click = 0;
 
-    circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Menu/boxOutline.png"));
+    circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/selected.png"));
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
 
-    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
-    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
+    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-img.png"));
+    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-img.png"));
+
+    deityOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-img.png"));
+    deityTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-img.png"));
 
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
-    deityOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
-    deityTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
-
-    easterEggImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/easteregg.png"));
+    deityOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-btn.png"));
+    deityTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-btn.png"));
 
     leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
+
 
     /* Initialize buttons */
     vesselOneBtn = new GUI::Button(*Manager::TextureManager::get(vesselOneImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onVesselOneClick);
@@ -78,12 +80,12 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onLeaveClick);
 
-    easterEggBtn = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, easterEggClick);
-
     /*Init artwork*/
     vesselOneSGO = new SGO(*Manager::TextureManager::get(vesselOneArt));
     vesselTwoSGO = new SGO(*Manager::TextureManager::get(vesselTwoArt));
-    easterEggSGO = new SGO(*Manager::TextureManager::get(easterEggImg));
+
+    deityOneSGO = new SGO(*Manager::TextureManager::get(deityOneArt));
+    deityTwoSGO = new SGO(*Manager::TextureManager::get(deityTwoArt));
 
     vesselOneCircleSGO = new SGO(*Manager::TextureManager::get(circle));
     vesselTwoCircleSGO = new SGO(*Manager::TextureManager::get(circle));
@@ -99,12 +101,12 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
 
     countdownBox = new GUI::TextBox(NULL,NULL);
-    countdownBox->text().setScale(1, 1);
+    countdownBox->text().setScale(0.66, 0.66);
     countdownBox->toggleSelected(false);
     countdownBox->text().setFont(*arial);
 
     playerBox = new GUI::TextBox(NULL,NULL);
-    playerBox->text().setScale(1, 1);
+    playerBox->text().setScale(0.66, 0.66);
     playerBox->toggleSelected(false);
     playerBox->text().setFont(*arial);
 }
@@ -162,32 +164,25 @@ void ClientLobbyScene::onLoad()
     clck.restart();
 
     /* Set btntest positions */
-    background->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6);
-    background->sprite().setScale(2, 2);
+    //background->sprite().setPosition(0, 0);//SCN_WIDTH * 1/6, SCN_HEIGHT * -2/6);
 
-    countdownBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10);
-    playerBox->text().setPosition((SCN_WIDTH*1/5)/2,SCN_HEIGHT*1/10 + SCN_HEIGHT*1/30);
+    countdownBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2, (SCN_HEIGHT / 3 + 64) / 2);
+    playerBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2, (SCN_HEIGHT / 3 + 96) / 2);
 
-    vesselOneBtn->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
-    vesselTwoBtn->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT/2);
+    vesselOneBtn->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT / 2 - 32);
+    vesselTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT / 2 - 32);
 
-    vesselOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2), SCN_HEIGHT/2 - CLASS_BTN_HEIGHT_B/2);
-    vesselTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2) , SCN_HEIGHT/2 - CLASS_BTN_HEIGHT_B/2);
+    vesselOneCircleSGO->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2 + 64), SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 - 32);
+    vesselTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 - 32);
 
-    deityOneBtn->sprite().setPosition((0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
-    deityTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
+    deityOneBtn->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT / 2 + 64);
+    deityTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) - 64, SCN_HEIGHT/ 2 - CLASS_BTN_HEIGHT / 2 + 64);
 
-    deityOneCircleSGO->sprite().setPosition( (0 + SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)          , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2);
-    deityTwoCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH/3 - CLASS_BTN_WIDTH_B/2)  , SCN_HEIGHT/2 + SCN_HEIGHT/4 - CLASS_BTN_HEIGHT_B/2 );
+    deityOneCircleSGO->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64);
+    deityTwoCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64  );
 
-    leaveBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, SCN_HEIGHT * 0.20);
+    leaveBtn->sprite().setPosition(SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH - 8, SCN_HEIGHT / 3 + 8);
 
-    easterEggBtn->sprite().setPosition(SCN_WIDTH*.66+CLASS_BTN_WIDTH_B*3, 3*SCN_HEIGHT/4);
-
-    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - EASTER_ART_HW/2, SCN_HEIGHT);
-
-    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2);
-    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2);
 
     /* Set the active view */
     updateMainView(viewMain);
@@ -218,7 +213,6 @@ void ClientLobbyScene::update(sf::Time t)
     deityOneBtn->update(t);
     deityTwoBtn->update(t);
     leaveBtn->update(t);
-    easterEggBtn->update(t);
 
     if(timego && currentTime > 0)
     {
@@ -290,16 +284,20 @@ void ClientLobbyScene::draw()
 
     //Background has to go first
 
-    if(currScrollHeight < MAX_SCROLL*100/3)
+    if(currScrollHeight < MAX_SCROLL * 100 / 6)
     {
         sf::Time scrollTime = clck.getElapsedTime();
         currScrollHeight = scrollTime.asMilliseconds();
 
     }
-    background->sprite().setPosition(SCN_WIDTH*1/6,SCN_HEIGHT*-2/6 + currScrollHeight*6 / 100);
 
-    vesselOneSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2 - MAX_SCROLL + currScrollHeight*6 / 100);
-    vesselTwoSGO->sprite().setPosition(SCN_WIDTH/2 - VESSEL_ART_W/2, SCN_HEIGHT/3 - VESSEL_ART_H/2 - MAX_SCROLL + currScrollHeight*6 / 100);
+    background->sprite().setPosition(SCN_WIDTH / 3 - 8, (SCN_HEIGHT / 3 - 188) + currScrollHeight * 6 / 100);
+
+    deityOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
+    deityTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
+
+    vesselOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
+    vesselTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
 
 
     renderer.draw(*background);
@@ -321,11 +319,18 @@ void ClientLobbyScene::draw()
     renderer.draw(*countdownBox);
     renderer.draw(*playerBox);
 
-    renderer.draw(*easterEggBtn);
+    if(deityChoice == 1)
+    {
+        renderer.draw(*deityOneCircleSGO);
+        renderer.draw(*deityOneSGO);
+        
+    }
 
-    easterEggSGO->sprite().setPosition(SCN_WIDTH/2 - EASTER_ART_HW/2,SCN_HEIGHT+ click * -25);
-    renderer.draw(*easterEggSGO);
-
+    if(deityChoice == 2)
+    {
+        renderer.draw(*deityTwoCircleSGO);
+        renderer.draw(*deityTwoSGO);
+    }
     if(vesselChoice == 1)
     {
         renderer.draw(*vesselOneSGO);
@@ -336,16 +341,6 @@ void ClientLobbyScene::draw()
     {
         renderer.draw(*vesselTwoSGO);
         renderer.draw(*vesselTwoCircleSGO);
-    }
-
-    if(deityChoice == 1)
-    {
-        renderer.draw(*deityOneCircleSGO);
-    }
-
-    if(deityChoice == 2)
-    {
-        renderer.draw(*deityTwoCircleSGO);
     }
 
     renderer.end();
@@ -507,7 +502,7 @@ void ClientLobbyScene::updateMainView(sf::View& v)
     v = AppWindow::getInstance().getCurrentView();
 
 	//needs to be 3X scale eventually
-	v.zoom(0.66);
+	v.zoom(0.33);
 
 }
 
