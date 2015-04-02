@@ -104,14 +104,14 @@ class MainMenuScene : public Scene
         const int TEXT_BOX_H = 40;
 
         const int textw = SCN_WIDTH/2  - TEXT_W/2;
-        const int text1_h = SCN_HEIGHT/3 + 100 + 50;
-        const int text2_h = SCN_HEIGHT/3 + 100 + 50 * 2;
-        const int text3_h = SCN_HEIGHT/3 + 100 + 50 * 3;
+        const int text1_h = SCN_HEIGHT/3 + 100 + 10;
+        const int text2_h = SCN_HEIGHT/3 + 100 + 30;
+        const int text3_h = SCN_HEIGHT/3 + 100 + 50;
 
         const int text_b_w = SCN_WIDTH/2  - TEXT_BOX_W/2;
-        const int text1_b_h = (SCN_HEIGHT/3 + 100 + 50) -5;
-        const int text2_b_h = (SCN_HEIGHT/3 + 100 + 50 * 2)-5;
-        const int text3_b_h = (SCN_HEIGHT/3 + 100 + 50 * 3)-5;
+        const int text1_b_h = (SCN_HEIGHT/3 + 100 + 10) - 5;
+        const int text2_b_h = (SCN_HEIGHT/3 + 100 + 30) - 5;
+        const int text3_b_h = (SCN_HEIGHT/3 + 100 + 50) - 5;
 
         static bool connectFailed;
 
