@@ -51,6 +51,7 @@ namespace Marx
 		virtual bool operator==(const Entity&);
 		void setBlocking(bool);
 		bool getBlocking();
+		Map * getMap();
 	protected:
 		std::set<Cell*> occupiedCells;
 		Map * map;

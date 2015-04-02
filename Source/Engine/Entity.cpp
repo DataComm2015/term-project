@@ -438,3 +438,8 @@ bool Entity::getBlocking()
 {
 	return blocking;
 }
+
+Map * Entity::getMap()
+{
+    return map;
+}

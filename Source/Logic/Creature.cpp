@@ -23,17 +23,18 @@ Marx::Projectile* Creature::createAttack(AttackEvent & event, SGO &sprite, float
 {
 	sf::Vector2f v(event.getCellX(), event.getCellY());
 	Marx::Action *action = actionList[event.getAction()];
-	return Manager::ProjectileManager::getProjectile(sprite, x, y, action, v, 1.0, 1.0);
+	return Manager::ProjectileManager::getProjectile(sprite, getEntity()->getMap(),  x, y, action, v, 1.0, 1.0);
 }
 
 Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y)
 {
 	sf::Vector2f v(event.getDestX(), event.getDestY());
 	Marx::Action *action = actionList[event.getAction()];
-	return Manager::ProjectileManager::getProjectile(sprite, x, y, action, v, 1.0, 1.0);
+
+	return Manager::ProjectileManager::getProjectile(sprite, getEntity()->getMap(), x, y, action, v, 1.0, 1.0);
 }
 
-Entity *Creature::getEntity()
+Entity * Creature::getEntity()
 {
     return NULL;
 }
