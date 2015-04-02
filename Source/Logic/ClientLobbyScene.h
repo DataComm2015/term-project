@@ -24,7 +24,7 @@
 #define CLASS_BTN_HEIGHT 49
 
 #define CLASS_BTN_WIDTH_B 52
-#define CLASS_BTN_HEIGHT_B 52
+#define CLASS_BTN_HEIGHT_B 53
 
 /*
 *   This is the Lobby scene.
@@ -63,9 +63,6 @@ class ClientLobbyScene : public Scene
         SGO *background;
         id_resource backgroundImg;
 
-        GUI::Button *easterEggBtn;
-        id_resource easterEggImg;
-
         id_resource circle;
         GUI::TextBox * countdownBox;
         GUI::TextBox * playerBox;
@@ -77,7 +74,9 @@ class ClientLobbyScene : public Scene
 
         SGO *vesselOneSGO;
         SGO *vesselTwoSGO;
-        SGO *easterEggSGO;
+
+        SGO *deityOneSGO;
+        SGO *deityTwoSGO;
 
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;
@@ -95,6 +94,9 @@ class ClientLobbyScene : public Scene
 
         id_resource deityOneImg;
         id_resource deityTwoImg;
+
+        id_resource deityOneArt;
+        id_resource deityTwoArt;
 
         id_resource leaveImg;
 
