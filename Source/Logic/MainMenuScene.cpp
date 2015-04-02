@@ -200,7 +200,7 @@ void MainMenuScene::onLoad()
     /* Set button positions */
     //banner->sprite().setPosition(SCN_WIDTH / 3 - BANNER_W / 2, SCN_HEIGHT/10);
 
-    background->sprite().setPosition(SCN_WIDTH / 3, SCN_HEIGHT / 3 - 188);
+    background->sprite().setPosition(SCN_WIDTH / 3 - 8, SCN_HEIGHT / 3 - 188);
 
     serverTextBackground  ->sprite().setPosition(textw, text1_h);
     portTextBackground    ->sprite().setPosition(textw, text2_h);
@@ -219,7 +219,7 @@ void MainMenuScene::onLoad()
     textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw / 2 + 5, text3_h / 2 - 3);
     connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
 
-    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
+    connectBtn->sprite().setPosition(SCN_WIDTH/3 - CLASS_BTN_WIDTH * 1.5 + 128, SCN_HEIGHT / 3 + 128);
     creditBtn->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH/2, SCN_HEIGHT*.75);
 
     curTextBox = 0;

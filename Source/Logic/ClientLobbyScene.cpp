@@ -291,7 +291,7 @@ void ClientLobbyScene::draw()
 
     }
 
-    background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188) + currScrollHeight * 6 / 100);
+    background->sprite().setPosition(SCN_WIDTH / 3 - 8, (SCN_HEIGHT / 3 - 188) + currScrollHeight * 6 / 100);
 
     deityOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
     deityTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
