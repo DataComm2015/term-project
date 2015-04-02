@@ -50,7 +50,7 @@ void onclickLevelup()
 void updateMainView(sf::View& v)
 {
 	v = AppWindow::getInstance().getCurrentView();
-	v.zoom(0.66);
+	v.zoom(0.5);
 }
 
 
@@ -63,7 +63,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
 		{
-			Cell *tempCell = new Cell();
+			Cell *tempCell = new Cell(j, i);
 			tempCell->setTileId(1);
 
 			cMap->setCell(j, i, tempCell);
