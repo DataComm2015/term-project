@@ -29,17 +29,17 @@
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
-	Marx::Map * gmap,
-	float x,
-	float y,
-	Marx::Controller* controller_,
-	float height,
-	float width
-	/*, job_class jobClass, Ability* abilityList*/ )
-			: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
-			mask_sprite(_mask),
-			weapon_sprite(_weapon)
-			//,_controller(controller)
+								Marx::Map * gmap,
+								float x,
+								float y,
+								Marx::Controller* controller_,
+								float height,
+								float width
+								/*, job_class jobClass, Ability* abilityList*/ )
+								: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+								mask_sprite(_mask),
+								weapon_sprite(_weapon)
+								//,_controller(controller)
 {
 
 	direction = 1; //start facing right
@@ -48,9 +48,9 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	xSpeed = 0.1;
 	ySpeed = 0.1;
 	movingLeft = false;
-    movingRight = false;
-    movingUp = false;
-    movingDown = false;
+	movingRight = false;
+	movingUp = false;
+	movingDown = false;
 	attackPower = 0;
 
 	//abilities = abilityList;
@@ -115,36 +115,40 @@ void Vessel::onUpdate()
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
-				MoveEvent* ev = (MoveEvent*) (*it);
-                int xDir = ev->getXDir();
-                int yDir = ev->getYDir();
+					MoveEvent* ev = (MoveEvent*) (*it);
+          int xDir = ev->getXDir();
+          int yDir = ev->getYDir();
 
-                movingLeft = (xDir < 0);
-                movingRight = (xDir > 0);
-                movingUp = (yDir < 0);
-                movingDown = (yDir > 0);
-				break;
+					// set position to last known position on server to avoid
+					// sync problems across the clients
+	        Entity::aMove(ev->getX(), ev->getY(),false);
+
+          movingLeft = (xDir < 0);
+          movingRight = (xDir > 0);
+          movingUp = (yDir < 0);
+          movingDown = (yDir > 0);
+			break;
 		}
 	}
 	getController()->clearEvents();
 
-    float newXSpeed = 0;
-    float newYSpeed = 0;
+  float newXSpeed = 0;
+  float newYSpeed = 0;
 
 	if (movingLeft)
-        newXSpeed = -xSpeed;
-    else if (movingRight)
-        newXSpeed = xSpeed;
+      newXSpeed = -xSpeed;
+  else if (movingRight)
+      newXSpeed = xSpeed;
 
-    if (movingUp)
-        newYSpeed = -ySpeed;
-    else if (movingDown)
-        newYSpeed = ySpeed;
+  if (movingUp)
+      newYSpeed = -ySpeed;
+  else if (movingDown)
+      newYSpeed = ySpeed;
 
-    if (isMoving())
-    {
-        Entity::rMove(newXSpeed, newYSpeed,false);
-    }
+  if (isMoving())
+  {
+      Entity::rMove(newXSpeed, newYSpeed,false);
+  }
 }
 
 /*---------

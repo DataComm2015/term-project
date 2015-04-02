@@ -56,14 +56,17 @@ using namespace Marx;
 Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
     map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
-	occupiedCells = std::set<Cell*>();
+    if(ctrl != NULL)
+      ctrl->setEntity(this);
+      
+	  occupiedCells = std::set<Cell*>();
 
     for(int i = floor(x); i < width + floor(x); i++)
     {
         for(int j = floor(y); j < height + floor(y); j++)
         {
             occupiedCells.emplace(map->getCell(floor(i),floor(j)));
-			map->getCell(floor(i),floor(j))->addEntity(this);
+			      map->getCell(floor(i),floor(j))->addEntity(this);
         }
     }
 }

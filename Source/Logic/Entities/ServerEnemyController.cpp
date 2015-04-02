@@ -28,12 +28,12 @@ void ServerEnemyController::init()
 
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
-    /*
+
     if (!moving)
     {
       moving = true;
 
-      MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
+      MoveEvent *event = new MoveEvent(entity->left,entity->up,-1,0,0);
       addEvent(event);
     }
     //*/

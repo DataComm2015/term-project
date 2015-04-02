@@ -60,6 +60,11 @@ void GateKeeper::onUpdate()
 			  MoveEvent* ev = (MoveEvent*) (*it);
         int xDir = ev->getXDir();
         int yDir = ev->getYDir();
+
+        // set position to last known position on server to avoid
+        // sync problems across the clients
+        Entity::aMove(ev->getX(), ev->getY(),false);
+
         printf("GateKeeper --- xDir:%d yDir:%d\n", xDir, yDir);
         movingLeft = (xDir < 0);
         movingRight = (xDir > 0);

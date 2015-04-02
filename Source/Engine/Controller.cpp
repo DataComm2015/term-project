@@ -65,8 +65,14 @@ void Controller::clearEvents()
 
 Controller::Controller()
 {
+  entity = NULL;
 }
 
 Controller::~Controller()
 {
+}
+
+void Controller::setEntity(Entity* e)
+{
+  entity = e;
 }
