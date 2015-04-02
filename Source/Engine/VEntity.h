@@ -21,6 +21,8 @@ namespace Marx
 			_map->add(*this);
 		}
 
+		const sf::Transform& getLocalTransform() const override;
+
 		// this should get removed
 		void setSprite(SGO& _sprite)
 		{
