@@ -55,8 +55,8 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
 
-    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
-    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior_art.png"));
+    vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-img.png"));
+    vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-img.png"));
 
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
