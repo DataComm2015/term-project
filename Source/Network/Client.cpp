@@ -77,7 +77,7 @@ void Client::onDisconnect(int socket, int remote)
     printf("client: socket %d disconnected by %s host\n",socket,remote?"remote":"local");
 #endif
     sessions[socket]->onDisconnect(remote);
-    free(sessions[socket]);
+    sessions[socket]->markForDeletion();
     sessions.erase(socket);
 }
 
