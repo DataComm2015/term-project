@@ -1,5 +1,6 @@
 #include "ClientScoreboardScene.h"
 #include <iostream>
+#include <string>
 #include <SFML/System/Time.hpp>
 #include "Entities/ClientMux.h"
 
@@ -14,14 +15,15 @@ sf::Clock ClientScoreboardScene::clock;
 float ClientScoreboardScene::currentTime;
 
 
-ClientScoreboardScene::ClientScoreboardScene()
-    : renderer(AppWindow::getInstance(), 48400)
+ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
     
     SCORE_ELEMENTS[0] = (char *)"NAME\0";
     SCORE_ELEMENTS[1] = (char *)"ROLE\0";
     SCORE_ELEMENTS[2] = (char *)"SCORE\0";
+
+    data_received = (Player*) malloc(sizeof(Player) * 12);
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/scoreboard-background.png"));
 
@@ -50,30 +52,28 @@ ClientScoreboardScene::ClientScoreboardScene()
             scoreboard[rows][cols].text().move(SCORE_X + (cols * OFFSET_X), SCORE_Y + (rows * OFFSET_Y));
             scoreboard[rows][cols].toggleSelected(false);
             scoreboard[rows][cols].text().setFont(*arial);
-            scoreboard[rows][cols].setText(SCORE_ELEMENTS[cols]); // comment out this line when the score data fill is implemented
         }
     }
     
     countdownBox = new GUI::TextBox();
-    countdownBox->text().setScale(1, 1);
-    countdownBox->text().move(5, 5);
+    countdownBox->text().setScale(TEXTBOX_SCALE, TEXTBOX_SCALE);
+    countdownBox->text().move(C_BOX_X, C_BOX_Y);
     countdownBox->toggleSelected(false);
     countdownBox->text().setFont(*arial);
 }
 
 ClientScoreboardScene::~ClientScoreboardScene()
 {
-    for (int rows = 0; rows < SCORE_ROWS; rows++)
-    {
-        delete[] scoreboard[rows];
-    }
-    
     delete background;
+    delete gameScene;
+    delete clientMux;
+    delete countdownBox;
 }
 
 void ClientScoreboardScene::onLoad()
 {
     background->sprite().setPosition(0,0);
+    setScoreboard(data_received);
 
     /* Set the active view */
     updateMainView(viewMain);
@@ -115,15 +115,23 @@ void ClientScoreboardScene::draw()
 
     // draw the objects
     renderer.draw(*background);
-    
-    for (int rows = 0; rows < SCORE_ROWS; rows++)
+
+    /* this block shows what is needed to set the scoreboard *
+    char ** newBoard[SCORE_ROWS - 1]; // should be 12
+    for (int rows = 0; rows < (SCORE_ROWS - 1); rows++)
     {
-        for (int cols = 0; cols < SCORE_COLS; cols++)
-        {
-            // IMPLEMENT SCOREBOARD ELEMENT FILLING HERE
-            // scoreboard[rows][cols]
-        }
+        // all arrays should at least have a "\0"
+        newBoard[rows] = new char*[SCORE_COLS]; // should be 3
+        newBoard[rows][0] = new char[8]; // 8 is an arbitrariy number
+        strcpy(newBoard[rows][0], "bob\0");
+        newBoard[rows][1] = new char[8];
+        strcpy(newBoard[rows][1], "vessel\0");
+        newBoard[rows][2] = new char[8];
+        strcpy(newBoard[rows][2], "1000\0");
     }
+    
+    setScoreboard(newBoard);
+    /* end block */
     
     for (int rows = 0; rows < SCORE_ROWS; rows++)
     {
@@ -146,11 +154,37 @@ void ClientScoreboardScene::updateMainView(sf::View& v)
     v = AppWindow::getInstance().getCurrentView();
 
 	//needs to be 3X scale eventually
-	//v.zoom(0.66);
+	v.zoom(0.66);
 }
 
 ClientScoreboardScene * ClientScoreboardScene::getInstance()
 {
     static ClientScoreboardScene * scene = new ClientScoreboardScene();
     return scene;
+}
+
+void ClientScoreboardScene::setScoreboard(Player* players)
+{
+    for (int rows = 1; rows < SCORE_ROWS; rows++)
+    {
+        if(players[rows-1].type > -1)
+        {
+            scoreboard[rows][0].setText(players[rows-1].name);
+            switch(players[rows-1].type)
+            {
+                case 0:
+                    scoreboard[rows][1].setText("Vessel");
+                    break;
+
+                case 1:
+                    scoreboard[rows][1].setText("Ghost");
+                    break;
+
+                case 2:
+                    scoreboard[rows][1].setText("Deity");
+                    break;
+            }                     
+            scoreboard[rows][2].setText(std::to_string(players[rows - 1].score));
+        }
+    }
 }

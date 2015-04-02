@@ -65,7 +65,7 @@ void CreditScene::update(sf::Time t)
 {
     backBtn->update(t);
 
-    if(creditText->sprite().getPosition().y > -2500)
+    if(creditText->sprite().getPosition().y > -2500 )
     {
         creditText->sprite().move(0, -t.asSeconds() * 100);
     }

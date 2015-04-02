@@ -39,8 +39,8 @@ class EntityFactory
         ~EntityFactory();
     private:
         static EntityFactory* instance;
-        id_resource gkSprite, vesselSprite, structImage;
-        SGO gkSGO, vesselSGO, structSprite;
+        id_resource gkSprite, vesselSprite, maskSprite, spearSprite, structImage;
+        SGO gkSGO, vesselSGO, maskSGO, spearSGO, structSprite;
 };
 
 #endif

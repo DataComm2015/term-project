@@ -38,7 +38,7 @@ void onclickLevelup()
 {
 	static int level = 1;
 	std::string slevel;
-	
+
 	// level should be double digits
 	if(level < 10)
 		slevel = "0" + std::to_string(level++);
@@ -464,13 +464,13 @@ void GameScene::draw()
 	renderer.draw(cMap, true);
 
 	renderer.end();
-
+/*
 	renderer.begin();
 
 	// draw the objects
 	//renderer.draw(championSGO2);
-	renderer.draw(&maskSGO, true);
-	renderer.draw(wepSGO);
+	//renderer.draw(&maskSGO, true);
+	//renderer.draw(wepSGO);
 
 	renderer.end();
 
@@ -489,7 +489,7 @@ void GameScene::draw()
 	renderer.draw(levelInd);
 
 	renderer.end();
-
+*/
 	window.display();
 }
 
@@ -625,12 +625,12 @@ void GameScene::generateUI()
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
 
 	pubHB = hb;
-	
+
 	// Create level indicator
-	
+
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
-	
+
 	levelInd = new GUI::TextBox(nullptr, nullptr);
 	levelInd->toggleSelected(true);
 	levelInd->text().setFont(*arial);
