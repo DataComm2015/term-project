@@ -48,7 +48,7 @@ EntityFactory::EntityFactory()
 
     vesselSGO.sprite().setTexture(*Manager::TextureManager::get(vesselSprite));
     vesselSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    vesselSGO.sprite().setScale(2, 2);
+    vesselSGO.sprite().setScale(1, 1);
     vesselSGO.middleAnchorPoint(true);
 
     // Structures
@@ -63,12 +63,12 @@ EntityFactory::EntityFactory()
 
     maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
     maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    maskSGO.sprite().setScale(2, 2);
+    maskSGO.sprite().setScale(1, 1);
     maskSGO.middleAnchorPoint(true);
 
     spearSGO.sprite().setTexture(*Manager::TextureManager::get(spearSprite));
     spearSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    spearSGO.sprite().setScale(2, 2);
+    spearSGO.sprite().setScale(1, 1);
     spearSGO.middleAnchorPoint(true);
 }
 
