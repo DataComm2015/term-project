@@ -13,6 +13,7 @@
 
 #include "Entities/ProperEntity.h"
 #include "Entities/Vessel.h"
+#include "Entities/Structure.h"
 
 using Networking::Message;
 using Marx::Controller;
@@ -41,6 +42,16 @@ EntityFactory::EntityFactory()
     vesselSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
     vesselSGO.sprite().setScale(2, 2);
     vesselSGO.middleAnchorPoint(true);
+
+    // Structures
+    structImage = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Environment/rock.png")
+    );
+
+    structSprite.sprite().setTexture(*Manager::TextureManager::get(structImage));
+    structSprite.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    structSprite.sprite().setScale(1, 1);
+    structSprite.middleAnchorPoint(false);
 }
 
 EntityFactory::~EntityFactory()
@@ -92,6 +103,9 @@ Entity* EntityFactory::makeEntity(
             break;
         case ENTITY_TYPES::VESSEL:
             entity = new Vessel(vesselSGO,map,x,y,cont,1,1);
+            break;
+        case STRUCTURES:
+            entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
             break;
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:
