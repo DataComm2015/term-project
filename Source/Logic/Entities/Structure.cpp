@@ -1,4 +1,5 @@
 #include "Structure.h"
+#include "../../Engine/Entity.h"
 #include <typeinfo>
 
 Structure::Structure(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
@@ -37,14 +38,7 @@ void Structure::onDestroy()
 
 }
 
-
 bool Structure::operator==(const VEntity&)
 {
   return true;
-}
-
-
-Entity *Structure::getEntity()
-{
-    return this;
 }

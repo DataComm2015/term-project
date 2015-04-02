@@ -18,7 +18,6 @@ class Structure : public Marx::VEntity
 		virtual void onDestroy();
 		virtual void onUpdate();
 		virtual bool operator==(const VEntity&);
-   		virtual Entity* getEntity();
 
 	protected:
 		Marx::Controller* _ctrl;
