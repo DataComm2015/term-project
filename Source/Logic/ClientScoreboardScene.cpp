@@ -1,5 +1,6 @@
 #include "ClientScoreboardScene.h"
 #include <iostream>
+#include <string>
 #include <SFML/System/Time.hpp>
 #include "Entities/ClientMux.h"
 
@@ -21,6 +22,8 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
     SCORE_ELEMENTS[0] = (char *)"NAME\0";
     SCORE_ELEMENTS[1] = (char *)"ROLE\0";
     SCORE_ELEMENTS[2] = (char *)"SCORE\0";
+
+    data_received = (Player*) malloc(sizeof(Player) * 12);
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/scoreboard-background.png"));
 
@@ -70,6 +73,7 @@ ClientScoreboardScene::~ClientScoreboardScene()
 void ClientScoreboardScene::onLoad()
 {
     background->sprite().setPosition(0,0);
+    setScoreboard(data_received);
 
     /* Set the active view */
     updateMainView(viewMain);
@@ -112,7 +116,7 @@ void ClientScoreboardScene::draw()
     // draw the objects
     renderer.draw(*background);
 
-    /* this block shows what is needed to set the scoreboard */
+    /* this block shows what is needed to set the scoreboard *
     char ** newBoard[SCORE_ROWS - 1]; // should be 12
     for (int rows = 0; rows < (SCORE_ROWS - 1); rows++)
     {
@@ -159,12 +163,28 @@ ClientScoreboardScene * ClientScoreboardScene::getInstance()
     return scene;
 }
 
-void ClientScoreboardScene::setScoreboard(char ** newBoard[])
+void ClientScoreboardScene::setScoreboard(Player* players)
 {
     for (int rows = 1; rows < SCORE_ROWS; rows++)
     {
-        scoreboard[rows][0].setText(newBoard[rows - 1][0]);
-        scoreboard[rows][1].setText(newBoard[rows - 1][1]);
-        scoreboard[rows][2].setText(newBoard[rows - 1][2]);
+        if(players[rows-1].type > -1)
+        {
+            scoreboard[rows][0].setText(players[rows-1].name);
+            switch(players[rows-1].type)
+            {
+                case 0:
+                    scoreboard[rows][1].setText("Vessel");
+                    break;
+
+                case 1:
+                    scoreboard[rows][1].setText("Ghost");
+                    break;
+
+                case 2:
+                    scoreboard[rows][1].setText("Deity");
+                    break;
+            }                     
+            scoreboard[rows][2].setText(std::to_string(players[rows - 1].score));
+        }
     }
 }

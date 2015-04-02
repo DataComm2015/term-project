@@ -4,11 +4,15 @@
 
 #include <iostream>
 
+const sf::Transform& Marx::VEntity::getLocalTransform() const
+{
+	sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
+	sf::Transform trans = sf::Transform::Identity;
+	return trans.translate(left * tile->width, top * tile->height);
+}
+
 void Marx::VEntity::draw(Renderer& renderer, sf::RenderStates states) const
 {
-	std::cout << "vEntity's draw called" << std::endl;
-	sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
-	states.transform.translate(left * tile->width, (top + height) * tile->height);
-
+	states.transform *= getLocalTransform();
 	renderer.draw(sprite, states);
 }
