@@ -42,9 +42,8 @@ class ClientLobbyScene : public Scene
         static void onLeaveClick();
         static void onVesselOneClick();
         static void onVesselTwoClick();
-        static void onDeityOneClick();
-        static void onDeityTwoClick();
-        static void easterEggClick();
+        static void ondeityVitalityClick();
+        static void ondeityDemiseClick();
         void updateMainView(sf::View& v);
         static int vesselChoice;
         static int deityChoice;
@@ -75,20 +74,20 @@ class ClientLobbyScene : public Scene
 
         SGO *vesselOneCircleSGO;
         SGO *vesselTwoCircleSGO;
-        SGO *deityOneCircleSGO;
-        SGO *deityTwoCircleSGO;
+        SGO *deityVitalityCircleSGO;
+        SGO *deityDemiseCircleSGO;
 
         SGO *vesselOneSGO;
         SGO *vesselTwoSGO;
 
-        SGO *deityOneSGO;
-        SGO *deityTwoSGO;
+        SGO *deityVitalitySGO;
+        SGO *deityDemiseSGO;
 
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;
 
-        GUI::Button * deityOneBtn;
-        GUI::Button * deityTwoBtn;
+        GUI::Button * deityVitalityBtn;
+        GUI::Button * deityDemiseBtn;
 
         GUI::Button * leaveBtn;
 
@@ -98,11 +97,11 @@ class ClientLobbyScene : public Scene
         id_resource vesselOneImg;
         id_resource vesselTwoImg;
 
-        id_resource deityOneImg;
-        id_resource deityTwoImg;
+        id_resource deityVitalityImg;
+        id_resource deityDemiseImg;
 
-        id_resource deityOneArt;
-        id_resource deityTwoArt;
+        id_resource deityVitalityArt;
+        id_resource deityDemiseArt;
 
         id_resource leaveImg;
 

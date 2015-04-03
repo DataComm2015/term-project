@@ -58,14 +58,14 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     vesselOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-img.png"));
     vesselTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-img.png"));
 
-    deityOneArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-img.png"));
-    deityTwoArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-img.png"));
+    deityVitalityArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-img.png"));
+    deityDemiseArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-img.png"));
 
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
-    deityOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-btn.png"));
-    deityTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-btn.png"));
+    deityVitalityImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-btn.png"));
+    deityDemiseImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-btn.png"));
 
     leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
@@ -75,8 +75,8 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     vesselTwoBtn = new GUI::Button(*Manager::TextureManager::get(vesselTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onVesselTwoClick);
 
-    deityOneBtn = new GUI::Button(*Manager::TextureManager::get(deityOneImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityOneClick);
-    deityTwoBtn = new GUI::Button(*Manager::TextureManager::get(deityTwoImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onDeityTwoClick);
+    deityVitalityBtn = new GUI::Button(*Manager::TextureManager::get(deityVitalityImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, ondeityVitalityClick);
+    deityDemiseBtn = new GUI::Button(*Manager::TextureManager::get(deityDemiseImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, ondeityDemiseClick);
 
     leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onLeaveClick);
 
@@ -84,13 +84,13 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     vesselOneSGO = new SGO(*Manager::TextureManager::get(vesselOneArt));
     vesselTwoSGO = new SGO(*Manager::TextureManager::get(vesselTwoArt));
 
-    deityOneSGO = new SGO(*Manager::TextureManager::get(deityOneArt));
-    deityTwoSGO = new SGO(*Manager::TextureManager::get(deityTwoArt));
+    deityVitalitySGO = new SGO(*Manager::TextureManager::get(deityVitalityArt));
+    deityDemiseSGO = new SGO(*Manager::TextureManager::get(deityDemiseArt));
 
     vesselOneCircleSGO = new SGO(*Manager::TextureManager::get(circle));
     vesselTwoCircleSGO = new SGO(*Manager::TextureManager::get(circle));
-    deityOneCircleSGO = new SGO(*Manager::TextureManager::get(circle));
-    deityTwoCircleSGO = new SGO(*Manager::TextureManager::get(circle));
+    deityVitalityCircleSGO = new SGO(*Manager::TextureManager::get(circle));
+    deityDemiseCircleSGO = new SGO(*Manager::TextureManager::get(circle));
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
@@ -132,8 +132,8 @@ ClientLobbyScene::~ClientLobbyScene()
     delete vesselOneBtn;
     delete vesselTwoBtn;
 
-    delete deityOneBtn;
-    delete deityTwoBtn;
+    delete deityVitalityBtn;
+    delete deityDemiseBtn;
 
     delete leaveBtn;
 }
@@ -173,11 +173,11 @@ void ClientLobbyScene::onLoad()
     vesselOneCircleSGO->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2 + 64), SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 - 32);
     vesselTwoCircleSGO->sprite().setPosition( (SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 - 32);
 
-    deityOneBtn->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT / 2 + 64);
-    deityTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) - 64, SCN_HEIGHT/ 2 - CLASS_BTN_HEIGHT / 2 + 64);
+    deityVitalityBtn->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT / 2 + 64);
+    deityDemiseBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) - 64, SCN_HEIGHT/ 2 - CLASS_BTN_HEIGHT / 2 + 64);
 
-    deityOneCircleSGO->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64);
-    deityTwoCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64  );
+    deityVitalityCircleSGO->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64);
+    deityDemiseCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64  );
 
     leaveBtn->sprite().setPosition(SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH - 8, SCN_HEIGHT / 3 + 8);
 
@@ -213,8 +213,8 @@ void ClientLobbyScene::update(sf::Time t)
 {
     vesselOneBtn->update(t);
     vesselTwoBtn->update(t);
-    deityOneBtn->update(t);
-    deityTwoBtn->update(t);
+    deityVitalityBtn->update(t);
+    deityDemiseBtn->update(t);
     leaveBtn->update(t);
 
     if(timego && currentTime > 0)
@@ -315,8 +315,8 @@ void ClientLobbyScene::draw()
 
     //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));// + currScrollHeight * 6 / 100);
 
-    deityOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
-    deityTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
+    deityVitalitySGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
+    deityDemiseSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
 
     vesselOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
     vesselTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
@@ -335,23 +335,23 @@ void ClientLobbyScene::draw()
     renderer.draw(*background);
     renderer.draw(*vesselOneBtn);
     renderer.draw(*vesselTwoBtn);
-    renderer.draw(*deityOneBtn);
-    renderer.draw(*deityTwoBtn);
+    renderer.draw(*deityVitalityBtn);
+    renderer.draw(*deityDemiseBtn);
     renderer.draw(*leaveBtn);
     renderer.draw(*countdownBox);
     renderer.draw(*playerBox);
 
     if(deityChoice == 1)
     {
-        renderer.draw(*deityOneCircleSGO);
-        renderer.draw(*deityOneSGO);
+        renderer.draw(*deityVitalityCircleSGO);
+        renderer.draw(*deityVitalitySGO);
 
     }
 
     if(deityChoice == 2)
     {
-        renderer.draw(*deityTwoCircleSGO);
-        renderer.draw(*deityTwoSGO);
+        renderer.draw(*deityDemiseCircleSGO);
+        renderer.draw(*deityDemiseSGO);
     }
     if(vesselChoice == 1)
     {
@@ -446,7 +446,7 @@ void ClientLobbyScene::onVesselTwoClick()
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: void ClientLobbyScene::onDeityOneClick()
+-- FUNCTION: void ClientLobbyScene::ondeityVitalityClick()
 --
 -- DATE: Mar 30, 2015
 --
@@ -456,21 +456,21 @@ void ClientLobbyScene::onVesselTwoClick()
 --
 -- PROGRAMMER: Alex Lam and Michael Chimick
 --
--- INTERFACE: void ClientLobbyScene::onDeityOneClick()
+-- INTERFACE: void ClientLobbyScene::ondeityVitalityClick()
 --
 -- RETURNS: void
 --
 -- NOTES:
 -- Sets vessel choice to Deity 1
 ----------------------------------------------------------------------------------------------------------------------*/
-void ClientLobbyScene::onDeityOneClick()
+void ClientLobbyScene::ondeityVitalityClick()
 {
     deityChoice = 1;
     cout << "Deity 1 clicked" << endl;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: void ClientLobbyScene::onDeityTwoClick()
+-- FUNCTION: void ClientLobbyScene::ondeityDemiseClick()
 --
 -- DATE: Mar 30, 2015
 --
@@ -480,25 +480,17 @@ void ClientLobbyScene::onDeityOneClick()
 --
 -- PROGRAMMER: Alex Lam and Michael Chimick
 --
--- INTERFACE: void ClientLobbyScene::onDeityTwoClick()
+-- INTERFACE: void ClientLobbyScene::ondeityDemiseClick()
 --
 -- RETURNS: void
 --
 -- NOTES:
 -- Sets vessel choice to Deity 2
 ----------------------------------------------------------------------------------------------------------------------*/
-void ClientLobbyScene::onDeityTwoClick()
+void ClientLobbyScene::ondeityDemiseClick()
 {
     deityChoice = 2;
     cout << "Deity 2 clicked" << endl;
-}
-
-void ClientLobbyScene::easterEggClick()
-{
-      if(click<18)
-      {
-        click++;
-      }
 }
 
 /*------------------------------------------------------------------------------------------------------------------

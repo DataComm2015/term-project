@@ -1,4 +1,6 @@
 #include "GameScene.h"
+#include "Entities/CommandEntity.h"
+#include "PlayerLobbyChoices.h"
 #include <iostream>
 
 using std::cout;
@@ -147,13 +149,26 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 void GameScene::onLoad()
 {
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	characterType = cm->getCommandEntity()->getPlayerMode();
+	switch (characterType)
+	{
+		case PLAYER_MODE::VESSEL:
+			classType = cm->getCommandEntity()->getLobbyOption()->vesselChoice;
+		case PLAYER_MODE::DEITY:
+			classType = cm->getCommandEntity()->getLobbyOption()->deityChoice;
+	}
+
+	printf("characterType: %d, classType: %d\n",characterType,classType);
+
 	// update views
 	updateMainView(viewMain);
 	viewUI = AppWindow::getInstance().getCurrentView();
 
 	// position buttons
-	positionUI();
 
+	generateUI();
+	positionUI();
 	// Enable buttons
 	b1->toggleEnabled(true);
 	b2->toggleEnabled(true);
@@ -453,8 +468,12 @@ void GameScene::draw()
 	renderer.draw(b4);
 	renderer.draw(b5);
 	renderer.draw(b6);
-	renderer.draw(hb, true);
-	renderer.draw(levelInd);
+
+	if(characterType == PLAYER_MODE::VESSEL)
+	{
+		renderer.draw(hb, true);
+		renderer.draw(levelInd);
+	}
 
 	renderer.end();
 
@@ -565,7 +584,13 @@ void GameScene::generateWater()
 void GameScene::generateUI()
 {
 	// Create buttons
-	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Menu/shaman-btn.png"));
+
+	demiseBtn = Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Menu/demise-btn.png"));
+	vitalityBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/vitality-btn.png"));
+	warriorBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/warrior-btn.png"));
+	shamanBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/shaman-btn.png"));
+
 
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
@@ -573,12 +598,65 @@ void GameScene::generateUI()
 
 	sf::Vector2f butSize = sf::Vector2f(width, height);
 
-	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
-	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+	switch (characterType)
+	{
+		case PLAYER_MODE::VESSEL: // VESSEL
+			switch(classType)
+			{
+				case 1: //SHAMAN
+					b1 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b4 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclickHealthTest);
+				break;
+				case 2: //WARRIOR
+					b1 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b4 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclickHealthTest);
+				break;
+		 }break;
+		case PLAYER_MODE::DEITY: // DEMISE
+			switch(classType)
+			{
+				case 1: //VITALITY
+					b1 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
+					b4 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickHealthTest);
+				break;
+				case 2: //DEMISE
+					b1 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
+					b4 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickHealthTest);
+				break;
+			}break;
+		case PLAYER_MODE::GHOST: // GHOST
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
+			b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+			break;
+		default: //ORIGINAL
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
+			b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+	}
+
 
 	// Create health bar (If statement here if vessel or deity)
 	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));

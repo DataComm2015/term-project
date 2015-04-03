@@ -44,6 +44,7 @@ PLAYER_MODE CommandEntity::getPlayerMode()
 
 void CommandEntity::notifyServerLobbySelections(PlayerLobbyChoices *selections)
 {
+    PLC = selections;
     // put the command into a message to be sent over the network
     Message msg;
     msg.type = (int)PlayerCommandMsgType::SELECT_LOBBY_OPTIONS;
@@ -123,7 +124,7 @@ void CommandEntity::onKeyReleased(int key)
 }
 
 void CommandEntity::onRegister(Session *session)
-{    
+{
     fprintf(stdout, "THIS: %s\n", clientmux->message.data);
     fflush(stdout);
     update(clientmux->message);
@@ -143,4 +144,9 @@ void CommandEntity::onUpdate(Message msg)
 
             break;
     }
+}
+
+PlayerLobbyChoices* CommandEntity::getLobbyOption()
+{
+    return PLC;
 }
