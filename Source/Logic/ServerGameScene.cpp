@@ -148,7 +148,11 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     // Create the enemy
     ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
     enemyControllers.push_back(enemyController);
-    enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
+
+    Entity *entity = EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y);
+
+    enemies.push_back((Creature*)entity);
+    enemyController->setEntity(entity);
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }

@@ -336,19 +336,22 @@ void GameScene::update(sf::Time t)
 
 void GameScene::processEvents(sf::Event& e)
 {
+	static std::set<int> depressedKeys;
 	Scene::processEvents(e);
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
 		AppWindow::getInstance().close();
-
-		AppWindow::getInstance().close();
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
-		for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		if (depressedKeys.find((int)e.key.code) == depressedKeys.end())
 		{
-			(*l)->onKeyPressed(e.key.code);
+			depressedKeys.insert((int)e.key.code);
+			for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+			{
+				(*l)->onKeyPressed(e.key.code);
+			}
 		}
 
 		// ALL OF THE FOLLOWING IS TEMPORARY
@@ -357,7 +360,6 @@ void GameScene::processEvents(sf::Event& e)
 			/*float camSpeed = 15;
 			switch (e.key.code)
 			{
-
 				case sf::Keyboard::A:
 				{
 					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
@@ -391,6 +393,7 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			(*l)->onKeyReleased(e.key.code);
 		}
+		depressedKeys.erase((int)e.key.code);
 
 		// v->stop(e.key.code);
 	}

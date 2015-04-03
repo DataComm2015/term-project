@@ -26,7 +26,7 @@ void ServerEnemyController::init()
 
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
-  /*
+
     if (!moving)
     {
       moving = true;
@@ -34,8 +34,14 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
       MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
       addEvent(event);
     }
-    */
+
 
     if (behaviour)
         behaviour->update(deltaTime);
+}
+
+
+void ServerEnemyController::setEntity(Entity* e)
+{
+  _currEntity = e;
 }
