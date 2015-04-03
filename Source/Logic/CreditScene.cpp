@@ -69,6 +69,11 @@ void CreditScene::update(sf::Time t)
     {
         creditText->sprite().move(0, -t.asSeconds() * 100);
     }
+    else
+    {
+      cout << "HELLO" << endl;
+      CreditScene::onClick();
+    }
 }
 
 void CreditScene::processEvents(sf::Event& e)
@@ -94,7 +99,7 @@ void CreditScene::draw()
     // draw the objects
     renderer.draw( creditText, true);
 
-    renderer.draw( backBtn );
+    //renderer.draw( backBtn );
 
     renderer.end();
 

@@ -79,8 +79,8 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     NetworkEntityMultiplexer::setInstance(clientmux);
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
-    textBackgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/textBackground.png"));
-    textBackgroundBoxImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/textBackgroundBox.png"));
+    textBackgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/text-box.png"));
+    textBackgroundBoxImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/text-box-outline.png"));
     bannerImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/easteregg.png"));
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
@@ -103,8 +103,8 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
 
 
     curTextBox = 0;
-    textBoxes[ SERVER_TXT ]->toggleSelected(true);
-    textBoxes[ PORT_TXT ]->toggleSelected(false);
+    textBoxes[ SERVER_TXT ]  ->toggleSelected(true);
+    textBoxes[ PORT_TXT ]    ->toggleSelected(false);
     textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
 
     textBoxes[ SERVER_TXT ]->text().setFont(*arial);
@@ -112,17 +112,25 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBoxes[ NICKNAME_TXT ]->text().setFont(*arial);
 
     serverLbl   = new GUI::Label( background, std::string("Server:") );
-    portLbl     = new GUI::Label( background, std::string("Port:" ) );
-    nicknameLbl = new GUI::Label( background, std::string("Nickname:" ) );
+    portLbl     = new GUI::Label( background, std::string("  Port:" ) );
+    nicknameLbl = new GUI::Label( background, std::string("  name:" ) );
 
     serverLbl     ->text().setFont(*arial);
     portLbl       ->text().setFont(*arial);
     nicknameLbl   ->text().setFont(*arial);
 
+    serverLbl     ->text().setScale(FONT_SCALE, FONT_SCALE);
+    portLbl       ->text().setScale(FONT_SCALE, FONT_SCALE);
+    nicknameLbl   ->text().setScale(FONT_SCALE, FONT_SCALE);
+
+    textBoxes[ SERVER_TXT ]  ->text().setScale(FONT_SCALE, FONT_SCALE);
+    textBoxes[ PORT_TXT ]    ->text().setScale(FONT_SCALE, FONT_SCALE);
+    textBoxes[ NICKNAME_TXT ]->text().setScale(FONT_SCALE, FONT_SCALE);
+
     connectFailedText = new GUI::TextBox( NULL, this );
     connectFailedText ->setText(connectFailErr);
     connectFailedText ->text().setFont(*arial);
-    connectFailedText ->text().setScale(0.8, 0.8);
+    connectFailedText ->text().setScale(FONT_SCALE, FONT_SCALE);
 
 
     /* Get texture assets */
@@ -198,9 +206,9 @@ MainMenuScene::~MainMenuScene()
 void MainMenuScene::onLoad()
 {
     /* Set button positions */
-    //banner->sprite().setPosition(SCN_WIDTH / 3 - BANNER_W / 2, SCN_HEIGHT/10);
+    banner->sprite().setPosition(SCN_WIDTH / 2 - BANNER_W / 2, SCN_HEIGHT/10);
 
-    background->sprite().setPosition(SCN_WIDTH / 3 - 8, SCN_HEIGHT / 3 - 188);
+    background->sprite().setPosition(SCN_WIDTH / 3, SCN_HEIGHT / 3 - 188);
 
     serverTextBackground  ->sprite().setPosition(textw, text1_h);
     portTextBackground    ->sprite().setPosition(textw, text2_h);
@@ -210,17 +218,18 @@ void MainMenuScene::onLoad()
     portTextBackgroundBox->sprite().setPosition(text_b_w, text2_b_h);
     nicknameTextBackgroundBox->sprite().setPosition(text_b_w, text3_b_h);
 
-    serverLbl->text().setPosition(textw / 2 + 5 - 100, text1_h / 2 - 3);
-    portLbl->text().setPosition(textw/ 2 + 5 - 100, text2_h / 2 - 3);
-    nicknameLbl->text().setPosition(textw / 2 + 5 - 100, text3_h / 2 - 3);
+    serverLbl   ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* FONT_OFFSET, (text1_h / 2)* FONT_OFFSET);
+    portLbl     ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* FONT_OFFSET, (text2_h / 2)* FONT_OFFSET);
+    nicknameLbl ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* FONT_OFFSET, (text3_h / 2)* FONT_OFFSET);
 
-    textBoxes[ SERVER_TXT ]   ->text().setPosition(textw / 2 + 5, text1_h / 2 - 3);
-    textBoxes[ PORT_TXT ]     ->text().setPosition(textw / 2 + 5, text2_h / 2 - 3);
-    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw / 2 + 5, text3_h / 2 - 3);
-    connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
+    textBoxes[ SERVER_TXT ]   ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text1_h / 2)* FONT_OFFSET);
+    textBoxes[ PORT_TXT ]     ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text2_h / 2)* FONT_OFFSET);
+    textBoxes[ NICKNAME_TXT ] ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text3_h / 2)* FONT_OFFSET);
 
-    connectBtn->sprite().setPosition(SCN_WIDTH/3 - CLASS_BTN_WIDTH * 1.5 + 128, SCN_HEIGHT / 3 + 128);
-    creditBtn->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH/2, SCN_HEIGHT*.75);
+    connectFailedText         ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text3_h/3)* FONT_OFFSET);
+
+    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH - CLASS_BTN_WIDTH, SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*4);
+    creditBtn ->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH - CLASS_BTN_WIDTH/2, SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*4);
 
     curTextBox = 0;
     textBoxes[ SERVER_TXT ]->toggleSelected(true);
