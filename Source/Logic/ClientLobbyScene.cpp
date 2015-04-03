@@ -437,8 +437,6 @@ void ClientLobbyScene::onLeaveClick()
     AppWindow::getInstance().removeScene(1);
 
     AppWindow::getInstance().addScene(new MainMenuScene());
-
-    AppWindow::getInstance().run();
 }
 
 /*------------------------------------------------------------------------------------------------------------------
