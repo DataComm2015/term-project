@@ -361,43 +361,43 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
-		for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		if(characterType == PLAYER_MODE::VESSEL)
 		{
-			(*l)->onKeyPressed(e.key.code);
+			for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+			{
+				(*l)->onKeyPressed(e.key.code);
+			}
 		}
-
-		// ALL OF THE FOLLOWING IS TEMPORARY
-
+		else
 		{
-			/*float camSpeed = 15;
+			float camSpeed = 15;
 			switch (e.key.code)
 			{
-
-				case sf::Keyboard::A:
+				case sf::Keyboard::Left:
 				{
 					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
 					break;
 				}
-				case sf::Keyboard::D:
+				case sf::Keyboard::Right:
 				{
 					viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
 					break;
 				}
-				case sf::Keyboard::W:
+				case sf::Keyboard::Up:
 				{
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
 					break;
 				}
-				case sf::Keyboard::S:
+				case sf::Keyboard::Down:
 				{
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
 					break;
 				}
-			    case sf::Keyboard::Return:
-			    {
-				    break;
-			    }
-			}*/
+		    case sf::Keyboard::Return:
+		    {
+			    break;
+		    }
+			}
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
