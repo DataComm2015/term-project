@@ -317,7 +317,7 @@ void MainMenuScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
 
-    window.clear(sf::Color::Blue);
+    window.clear();
 
     window.setView(viewMain);
 
@@ -442,8 +442,6 @@ void MainMenuScene::onClickCredit()
     AppWindow::getInstance().removeScene(1);
 
     AppWindow::getInstance().addScene(creditscene);
-
-    AppWindow::getInstance().run();
 }
 
 /*------------------------------------------------------------------------------------------------------------------

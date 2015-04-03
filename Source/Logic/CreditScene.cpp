@@ -88,7 +88,7 @@ void CreditScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
 
-    window.clear(sf::Color::Black);
+    window.clear();
 
     window.setView(viewMain);
 
@@ -111,9 +111,6 @@ void CreditScene::onClick()
     AppWindow::getInstance().removeScene(1);
 
     AppWindow::getInstance().addScene(CreditScene::getInstance()->mainmenu);
-
-    AppWindow::getInstance().run();
-
 }
 
 void CreditScene::updateMainView(sf::View& v)
