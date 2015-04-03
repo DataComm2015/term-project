@@ -146,7 +146,7 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     msg.len = sizeof(initData);
 
     // Create the enemy
-    ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
+    ServerEnemyController *enemyController = new ServerEnemyController(behaviour, this);
     enemyControllers.push_back(enemyController);
 
     Entity *entity = EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y);
@@ -193,7 +193,7 @@ void ServerGameScene::createPlayers()
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
                 initData.type = ENTITY_TYPES::VESSEL;
-		        gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
+		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;
 
@@ -202,7 +202,10 @@ void ServerGameScene::createPlayers()
                 msg.len = sizeof(initData);
 
                 // create vessel, pass it server vessel controller too
-                Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
+                Vessel* e = static_cast<Vessel*>(EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont));
+
+                //Add player entities to the list of players
+                playerList.push_back(e);
 
                 // register the server controller with the player
                 msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME;
@@ -227,4 +230,9 @@ void ServerGameScene::createPlayers()
             }
         }
     }
+}
+
+std::vector<Entity*> ServerGameScene::getPlayerList()
+{
+  return playerList;
 }

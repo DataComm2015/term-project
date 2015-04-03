@@ -5,6 +5,7 @@
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
 #include "../../Engine/VEntity.h"
+#include "../ServerGameScene.h"
 
 using Marx::Entity;
 
@@ -13,7 +14,7 @@ class Behaviour;
 class ServerEnemyController : public ServerNetworkController
 {
     public:
-        ServerEnemyController(Behaviour *behaviour);
+        ServerEnemyController(Behaviour *behaviour, ServerGameScene*);
         virtual ~ServerEnemyController();
         void setEntity(Entity*);
         void init();
@@ -23,6 +24,7 @@ class ServerEnemyController : public ServerNetworkController
         Behaviour *behaviour;
         bool moving;
         Entity* _currEntity;
+        ServerGameScene* _servGameScene;
 };
 
 #endif

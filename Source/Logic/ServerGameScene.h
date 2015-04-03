@@ -41,6 +41,8 @@ class ServerGameScene : public Scene
         void createPlayers();
         void createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y);
 
+        std::vector<Entity*> getPlayerList();
+
     private:
         SGO gkSGO;
         Marx::Map *cMap;
@@ -52,6 +54,7 @@ class ServerGameScene : public Scene
         float lobtimer;
         std::vector<Creature*> enemies;
         std::vector<ServerEnemyController*> enemyControllers;
+        std::vector<Entity*> playerList;
 };
 
 #endif
