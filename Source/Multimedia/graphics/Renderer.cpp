@@ -191,6 +191,7 @@ void Renderer::resetStats()
 
 /**
  * The general draw call for any kind of game object.
+ * 
  *
  * @date       2015-02-25
  *
@@ -200,17 +201,16 @@ void Renderer::resetStats()
  *
  * @programmer Melvin Loho
  *
- * @param      go         The game object to draw
- * @param      scenegraph Whether to draw the whole hierarchy or just the specified game object
+ * @param      bgo        The game object to draw
  * @param      states     The render states
  */
-void Renderer::draw(const BGO *go, bool scenegraph, sf::RenderStates states)
+void Renderer::draw(const BGO *bgo, sf::RenderStates states)
 {
 	if (!active) throw "Renderer is not active.";
 
 	mergeRenderStates(states);
 
-	scenegraph ? go->drawSG(*this, states) : go->draw(*this, states);
+	bgo->drawSG(*this, states);
 }
 
 /**
