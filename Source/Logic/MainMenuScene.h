@@ -93,7 +93,7 @@ class MainMenuScene : public Scene
         GUI::Button * creditBtn;
         id_resource creditImg;
 
-        const float FONT_SCALE = 0.9;
+        const float FONT_SCALE = 0.7;
         const float FONT_OFFSET = 1 + ((1 - FONT_SCALE) * 1/2);
 
         const int SCN_WIDTH = 1366;
@@ -106,19 +106,19 @@ class MainMenuScene : public Scene
         const int WIDE_BUTTONS_W = 64;
         const int WIDE_BUTTONS_H = 31;
 
-        const int textw = SCN_WIDTH/2  - TEXT_W/2;
-        const int text1_h = SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*1;
-        const int text2_h = SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*2;
-        const int text3_h = SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*3;
+        const int textw = SCN_WIDTH/2 + 114  - TEXT_W/2;
+        const int text1_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*1;
+        const int text2_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*2;
+        const int text3_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*3;
 
-        const int text_b_w = SCN_WIDTH/2  - TEXT_BOX_W/2;
-        const int text1_b_h = SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*1;
-        const int text2_b_h = SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*2;
-        const int text3_b_h = SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*3;
+        const int text_b_w = SCN_WIDTH/2 + 114 - TEXT_BOX_W/2;
+        const int text1_b_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*1;
+        const int text2_b_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*2;
+        const int text3_b_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*3;
 
         static bool connectFailed;
 
-        const char* connectFailErr = "Connect F";
+        const char* connectFailErr = "FAILED TO CONNECT";
 
 };
 void nextTextBox( void * data );
