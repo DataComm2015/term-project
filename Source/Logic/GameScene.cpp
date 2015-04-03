@@ -121,9 +121,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	tb->toggleSelected(true);
 	tb->text().setFont(*arial);
 
-	Manager::MusicManager::get(scat_music)->setVolume(60);
-	Manager::MusicManager::get(scat_music)->play();
-
 	// Link game objects (not everything is linked, for example purposes only)
 	// as of now, the hierarchy system is barely used in this example
 	//maskSGO.add(*tb);
@@ -161,6 +158,9 @@ void GameScene::onLoad()
 	b4->toggleEnabled(true);
 	b5->toggleEnabled(true);
 	b6->toggleEnabled(true);
+
+	Manager::MusicManager::get(scat_music)->setVolume(60);
+	Manager::MusicManager::get(scat_music)->play();
 }
 
 
@@ -216,6 +216,8 @@ void GameScene::unLoad()
 	b4->toggleEnabled(false);
 	b5->toggleEnabled(false);
 	b6->toggleEnabled(false);
+
+	Manager::MusicManager::get(scat_music)->stop();
 }
 
 
@@ -255,11 +257,23 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != 0)
 	{
-		cout << myVessel->left << ", " << myVessel->top << endl;
+		viewMain.setCenter(
+			(myVessel->getGlobalTransform()).transformPoint(myVessel->left * 32.0f,myVessel->top * 32.0f)
+			);
 
-		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left), (myVessel->top)));
+		std::cout << std::endl << "localtrans: ";
+		const float * myTrans = myVessel->getLocalTransform().getMatrix();
+		for (unsigned myT = 0; myT < 16; ++myT)
+		{
+			if (myT % 4 == 0) std::cout << std::endl;
+			std::cout << myTrans[myT] << "\t\t";
+		}
+		std::cout << std::endl;
 
-		cout << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
+		sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
+		std::cout << "mouse : " << mousePos.x << ", " << mousePos.y << std::endl;
+		cout << "vessel:   " << myVessel->left << ", " << myVessel->top << endl;
+		cout << "viewmain: " << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
 	}
 
 	// listEntity = false;
@@ -429,16 +443,7 @@ void GameScene::draw()
 	renderer.states.shader = &waveShader;
 	renderer.draw(waterMap);
 	renderer.states.shader = nullptr;
-	renderer.draw(cMap, true);
-
-	renderer.end();
-
-	renderer.begin();
-
-	// draw the objects
-	//renderer.draw(championSGO2);
-	//renderer.draw(&maskSGO, true);
-	//renderer.draw(wepSGO);
+	renderer.draw(cMap);
 
 	renderer.end();
 
@@ -453,7 +458,7 @@ void GameScene::draw()
 	renderer.draw(b4);
 	renderer.draw(b5);
 	renderer.draw(b6);
-	renderer.draw(hb, true);
+	renderer.draw(hb);
 	renderer.draw(levelInd);
 
 	renderer.end();

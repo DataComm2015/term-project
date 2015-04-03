@@ -191,9 +191,9 @@ void Renderer::resetStats()
 
 /**
  * The general draw call for any kind of game object.
- * 
+ * This draws both the object passed in and its children.
  *
- * @date       2015-02-25
+ * @date       2015-04-03
  *
  * @revisions
  *
@@ -214,7 +214,7 @@ void Renderer::draw(const BGO *bgo, sf::RenderStates states)
 }
 
 /**
- * Draws the specifies SGO.
+ * Draws the specified SGO.
  *
  * @date       2015-02-25
  *

@@ -275,7 +275,7 @@ void BGO::update(const sf::Time& t)
 /**
  * Draws this game object's children and itself.
  *
- * @date       2015-02-25
+ * @date       2015-04-03
  *
  * @revisions
  *

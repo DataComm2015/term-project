@@ -60,6 +60,7 @@ namespace GUI
 	*
 	* @programmer   Jonathan Chu
 	*				Lewis Scott
+	*				Melvin Loho
 	*
 	* @return       void
 	*/
@@ -70,7 +71,7 @@ namespace GUI
 
 		if (enabled) // button enabled
 		{
-			if (getGlobalTransform().transformRect(sprite().getGlobalBounds()).contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
+			if (getGlobalTransform().transformRect(sprite().getLocalBounds()).contains(appWindow.getMousePositionRelativeToWindowAndView(view))) // mouse inside button
 			{
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // mouse clicking button
 				{

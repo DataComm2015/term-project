@@ -348,7 +348,7 @@ void ClientLobbyScene::draw()
     vesselShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 2, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 10 + total_movement);
 
 
-    renderer.draw(*background);
+    renderer.draw(background);
 
     if (timego)
     {
@@ -358,53 +358,53 @@ void ClientLobbyScene::draw()
     playerBox->setText(std::to_string(playerCount) + " PLAYER(S)");
 
     // draw the objects
-    renderer.draw(*background);
-    renderer.draw(*vesselOneBtn);
-    renderer.draw(*vesselTwoBtn);
-    renderer.draw(*deityOneBtn);
-    renderer.draw(*deityTwoBtn);
-    renderer.draw(*leaveBtn);
-    renderer.draw(*countdownBox);
-    renderer.draw(*playerBox);
+    renderer.draw(background);
+    renderer.draw(vesselOneBtn);
+    renderer.draw(vesselTwoBtn);
+    renderer.draw(deityOneBtn);
+    renderer.draw(deityTwoBtn);
+    renderer.draw(leaveBtn);
+    renderer.draw(countdownBox);
+    renderer.draw(playerBox);
 
     if(deityChoice == 1)
     {
-        renderer.draw(*deityOneCircleSGO);
-        renderer.draw(*deityOneSGO);
+        renderer.draw(deityOneCircleSGO);
+        renderer.draw(deityOneSGO);
 
     }
 
-    renderer.draw(*vesselShadowSGO);
+    renderer.draw(vesselShadowSGO);
 
     if(deityChoice == 2)
     {
-        renderer.draw(*deityTwoCircleSGO);
-        renderer.draw(*deityTwoSGO);
+        renderer.draw(deityTwoCircleSGO);
+        renderer.draw(deityTwoSGO);
     }
     if(vesselChoice == 1)
     {
-        renderer.draw(*vesselOneSGO);
-        renderer.draw(*vesselOneCircleSGO);
+        renderer.draw(vesselOneSGO);
+        renderer.draw(vesselOneCircleSGO);
     }
 
     if(vesselChoice == 2)
     {
-        renderer.draw(*vesselTwoSGO);
-        renderer.draw(*vesselTwoCircleSGO);
+        renderer.draw(vesselTwoSGO);
+        renderer.draw(vesselTwoCircleSGO);
     }
 
     // Draw additional players
     switch(playerCount)
     {
         case 4:
-            renderer.draw(*playerFourShadowSGO);
-            renderer.draw(*playerFourSGO);
+            renderer.draw(playerFourShadowSGO);
+            renderer.draw(playerFourSGO);
         case 3:
-            renderer.draw(*playerThreeShadowSGO);
-            renderer.draw(*playerThreeSGO);
+            renderer.draw(playerThreeShadowSGO);
+            renderer.draw(playerThreeSGO);
         case 2:
-            renderer.draw(*playerTwoShadowSGO);
-            renderer.draw(*playerTwoSGO);
+            renderer.draw(playerTwoShadowSGO);
+            renderer.draw(playerTwoSGO);
         default:
             break;
     }

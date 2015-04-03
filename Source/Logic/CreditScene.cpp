@@ -88,16 +88,16 @@ void CreditScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
 
-    window.clear(sf::Color::Blue);
+    window.clear(sf::Color::Black);
 
     window.setView(viewMain);
 
     renderer.begin();
 
-    renderer.draw( background, true );
+    renderer.draw( background );
 
     // draw the objects
-    renderer.draw( creditText, true);
+    renderer.draw( creditText );
 
     //renderer.draw( backBtn );
 
