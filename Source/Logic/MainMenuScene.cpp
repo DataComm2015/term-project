@@ -206,7 +206,7 @@ MainMenuScene::~MainMenuScene()
 void MainMenuScene::onLoad()
 {
     /* Set button positions */
-    banner->sprite().setPosition(SCN_WIDTH / 2 - BANNER_W / 2, SCN_HEIGHT / 3);
+    banner->sprite().setPosition(SCN_WIDTH / 2 - BANNER_W / 2 - 80, SCN_HEIGHT / 3 + 4);
 
     background->sprite().setPosition(SCN_WIDTH / 3, SCN_HEIGHT / 3 - 188);
 
@@ -228,8 +228,8 @@ void MainMenuScene::onLoad()
 
     connectFailedText         ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text3_h/3)* 1.19);
 
-    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH - CLASS_BTN_WIDTH, SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*4);
-    creditBtn ->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH - CLASS_BTN_WIDTH/2, SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*4);
+    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH / 2 - CLASS_BTN_WIDTH + 120, SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*4);
+    creditBtn ->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH / 2 - CLASS_BTN_WIDTH/2 + 120, SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*4);
 
     curTextBox = 0;
     textBoxes[ SERVER_TXT ]->toggleSelected(true);
@@ -285,6 +285,12 @@ void MainMenuScene::update(sf::Time t)
 void MainMenuScene::processEvents(sf::Event& e)
 {
     Scene::processEvents(e);
+
+    if (e.type == sf::Event::Closed)
+    {
+        AppWindow::getInstance().close();
+    }
+
     textBoxes[ curTextBox ]->process(e);
 }
 
