@@ -16,6 +16,7 @@
 #include "../../Event.h"
 #include "../../Entities/ServerEnemyController.h"
 #include <typeinfo>
+#include <iostream>
 
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
   VEntity(sprite, map, x, y, ctrl, h, w)
@@ -44,49 +45,62 @@ GateKeeper::~GateKeeper()
 
 void GateKeeper::onUpdate()
 {
-  //getController()->addEvent(new UpdateEvent());
+  static float newXSpeed = 0;
+static float newYSpeed = 0;
 
-  std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
-	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
-		; it != eventQueue->end()
-		; ++it )
-	{
+std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
+  ; it != eventQueue->end()
+  ; ++it )
+{
 
-		// switch on type
-		switch((*it)->type)
-		{
-			case ::Marx::MOVE:
-				MoveEvent* ev = (MoveEvent*) (*it);
-                int xDir = ev->getXDir();
-                int yDir = ev->getYDir();
+  // switch on type
+  switch((*it)->type)
+  {
+    case ::Marx::MOVE:
+        MoveEvent* ev = (MoveEvent*) (*it);
+        int xDir = ev->getXDir();
+        int yDir = ev->getYDir();
 
-                movingLeft = (xDir < 0);
-                movingRight = (xDir > 0);
-                movingUp = (yDir < 0);
-                movingDown = (yDir > 0);
-				break;
-		}
+        if (yDir == -1)
+        {
+          newYSpeed -= _ySpeed;
+          std::cout << "Vessel.cpp: moving up" << std::endl;
+        }
+        else if (yDir == 1)
+        {
+          newYSpeed += _ySpeed;
+          std::cout << "Vessel.cpp: moving down" << std::endl;
+        }
+        else if (xDir == 1)
+        {
+          newXSpeed += _xSpeed;
+          std::cout << "Vessel.cpp: moving right" << std::endl;
+        }
+        else if (xDir == -1)
+        {
+          newXSpeed -= _xSpeed;
+          std::cout << "Vessel.cpp: moving left" << std::endl;
+        }
+
+
+        break;
   }
+}
+getController()->clearEvents();
 
-  getController()->clearEvents();
+// if (movingLeft)
+//       newXSpeed = -xSpeed;
+//   else if (movingRight)
+//       newXSpeed = xSpeed;
+//
+//   if (movingUp)
+//       newYSpeed = -ySpeed;
+//   else if (movingDown)
+//       newYSpeed = ySpeed;
 
-  float newXSpeed = 0;
-  float newYSpeed = 0;
 
-  if (movingLeft)
-        newXSpeed = -_xSpeed;
-  else if (movingRight)
-      newXSpeed = _xSpeed;
-
-  if (movingUp)
-      newYSpeed = -_ySpeed;
-  else if (movingDown)
-      newYSpeed = _ySpeed;
-
-    if (isMoving())
-    {
-        Entity::rMove(newXSpeed, newYSpeed,false);
-    }
+  Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 bool GateKeeper::isMoving()
