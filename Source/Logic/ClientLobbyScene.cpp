@@ -94,8 +94,6 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
-    //tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
-
     sf::Font *arial = new sf::Font();
     arial->loadFromFile("Assets/Fonts/arial.ttf");
 
@@ -164,7 +162,7 @@ void ClientLobbyScene::onLoad()
     clck.restart();
 
     /* Set btntest positions */
-    //background->sprite().setPosition(0, 0);//SCN_WIDTH * 1/6, SCN_HEIGHT * -2/6);
+    background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));
 
     countdownBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2, (SCN_HEIGHT / 3 + 64) / 2);
     playerBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2, (SCN_HEIGHT / 3 + 96) / 2);
@@ -183,7 +181,12 @@ void ClientLobbyScene::onLoad()
 
     leaveBtn->sprite().setPosition(SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH - 8, SCN_HEIGHT / 3 + 8);
 
-
+    //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));
+    height = MAX_SCROLL;
+    cur_movement = 0;
+    speed = 35; //Chris, this changes the initial speed then it will be halved as asked.
+    total_movement = 0;
+    height_mov = 0;
     /* Set the active view */
     updateMainView(viewMain);
 }
@@ -218,6 +221,23 @@ void ClientLobbyScene::update(sf::Time t)
     {
         currentTime -= t.asSeconds();
     }
+
+    if(total_movement < MAX_SCROLL) // total_movement = total movement
+    {
+      if(height_mov < height/2) //cur_movement = current pixel/time , height = total movement
+      {
+        cur_movement = t.asSeconds() * speed;
+        height_mov += t.asSeconds() * speed;
+        total_movement += cur_movement;
+        background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188) + total_movement);
+      }
+      else
+      {
+        height_mov = 0;
+        height = height/2;
+        speed = speed/2;
+      }
+    }
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -248,6 +268,8 @@ void ClientLobbyScene::processEvents(sf::Event& e)
 	    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
 		AppWindow::getInstance().close();
 	}
+
+
 
     countdownBox->process(e);
 }
@@ -291,13 +313,13 @@ void ClientLobbyScene::draw()
 
     }
 
-    background->sprite().setPosition(SCN_WIDTH / 3 - 8, (SCN_HEIGHT / 3 - 188) + currScrollHeight * 6 / 100);
+    //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));// + currScrollHeight * 6 / 100);
 
-    deityOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
-    deityTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
+    deityOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
+    deityTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
 
-    vesselOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
-    vesselTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + currScrollHeight * 6 / 100);
+    vesselOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
+    vesselTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
 
 
     renderer.draw(*background);
@@ -323,7 +345,7 @@ void ClientLobbyScene::draw()
     {
         renderer.draw(*deityOneCircleSGO);
         renderer.draw(*deityOneSGO);
-        
+
     }
 
     if(deityChoice == 2)
@@ -502,7 +524,7 @@ void ClientLobbyScene::updateMainView(sf::View& v)
     v = AppWindow::getInstance().getCurrentView();
 
 	//needs to be 3X scale eventually
-	v.zoom(0.33);
+	 v.zoom(0.33);
 
 }
 

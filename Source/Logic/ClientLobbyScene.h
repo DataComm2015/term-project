@@ -60,6 +60,12 @@ class ClientLobbyScene : public Scene
         sf::View viewMain;
         Renderer renderer;
 
+        double height;
+        double cur_movement;
+        double speed;
+        double total_movement;
+        double height_mov;
+
         SGO *background;
         id_resource backgroundImg;
 
