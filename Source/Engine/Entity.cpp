@@ -27,6 +27,7 @@
 --        This file implements the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
+#include "Controller.h"
 #include "Entity.h"
 #include "Map.h"
 #include <iostream>
@@ -56,9 +57,9 @@ using namespace Marx;
 Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
     map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
-    if(ctrl != NULL)
-      ctrl->setEntity(this);
-      
+    //if(ctrl != NULL)
+    //  ctrl->setEntity(this);
+
 	  occupiedCells = std::set<Cell*>();
 
     for(int i = floor(x); i < width + floor(x); i++)
@@ -197,7 +198,7 @@ Entity * Entity::move(float x, float y, bool force = false)
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::aMove(float x, float y, bool force = false)
 {
-    std::set<Cell*> tempCell;
+  std::set<Cell*> tempCell;
 	float temp_x = left;
 	float temp_y = top;
 	top = y;

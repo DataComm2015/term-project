@@ -19,6 +19,7 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
+#include "Entity.h"
 #include "Controller.h"
 
 #include <cstdio>
@@ -72,7 +73,26 @@ Controller::~Controller()
 {
 }
 
+/***
+--
+-- DESIGNER:    Calvin Rempel
+--
+-- PROGRAMMER:  Sanders Lee
+--
 void Controller::setEntity(Entity* e)
 {
   entity = e;
 }
+
+/***
+--
+-- DESIGNER:    Calvin Rempel
+--
+-- PROGRAMMER:  Sanders Lee
+--
+Entity* Controller::getEntity()
+{
+  return entity;
+}
+
+***/
