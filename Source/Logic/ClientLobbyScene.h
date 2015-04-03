@@ -26,6 +26,9 @@
 #define CLASS_BTN_WIDTH_B 52
 #define CLASS_BTN_HEIGHT_B 53
 
+#define BACK_BTN_WIDTH 48
+#define BACK_BTN_HEIGHT 17
+
 /*
 *   This is the Lobby scene.
 */
@@ -84,6 +87,16 @@ class ClientLobbyScene : public Scene
         SGO *deityOneSGO;
         SGO *deityTwoSGO;
 
+        SGO *playerTwoSGO;
+        SGO *playerThreeSGO;
+        SGO *playerFourSGO;
+
+        SGO *playerTwoShadowSGO;
+        SGO *playerThreeShadowSGO;
+        SGO *playerFourShadowSGO;
+
+        SGO *vesselShadowSGO;
+
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;
 
@@ -95,6 +108,8 @@ class ClientLobbyScene : public Scene
         id_resource vesselOneArt;
         id_resource vesselTwoArt;
 
+        id_resource otherPlayerArt;
+
         id_resource vesselOneImg;
         id_resource vesselTwoImg;
 
@@ -103,6 +118,8 @@ class ClientLobbyScene : public Scene
 
         id_resource deityOneArt;
         id_resource deityTwoArt;
+
+        id_resource vesselShadowImg;
 
         id_resource leaveImg;
 
