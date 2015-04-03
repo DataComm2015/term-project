@@ -93,7 +93,7 @@ class MainMenuScene : public Scene
         GUI::Button * creditBtn;
         id_resource creditImg;
 
-        const float FONT_SCALE = 0.9;
+        const float FONT_SCALE = 0.7;
         const float FONT_OFFSET = 1 + ((1 - FONT_SCALE) * 1/2);
 
         const int SCN_WIDTH = 1366;
@@ -118,7 +118,7 @@ class MainMenuScene : public Scene
 
         static bool connectFailed;
 
-        const char* connectFailErr = "Connect F";
+        const char* connectFailErr = "FAILED TO CONNECT";
 
 };
 void nextTextBox( void * data );
