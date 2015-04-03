@@ -323,34 +323,34 @@ void MainMenuScene::draw()
 
     renderer.begin();
 
-    renderer.draw( background, true );
+    renderer.draw( background );
 
     // draw the objects
-    renderer.draw(*banner);
-    renderer.draw(*serverTextBackground);
-    renderer.draw(*portTextBackground);
-    renderer.draw(*nicknameTextBackground);
+    renderer.draw(banner);
+    renderer.draw(serverTextBackground);
+    renderer.draw(portTextBackground);
+    renderer.draw(nicknameTextBackground);
 
-    renderer.draw( *serverLbl );
-    renderer.draw( *portLbl );
-    renderer.draw( *nicknameLbl );
+    renderer.draw( serverLbl );
+    renderer.draw( portLbl );
+    renderer.draw( nicknameLbl );
 
     if(textBoxes[SERVER_TXT]->getSelected())
     {
-      renderer.draw(*serverTextBackgroundBox);
+      renderer.draw(serverTextBackgroundBox);
     }
     if(textBoxes[PORT_TXT]->getSelected())
     {
-      renderer.draw(*portTextBackgroundBox);
+      renderer.draw(portTextBackgroundBox);
     }
     if(textBoxes[NICKNAME_TXT]->getSelected())
     {
-      renderer.draw(*nicknameTextBackgroundBox);
+      renderer.draw(nicknameTextBackgroundBox);
     }
 
     if(connectFailed)
     {
-      renderer.draw(*connectFailedText);
+      renderer.draw(connectFailedText);
     }
 
     for( int i = 0; i < TEXT_BOXES; ++i )
