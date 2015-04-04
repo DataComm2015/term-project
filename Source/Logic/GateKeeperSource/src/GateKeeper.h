@@ -79,6 +79,8 @@ class GateKeeper : public Marx::VEntity, public Creature
 		int _movementSpeed;
 		float _xSpeed;
 		float _ySpeed;
+		float newXSpeed = 0;
+		float newYSpeed = 0;
 		int _direction;
 		float _xPos;
 		float _yPos;
