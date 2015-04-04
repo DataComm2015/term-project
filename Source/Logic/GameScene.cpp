@@ -174,8 +174,8 @@ void GameScene::onLoad()
 	b5->toggleEnabled(true);
 	b6->toggleEnabled(true);
 
-	Manager::MusicManager::get(scat_music)->setVolume(60);
-	Manager::MusicManager::get(scat_music)->play();
+//	Manager::MusicManager::get(scat_music)->setVolume(60);
+//	Manager::MusicManager::get(scat_music)->play();
 }
 
 
