@@ -426,6 +426,8 @@ void GameScene::processEvents(sf::Event& e)
 		sf::Vector2f viewVector = viewMain.getCenter();
 		for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
 		{
+			(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
+								ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
 			//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
 			//current.play();
 		}

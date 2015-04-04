@@ -558,6 +558,7 @@ void ClientLobbyScene::updateMainView(sf::View& v)
 
 	//needs to be 3X scale eventually
 	 v.zoom(0.33);
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------

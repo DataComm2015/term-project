@@ -121,7 +121,7 @@ void Vessel::onUpdate()
 		; it != eventQueue->end()
 		; ++it )
 	{
-
+		std::cout << (*it)->type << std::endl;
 		// switch on type
 		switch((*it)->type)
 		{

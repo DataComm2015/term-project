@@ -43,6 +43,8 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 			msg.data = &msgAttk;
 			msg.len = sizeof(AttackMessage);
 			msgAttk.srcid = static_cast<ServerNetworkController*>(e->getController())->getId();
+			msgAttk.srcx = e->left;
+			msgAttk.srcy = e->top;
 			msgAttk.action = normalAttack;
 			msgAttk.cellx = v.x;
 			msgAttk.celly = v.y;
