@@ -63,6 +63,12 @@ ServerGameScene::~ServerGameScene()
 
 void ServerGameScene::update(sf::Time time)
 {
+    auto entities = cMap->getEntities();
+    for ( auto it = entities.begin(); it != entities.end(); ++it)
+    {
+      (*it)->onUpdate();
+    }
+
     if (timer > 0)
     {
         for (int i = 0; i < enemyControllers.size(); i++)
@@ -146,9 +152,13 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     msg.len = sizeof(initData);
 
     // Create the enemy
-    ServerEnemyController *enemyController = new ServerEnemyController(behaviour);
+    ServerEnemyController *enemyController = new ServerEnemyController(behaviour, this);
     enemyControllers.push_back(enemyController);
-    enemies.push_back((Creature*)EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
+
+    Entity *entity = EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y);
+
+    enemies.push_back((Creature*)entity);
+    enemyController->setEntity(entity);
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
@@ -198,7 +208,10 @@ void ServerGameScene::createPlayers()
                 msg.len = sizeof(initData);
 
                 // create vessel, pass it server vessel controller too
-                Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
+                Vessel* e = static_cast<Vessel*>(EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont));
+
+                //Add player entities to the list of players
+                playerList.push_back(e);
 
                 // register the server controller with the player
                 msg.type = (int) ServerNetworkControllerClientNetworkControllerMsgType::FOLLOW_ME;
@@ -223,4 +236,9 @@ void ServerGameScene::createPlayers()
             }
         }
     }
+}
+
+std::vector<Vessel*> ServerGameScene::getPlayerList()
+{
+  return playerList;
 }

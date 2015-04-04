@@ -53,6 +53,9 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	movingDown = false;
 	attackPower = 0;
 
+	xPos = x;
+	yPos = y;
+
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -105,6 +108,10 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
+
+	static float newXSpeed = 0;
+	static float newYSpeed = 0;
+
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
@@ -118,38 +125,55 @@ void Vessel::onUpdate()
 				MoveEvent* ev = (MoveEvent*) (*it);
 				int xDir = ev->getXDir();
 				int yDir = ev->getYDir();
-
 				// set position to last known position on server to avoid
 				// sync problems across the clients
 				// printf("client x,y: %f %f\n", ev->getX(), ev->getY());
 				// Entity::aMove(ev->getX(), ev->getY(),false);
 				printf("general vessel x,y: %f %f\n", getEntity()->left, getEntity()->top);
-				movingLeft = (xDir < 0);
-				movingRight = (xDir > 0);
-				movingUp = (yDir < 0);
-				movingDown = (yDir > 0);
-			break;
+
+				if (yDir == -1)
+				{
+					newYSpeed -= ySpeed;
+					std::cout << "Vessel.cpp: moving up" << std::endl;
+				}
+				else if (yDir == 1)
+				{
+					newYSpeed += ySpeed;
+					std::cout << "Vessel.cpp: moving down" << std::endl;
+				}
+				else if (xDir == 1)
+				{
+					newXSpeed += xSpeed;
+					std::cout << "Vessel.cpp: moving right" << std::endl;
+				}
+				else if (xDir == -1)
+				{
+					newXSpeed -= xSpeed;
+					std::cout << "Vessel.cpp: moving left" << std::endl;
+				}
+
+				//old code - replaced with the if-else block above
+                //movingLeft = (xDir < 0);
+                //movingRight = (xDir > 0);
+                //movingUp = (yDir < 0);
+                //movingDown = (yDir > 0);
+				break;
 		}
 	}
 	getController()->clearEvents();
 
-	float newXSpeed = 0;
-	float newYSpeed = 0;
+	// if (movingLeft)
+  //       newXSpeed = -xSpeed;
+  //   else if (movingRight)
+  //       newXSpeed = xSpeed;
+	//
+  //   if (movingUp)
+  //       newYSpeed = -ySpeed;
+  //   else if (movingDown)
+  //       newYSpeed = ySpeed;
 
-	if (movingLeft)
-		newXSpeed = -xSpeed;
-	else if (movingRight)
-		newXSpeed = xSpeed;
 
-	if (movingUp)
-		newYSpeed = -ySpeed;
-	else if (movingDown)
-	  	newYSpeed = ySpeed;
-
-	if (isMoving())
-	{
-	  	Entity::rMove(newXSpeed, newYSpeed,false);
-	}
+  Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 /*---------
@@ -1031,4 +1055,14 @@ void Vessel::setAttack(int attack)
 Entity *Vessel::getEntity()
 {
     return this;
+}
+
+float Vessel::getYPosition()
+{
+	return xPos;
+}
+
+float Vessel::getXPosition()
+{
+	return yPos;
 }

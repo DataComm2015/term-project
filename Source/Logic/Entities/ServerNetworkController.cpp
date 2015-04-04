@@ -216,19 +216,19 @@ void ServerNetworkController::onUpdate(Message msg)
         }
         case PlayerCommandMsgType::STOP_MV_RIGHT_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(x,y,0,0,0);
+            MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_UP_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(x,y,0,0,0);
+            MoveEvent *event = new MoveEvent(0,1,0,1,0);
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_DOWN_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(x,y,0,0,0);
+            MoveEvent *event = new MoveEvent(0,-1,0,-1,0);
             addEvent(event);
             break;
         }

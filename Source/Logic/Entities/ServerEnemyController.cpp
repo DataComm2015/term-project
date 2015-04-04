@@ -5,14 +5,17 @@
 #include "../Event.h"
 #include "../../Engine/Entity.h"
 
+
 #include <cstdio>
 
 
-ServerEnemyController::ServerEnemyController(Behaviour *behaviour)
+ServerEnemyController::ServerEnemyController(Behaviour *behaviour, ServerGameScene* sgs)
     : ServerNetworkController()
     , behaviour(behaviour)
 {
-    moving = false;
+  moving = false;
+
+  _servGameScene = sgs;
 }
 
 ServerEnemyController::~ServerEnemyController()
@@ -27,20 +30,39 @@ void ServerEnemyController::init()
     }
 }
 
+
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
-
-    if (!moving)
+    if (_servGameScene && _currEntity)
     {
-        moving = true;
+      std::cout << "GateKeeper x: " << _currEntity->left << std::endl;
+      std::cout << "GateKeeper y: " << _currEntity->top << std::endl;
 
-        MoveEvent *event = new MoveEvent(getEntity()->left,getEntity()->top,-1,0,0);
-        addEvent(event);
+      for(int i = 0; i < _servGameScene->getPlayerList().size(); i++)
+      {
+          std::cout << "Vessel x: " << static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->left << std::endl;
+          std::cout << "Vessel y: " << static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->top << std::endl;
+
+          if (!moving)
+          {
+            moving = true;
+
+            MoveEvent *event = new MoveEvent(0, 0, 0, 0, 0);
+            addEvent(event);
+          }
+
+      }
+
     }
-    //*/
 
     if (behaviour)
     {
         behaviour->update(deltaTime);
     }
+}
+
+
+void ServerEnemyController::setEntity(Entity* e)
+{
+  _currEntity = e;
 }

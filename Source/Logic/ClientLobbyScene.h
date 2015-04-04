@@ -24,7 +24,10 @@
 #define CLASS_BTN_HEIGHT 49
 
 #define CLASS_BTN_WIDTH_B 52
-#define CLASS_BTN_HEIGHT_B 52
+#define CLASS_BTN_HEIGHT_B 53
+
+#define BACK_BTN_WIDTH 48
+#define BACK_BTN_HEIGHT 17
 
 /*
 *   This is the Lobby scene.
@@ -60,11 +63,14 @@ class ClientLobbyScene : public Scene
         sf::View viewMain;
         Renderer renderer;
 
+        double height;
+        double cur_movement;
+        double speed;
+        double total_movement;
+        double height_mov;
+
         SGO *background;
         id_resource backgroundImg;
-
-        GUI::Button *easterEggBtn;
-        id_resource easterEggImg;
 
         id_resource circle;
         GUI::TextBox * countdownBox;
@@ -77,7 +83,19 @@ class ClientLobbyScene : public Scene
 
         SGO *vesselOneSGO;
         SGO *vesselTwoSGO;
-        SGO *easterEggSGO;
+
+        SGO *deityOneSGO;
+        SGO *deityTwoSGO;
+
+        SGO *playerTwoSGO;
+        SGO *playerThreeSGO;
+        SGO *playerFourSGO;
+
+        SGO *playerTwoShadowSGO;
+        SGO *playerThreeShadowSGO;
+        SGO *playerFourShadowSGO;
+
+        SGO *vesselShadowSGO;
 
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;
@@ -90,11 +108,18 @@ class ClientLobbyScene : public Scene
         id_resource vesselOneArt;
         id_resource vesselTwoArt;
 
+        id_resource otherPlayerArt;
+
         id_resource vesselOneImg;
         id_resource vesselTwoImg;
 
         id_resource deityOneImg;
         id_resource deityTwoImg;
+
+        id_resource deityOneArt;
+        id_resource deityTwoArt;
+
+        id_resource vesselShadowImg;
 
         id_resource leaveImg;
 
