@@ -17,8 +17,6 @@ using Networking::Client;
 
 int main(int argc, char* argv[])
 {
-    Manager::ProjectileManager::setServer(false);
-	
     // force the entity factory to create their graphics on the main thread
     EntityFactory::getInstance();
 

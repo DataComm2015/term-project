@@ -30,6 +30,8 @@ Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, SGO &sprite,
 {
 	sf::Vector2f v(event.getDestX(), event.getDestY());
 	Marx::Action *action = actionList[event.getAction()];
+	
+
 
 	return Manager::ProjectileManager::getProjectile(sprite, getEntity()->getMap(), x, y, action, v, 1.0, 1.0);
 }

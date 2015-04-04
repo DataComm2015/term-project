@@ -33,8 +33,9 @@ int main( int argc, char ** argv )
         fflush(stdout);
     }
 
-    Manager::ProjectileManager::setServer(true);
     ServerCommand server;
+    Manager::ProjectileManager::setServer(&server);
+
 
     server.startServer(atoi(argv[1]));
     run(&server);

@@ -63,7 +63,7 @@ void CommandEntity::onKeyPressed(int key)
 
 	// put the command into a message to be sent over the network
     Message msg;
-    
+
 
     switch(key)
     {
@@ -146,7 +146,7 @@ void CommandEntity::onMouseClick(int key, int srcid, enum ActionType action, flo
 		}
     }
 
-  	
+
     // send the command over the network
     update(msg);
 }
@@ -186,7 +186,7 @@ void CommandEntity::onKeyReleased(int key)
 }
 
 void CommandEntity::onRegister(Session *session)
-{    
+{
     fprintf(stdout, "THIS: %s\n", clientmux->message.data);
     fflush(stdout);
     update(clientmux->message);

@@ -31,6 +31,11 @@
 #include "../Logic/Entities/ClientNetworkController.h"
 #include <SFML/System/Vector2.hpp>
 
+#include "../Logic/ServerCommand.h"
+#include "../Network/Message.h"
+#include "../Logic/Event.h"
+#include "../Logic/Entities/ServerGameState.h"
+
 namespace Marx
 {
 	class Projectile;
@@ -42,13 +47,13 @@ namespace Manager
 	{
 		private:
 			static std::set<Marx::Projectile*> projectile_pool;
+			static ServerCommand * SERVER;
 		public:
-			static bool SERVER;
 			static Marx::Projectile* getProjectile(SGO &, Marx::Map *,  float, float, Marx::Action *, sf::Vector2f &, float, float);
 			static void enqueue(Marx::Projectile*);
 			static void dequeue(Marx::Projectile*);
-			static void setServer(bool serv);
-			static bool getServer();
+			static void setServer(ServerCommand *);
+			static ServerCommand * getServer();
 
 	};
 };

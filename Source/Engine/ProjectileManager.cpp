@@ -1,7 +1,7 @@
 #include "ProjectileManager.h"
 
 std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
-bool Manager::ProjectileManager::SERVER = true;
+ServerCommand * Manager::ProjectileManager::SERVER = nullptr;
 
 using namespace Manager;
 
@@ -26,21 +26,36 @@ using namespace Manager;
 Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  float x, float y, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0)
 {
-	Marx::Projectile *temp;
-	Marx::Controller * cont;
+	Marx::Projectile * temp;
+
+
 	if (projectile_pool.size() <= 0)
 	{
 		if( SERVER )
 		{
+			ServerNetworkController * cont;
+
+			Message msg;
+			AttackMessage msgAttk;
+
+			msg.type = Marx::ATTACK;
+			msg.data = &msgAttk;
+			msg.len = sizeof(AttackMessage);
+			/*
+			msgAttk.srcid = srcid;
+			msgAttk.action = action;
+			msgAttk.cellx = xpos;
+			msgAttk.celly = ypos;
+
+			msg->add
+			*/
 			cont = new ServerNetworkController();
-		}
-		else
-		{
-			// TODO: Ask Eric about how to get this ID here.
-			cont = new ClientNetworkController(0);
+			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
+
+			return new Marx::Projectile(_sprite, map, x, y, action, v, cont, h, w);
 		}
 
-		return new Marx::Projectile(_sprite, map, x, y, action, v, cont, h, w);
+
 	} else
 	{
 		temp = *projectile_pool.begin();
@@ -54,7 +69,7 @@ getProjectile(SGO &_sprite, Marx::Map *map,  float x, float y, Marx::Action *act
 }
 
 void ProjectileManager::
-enqueue(Marx::Projectile* projectile)
+enqueue(Marx::Projectile * projectile)
 {
 	projectile_pool.insert(projectile);
 }
@@ -66,12 +81,12 @@ dequeue(Marx::Projectile* projectile)
 }
 
 void ProjectileManager::
-	setServer(bool serv)
+	setServer(ServerCommand * serv)
 {
 	SERVER = serv;
 }
 
-bool ProjectileManager::
+ServerCommand * ProjectileManager::
 	getServer()
 {
 	return SERVER;
