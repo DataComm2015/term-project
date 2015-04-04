@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <cstdlib>
+#include <set>
 #include <iostream>
 #include "EnemyHierarchy.h"
 #include "../EntityFactory.h"
@@ -13,6 +14,7 @@ using std::endl;
 using std::string;
 using std::max;
 using std::vector;
+using std::set;
 
 using namespace Marx;
 
@@ -50,6 +52,7 @@ GameMap::GameMap(Map *cMap)
 	height = cMap->getHeight();
 	bWidth = 0;
 	bHeight = 0;
+	generated = false;
 }
 
 
@@ -105,6 +108,12 @@ GameMap::~GameMap()
 ******************************************************************************/
 bool GameMap::generateMap(int seed, ServerGameScene *gs)
 {
+	if (generated)
+	{
+		cleanMap();
+		generated = false;
+	}
+
     srand(seed);
     gameScene = gs;
 
@@ -149,7 +158,61 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 		generateTiles();
 	}
 
+	generated = true;
+
 	return true;
+}
+
+
+/******************************************************************************
+*	FUNCTION: cleanMap
+*
+*	DATE: April 3, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: void cleanMap();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function removes all entities from the game map so that it can
+*		be regenerated.
+******************************************************************************/
+void GameMap::cleanMap()
+{
+	Cell *tempCell;
+
+	// Delete all entities
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			tempCell = cellMap->getCell(j, i);
+
+			// Retrieve the entities of the cell
+			set<Entity*> entities = tempCell->getEntity();
+
+			set<Entity*>::iterator it;
+			for (it = entities.begin(); it != entities.end(); it++)
+			{
+				// Move entities to an unused cell
+				(*it)->aMove(0, 0, false);
+
+				// Delete all entities
+				//delete (*it)->getController();
+				
+				//delete *it;
+			}
+		}
+	}
 }
 
 
