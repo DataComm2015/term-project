@@ -2,7 +2,7 @@
 #define _SERVER_ENEMY_CONTROLLER_H_
 
 #define THRESHOLD 0
-#define AGGRO_RADIUS 10
+#define AGGRO_RADIUS 30
 
 #include "ServerNetworkController.h"
 #include "../Artificial Intelligence/Behaviour.h"

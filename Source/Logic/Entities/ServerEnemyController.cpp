@@ -32,15 +32,6 @@ void ServerEnemyController::init()
 
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
-    static float time = 0.05;
-
-
-  //  time -= deltaTime;
-
-  //  if (time > 0)
-    //  return;
-
-//    time = 0.01;
 
     float vessel_X;
     float vessel_Y;
@@ -57,7 +48,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
         if ((targetVessel = detectVessels()) == NULL)
         {
-          event = new MoveEvent(0, 0, 0, 0  , 0);
+          event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
           addEvent(event);
           return;
         }
@@ -105,7 +96,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
           prevX = xDirection;
           prevY = yDirection;
 
-          event = new MoveEvent(0, 0, xDirection, yDirection, 0);
+          event = new MoveEvent(gk_X, gk_Y, xDirection, yDirection, 0);
           addEvent(event);
         }
 

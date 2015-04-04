@@ -68,6 +68,8 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
       int xDir = ev->getXDir();
       int yDir = ev->getYDir();
 
+      Entity::aMove(ev->getX(), ev->getY(), false);
+
       if (yDir < 0)
       {
         newYSpeed = -_ySpeed;
