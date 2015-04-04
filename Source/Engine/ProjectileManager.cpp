@@ -1,4 +1,5 @@
 #include "ProjectileManager.h"
+#include <iostream>
 
 std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
 ServerCommand * Manager::ProjectileManager::SERVER = nullptr;
@@ -24,7 +25,7 @@ using namespace Manager;
 -- handle this function.
 -- ---------------------------------------------------------------------------*/
 Marx::Projectile* ProjectileManager::
-getProjectile(SGO &_sprite, Marx::Map *map,  float x, float y, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0)
+getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0)
 {
 	Marx::Projectile * temp;
 
@@ -41,26 +42,26 @@ getProjectile(SGO &_sprite, Marx::Map *map,  float x, float y, Marx::Action *act
 			msg.type = Marx::ATTACK;
 			msg.data = &msgAttk;
 			msg.len = sizeof(AttackMessage);
-			/*
-			msgAttk.srcid = srcid;
-			msgAttk.action = action;
-			msgAttk.cellx = xpos;
-			msgAttk.celly = ypos;
+			msgAttk.srcid = static_cast<ServerNetworkController*>(e->getController())->getId();
+			msgAttk.action = normalAttack;
+			msgAttk.cellx = v.x;
+			msgAttk.celly = v.y;
 
-			msg->add
-			*/
+			std::cout << "Made Attack" << std::endl;
+
 			cont = new ServerNetworkController();
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
 
-			return new Marx::Projectile(_sprite, map, x, y, action, v, cont, h, w);
+			return new Marx::Projectile(_sprite, map, e->left, e->top, action, v, cont, h, w);
 		}
 
 
-	} else
+	}
+	else
 	{
 		temp = *projectile_pool.begin();
 		temp->setSprite(_sprite);
-		temp->setCurrentPos(x, y);
+		temp->setCurrentPos(e->left, e->top);
 		temp->setAct(action);
 		temp->setTarget(v);
 		projectile_pool.erase(*projectile_pool.begin());

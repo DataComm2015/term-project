@@ -31,8 +31,11 @@
 #include <set>
 #include <cmath>
 
+
 namespace Marx
 {
+	class Controller;
+
 	class Entity : public sf::FloatRect, public BGO
 	{
 	public:

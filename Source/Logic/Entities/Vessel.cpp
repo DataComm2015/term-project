@@ -132,16 +132,15 @@ void Vessel::onUpdate()
 			}
 			case ::Marx::ATTACK:
 			{
-
 				AttackEvent* aev = (AttackEvent*) (*it);
-
+				std::cout << "ATTACK" << std::endl;
 				createAttack(*aev, atk_sprite, left, top);
 			}
 			case ::Marx::SK_ATTACK:
 			{
 
 				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-
+				std::cout << "ATTACK" << std::endl;
 				createSkAttack(*saev, satk_sprite, left, top);
 			}
 		}

@@ -144,10 +144,12 @@ void ServerNetworkController::sendEventMessage(Event *event)
             update(message);
             break;
     	}
-		case ::Marx::ATTACK:
+        case ::Marx::ATTACK:
 		{
 			// cast event to event subclass
 			AttackEvent *ae = (AttackEvent*) event;
+
+
 
 			// parse attack event into move message
 			AttackMessage am;
@@ -155,7 +157,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 			am.action	= ae->getAction();
 			am.cellx	= ae->getCellX();
 			am.celly	= ae->getCellY();
-			
+
 			// message to be sent over the network
 			Message message;
 			message.data = &am;
@@ -177,7 +179,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 			am.action	= ae->getAction();
 			am.destx	= ae->getDestX();
 			am.desty	= ae->getDestY();
-			
+
 			// message to be sent over the network
 			Message message;
 			message.data = &am;
@@ -270,6 +272,7 @@ void ServerNetworkController::onUpdate(Message msg)
         }
 		case PlayerCommandMsgType::START_ATT_COMMAND:
 		{
+            printf("Starting attack");
 			AttackMessage *mesg = (AttackMessage*) msg.data;
 			AttackEvent *aevent = new AttackEvent(mesg->srcid, mesg->action, mesg->cellx, mesg->celly);
 			addEvent(aevent);
@@ -277,11 +280,16 @@ void ServerNetworkController::onUpdate(Message msg)
 		}
 		case PlayerCommandMsgType::START_SK_ATT_COMMAND:
 		{
+            printf("Starting attack");
 			SkillAttackMessage *smesg = (SkillAttackMessage*) msg.data;
 			SkillAttackEvent *saevent = new SkillAttackEvent(smesg->srcid, smesg->action, smesg->destx, smesg->desty);
 			addEvent(saevent);
 			break;
 		}
+        default:
+        	printf("\r\nWARNING: NetworkController::sendEventMessage received an "
+            	"unknown event type. please add new case to switch statement\r\n");
+        	fflush(stdout);
+        	break;
     }
 }
-
