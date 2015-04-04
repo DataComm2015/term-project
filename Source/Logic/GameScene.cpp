@@ -247,7 +247,6 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
-
 	// static int listEntity = 100;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
@@ -260,15 +259,6 @@ void GameScene::update(sf::Time t)
 		viewMain.setCenter(
 			myVessel->getGlobalTransform().transformPoint(0,0)
 			);
-
-		std::cout << std::endl << "localtrans: ";
-		const float * myTrans = myVessel->getLocalTransform().getMatrix();
-		for (unsigned myT = 0; myT < 16; ++myT)
-		{
-			if (myT % 4 == 0) std::cout << std::endl;
-			std::cout << myTrans[myT] << "\t\t";
-		}
-		std::cout << std::endl;
 
 		sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
 		std::cout << "mouse : " << mousePos.x << ", " << mousePos.y << std::endl;
@@ -316,7 +306,7 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x-45, viewMain.getCenter().y-45, 0);
+	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
 
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*

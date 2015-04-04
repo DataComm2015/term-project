@@ -13,9 +13,8 @@ class TGO;
 namespace Marx
 {
 	class Map;
+	class VEntity;
 }
-
-// @TODO : Make Renderer have a dynamic buffer
 
 class Renderer
 {
@@ -39,6 +38,7 @@ public:
 	void draw(const SGO& sgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const TGO& tgo, sf::RenderStates states = sf::RenderStates::Default);
 	void draw(const Marx::Map& map, sf::RenderStates states = sf::RenderStates::Default);
+	void draw(const Marx::VEntity& ve, sf::RenderStates states = sf::RenderStates::Default);
 
 	sf::RenderStates states;
 
