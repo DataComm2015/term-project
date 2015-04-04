@@ -32,6 +32,7 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
         virtual ~ClientMux();
         virtual NetworkEntity* onRegister(int id, int entityType,
             Session* session, Message msg);
+        CommandEntity* getCommandEntity();
         void shutdown();
     private:
         /**

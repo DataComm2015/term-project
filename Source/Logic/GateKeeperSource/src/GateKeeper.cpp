@@ -45,10 +45,10 @@ GateKeeper::~GateKeeper()
 
 void GateKeeper::onUpdate()
 {
-  static float newXSpeed = 0;
-  static float newYSpeed = 0;
+  float newXSpeed = 0;
+  float newYSpeed = 0;
 
-  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
+//  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
 std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
@@ -57,52 +57,25 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 {
 
   // switch on type
-  switch((*it)->type)
-  {
-    case ::Marx::MOVE:
-        MoveEvent* ev = (MoveEvent*) (*it);
-        int xDir = ev->getXDir();
-        int yDir = ev->getYDir();
+	switch((*it)->type)
+	{
+		case ::Marx::MOVE:
+			MoveEvent* ev = (MoveEvent*) (*it);
+              int xDir = ev->getXDir();
+              int yDir = ev->getYDir();
 
-        if (yDir == -1)
-        {
-          newYSpeed -= _ySpeed;
-          std::cout << "GateKeeper.cpp: moving up" << std::endl;
-        }
-        else if (yDir == 1)
-        {
-          newYSpeed += _ySpeed;
-          std::cout << "GateKeeper.cpp: moving down" << std::endl;
-        }
-        else if (xDir == 1)
-        {
-          newXSpeed += _xSpeed;
-          std::cout << "GateKeeper.cpp: moving right" << std::endl;
-        }
-        else if (xDir == -1)
-        {
-          newXSpeed -= _xSpeed;
-          std::cout << "GateKeeper.cpp: moving left" << std::endl;
-        }
+              newXSpeed = ((float)xDir/10.0);
+              newYSpeed = ((float)yDir/10.0);
+			break;
+	}
 
-
-        break;
-  }
 }
 getController()->clearEvents();
 
-// if (movingLeft)
-//       newXSpeed = -xSpeed;
-//   else if (movingRight)
-//       newXSpeed = xSpeed;
-//
-//   if (movingUp)
-//       newYSpeed = -ySpeed;
-//   else if (movingDown)
-//       newYSpeed = ySpeed;
+
+Entity::rMove(newXSpeed, newYSpeed,false);
 
 
-  Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 bool GateKeeper::isMoving()
