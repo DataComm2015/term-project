@@ -44,6 +44,10 @@ GateKeeper::~GateKeeper()
 
 }
 
+/***
+-- PROGRAMMER:  ???
+--				Sanders Lee (Debugged synchronization problem across clients)
+***/
 void GateKeeper::onUpdate()
 {
     static float newXSpeed = 0;

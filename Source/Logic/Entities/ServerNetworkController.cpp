@@ -109,6 +109,7 @@ void ServerNetworkController::addEvent(Event *event)
 -- DESIGNER:        Eric Tsang
 --
 -- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--                  Sanders Lee (Debugged synchronization problem across clients)
 --
 -- INTERFACE:       void ServerNetworkController::sendEventMessage(Event *event)
 --
@@ -164,6 +165,8 @@ void ServerNetworkController::sendEventMessage(Event *event)
 -- DESIGNER:        Eric Tsang
 --
 -- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--		            Sanders Lee (Debugged synchronization problem across clients)
+--
 --
 -- INTERFACE:       void ServerNetworkController::onUpdate(Message msg)
 --                  msg - message received from the update
