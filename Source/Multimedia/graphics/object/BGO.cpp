@@ -227,7 +227,7 @@ const sf::Transform& BGO::getLocalTransform() const
 
 const sf::Transform& BGO::getGlobalTransform() const
 {
-	return m_sgtrans;
+	return m_globaltrans;
 }
 
 /**
@@ -275,7 +275,7 @@ void BGO::update(const sf::Time& t)
 /**
  * Draws this game object's children and itself.
  *
- * @date       2015-02-25
+ * @date       2015-04-03
  *
  * @revisions
  *
@@ -291,11 +291,11 @@ void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
 	// Draw self
 	draw(renderer, states);
 
-	// Combine transformations (caller's + mine)
+	// Combine transforms (caller's + mine)
 	states.transform *= getLocalTransform();
 
-	// cache scene graph transformations
-	m_sgtrans = states.transform;
+	// cache global transform
+	m_globaltrans = states.transform;
 
 	// Draw children
 	if (hasChildren())

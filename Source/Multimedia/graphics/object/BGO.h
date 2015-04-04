@@ -45,7 +45,7 @@ private:
 	id_go m_id;
 	bool m_ignoringChildren;
 
-	mutable sf::Transform m_sgtrans;
+	mutable sf::Transform m_globaltrans;
 };
 
 #endif // BGO_H

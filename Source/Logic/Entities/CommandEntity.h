@@ -37,6 +37,7 @@ class CommandEntity : public NetworkEntity, public KeyListener, public ClickList
         ~CommandEntity();
 
         PLAYER_MODE getPlayerMode();
+        PlayerLobbyChoices* getLobbyOption();
         void notifyServerLobbySelections(PlayerLobbyChoices *selections);
 
     protected:
@@ -48,10 +49,10 @@ class CommandEntity : public NetworkEntity, public KeyListener, public ClickList
         virtual void onUpdate(Message message);
 
     private:
+        PlayerLobbyChoices *PLC;
         ClientMux* clientmux;
         GameScene* _gameScene;
         PLAYER_MODE playerMode;
 };
 
 #endif
-
