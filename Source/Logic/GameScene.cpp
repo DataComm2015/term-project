@@ -85,8 +85,8 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
 	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
-	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
-	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
+	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
+	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
 	placeholderSprite = Manager::TextureManager::store(
 		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
 		);
@@ -228,7 +228,7 @@ void GameScene::unLoad()
 	b5->toggleEnabled(false);
 	b6->toggleEnabled(false);
 
-	Manager::MusicManager::get(scat_music)->stop();
+	//Manager::MusicManager::get(scat_music)->stop();
 }
 
 
@@ -424,8 +424,8 @@ void GameScene::processEvents(sf::Event& e)
 	{
 		if (e.mouseButton.button == sf::Mouse::Left)
 		{
-			current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
-			current.play();
+			//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+			//current.play();
 		}
 	}
 
