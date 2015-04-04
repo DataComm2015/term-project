@@ -30,9 +30,6 @@
 #define CLASS_BTN_WIDTH 48
 #define CLASS_BTN_HEIGHT 49
 
-#define WIDE_BUTTONS_W 64
-#define WIDE_BUTTONS_H 31
-
 class GameScene;
 class ClientLobbyScene;
 class ClientScoreboardScene;
@@ -65,6 +62,8 @@ class MainMenuScene : public Scene
         sf::View viewMain;
         Renderer renderer;
 
+        char* name_sent;
+
         SGO *background;
         SGO *serverTextBackground;
         SGO *portTextBackground;
@@ -85,6 +84,7 @@ class MainMenuScene : public Scene
         GUI::Label * nicknameLbl;
 
         GUI::TextBox * textBoxes[ TEXT_BOXES ];
+        GUI::TextBox * connectFailedText;
         int curTextBox;
 
         GUI::Button * connectBtn;
@@ -93,22 +93,32 @@ class MainMenuScene : public Scene
         GUI::Button * creditBtn;
         id_resource creditImg;
 
+        const float FONT_SCALE = 0.7;
+        const float FONT_OFFSET = 1 + ((1 - FONT_SCALE) * 1/2);
+
         const int SCN_WIDTH = 1366;
         const int SCN_HEIGHT = 768;
-        const int TEXT_W = 300;
-        const int TEXT_H = 30;
-        const int TEXT_BOX_W = 310;
-        const int TEXT_BOX_H = 40;
+        const int TEXT_W = 148;
+        const int TEXT_H = 24;
+        const int TEXT_BOX_W = 152;
+        const int TEXT_BOX_H = 26;
 
-        int textw = SCN_WIDTH/2  - TEXT_W/2;
-        int text1_h = SCN_HEIGHT/3 + 100 + 50;
-        int text2_h = SCN_HEIGHT/3 + 100 + 50 * 2;
-        int text3_h = SCN_HEIGHT/3 + 100 + 50 * 3;
+        const int WIDE_BUTTONS_W = 64;
+        const int WIDE_BUTTONS_H = 31;
 
-        int text_b_w = SCN_WIDTH/2  - TEXT_BOX_W/2;
-        int text1_b_h = (SCN_HEIGHT/3 + 100 + 50) -5;
-        int text2_b_h = (SCN_HEIGHT/3 + 100 + 50 * 2)-5;
-        int text3_b_h = (SCN_HEIGHT/3 + 100 + 50 * 3)-5;
+        const int textw = SCN_WIDTH/2 + 114  - TEXT_W/2;
+        const int text1_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*1;
+        const int text2_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*2;
+        const int text3_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*3;
+
+        const int text_b_w = SCN_WIDTH/2 + 114 - TEXT_BOX_W/2;
+        const int text1_b_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*1;
+        const int text2_b_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*2;
+        const int text3_b_h = SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*3;
+
+        static bool connectFailed;
+
+        const char* connectFailErr = "FAILED TO CONNECT";
 
 };
 void nextTextBox( void * data );

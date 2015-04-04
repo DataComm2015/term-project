@@ -65,9 +65,14 @@ void CreditScene::update(sf::Time t)
 {
     backBtn->update(t);
 
-    if(creditText->sprite().getPosition().y > -2500)
+    if(creditText->sprite().getPosition().y > -2500 )
     {
         creditText->sprite().move(0, -t.asSeconds() * 100);
+    }
+    else
+    {
+      cout << "HELLO" << endl;
+      CreditScene::onClick();
     }
 }
 
@@ -83,18 +88,18 @@ void CreditScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
 
-    window.clear(sf::Color::Blue);
+    window.clear();
 
     window.setView(viewMain);
 
     renderer.begin();
 
-    renderer.draw( background, true );
+    renderer.draw( background );
 
     // draw the objects
-    renderer.draw( creditText, true);
+    renderer.draw( creditText );
 
-    renderer.draw( backBtn );
+    //renderer.draw( backBtn );
 
     renderer.end();
 
@@ -106,9 +111,6 @@ void CreditScene::onClick()
     AppWindow::getInstance().removeScene(1);
 
     AppWindow::getInstance().addScene(CreditScene::getInstance()->mainmenu);
-
-    AppWindow::getInstance().run();
-
 }
 
 void CreditScene::updateMainView(sf::View& v)

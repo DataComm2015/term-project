@@ -13,6 +13,7 @@
 
 #include "../Network/Client.h"
 #include "Entities/ClientMux.h"
+#include "../GameSettings.h"
 
 #define SCREEN_WIDTH 1366
 #define SCREEN_HEIGHT 768
@@ -20,12 +21,17 @@
 #define SCORE_ROWS 13 // max players + 1
 #define SCORE_COLS  3 // name, (deity or vessel), score
 
-#define SCORE_X  200 // starting position for the scoreboard
-#define SCORE_Y  20  // starting position for the scoreboard
-#define OFFSET_X 100 // offset for each col in the scoreboard
-#define OFFSET_Y 20 // offset for eacg row in the scoreboard
+#define SCORE_X  220 // starting position for the scoreboard
+#define SCORE_Y  80  // starting position for the scoreboard
+#define OFFSET_X 150 // offset for each col in the scoreboard
+#define OFFSET_Y 20 // offset for each row in the scoreboard
 
-#define TEXTBOX_SCALE 1
+#define C_BOX_X 65
+#define C_BOX_Y 30
+
+#define SCALE 0.8
+
+#define SCORE_COUNTDOWN 10
 
 /*
 *   This is the Lobby scene.
@@ -33,6 +39,8 @@
 class ClientScoreboardScene : public Scene
 {
     public:
+
+        Player* data_received;
 
         ClientScoreboardScene();
         virtual void update(sf::Time);
@@ -45,6 +53,8 @@ class ClientScoreboardScene : public Scene
         
         static ClientScoreboardScene * getInstance();
 
+        void setScoreboard(Player* players);
+
     private:
 
         sf::View viewMain;
@@ -55,7 +65,6 @@ class ClientScoreboardScene : public Scene
 
         GUI::TextBox scoreboard[SCORE_ROWS][SCORE_COLS];
 
-        static sf::Clock clock;
         static float currentTime;
 
         GameScene * gameScene;

@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <iostream>
 #include "EnemyHierarchy.h"
+#include "../EntityFactory.h"
+#include "../Entities/Structure.h"
 
 using std::cout;
 using std::endl;
@@ -127,15 +129,19 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 
 		// Place mini-bosses
 	    generateMiniBosses();
+	}
 
-		// Define placeholder blocks
-		generatePlaceholderBlocks();
+	// Define placeholder blocks
+	generatePlaceholderBlocks();
 
+	if (gameScene != NULL)
+	{
 		// Generate enemies
 		generateEnemies();
 	}
 
 	// Generate miscellaneous objects
+	generateStructures();
 
 	// Generate tiles
 	if (gameScene == NULL)
@@ -433,10 +439,10 @@ void GameMap::generateEnemies()
 		for (int j = 0; j < bWidth; j++)
 		{
 			// If this block is an enemies block
-			if (blockMap[j][i].getType() == ENEMIES)
+			if (blockMap[i][j].getType() == ENEMIES)
 			{
 				int size = (rand() % MAX_ENEMY_GROUP) + MIN_ENEMY_GROUP;
-				createEnemyGroup(&blockMap[j][i], blockMap[j][i].getZone(), size);
+				createEnemyGroup(&blockMap[i][j], blockMap[i][j].getZone(), size);
 			}
 		}
 	}
@@ -473,6 +479,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 {
 	EnemyHierarchy *eh = EnemyHierarchy::getInstance();
 	string enemy;
+	Cell *cell;
 
 	switch(z)
 	{
@@ -487,9 +494,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 
 						int xPos = block->getRandomCell()->getX();
 						int yPos = block->getRandomCell()->getY();
@@ -502,9 +511,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "grass/lost_grass/air_grass");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 					}
 
 					break;
@@ -525,9 +536,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "stone/lost_stone/ground_stone");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 					}
 
 					break;
@@ -537,9 +550,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "stone/lost_stone/air_stone");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 					}
 
 					break;
@@ -612,6 +627,55 @@ void GameMap::getVesselPosition(int vesselNum, int *xPos, int *yPos)
 				*yPos = tempCell->getY();
 
 				return;
+			}
+		}
+	}
+}
+
+
+/******************************************************************************
+*   FUNCTION: generateStructures
+*
+*   DATE: April 1, 2015
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: Chris Klassen
+*
+*   PROGRAMMER: Chris Klassen
+*
+*   INTERFACE: void generateStructures();
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+*		This function creates structures on the map.
+******************************************************************************/
+void GameMap::generateStructures()
+{
+	EntityFactory *ef = EntityFactory::getInstance();
+	Cell *destCell;
+
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			// If this block is a structures block
+			if (blockMap[i][j].getType() == STRUCTURE)
+			{
+				// Determine the number of structures to generate
+				int numStructs = (rand() % MAX_STRUCTURE_GROUP) + MIN_STRUCTURE_GROUP;
+
+				for (int k = 0; k < numStructs; k++)
+				{
+					// Get the destination cell
+					destCell = blockMap[i][j].getRandomCell();
+
+					// Place the structure
+					ef->makeEntity(STRUCTURES, NULL, cellMap, destCell->getX(), destCell->getY());
+				}
 			}
 		}
 	}

@@ -13,6 +13,7 @@
  */
 
 #include "SGO.h"
+#include <iostream>
 
 #include "../Renderer.h"
 

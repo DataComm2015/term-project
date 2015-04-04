@@ -1,6 +1,12 @@
 #include <iostream>
 #include "Vessel.h"
 #include "../Event.h"
+
+//TO DO:
+//1) GIVE IT A SPRITE
+//2) MAKE THE SPRITE ANIMATE
+//3) DIAGONAL MODEMENT
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel constructor
 --
@@ -22,7 +28,7 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( SGO &_sprite,
+Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	Marx::Map * gmap,
 	float x,
 	float y,
@@ -30,7 +36,9 @@ Vessel::Vessel( SGO &_sprite,
 	float height,
 	float width
 	/*, job_class jobClass, Ability* abilityList*/ )
-			: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 )
+			: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+			mask_sprite(_mask),
+			weapon_sprite(_weapon)
 			//,_controller(controller)
 {
 
@@ -44,6 +52,10 @@ Vessel::Vessel( SGO &_sprite,
     movingUp = false;
     movingDown = false;
 	attackPower = 0;
+
+	xPos = x;
+	yPos = y;
+
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -82,6 +94,9 @@ Vessel::Vessel( SGO &_sprite,
 		travelSpeed = 42;
 		//weapon = BOWL_OF_LAKSA;
 	}*/
+	this->add(mask_sprite);
+	this->add(weapon_sprite);
+
 	std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
@@ -93,6 +108,10 @@ Vessel::Vessel( SGO &_sprite,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
+
+	static float newXSpeed = 0;
+	static float newYSpeed = 0;
+
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
@@ -107,34 +126,69 @@ void Vessel::onUpdate()
                 int xDir = ev->getXDir();
                 int yDir = ev->getYDir();
 
-                movingLeft = (xDir < 0);
-                movingRight = (xDir > 0);
-                movingUp = (yDir < 0);
-                movingDown = (yDir > 0);
+								if (yDir == -1)
+								{
+									newYSpeed -= ySpeed;
+									std::cout << "Vessel.cpp: moving up" << std::endl;
+								}
+								else if (yDir == 1)
+								{
+									newYSpeed += ySpeed;
+									std::cout << "Vessel.cpp: moving down" << std::endl;
+								}
+								else if (xDir == 1)
+								{
+									newXSpeed += xSpeed;
+									std::cout << "Vessel.cpp: moving right" << std::endl;
+								}
+								else if (xDir == -1)
+								{
+									newXSpeed -= xSpeed;
+									std::cout << "Vessel.cpp: moving left" << std::endl;
+								}
+
+								//old code - replaced with the if-else block above
+                //movingLeft = (xDir < 0);
+                //movingRight = (xDir > 0);
+                //movingUp = (yDir < 0);
+                //movingDown = (yDir > 0);
 				break;
 		}
 	}
 	getController()->clearEvents();
 
-    float newXSpeed = 0;
-    float newYSpeed = 0;
+	// if (movingLeft)
+  //       newXSpeed = -xSpeed;
+  //   else if (movingRight)
+  //       newXSpeed = xSpeed;
+	//
+  //   if (movingUp)
+  //       newYSpeed = -ySpeed;
+  //   else if (movingDown)
+  //       newYSpeed = ySpeed;
 
-	if (movingLeft)
-        newXSpeed = -xSpeed;
-    else if (movingRight)
-        newXSpeed = xSpeed;
 
-    if (movingUp)
-        newYSpeed = -ySpeed;
-    else if (movingDown)
-        newYSpeed = ySpeed;
-
-    if (isMoving())
-    {
-        Entity::rMove(newXSpeed, newYSpeed,false);
-    }
+  Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
+/*---------
+-- Calls the function to draw the body around, and handles the movement of the
+-- mask and weapon in Vessel.cpp
+--
+--------------*/
+/*
+void Vessel::draw(Renderer& renderer, sf::RenderStates states) const
+{
+	std::cout << "vessel's draw called" << std::endl;
+	VEntity::draw(renderer, states);
+	sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
+	states.transform.translate(left * tile->width, (top + height) * tile->height);
+
+	renderer.draw(mask_sprite, states);
+	renderer.draw(weapon_sprite, states);
+
+}
+*/
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel destructor
@@ -996,4 +1050,14 @@ void Vessel::setAttack(int attack)
 Entity *Vessel::getEntity()
 {
     return this;
+}
+
+float Vessel::getYPosition()
+{
+	return xPos;
+}
+
+float Vessel::getXPosition()
+{
+	return yPos;
 }

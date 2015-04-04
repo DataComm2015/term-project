@@ -25,6 +25,8 @@
 #include "../Engine/VEntity.h"
 #include "../Engine/EGTheSpinner.h"
 #include "Entities/Vessel.h"
+#include "../Logic/PlayerMode.h"
+
 
 #include "KeyListener.h"
 
@@ -54,7 +56,7 @@ class GameScene : public Scene
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
 
-        	void generateMap(int seed);
+  	void generateMap(int seed);
 		void generateWater();
 		void generateUI();
 		void positionUI();
@@ -81,12 +83,20 @@ class GameScene : public Scene
 		id_resource championSprite;
 		id_resource maskSprite;
 		id_resource wepSprite;
-		id_resource butSprite;
+
 		id_resource hbarSprite;
 		id_resource hbgSprite;
 		id_resource scat_music;
 		id_resource chick_sound;
 		id_resource placeholderSprite;
+
+
+		//buttons
+		id_resource butSprite;
+		id_resource demiseBtn;
+		id_resource vitalityBtn;
+		id_resource warriorBtn;
+		id_resource shamanBtn;
 
 		sf::Shader waveShader;
 		float phase;
@@ -116,6 +126,9 @@ class GameScene : public Scene
 		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
 		GUI::TextBox *levelInd;
+
+		PLAYER_MODE characterType;
+		int classType;
 };
 
 #endif
