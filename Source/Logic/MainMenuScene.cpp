@@ -89,9 +89,6 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     //background = new SGO(*Manager::TextureManager::get(backgroundImg));
     background->sprite().setScale(1, 1);
 
-    //background = new SGO(*Manager::TextureManager::get(backgroundImg));
-    background->sprite().setScale(2, 2);
-
 
     sf::Font *font = new sf::Font();
     font->loadFromFile("Assets/Fonts/hud.ttf");
@@ -239,23 +236,6 @@ void MainMenuScene::onLoad()
     textBoxes[ PORT_TXT ]->toggleSelected(false);
     textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
 
-    serverLbl             ->text().setPosition(textw/2+5 - 100, text1_h/2 - 3);
-    portLbl               ->text().setPosition(textw/2+5 - 100, text2_h/2 - 3);
-    nicknameLbl           ->text().setPosition(textw/2+5 - 100, text3_h/2 - 3);
-
-    textBoxes[ SERVER_TXT ]   ->text().setPosition(textw/2+5, text1_h/2 - 3);
-    textBoxes[ PORT_TXT ]     ->text().setPosition(textw/2+5, text2_h/2 - 3);
-    textBoxes[ NICKNAME_TXT ] ->text().setPosition(textw/2+5, text2_h/2 - 3);
-    connectFailedText         ->text().setPosition((SCN_WIDTH - sizeof(connectFailErr)/2) /4, (text2_h/2 - 3)* 1.2+ TEXT_BOX_H*2/3 );
-
-    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH * 1.5, SCN_HEIGHT*.75);
-    creditBtn->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH/2, SCN_HEIGHT*.75);
-
-    curTextBox = 0;
-    textBoxes[ SERVER_TXT ]->toggleSelected(true);
-    textBoxes[ PORT_TXT ]->toggleSelected(false);
-    textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
-
     /* Set the active view */
     updateMainView(viewMain);
 }
@@ -373,24 +353,6 @@ void MainMenuScene::draw()
       renderer.draw(connectFailedText);
     }
 
-    if(textBoxes[SERVER_TXT]->getSelected())
-    {
-      renderer.draw(*serverTextBackgroundBox);
-    }
-    if(textBoxes[PORT_TXT]->getSelected())
-    {
-      renderer.draw(*portTextBackgroundBox);
-    }
-    if(textBoxes[NICKNAME_TXT]->getSelected())
-    {
-      renderer.draw(*nicknameTextBackgroundBox);
-    }
-
-    if(connectFailed)
-    {
-      renderer.draw(*connectFailedText);
-    }
-
     for( int i = 0; i < TEXT_BOXES; ++i )
         renderer.draw( textBoxes[ i ] );
 
@@ -431,13 +393,6 @@ void MainMenuScene::onClick()
     if(port != 0 && 1) //TODO: add check for address filled in
     {
       char* nickname_text = (char *)MainMenuScene::getInstance()->textBoxes[ NICKNAME_TXT ]->getText().c_str();
-
-      MainMenuScene::getInstance()->clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
-      MainMenuScene::getInstance()->clientmux->message.len = strlen(nickname_text);
-      //clientmux->message.data = (char*)"TEST";
-      char* hello = new char[16];
-      memcpy(hello, nickname_text, strlen(nickname_text));
-      MainMenuScene::getInstance()->clientmux->message.data = hello;
 
       MainMenuScene::getInstance()->clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
       MainMenuScene::getInstance()->clientmux->message.len = strlen(nickname_text);

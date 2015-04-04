@@ -9,12 +9,12 @@ sprite(_sprite), Entity(_map, x, y, ctrl, h, w)
 {
 	setSprite(_sprite);
 	_map->add(*this);
+	drawable = true;
 }
 
 const sf::Transform& Marx::VEntity::getLocalTransform() const
 {
-	{
-		sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
+	sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
 	sf::Transform trans = sprite.sprite().getTransform();
 	return trans.translate(
 		left * tile->width + tile->width * 0.5, top * tile->height + tile->height
@@ -35,5 +35,6 @@ void Marx::VEntity::setSprite(SGO& _sprite)
 
 void Marx::VEntity::draw(Renderer& renderer, sf::RenderStates states) const
 {
-	renderer.draw(*this, states);
+	if(drawable)
+		renderer.draw(*this, states);
 }

@@ -4,6 +4,8 @@
 #include "EntityTypes.h"
 #include "Creature.h"
 
+#include "../Engine/AttackAction.h"
+
 #include "../Engine/Controller.h"
 #include "../Engine/TextureManager.h"
 
@@ -91,6 +93,19 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
     Message* msg,
     Controller* cont)
 {
+    if( msg->type == Marx::ATTACK )
+    {
+
+        AttackMessage * ms = (AttackMessage *) msg->data;
+
+        std::cout << "MAKE ME AN ATTACK" << std::endl;
+        sf::Vector2f v(ms->cellx, ms->celly);
+        Marx::AttackAction act(sf::seconds(10), 10.0f);
+        return new Marx::Projectile(maskSGO, cMap, ms->srcx, ms->srcy, &act, v, cont, 1.0, 1.0);
+
+    }
+    else
+    {
     // Parse Network Message
     EnemyControllerInit* init = (EnemyControllerInit*) msg->data;
 
@@ -99,8 +114,10 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
     // init->x     float
     // init->y     float
 
+
     // Create the enemy
     return EntityFactory::makeEntity(init->type,cont,cMap,init->x,init->y);
+}
 }
 
 
@@ -130,6 +147,9 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::MINION:
         case ENTITY_TYPES::MINI_BOSS:
 			break;
+        case PROJECTILE:
+            //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
+            break;
         default:
             entity = new ProperEntity(map,x,y,cont,1.0,1.0);
             break;

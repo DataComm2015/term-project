@@ -29,11 +29,11 @@ namespace Marx
 	{
 		public:
 			AttackAction(sf::Time, float);
-			virtual void onUpdate(sf::Time);
-			virtual void onHit(Entity * e );
+			virtual void onUpdate(Entity * me, sf::Time);
+			virtual void onHit(Entity * me, Entity * e );
 		private:
 			float damage;
-	}
+	};
 }
 
 #endif

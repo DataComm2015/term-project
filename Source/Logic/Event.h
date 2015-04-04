@@ -40,6 +40,8 @@ private:
 struct AttackMessage
 {
 	int srcid; // Entity id source
+    float srcx;
+    float srcy;
 	enum ActionType action; // Type of attack to take
 	int cellx; // Coordinates of the cell you're attacking.
 	int celly;
