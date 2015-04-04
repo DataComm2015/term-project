@@ -45,8 +45,7 @@ GateKeeper::~GateKeeper()
 
 void GateKeeper::onUpdate()
 {
-  static float newXSpeed = 0;
-  static float newYSpeed = 0;
+
 
 //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
@@ -81,6 +80,12 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
       {
         newXSpeed = -_xSpeed;
       }
+
+      if (xDir == 0)
+        newXSpeed = 0;
+
+      if (yDir == 0)
+        newYSpeed = 0;
 
       //old code - replaced with the if-else block above
       //movingLeft = (xDir < 0);

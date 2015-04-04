@@ -2,6 +2,7 @@
 #define _SERVER_ENEMY_CONTROLLER_H_
 
 #define THRESHOLD 0
+#define AGGRO_RADIUS 10
 
 #include "ServerNetworkController.h"
 #include "../Artificial Intelligence/Behaviour.h"
@@ -21,6 +22,8 @@ class ServerEnemyController : public ServerNetworkController
         void setEntity(Entity*);
         void init();
         void updateBehaviour(float deltaTime);
+        Vessel* detectVessels();
+        float getDistance(float, float, float, float);
 
     private:
         Behaviour *behaviour;
@@ -31,6 +34,7 @@ class ServerEnemyController : public ServerNetworkController
         int prevY = 0;
         int xDirection;
         int yDirection;
+        Vessel* targetVessel;
 };
 
 #endif

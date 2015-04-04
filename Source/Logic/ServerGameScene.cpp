@@ -119,7 +119,7 @@ void ServerGameScene::enterScene()
 	  gMap->generateMap(worldSeed, this);
 
     createPlayers();
-	  //createEnemy(BASIC_TYPE, NULL, 48, 48);
+	  createEnemy(BASIC_TYPE, NULL, 48, 48);
 }
 
 void ServerGameScene::leaveScene()
