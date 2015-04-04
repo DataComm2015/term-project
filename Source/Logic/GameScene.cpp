@@ -199,7 +199,7 @@ void GameScene::positionUI()
 	hb->sprite().setPosition(20, 20);
 
 	// position and scale level indicator
-	levelInd->text().move(14, 10);
+	levelInd->text().setPosition(14, 10);
 	levelInd->text().setScale(1.5, 1.5);
 }
 
@@ -258,7 +258,7 @@ void GameScene::update(sf::Time t)
 	if (myVessel != 0)
 	{
 		viewMain.setCenter(
-			(myVessel->getGlobalTransform()).transformPoint(myVessel->left * 32.0f,myVessel->top * 32.0f)
+			myVessel->getGlobalTransform().transformPoint(0,0)
 			);
 
 		std::cout << std::endl << "localtrans: ";
