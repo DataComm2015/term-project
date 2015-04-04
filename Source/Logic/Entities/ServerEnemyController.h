@@ -1,6 +1,8 @@
 #ifndef _SERVER_ENEMY_CONTROLLER_H_
 #define _SERVER_ENEMY_CONTROLLER_H_
 
+#define THRESHOLD 0
+
 #include "ServerNetworkController.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
@@ -25,6 +27,10 @@ class ServerEnemyController : public ServerNetworkController
         bool moving;
         Entity* _currEntity;
         ServerGameScene* _servGameScene;
+        int prevX = 0;
+        int prevY = 0;
+        int xDirection;
+        int yDirection;
 };
 
 #endif
