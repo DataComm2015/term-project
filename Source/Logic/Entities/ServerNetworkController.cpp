@@ -2,6 +2,7 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
+#include "../../Engine/Entity.h"
 #include <stdio.h>
 #include <cstring>
 
@@ -87,7 +88,7 @@ ServerNetworkController::~ServerNetworkController()
 --
 -- RETURNS:         void
 --
--- NOTES:           adds an even into the event queue, but since this is the
+-- NOTES:           adds an event into the event queue, but since this is the
 --                  server side, it will send the event to the clients first,
 --                  so that they can enqueue it into their own event queue, and
 --                  then the server enqueues the event into its event queue.
@@ -128,8 +129,11 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
             // parse move event into move message
             MoveMessage mm;
+            printf("server vessel x,y: %f %f\n", getEntity()->left, getEntity()->top);
             mm.x      = me->getX();
+                        //me->setX(getEntity()->left);
             mm.y      = me->getY();
+                        //me->setY(getEntity()->top);
             mm.xDir   = me->getXDir();
             mm.yDir   = me->getYDir();
             mm.forced = me->forced();
@@ -173,8 +177,10 @@ void ServerNetworkController::sendEventMessage(Event *event)
 ------------------------------------------------------------------------------*/
 void ServerNetworkController::onUpdate(Message msg)
 {
-    float x = ((MoveMessage *)(msg.data))->x;
-    float y = ((MoveMessage *)(msg.data))->y;
+    float x = //getEntity()->left;
+              ((MoveMessage*)msg.data)->x;
+    float y = //getEntity()->top;
+              ((MoveMessage*)msg.data)->y;
 
     switch((PlayerCommandMsgType)msg.type)
     {

@@ -3,6 +3,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
+#include "../../Engine/Entity.h"
 
 #include <cstdio>
 
@@ -31,10 +32,10 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
     if (!moving)
     {
-      moving = true;
+        moving = true;
 
-      MoveEvent *event = new MoveEvent(entity->left,entity->up,-1,0,0);
-      addEvent(event);
+        MoveEvent *event = new MoveEvent(getEntity()->left,getEntity()->top,-1,0,0);
+        addEvent(event);
     }
     //*/
 

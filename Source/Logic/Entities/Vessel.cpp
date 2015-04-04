@@ -100,7 +100,7 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 /*-------------------------------------------
 --
 --
--- Called every game loop. dequeus all events from the entity's
+-- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
 ---------------------------------------------*/
 void Vessel::onUpdate()
@@ -115,40 +115,41 @@ void Vessel::onUpdate()
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
-					MoveEvent* ev = (MoveEvent*) (*it);
-          int xDir = ev->getXDir();
-          int yDir = ev->getYDir();
+				MoveEvent* ev = (MoveEvent*) (*it);
+				int xDir = ev->getXDir();
+				int yDir = ev->getYDir();
 
-					// set position to last known position on server to avoid
-					// sync problems across the clients
-	        Entity::aMove(ev->getX(), ev->getY(),false);
-
-          movingLeft = (xDir < 0);
-          movingRight = (xDir > 0);
-          movingUp = (yDir < 0);
-          movingDown = (yDir > 0);
+				// set position to last known position on server to avoid
+				// sync problems across the clients
+				// printf("client x,y: %f %f\n", ev->getX(), ev->getY());
+				// Entity::aMove(ev->getX(), ev->getY(),false);
+				printf("general vessel x,y: %f %f\n", getEntity()->left, getEntity()->top);
+				movingLeft = (xDir < 0);
+				movingRight = (xDir > 0);
+				movingUp = (yDir < 0);
+				movingDown = (yDir > 0);
 			break;
 		}
 	}
 	getController()->clearEvents();
 
-  float newXSpeed = 0;
-  float newYSpeed = 0;
+	float newXSpeed = 0;
+	float newYSpeed = 0;
 
 	if (movingLeft)
-      newXSpeed = -xSpeed;
-  else if (movingRight)
-      newXSpeed = xSpeed;
+		newXSpeed = -xSpeed;
+	else if (movingRight)
+		newXSpeed = xSpeed;
 
-  if (movingUp)
-      newYSpeed = -ySpeed;
-  else if (movingDown)
-      newYSpeed = ySpeed;
+	if (movingUp)
+		newYSpeed = -ySpeed;
+	else if (movingDown)
+	  	newYSpeed = ySpeed;
 
-  if (isMoving())
-  {
-      Entity::rMove(newXSpeed, newYSpeed,false);
-  }
+	if (isMoving())
+	{
+	  	Entity::rMove(newXSpeed, newYSpeed,false);
+	}
 }
 
 /*---------

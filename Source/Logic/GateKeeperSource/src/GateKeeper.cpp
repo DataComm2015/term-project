@@ -45,9 +45,9 @@ GateKeeper::~GateKeeper()
 
 void GateKeeper::onUpdate()
 {
-  //getController()->addEvent(new UpdateEvent());
+    //getController()->addEvent(new UpdateEvent());
 
-  std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+    std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
 		; ++it )
@@ -57,42 +57,42 @@ void GateKeeper::onUpdate()
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
-			  MoveEvent* ev = (MoveEvent*) (*it);
-        int xDir = ev->getXDir();
-        int yDir = ev->getYDir();
+                MoveEvent* ev = (MoveEvent*) (*it);
+                int xDir = ev->getXDir();
+                int yDir = ev->getYDir();
 
-        // set position to last known position on server to avoid
-        // sync problems across the clients
-        Entity::aMove(ev->getX(), ev->getY(),false);
+                // set position to last known position on server to avoid
+                // sync problems across the clients
+                Entity::aMove(ev->getX(), ev->getY(),false);
 
-        printf("GateKeeper --- xDir:%d yDir:%d\n", xDir, yDir);
-        movingLeft = (xDir < 0);
-        movingRight = (xDir > 0);
-        movingUp = (yDir < 0);
-        movingDown = (yDir > 0);
+                //printf("GateKeeper --- xDir:%d yDir:%d\n", xDir, yDir);
+                movingLeft = (xDir < 0);
+                movingRight = (xDir > 0);
+                movingUp = (yDir < 0);
+                movingDown = (yDir > 0);
 			break;
 		}
-  }
+    }
 
-  getController()->clearEvents();
+    getController()->clearEvents();
 
-  float newXSpeed = 0;
-  float newYSpeed = 0;
+    float newXSpeed = 0;
+    float newYSpeed = 0;
 
-  if (movingLeft)
-      newXSpeed = -_xSpeed;
-  else if (movingRight)
-      newXSpeed = _xSpeed;
+    if (movingLeft)
+        newXSpeed = -_xSpeed;
+    else if (movingRight)
+        newXSpeed = _xSpeed;
 
-  if (movingUp)
-      newYSpeed = -_ySpeed;
-  else if (movingDown)
-      newYSpeed = _ySpeed;
+    if (movingUp)
+        newYSpeed = -_ySpeed;
+    else if (movingDown)
+        newYSpeed = _ySpeed;
 
-  if (isMoving())
-  {
-      Entity::rMove(newXSpeed, newYSpeed,false);
-  }
+    if (isMoving())
+    {
+        Entity::rMove(newXSpeed, newYSpeed,false);
+    }
 }
 
 bool GateKeeper::isMoving()

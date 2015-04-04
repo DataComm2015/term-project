@@ -18,11 +18,10 @@ namespace Marx
         virtual std::vector<Event*>* getEvents();
         virtual void addEvent(Event *ev);
         virtual void clearEvents();
-        //void setEntity(Entity* e);
-        //Entity* getEntity();
-    protected:
-        Entity* entity;
+        void setEntity(Entity* e);
+        Entity* getEntity();        
     private:
+        Entity* entity;
         std::vector<Event*> eventQueue;
     };
 }

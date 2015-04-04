@@ -19,7 +19,6 @@
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 
-#include "Entity.h"
 #include "Controller.h"
 
 #include <cstdio>
@@ -79,6 +78,7 @@ Controller::~Controller()
 --
 -- PROGRAMMER:  Sanders Lee
 --
+***/
 void Controller::setEntity(Entity* e)
 {
   entity = e;
@@ -90,9 +90,8 @@ void Controller::setEntity(Entity* e)
 --
 -- PROGRAMMER:  Sanders Lee
 --
+***/
 Entity* Controller::getEntity()
 {
   return entity;
 }
-
-***/
