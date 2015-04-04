@@ -265,7 +265,10 @@ void GameScene::update(sf::Time t)
 		(*it)->onUpdate();
 	}
 
-	viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(0,0));
+	if (myVessel != NULL)
+	{
+		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(0,0));
+	}
 
 	/*
 	sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
