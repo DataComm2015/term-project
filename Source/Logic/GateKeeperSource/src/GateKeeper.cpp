@@ -46,7 +46,9 @@ GateKeeper::~GateKeeper()
 void GateKeeper::onUpdate()
 {
   static float newXSpeed = 0;
-static float newYSpeed = 0;
+  static float newYSpeed = 0;
+
+  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
 std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
@@ -65,22 +67,22 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
         if (yDir == -1)
         {
           newYSpeed -= _ySpeed;
-          std::cout << "Vessel.cpp: moving up" << std::endl;
+          std::cout << "GateKeeper.cpp: moving up" << std::endl;
         }
         else if (yDir == 1)
         {
           newYSpeed += _ySpeed;
-          std::cout << "Vessel.cpp: moving down" << std::endl;
+          std::cout << "GateKeeper.cpp: moving down" << std::endl;
         }
         else if (xDir == 1)
         {
           newXSpeed += _xSpeed;
-          std::cout << "Vessel.cpp: moving right" << std::endl;
+          std::cout << "GateKeeper.cpp: moving right" << std::endl;
         }
         else if (xDir == -1)
         {
           newXSpeed -= _xSpeed;
-          std::cout << "Vessel.cpp: moving left" << std::endl;
+          std::cout << "GateKeeper.cpp: moving left" << std::endl;
         }
 
 

@@ -63,6 +63,12 @@ ServerGameScene::~ServerGameScene()
 
 void ServerGameScene::update(sf::Time time)
 {
+    auto entities = cMap->getEntities();
+    for ( auto it = entities.begin(); it != entities.end(); ++it)
+    {
+      (*it)->onUpdate();
+    }
+
     if (timer > 0)
     {
         for (int i = 0; i < enemyControllers.size(); i++)
@@ -232,7 +238,7 @@ void ServerGameScene::createPlayers()
     }
 }
 
-std::vector<Entity*> ServerGameScene::getPlayerList()
+std::vector<Vessel*> ServerGameScene::getPlayerList()
 {
   return playerList;
 }
