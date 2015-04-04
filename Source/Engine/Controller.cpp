@@ -65,8 +65,33 @@ void Controller::clearEvents()
 
 Controller::Controller()
 {
+  entity = NULL;
 }
 
 Controller::~Controller()
 {
+}
+
+/***
+--
+-- DESIGNER:    Calvin Rempel
+--
+-- PROGRAMMER:  Sanders Lee
+--
+***/
+void Controller::setEntity(Entity* e)
+{
+  entity = e;
+}
+
+/***
+--
+-- DESIGNER:    Calvin Rempel
+--
+-- PROGRAMMER:  Sanders Lee
+--
+***/
+Entity* Controller::getEntity()
+{
+  return entity;
 }

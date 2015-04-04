@@ -18,6 +18,7 @@
 #include <typeinfo>
 #include <iostream>
 
+// bug fix by Sanders Lee
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
   VEntity(sprite, map, x, y, ctrl, h, w)
 //  _ctrl(ctrl)
@@ -34,7 +35,7 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     _yPos = y;
     _xSpeed = 0.01;
     _ySpeed = 0.01;
-    _moving = false;
+    movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
   };
 
@@ -43,39 +44,44 @@ GateKeeper::~GateKeeper()
 
 }
 
+/***
+-- PROGRAMMER:  ???
+--				Sanders Lee (Debugged synchronization problem across clients)
+***/
 void GateKeeper::onUpdate()
 {
-  float newXSpeed = 0;
-  float newYSpeed = 0;
+    float newXSpeed = 0;
+    float newYSpeed = 0;
 
-//  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
+    //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
-std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
-for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
-  ; it != eventQueue->end()
-  ; ++it )
-{
+    std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+    for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
+      ; it != eventQueue->end()
+      ; ++it )
+    {
 
-  // switch on type
-	switch((*it)->type)
-	{
-		case ::Marx::MOVE:
-			MoveEvent* ev = (MoveEvent*) (*it);
-              int xDir = ev->getXDir();
-              int yDir = ev->getYDir();
+        // switch on type
+    	switch((*it)->type)
+    	{
+    		case ::Marx::MOVE:
+    			MoveEvent* ev = (MoveEvent*) (*it);
+                  int xDir = ev->getXDir();
+                  int yDir = ev->getYDir();
 
-              newXSpeed = ((float)xDir/10.0);
-              newYSpeed = ((float)yDir/10.0);
-			break;
-	}
+                  // set position to last known position on server to avoid
+                  // sync problems across the clients
+                  Entity::aMove(ev->getX(), ev->getY(), false);
 
-}
-getController()->clearEvents();
+                  newXSpeed = ((float)xDir/10.0);
+                  newYSpeed = ((float)yDir/10.0);
+    			break;
+    	}
 
+    }
+    getController()->clearEvents();
 
-Entity::rMove(newXSpeed, newYSpeed,false);
-
-
+    Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 bool GateKeeper::isMoving()

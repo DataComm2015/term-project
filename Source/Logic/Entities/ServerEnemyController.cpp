@@ -3,6 +3,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
+#include "../../Engine/Entity.h"
 
 
 #include <cstdio>
@@ -24,7 +25,9 @@ ServerEnemyController::~ServerEnemyController()
 void ServerEnemyController::init()
 {
     if (behaviour)
+    {
         behaviour->init();
+    }
 }
 
 
@@ -104,9 +107,10 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
     }
 
-
     if (behaviour)
+    {
         behaviour->update(deltaTime);
+    }
 }
 
 
