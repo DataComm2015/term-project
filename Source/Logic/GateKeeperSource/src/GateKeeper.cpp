@@ -18,6 +18,7 @@
 #include <typeinfo>
 #include <iostream>
 
+// bug fix by Sanders Lee
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
   VEntity(sprite, map, x, y, ctrl, h, w)
 //  _ctrl(ctrl)
@@ -34,7 +35,7 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     _yPos = y;
     _xSpeed = 0.05;
     _ySpeed = 0.05;
-    _moving = false;
+    movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
   };
 
@@ -43,6 +44,10 @@ GateKeeper::~GateKeeper()
 
 }
 
+/***
+-- PROGRAMMER:  ???
+--				Sanders Lee (Debugged synchronization problem across clients)
+***/
 void GateKeeper::onUpdate()
 {
 

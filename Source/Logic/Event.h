@@ -25,7 +25,9 @@ public:
     MoveEvent(MoveEvent&& other);
     MoveEvent(const MoveEvent& other);
     float getX();
+    float setX(float _x);
     float getY();
+    float setY(float _y);
     int getXDir();
     int getYDir();
     bool forced();

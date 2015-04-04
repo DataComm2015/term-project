@@ -31,14 +31,16 @@
 
 //> In a separate scene file
 // Note that a scene made for content can just be a header file
-
+#include <iostream>
 #include "AppWindow.h"
+#include "Engine/Map.h"
 #include "Engine/Scene.h"
 #include "Engine/TextureManager.h"
 #include "Multimedia/graphics/Renderer.h"
 #include "Multimedia/graphics/object/BGO.h"
 #include "Multimedia/graphics/object/SGO.h"
 #include "Multimedia/graphics/object/TGO.h"
+#include "Logic/Champion/Vessel.h"
 
 class StartScreen : public Marx::Scene
 {
@@ -51,27 +53,24 @@ public:
 		texture_1 = Manager::TextureManager::store(
 			Manager::TextureManager::load("Multimedia/Assets/Art/Misc/placeholder.png")
 			);
-
 		texture_2 = Manager::TextureManager::store(
-			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Idle/vessel-idle.png")
+			Manager::TextureManager::load("Multimedia/Assets/Art/Player/Idle/vessel-idle-example.png")
 			);
 
 		// configure the sprite
-
-		//background().setTexture(*Manager::TextureManager::get(texture_1));
+		background().setTexture(*Manager::TextureManager::get(texture_1));
 		sgo().setTexture(*Manager::TextureManager::get(texture_2));
 
-		v = new Vessel(0,NULL,0,0);
-
-
+		Marx::Map *gmap = new Marx::Map(100,100);
+		v = new Vessel(gmap, WARRIOR,NULL,0,0);
 
 		// might want to have another resource manager for fonts...
 		font.loadFromFile("Multimedia/Assets/Fonts/arial.ttf");
 
-		// configure the text this doesn't compile :/
-		//welcomeText().setFont(font);
-		//welcomeText().setCharacterSize(30);
-		//welcomeText().setString("Welcome to Spectre");
+		// configure the text
+		welcomeText().setFont(font);
+		welcomeText().setCharacterSize(30);
+		welcomeText().setString("Welcome to Spectre");
 	}
 
 	// Destructors are... obvious
@@ -96,40 +95,41 @@ public:
 		// YESS so many switch case statements!!
 		switch (event.type)
 		{
-		case sf::Event::KeyPressed:
-			v->move(event.key);
-			break;
-
-		case sf::Event::KeyReleased:
-			v->stop();
-			switch (event.key.code)
-			{
-			case sf::Keyboard::Escape:
-				// TODO Can't suicide yet...
-				// getWindow().removeScene(this->getID()); // SUICIDE
+			case sf::Event::KeyPressed:
+				v->detectMove();
+				//std::cout << event.key.code << std::endl;
 				break;
-			}
-			break;
 
-		case sf::Event::Closed:
-			AppWindow::getInstance().close();
-			break;
+			case sf::Event::KeyReleased:
+				v->stop(event.key.code);
+				switch (event.key.code)
+				{
+				case sf::Keyboard::Escape:
+					// TODO Can't suicide yet...
+					// getWindow().removeScene(this->getID()); // SUICIDE
+					break;
+				}
+				break;
 
-		case sf::Event::Resized:
-			view_hud = view_main = AppWindow::getInstance().getCurrentView();
-			break;
+			case sf::Event::Closed:
+				AppWindow::getInstance().close();
+				break;
+
+			case sf::Event::Resized:
+				view_hud = view_main = AppWindow::getInstance().getCurrentView();
+				break;
 		}
 	}
 
 	// Update callback, do logical stuff here
 	void update(sf::Time t) override
 	{
-
-		/* This code moves the background but keeps the vessel centered */
+		/* This code moves the background but keeps the vessel centered
 		view_main.move(v->getXSpeed(), v->getYSpeed());
 		sgo().setPosition(view_main.getCenter()); //*/
 
-		/* This code moves the vessel around but keeps the screen centered
+		/* This code moves the vessel around but keeps the screen centered*/
+		v->move();
 		sgo().setPosition(v->getXPosition(), v->getYPosition());
 		//*/
 	}
@@ -181,7 +181,6 @@ private:
 	TGO welcomeText;
 };
 
-/*
 //> In the main file
 #include "AppWindow.h"
 // include the separate scene file
@@ -195,4 +194,4 @@ int main()
 	AppWindow::getInstance().run();
 
 	return 0;
-}*/
+}
