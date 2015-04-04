@@ -61,13 +61,17 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     deityVitalityArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-img.png"));
     deityDemiseArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-img.png"));
 
+    otherPlayerArt = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Idle/Body/vessel-idle.png"));
+
     vesselOneImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
     vesselTwoImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
 
     deityVitalityImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-btn.png"));
     deityDemiseImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-btn.png"));
 
-    leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
+    vesselShadowImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Shadows/vessel_shadow.png"));
+
+    leaveImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/back-btn.png"));
 
 
     /* Initialize buttons */
@@ -78,11 +82,19 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     deityVitalityBtn = new GUI::Button(*Manager::TextureManager::get(deityVitalityImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, ondeityVitalityClick);
     deityDemiseBtn = new GUI::Button(*Manager::TextureManager::get(deityDemiseImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, ondeityDemiseClick);
 
-    leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(CLASS_BTN_WIDTH, CLASS_BTN_HEIGHT), viewMain, onLeaveClick);
+    leaveBtn     = new GUI::Button(*Manager::TextureManager::get(leaveImg), sf::Vector2f(BACK_BTN_WIDTH, BACK_BTN_HEIGHT), viewMain, onLeaveClick);
 
     /*Init artwork*/
     vesselOneSGO = new SGO(*Manager::TextureManager::get(vesselOneArt));
     vesselTwoSGO = new SGO(*Manager::TextureManager::get(vesselTwoArt));
+
+    playerTwoSGO = new SGO(*Manager::TextureManager::get(otherPlayerArt));
+    playerThreeSGO = new SGO(*Manager::TextureManager::get(otherPlayerArt));
+    playerFourSGO = new SGO(*Manager::TextureManager::get(otherPlayerArt));
+
+    playerTwoShadowSGO = new SGO(*Manager::TextureManager::get(vesselShadowImg));
+    playerThreeShadowSGO = new SGO(*Manager::TextureManager::get(vesselShadowImg));
+    playerFourShadowSGO = new SGO(*Manager::TextureManager::get(vesselShadowImg));
 
     deityVitalitySGO = new SGO(*Manager::TextureManager::get(deityVitalityArt));
     deityDemiseSGO = new SGO(*Manager::TextureManager::get(deityDemiseArt));
@@ -92,21 +104,23 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     deityVitalityCircleSGO = new SGO(*Manager::TextureManager::get(circle));
     deityDemiseCircleSGO = new SGO(*Manager::TextureManager::get(circle));
 
+    vesselShadowSGO = new SGO(*Manager::TextureManager::get(vesselShadowImg));
+
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
-    sf::Font *arial = new sf::Font();
-    arial->loadFromFile("Assets/Fonts/arial.ttf");
+    sf::Font *font = new sf::Font();
+    font->loadFromFile("Assets/Fonts/hud.ttf");
 
 
     countdownBox = new GUI::TextBox(NULL,NULL);
-    countdownBox->text().setScale(0.66, 0.66);
+    countdownBox->text().setScale(0.5, 0.5);
     countdownBox->toggleSelected(false);
-    countdownBox->text().setFont(*arial);
+    countdownBox->text().setFont(*font);
 
     playerBox = new GUI::TextBox(NULL,NULL);
-    playerBox->text().setScale(0.66, 0.66);
+    playerBox->text().setScale(0.7, 0.7);
     playerBox->toggleSelected(false);
-    playerBox->text().setFont(*arial);
+    playerBox->text().setFont(*font);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -164,8 +178,8 @@ void ClientLobbyScene::onLoad()
     /* Set btntest positions */
     background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));
 
-    countdownBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2, (SCN_HEIGHT / 3 + 64) / 2);
-    playerBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2, (SCN_HEIGHT / 3 + 96) / 2);
+    countdownBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2 + 18, (SCN_HEIGHT / 3 + 96) / 2 + 6);
+    playerBox->text().setPosition((SCN_WIDTH / 3 + 128) / 2 - 18, (SCN_HEIGHT / 3 + 96) / 2 - 24);
 
     vesselOneBtn->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT / 2 - 32);
     vesselTwoBtn->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT / 2 - 32);
@@ -181,10 +195,11 @@ void ClientLobbyScene::onLoad()
 
     leaveBtn->sprite().setPosition(SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH - 8, SCN_HEIGHT / 3 + 8);
 
+
     //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));
     height = MAX_SCROLL;
     cur_movement = 0;
-    speed = 35; //Chris, this changes the initial speed then it will be halved as asked.
+    speed = 70; //Chris, this changes the initial speed then it will be halved as asked.
     total_movement = 0;
     height_mov = 0;
     /* Set the active view */
@@ -235,7 +250,7 @@ void ClientLobbyScene::update(sf::Time t)
       {
         height_mov = 0;
         height = height/2;
-        speed = speed/2;
+        speed = speed/1.5;
       }
     }
 }
@@ -318,51 +333,79 @@ void ClientLobbyScene::draw()
     deityVitalitySGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
     deityDemiseSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
 
+    playerTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6) - 48, SCN_HEIGHT / 3 - 48 - VESSEL_ART_H + total_movement);
+    playerThreeSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6) + 48, SCN_HEIGHT / 3 - 48 - VESSEL_ART_H + total_movement);
+    playerFourSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - 128 - VESSEL_ART_H + total_movement);
+
+    playerTwoShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 50, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 58 + total_movement);
+    playerThreeShadowSGO->sprite().setPosition((SCN_WIDTH / 2) + 46, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 58 + total_movement);
+    playerFourShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 2, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 138 + total_movement);
+
+
     vesselOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
     vesselTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
 
+    vesselShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 2, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 10 + total_movement);
 
-    renderer.draw(*background);
+
+    renderer.draw(background);
 
     if (timego)
     {
-        countdownBox->setText(std::to_string((int)currentTime) + "s" );
+        countdownBox->setText(std::to_string((int)currentTime) + " SECONDS UNTIL THE MATCH" );
     }
 
-    playerBox->setText(std::to_string(playerCount) + " player(s)");
+    playerBox->setText(std::to_string(playerCount) + " PLAYER(S)");
 
     // draw the objects
-    renderer.draw(*background);
-    renderer.draw(*vesselOneBtn);
-    renderer.draw(*vesselTwoBtn);
-    renderer.draw(*deityVitalityBtn);
-    renderer.draw(*deityDemiseBtn);
-    renderer.draw(*leaveBtn);
-    renderer.draw(*countdownBox);
-    renderer.draw(*playerBox);
+    renderer.draw(background);
+    renderer.draw(vesselOneBtn);
+    renderer.draw(vesselTwoBtn);
+    renderer.draw(deityVitalityBtn);
+    renderer.draw(deityDemiseBtn);
+    renderer.draw(leaveBtn);
+    renderer.draw(countdownBox);
+    renderer.draw(playerBox);
 
     if(deityChoice == 1)
     {
-        renderer.draw(*deityVitalityCircleSGO);
-        renderer.draw(*deityVitalitySGO);
-
+      renderer.draw(deityVitalityCircleSGO);
+      renderer.draw(deityVitalitySGO);
     }
+
+    renderer.draw(vesselShadowSGO);
 
     if(deityChoice == 2)
     {
-        renderer.draw(*deityDemiseCircleSGO);
-        renderer.draw(*deityDemiseSGO);
+        renderer.draw(deityDemiseCircleSGO);
+        renderer.draw(deityDemiseSGO);
     }
     if(vesselChoice == 1)
     {
-        renderer.draw(*vesselOneSGO);
-        renderer.draw(*vesselOneCircleSGO);
+        renderer.draw(vesselOneSGO);
+        renderer.draw(vesselOneCircleSGO);
     }
 
     if(vesselChoice == 2)
     {
-        renderer.draw(*vesselTwoSGO);
-        renderer.draw(*vesselTwoCircleSGO);
+        renderer.draw(vesselTwoSGO);
+        renderer.draw(vesselTwoCircleSGO);
+    }
+
+    // Draw additional players
+    switch(playerCount)
+    {
+        case 4:
+            renderer.draw(playerFourShadowSGO);
+            renderer.draw(playerFourSGO);
+        case 3:
+            renderer.draw(playerThreeShadowSGO);
+            renderer.draw(playerThreeSGO);
+        case 2:
+            renderer.draw(playerTwoShadowSGO);
+            renderer.draw(playerTwoSGO);
+        default:
+            break;
     }
 
     renderer.end();
@@ -393,8 +436,6 @@ void ClientLobbyScene::onLeaveClick()
     AppWindow::getInstance().removeScene(1);
 
     AppWindow::getInstance().addScene(new MainMenuScene());
-
-    AppWindow::getInstance().run();
 }
 
 /*------------------------------------------------------------------------------------------------------------------

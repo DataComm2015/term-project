@@ -81,7 +81,7 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
     textBackgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/text-box.png"));
     textBackgroundBoxImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/text-box-outline.png"));
-    bannerImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/easteregg.png"));
+    bannerImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/logo.png"));
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
     banner = new SGO(*Manager::TextureManager::get(bannerImg));
@@ -90,8 +90,8 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     background->sprite().setScale(1, 1);
 
 
-    sf::Font *arial = new sf::Font();
-    arial->loadFromFile("Assets/Fonts/arial.ttf");
+    sf::Font *font = new sf::Font();
+    font->loadFromFile("Assets/Fonts/hud.ttf");
 
     textBoxes[ SERVER_TXT ]   = new GUI::TextBox( nextTextBox, this, 16 );
     textBoxes[ SERVER_TXT ]   ->setText("localhost");
@@ -107,17 +107,17 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBoxes[ PORT_TXT ]    ->toggleSelected(false);
     textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
 
-    textBoxes[ SERVER_TXT ]->text().setFont(*arial);
-    textBoxes[ PORT_TXT ]->text().setFont(*arial);
-    textBoxes[ NICKNAME_TXT ]->text().setFont(*arial);
+    textBoxes[ SERVER_TXT ]->text().setFont(*font);
+    textBoxes[ PORT_TXT ]->text().setFont(*font);
+    textBoxes[ NICKNAME_TXT ]->text().setFont(*font);
 
-    serverLbl   = new GUI::Label( background, std::string("Server:") );
-    portLbl     = new GUI::Label( background, std::string("  Port:" ) );
-    nicknameLbl = new GUI::Label( background, std::string("  name:" ) );
+    serverLbl   = new GUI::Label( background, std::string("SERVER:") );
+    portLbl     = new GUI::Label( background, std::string("PORT:") );
+    nicknameLbl = new GUI::Label( background, std::string("NAME:") );
 
-    serverLbl     ->text().setFont(*arial);
-    portLbl       ->text().setFont(*arial);
-    nicknameLbl   ->text().setFont(*arial);
+    serverLbl     ->text().setFont(*font);
+    portLbl       ->text().setFont(*font);
+    nicknameLbl   ->text().setFont(*font);
 
     serverLbl     ->text().setScale(FONT_SCALE, FONT_SCALE);
     portLbl       ->text().setScale(FONT_SCALE, FONT_SCALE);
@@ -129,7 +129,7 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
 
     connectFailedText = new GUI::TextBox( NULL, this );
     connectFailedText ->setText(connectFailErr);
-    connectFailedText ->text().setFont(*arial);
+    connectFailedText ->text().setFont(*font);
     connectFailedText ->text().setScale(FONT_SCALE, FONT_SCALE);
 
 
@@ -206,7 +206,7 @@ MainMenuScene::~MainMenuScene()
 void MainMenuScene::onLoad()
 {
     /* Set button positions */
-    banner->sprite().setPosition(SCN_WIDTH / 2 - BANNER_W / 2, SCN_HEIGHT/10);
+    banner->sprite().setPosition(SCN_WIDTH / 2 - BANNER_W / 2 - 80, SCN_HEIGHT / 3 + 4);
 
     background->sprite().setPosition(SCN_WIDTH / 3, SCN_HEIGHT / 3 - 188);
 
@@ -214,22 +214,22 @@ void MainMenuScene::onLoad()
     portTextBackground    ->sprite().setPosition(textw, text2_h);
     nicknameTextBackground->sprite().setPosition(textw, text3_h);
 
-    serverTextBackgroundBox->sprite().setPosition(text_b_w, text1_b_h);
-    portTextBackgroundBox->sprite().setPosition(text_b_w, text2_b_h);
-    nicknameTextBackgroundBox->sprite().setPosition(text_b_w, text3_b_h);
+    serverTextBackgroundBox->sprite().setPosition(text_b_w + 2, text1_b_h);
+    portTextBackgroundBox->sprite().setPosition(text_b_w + 2, text2_b_h);
+    nicknameTextBackgroundBox->sprite().setPosition(text_b_w + 2, text3_b_h);
 
-    serverLbl   ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* FONT_OFFSET, (text1_h / 2)* FONT_OFFSET);
-    portLbl     ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* FONT_OFFSET, (text2_h / 2)* FONT_OFFSET);
-    nicknameLbl ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* FONT_OFFSET, (text3_h / 2)* FONT_OFFSET);
+    serverLbl   ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* 1.2, (text1_h / 2)* 1.19);
+    portLbl     ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* 1.2 + 9, (text2_h / 2)* 1.19);
+    nicknameLbl ->text().setPosition((textw / 2 - TEXT_BOX_W/4)* 1.2 + 8, (text3_h / 2)* 1.19);
 
-    textBoxes[ SERVER_TXT ]   ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text1_h / 2)* FONT_OFFSET);
-    textBoxes[ PORT_TXT ]     ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text2_h / 2)* FONT_OFFSET);
-    textBoxes[ NICKNAME_TXT ] ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text3_h / 2)* FONT_OFFSET);
+    textBoxes[ SERVER_TXT ]   ->text().setPosition((textw / 2 + 5)* 1.175, (text1_h / 2)* 1.19);
+    textBoxes[ PORT_TXT ]     ->text().setPosition((textw / 2 + 5)* 1.175, (text2_h / 2)* 1.19);
+    textBoxes[ NICKNAME_TXT ] ->text().setPosition((textw / 2 + 5)* 1.175, (text3_h / 2)* 1.19);
 
-    connectFailedText         ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text3_h/3)* FONT_OFFSET);
+    connectFailedText         ->text().setPosition((textw / 2 + 5)* FONT_OFFSET, (text3_h/3)* 1.19);
 
-    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH - CLASS_BTN_WIDTH, SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*4);
-    creditBtn ->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH - CLASS_BTN_WIDTH/2, SCN_HEIGHT/3 + 100 + (TEXT_BOX_H + 2)*4);
+    connectBtn->sprite().setPosition(SCN_WIDTH/2 - CLASS_BTN_WIDTH / 2 - CLASS_BTN_WIDTH + 120, SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*4);
+    creditBtn ->sprite().setPosition(SCN_WIDTH/2 + CLASS_BTN_WIDTH / 2 - CLASS_BTN_WIDTH/2 + 120, SCN_HEIGHT/3 + 90 + (TEXT_BOX_H + 2)*4);
 
     curTextBox = 0;
     textBoxes[ SERVER_TXT ]->toggleSelected(true);
@@ -285,6 +285,12 @@ void MainMenuScene::update(sf::Time t)
 void MainMenuScene::processEvents(sf::Event& e)
 {
     Scene::processEvents(e);
+
+    if (e.type == sf::Event::Closed)
+    {
+        AppWindow::getInstance().close();
+    }
+
     textBoxes[ curTextBox ]->process(e);
 }
 
@@ -311,40 +317,40 @@ void MainMenuScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
 
-    window.clear(sf::Color::Blue);
+    window.clear();
 
     window.setView(viewMain);
 
     renderer.begin();
 
-    renderer.draw( background, true );
+    renderer.draw( background );
 
     // draw the objects
-    renderer.draw(*banner);
-    renderer.draw(*serverTextBackground);
-    renderer.draw(*portTextBackground);
-    renderer.draw(*nicknameTextBackground);
+    renderer.draw(banner);
+    renderer.draw(serverTextBackground);
+    renderer.draw(portTextBackground);
+    renderer.draw(nicknameTextBackground);
 
-    renderer.draw( *serverLbl );
-    renderer.draw( *portLbl );
-    renderer.draw( *nicknameLbl );
+    renderer.draw( serverLbl );
+    renderer.draw( portLbl );
+    renderer.draw( nicknameLbl );
 
     if(textBoxes[SERVER_TXT]->getSelected())
     {
-      renderer.draw(*serverTextBackgroundBox);
+      renderer.draw(serverTextBackgroundBox);
     }
     if(textBoxes[PORT_TXT]->getSelected())
     {
-      renderer.draw(*portTextBackgroundBox);
+      renderer.draw(portTextBackgroundBox);
     }
     if(textBoxes[NICKNAME_TXT]->getSelected())
     {
-      renderer.draw(*nicknameTextBackgroundBox);
+      renderer.draw(nicknameTextBackgroundBox);
     }
 
     if(connectFailed)
     {
-      renderer.draw(*connectFailedText);
+      renderer.draw(connectFailedText);
     }
 
     for( int i = 0; i < TEXT_BOXES; ++i )
@@ -436,8 +442,6 @@ void MainMenuScene::onClickCredit()
     AppWindow::getInstance().removeScene(1);
 
     AppWindow::getInstance().addScene(creditscene);
-
-    AppWindow::getInstance().run();
 }
 
 /*------------------------------------------------------------------------------------------------------------------

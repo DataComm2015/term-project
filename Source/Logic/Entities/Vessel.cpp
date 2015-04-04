@@ -105,6 +105,10 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
+
+	static float newXSpeed = 0;
+	static float newYSpeed = 0;
+
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
@@ -119,32 +123,49 @@ void Vessel::onUpdate()
                 int xDir = ev->getXDir();
                 int yDir = ev->getYDir();
 
-                movingLeft = (xDir < 0);
-                movingRight = (xDir > 0);
-                movingUp = (yDir < 0);
-                movingDown = (yDir > 0);
+								if (yDir == -1)
+								{
+									newYSpeed -= ySpeed;
+									std::cout << "Vessel.cpp: moving up" << std::endl;
+								}
+								else if (yDir == 1)
+								{
+									newYSpeed += ySpeed;
+									std::cout << "Vessel.cpp: moving down" << std::endl;
+								}
+								else if (xDir == 1)
+								{
+									newXSpeed += xSpeed;
+									std::cout << "Vessel.cpp: moving right" << std::endl;
+								}
+								else if (xDir == -1)
+								{
+									newXSpeed -= xSpeed;
+									std::cout << "Vessel.cpp: moving left" << std::endl;
+								}
+
+								//old code - replaced with the if-else block above
+                //movingLeft = (xDir < 0);
+                //movingRight = (xDir > 0);
+                //movingUp = (yDir < 0);
+                //movingDown = (yDir > 0);
 				break;
 		}
 	}
 	getController()->clearEvents();
 
-    float newXSpeed = 0;
-    float newYSpeed = 0;
+	// if (movingLeft)
+  //       newXSpeed = -xSpeed;
+  //   else if (movingRight)
+  //       newXSpeed = xSpeed;
+	//
+  //   if (movingUp)
+  //       newYSpeed = -ySpeed;
+  //   else if (movingDown)
+  //       newYSpeed = ySpeed;
 
-	if (movingLeft)
-        newXSpeed = -xSpeed;
-    else if (movingRight)
-        newXSpeed = xSpeed;
 
-    if (movingUp)
-        newYSpeed = -ySpeed;
-    else if (movingDown)
-        newYSpeed = ySpeed;
-
-    if (isMoving())
-    {
-        Entity::rMove(newXSpeed, newYSpeed,false);
-    }
+  Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 /*---------

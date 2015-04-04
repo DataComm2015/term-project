@@ -123,9 +123,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	tb->toggleSelected(true);
 	tb->text().setFont(*arial);
 
-	Manager::MusicManager::get(scat_music)->setVolume(60);
-	Manager::MusicManager::get(scat_music)->play();
-
 	// Link game objects (not everything is linked, for example purposes only)
 	// as of now, the hierarchy system is barely used in this example
 	//maskSGO.add(*tb);
@@ -176,6 +173,9 @@ void GameScene::onLoad()
 	b4->toggleEnabled(true);
 	b5->toggleEnabled(true);
 	b6->toggleEnabled(true);
+
+	Manager::MusicManager::get(scat_music)->setVolume(60);
+	Manager::MusicManager::get(scat_music)->play();
 }
 
 
@@ -214,7 +214,7 @@ void GameScene::positionUI()
 	hb->sprite().setPosition(20, 20);
 
 	// position and scale level indicator
-	levelInd->text().move(14, 10);
+	levelInd->text().setPosition(14, 10);
 	levelInd->text().setScale(1.5, 1.5);
 }
 
@@ -231,6 +231,8 @@ void GameScene::unLoad()
 	b4->toggleEnabled(false);
 	b5->toggleEnabled(false);
 	b6->toggleEnabled(false);
+
+	Manager::MusicManager::get(scat_music)->stop();
 }
 
 
@@ -260,7 +262,6 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
-
 	// static int listEntity = 100;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
@@ -270,11 +271,14 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != 0)
 	{
-		cout << myVessel->left << ", " << myVessel->top << endl;
+		viewMain.setCenter(
+			myVessel->getGlobalTransform().transformPoint(0,0)
+			);
 
-		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left), (myVessel->top)));
-
-		cout << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
+		sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
+		std::cout << "mouse : " << mousePos.x << ", " << mousePos.y << std::endl;
+		cout << "vessel:   " << myVessel->left << ", " << myVessel->top << endl;
+		cout << "viewmain: " << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
 	}
 
 	// listEntity = false;
@@ -317,7 +321,7 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x-45, viewMain.getCenter().y-45, 0);
+	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
 
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*
@@ -351,21 +355,24 @@ void GameScene::update(sf::Time t)
 
 void GameScene::processEvents(sf::Event& e)
 {
+	static std::set<int> depressedKeys;
 	Scene::processEvents(e);
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
-		AppWindow::getInstance().close();
-
 		AppWindow::getInstance().close();
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
 		if(characterType == PLAYER_MODE::VESSEL)
 		{
-			for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+			if (depressedKeys.find((int)e.key.code) == depressedKeys.end())
 			{
-				(*l)->onKeyPressed(e.key.code);
+				depressedKeys.insert((int)e.key.code);
+				for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+				{
+					(*l)->onKeyPressed(e.key.code);
+				}
 			}
 		}
 		else
@@ -406,6 +413,7 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			(*l)->onKeyReleased(e.key.code);
 		}
+		depressedKeys.erase((int)e.key.code);
 
 		// v->stop(e.key.code);
 	}
@@ -444,16 +452,7 @@ void GameScene::draw()
 	renderer.states.shader = &waveShader;
 	renderer.draw(waterMap);
 	renderer.states.shader = nullptr;
-	renderer.draw(cMap, true);
-
-	renderer.end();
-
-	renderer.begin();
-
-	// draw the objects
-	//renderer.draw(championSGO2);
-	//renderer.draw(&maskSGO, true);
-	//renderer.draw(wepSGO);
+	renderer.draw(cMap);
 
 	renderer.end();
 
@@ -471,10 +470,9 @@ void GameScene::draw()
 
 	if(characterType == PLAYER_MODE::VESSEL)
 	{
-		renderer.draw(hb, true);
+		renderer.draw(hb);
 		renderer.draw(levelInd);
 	}
-
 	renderer.end();
 
 	window.display();
