@@ -53,6 +53,9 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
     movingDown = false;
 	attackPower = 0;
 
+	xPos = x;
+	yPos = y;
+
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -1047,4 +1050,14 @@ void Vessel::setAttack(int attack)
 Entity *Vessel::getEntity()
 {
     return this;
+}
+
+float Vessel::getYPosition()
+{
+	return xPos;
+}
+
+float Vessel::getXPosition()
+{
+	return yPos;
 }

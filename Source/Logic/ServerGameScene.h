@@ -41,7 +41,7 @@ class ServerGameScene : public Scene
         void createPlayers();
         void createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y);
 
-        std::vector<Entity*> getPlayerList();
+        std::vector<Vessel*> getPlayerList();
 
     private:
         SGO gkSGO;
@@ -54,7 +54,7 @@ class ServerGameScene : public Scene
         float lobtimer;
         std::vector<Creature*> enemies;
         std::vector<ServerEnemyController*> enemyControllers;
-        std::vector<Entity*> playerList;
+        std::vector<Vessel*> playerList;
 };
 
 #endif
