@@ -74,7 +74,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	myVessel = NULL;
 
-
 	std::cout << "making tileset" << std::endl;
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
@@ -93,21 +92,18 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	cMap->setTexture(tilemap);
 	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
 	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO.sprite().setScale(1, 1);
 	championSGO.middleAnchorPoint(true);
 
 	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
 	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	maskSGO.sprite().setScale(1, 1);
 	maskSGO.middleAnchorPoint(true);
 
 	wepSGO.sprite().setTexture(*Manager::TextureManager::get(wepSprite));
 	wepSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	wepSGO.sprite().setScale(1, 1);
 	wepSGO.middleAnchorPoint(true);
 
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
-	placeHolderSGO.sprite().setScale(1, 1);
+	placeHolderSGO.middleAnchorPoint(true);
 
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
@@ -199,7 +195,7 @@ void GameScene::positionUI()
 	hb->sprite().setPosition(20, 20);
 
 	// position and scale level indicator
-	levelInd->text().setPosition(14, 10);
+	levelInd->text().setPosition(15, 10);
 	levelInd->text().setScale(1.5, 1.5);
 }
 
@@ -254,17 +250,14 @@ void GameScene::update(sf::Time t)
 		(*it)->onUpdate();
 	}
 
-	if (myVessel != 0)
-	{
-		viewMain.setCenter(
-			myVessel->getGlobalTransform().transformPoint(0,0)
-			);
+	viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(0,0));
 
-		sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
-		std::cout << "mouse : " << mousePos.x << ", " << mousePos.y << std::endl;
-		cout << "vessel:   " << myVessel->left << ", " << myVessel->top << endl;
-		cout << "viewmain: " << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
-	}
+	/*
+	sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
+	std::cout << "mouse : " << mousePos.x << ", " << mousePos.y << std::endl;
+	cout << "vessel:   " << myVessel->left << ", " << myVessel->top << endl;
+	cout << "viewmain: " << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
+	*/
 
 	// listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
