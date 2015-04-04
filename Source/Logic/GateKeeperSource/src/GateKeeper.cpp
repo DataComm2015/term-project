@@ -48,7 +48,7 @@ void GateKeeper::onUpdate()
   static float newXSpeed = 0;
   static float newYSpeed = 0;
 
-  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
+  //std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
 std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()

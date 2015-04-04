@@ -164,3 +164,8 @@ void ClientMux::shutdown()
     // unregister our {Session} from the server
     command->unregisterSession(session, msg);
 }
+
+CommandEntity* ClientMux::getCommandEntity()
+{
+  return command;
+}
