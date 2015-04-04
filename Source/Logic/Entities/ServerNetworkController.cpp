@@ -129,11 +129,9 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
             // parse move event into move message
             MoveMessage mm;
-            printf("server vessel x,y: %f %f\n", getEntity()->left, getEntity()->top);
-            mm.x      = me->getX();
-                        //me->setX(getEntity()->left);
-            mm.y      = me->getY();
-                        //me->setY(getEntity()->top);
+            printf("entity server x, y: %f %f\n", getEntity()->left, getEntity()->top);
+            mm.x      = getEntity()->left;
+            mm.y      = getEntity()->top;
             mm.xDir   = me->getXDir();
             mm.yDir   = me->getYDir();
             mm.forced = me->forced();
@@ -177,10 +175,8 @@ void ServerNetworkController::sendEventMessage(Event *event)
 ------------------------------------------------------------------------------*/
 void ServerNetworkController::onUpdate(Message msg)
 {
-    float x = //getEntity()->left;
-              ((MoveMessage*)msg.data)->x;
-    float y = //getEntity()->top;
-              ((MoveMessage*)msg.data)->y;
+    float x = getEntity()->left;
+    float y = getEntity()->top;
 
     switch((PlayerCommandMsgType)msg.type)
     {
@@ -210,25 +206,25 @@ void ServerNetworkController::onUpdate(Message msg)
         }
         case PlayerCommandMsgType::STOP_MV_LEFT_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(x,y,0,0,0);
+            MoveEvent *event = new MoveEvent(x,y,1,0,0);
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_RIGHT_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
+            MoveEvent *event = new MoveEvent(x,y,-1,0,0);
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_UP_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(0,1,0,1,0);
+            MoveEvent *event = new MoveEvent(x,y,0,1,0);
             addEvent(event);
             break;
         }
         case PlayerCommandMsgType::STOP_MV_DOWN_COMMAND:
         {
-            MoveEvent *event = new MoveEvent(0,-1,0,-1,0);
+            MoveEvent *event = new MoveEvent(x,y,0,-1,0);
             addEvent(event);
             break;
         }

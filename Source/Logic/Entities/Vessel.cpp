@@ -117,7 +117,6 @@ void Vessel::onUpdate()
 		; it != eventQueue->end()
 		; ++it )
 	{
-
 		// switch on type
 		switch((*it)->type)
 		{
@@ -125,31 +124,31 @@ void Vessel::onUpdate()
 				MoveEvent* ev = (MoveEvent*) (*it);
 				int xDir = ev->getXDir();
 				int yDir = ev->getYDir();
+
 				// set position to last known position on server to avoid
 				// sync problems across the clients
-				// printf("client x,y: %f %f\n", ev->getX(), ev->getY());
-				// Entity::aMove(ev->getX(), ev->getY(),false);
-				printf("general vessel x,y: %f %f\n", getEntity()->left, getEntity()->top);
+				Entity::aMove(ev->getX(), ev->getY(), false);
+				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)
 				{
 					newYSpeed -= ySpeed;
-					std::cout << "Vessel.cpp: moving up" << std::endl;
+					printf("Vessel.cpp: moving up\n");
 				}
 				else if (yDir == 1)
 				{
 					newYSpeed += ySpeed;
-					std::cout << "Vessel.cpp: moving down" << std::endl;
+					printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == 1)
 				{
 					newXSpeed += xSpeed;
-					std::cout << "Vessel.cpp: moving right" << std::endl;
+					printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == -1)
 				{
 					newXSpeed -= xSpeed;
-					std::cout << "Vessel.cpp: moving left" << std::endl;
+					printf("Vessel.cpp: moving up\n");
 				}
 
 				//old code - replaced with the if-else block above
@@ -173,7 +172,7 @@ void Vessel::onUpdate()
   //       newYSpeed = ySpeed;
 
 
-  Entity::rMove(newXSpeed, newYSpeed,false);
+	Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 /*---------

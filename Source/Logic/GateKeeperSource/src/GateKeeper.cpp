@@ -56,43 +56,43 @@ void GateKeeper::onUpdate()
       ; it != eventQueue->end()
       ; ++it )
     {
+        // switch on type
+        switch((*it)->type)
+        {
+            case ::Marx::MOVE:
+                MoveEvent* ev = (MoveEvent*) (*it);
+                int xDir = ev->getXDir();
+                int yDir = ev->getYDir();
 
-      // switch on type
-      switch((*it)->type)
-      {
-        case ::Marx::MOVE:
-            MoveEvent* ev = (MoveEvent*) (*it);
-            int xDir = ev->getXDir();
-            int yDir = ev->getYDir();
+                // set position to last known position on server to avoid
+                // sync problems across the clients
+                Entity::aMove(ev->getX(), ev->getY(), false);
+                printf("gatekeeper x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
-            // set position to last known position on server to avoid
-            // sync problems across the clients
-            Entity::aMove(ev->getX(), ev->getY(),false);
-
-            if (yDir == -1)
-            {
-              newYSpeed -= _ySpeed;
-              std::cout << "GateKeeper.cpp: moving up" << std::endl;
-            }
-            else if (yDir == 1)
-            {
-              newYSpeed += _ySpeed;
-              std::cout << "GateKeeper.cpp: moving down" << std::endl;
-            }
-            else if (xDir == 1)
-            {
-              newXSpeed += _xSpeed;
-              std::cout << "GateKeeper.cpp: moving right" << std::endl;
-            }
-            else if (xDir == -1)
-            {
-              newXSpeed -= _xSpeed;
-              std::cout << "GateKeeper.cpp: moving left" << std::endl;
-            }
+                if (yDir == -1)
+                {
+                  newYSpeed -= _ySpeed;
+                  std::cout << "GateKeeper.cpp: moving up" << std::endl;
+                }
+                else if (yDir == 1)
+                {
+                  newYSpeed += _ySpeed;
+                  std::cout << "GateKeeper.cpp: moving down" << std::endl;
+                }
+                else if (xDir == 1)
+                {
+                  newXSpeed += _xSpeed;
+                  std::cout << "GateKeeper.cpp: moving right" << std::endl;
+                }
+                else if (xDir == -1)
+                {
+                  newXSpeed -= _xSpeed;
+                  std::cout << "GateKeeper.cpp: moving left" << std::endl;
+                }
 
 
             break;
-      }
+        }
     }
     getController()->clearEvents();
 
@@ -106,7 +106,7 @@ void GateKeeper::onUpdate()
     //   else if (movingDown)
     //       newYSpeed = ySpeed;
 
-  Entity::rMove(newXSpeed, newYSpeed,false);
+    Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 bool GateKeeper::isMoving()
