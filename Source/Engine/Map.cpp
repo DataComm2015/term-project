@@ -25,6 +25,7 @@
 --      This file implements the Map class members
 ----------------------------------------------------------------------------------------------------------------------*/
 #include "Map.h"
+#include "TileManager.h"
 #include <iostream>
 using namespace Marx;
 
@@ -251,6 +252,7 @@ unsigned int Map::getHeight() const
 --           Marc Rafanan
 --
 -- PROGRAMMER: Marc Rafanan
+--             Melvin Loho
 --
 -- INTERFACE: void setTexture(const uint& texture_id)
 --
@@ -261,12 +263,15 @@ unsigned int Map::getHeight() const
 --     void
 --
 -- NOTES:
---     returns texture id of the map in cells.
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 void Map::setTexture(const uint texture_id)
 {
     texture_id_ = texture_id;
+
+	// centers the map using the new texture info
+	sf::FloatRect* tile = Manager::TileManager::get(getCell(0, 0)->getTileId());
+	trans.translate(width_ * tile->width * -0.5, height_ * tile->height * -0.5);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -298,7 +303,7 @@ uint Map::getTexture() const
     return texture_id_;
 }
 
-const sf::Transform& Map::getLocalTransform() const
+sf::Transform Map::getLocalTransform() const
 {
 	return trans;
 }

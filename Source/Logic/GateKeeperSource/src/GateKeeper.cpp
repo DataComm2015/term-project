@@ -33,8 +33,8 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     _cooldown = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.01;
-    _ySpeed = 0.01;
+    _xSpeed = 0.09;
+    _ySpeed = 0.09;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
   };
@@ -48,10 +48,9 @@ GateKeeper::~GateKeeper()
 -- PROGRAMMER:  Filip Gutica
 --				Sanders Lee (Debugged synchronization problem across clients)
 ***/
-void GateKeeper::onUpdate()
+void GateKeeper::onUpdate(float deltaTime)
 {
-    float newXSpeed = 0;
-    float newYSpeed = 0;
+
 
     //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
@@ -61,27 +60,52 @@ void GateKeeper::onUpdate()
       ; ++it )
     {
 
-        // switch on type
+      // switch on type
     	switch((*it)->type)
     	{
     		case ::Marx::MOVE:
-    			MoveEvent* ev = (MoveEvent*) (*it);
+    		    MoveEvent* ev = (MoveEvent*) (*it);
                 int xDir = ev->getXDir();
                 int yDir = ev->getYDir();
 
-                // set position to last known position on server to avoid
-                // sync problems across the clients
                 Entity::aMove(ev->getX(), ev->getY(), false);
 
-                newXSpeed = ((float)xDir/10.0);
-                newYSpeed = ((float)yDir/10.0);
-			break;
-    	}
+                if (yDir < 0)
+                {
+                    newYSpeed = -_ySpeed;
+                }
+                else
+                {
+                    newYSpeed = _ySpeed;
+                }
 
+                if (xDir > 0)
+                {
+                    newXSpeed = _xSpeed;
+                }
+                else
+                {
+                    newXSpeed = -_xSpeed;
+                }
+
+                if (xDir == 0)
+                    newXSpeed = 0;
+
+                if (yDir == 0)
+                    newYSpeed = 0;
+
+      //old code - replaced with the if-else block above
+      //movingLeft = (xDir < 0);
+      //movingRight = (xDir > 0);
+      //movingUp = (yDir < 0);
+      //movingDown = (yDir > 0);
+			break;
+	    }
     }
     getController()->clearEvents();
 
     Entity::rMove(newXSpeed, newYSpeed,false);
+
 }
 
 bool GateKeeper::isMoving()

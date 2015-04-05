@@ -1,4 +1,6 @@
 #include <iostream>
+#include <time.h>
+#include <cmath>
 #include "Vessel.h"
 #include "../Event.h"
 #include "../../Multimedia/manager/SoundManager.h"
@@ -21,7 +23,7 @@ sf::Sound current;
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
 --
--- PROGRAMMER: Sebastian Pelka, Sanders Lee
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
@@ -57,12 +59,21 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	movingUp = false;
 	movingDown = false;
 	attackPower = 0;
+    newXSpeed = 0;
+    newYSpeed = 0;
 
 	xPos = x;
 	yPos = y;
 
+	servX = 0;
+	servY = 0;
+
+	myX = 0;
+	myY = 0;
+
 	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.wav"));
 	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.wav"));
+
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -115,9 +126,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 -- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
 ---------------------------------------------*/
-void Vessel::onUpdate()
+void Vessel::onUpdate(float deltaTime)
 {
-
 	static float newXSpeed = 0;
 	static float newYSpeed = 0;
 	static bool soundActive = false;
@@ -132,13 +142,14 @@ void Vessel::onUpdate()
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
+			{
 				MoveEvent* ev = (MoveEvent*) (*it);
 				int xDir = ev->getXDir();
 				int yDir = ev->getYDir();
 
 				// set position to last known position on server to avoid
 				// sync problems across the clients
-				Entity::aMove(ev->getX(), ev->getY(), false);
+	      		Entity::aMove(ev->getX(), ev->getY(), false);
 				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)
@@ -162,25 +173,38 @@ void Vessel::onUpdate()
 					printf("Vessel.cpp: moving left, speed: %f\n", newXSpeed);
 				}
 
-				//old code - replaced with the if-else block above
-                //movingLeft = (xDir < 0);
-                //movingRight = (xDir > 0);
-                //movingUp = (yDir < 0);
-                //movingDown = (yDir > 0);
+
 				break;
+			}
+			case ::Marx::UPDATE:
+			{
+				UpdateEvent* ev = (UpdateEvent*) (*it);
+				myX = left;
+				myY = top;
+
+				servX = ev->_x;
+				servY = ev->_y;
+
+				Entity::aMove(ev->_x, ev->_y, false);
+			}
 		}
 	}
 	getController()->clearEvents();
 
-	// if (movingLeft)
-  //       newXSpeed = -xSpeed;
-  //   else if (movingRight)
-  //       newXSpeed = xSpeed;
-	//
-  //   if (movingUp)
-  //       newYSpeed = -ySpeed;
-  //   else if (movingDown)
-  //       newYSpeed = ySpeed;
+
+// Needs improvement?
+/*	if (std::abs(servX - myX) > 1 || std::abs(servY - myY) > 1)
+	{
+		float syncX = myX - (deltaTime * (myX - servX));
+		float syncY = myY - (deltaTime * (myY - servY));
+
+		Entity::aMove(syncX, syncY, false);
+	}
+
+	else if (std::abs(servX - myX) > 0.5 || std::abs(servY - myY) > 0.5)
+	{
+		Entity::aMove(servX, servY, false);
+	}*/
 
 	/***
 	*
@@ -227,6 +251,7 @@ void Vessel::onUpdate()
 	}
 
 	Entity::rMove(newXSpeed, newYSpeed,false);
+
 }
 
 /*---------

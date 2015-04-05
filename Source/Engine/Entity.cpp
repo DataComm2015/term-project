@@ -204,7 +204,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 	top = y;
 	left = x;
 	blocking = !force;
-    
+
 	// loop through collecting all cells that this entity will be contained in.
     for(int i = floor(x); i <= width + floor(x); i++)
     {
@@ -398,7 +398,7 @@ void Entity::onDestroy()
 -- NOTES:
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-void Entity::onUpdate()
+void Entity::onUpdate(float deltaTime)
 {
 	// logic team
 }
