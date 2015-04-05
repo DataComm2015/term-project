@@ -5,8 +5,8 @@
 
 using namespace Manager;
 
-id_resource grassWalkSound, stoneWalkSound;
 sf::Sound current;
+
 //TO DO:
 //1) GIVE IT A SPRITE
 //2) MAKE THE SPRITE ANIMATE
@@ -62,7 +62,7 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	yPos = y;
 
 	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.wav"));
-
+	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.wav"));
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -120,6 +120,8 @@ void Vessel::onUpdate()
 
 	static float newXSpeed = 0;
 	static float newYSpeed = 0;
+	static bool soundActive = false;
+	static BlockZone steppedTile = GRASS;
 
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
@@ -138,19 +140,6 @@ void Vessel::onUpdate()
 				// sync problems across the clients
 				Entity::aMove(ev->getX(), ev->getY(), false);
 				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
-
-				//use getCell() to see whether to play grass or stone walking sound
-				std::set<Cell*>::iterator i = getCell().begin();
-				if (*i->getTileId() == GRASS_TL)
-				{
-					if (newXSpeed == 0 && newYSpeed == 0)
-					{
-						sf::Vector2f soundPos;
-						current = SoundManager::play(grassWalkSound, soundPos);
-						current.play();
-						printf("sound active, id: %d\n", grassWalkSound);
-					}
-				}
 
 				if (yDir == -1)
 				{
@@ -193,6 +182,49 @@ void Vessel::onUpdate()
   //   else if (movingDown)
   //       newYSpeed = ySpeed;
 
+	/***
+	*
+	* Code for playing sounds
+	*
+	***/
+	// Sounds for walking:
+	// first get the tile type we're walking on
+	Cell* currentTile = *getCell().begin();
+	sf::Vector2f soundPos;
+	if (currentTile->getTileId() >= GRASS_TL && currentTile->getTileId() <= GRASS_BR)
+	{
+		// we need the extra soundActive boolean to make sure we're not playing a new
+		// sound when there's already a walking sound active for our vessel
+		if (((newXSpeed != 0 || newYSpeed != 0) && !soundActive) ||
+			(soundActive && steppedTile != GRASS))
+		{
+			current.stop();
+			current = SoundManager::play(grassWalkSound, soundPos);
+			current.setLoop(true);
+			current.play();
+			soundActive = true;
+			steppedTile = GRASS;
+		}
+	}
+	else if (currentTile->getTileId() >= STONE_TL && currentTile->getTileId() <= ARBITER_BR)
+	{
+		if (((newXSpeed != 0 || newYSpeed != 0) && !soundActive) ||
+			(soundActive && steppedTile != STONE))
+		{
+			current.stop();
+			current = SoundManager::play(stoneWalkSound, soundPos);
+			current.setLoop(true);
+			current.play();
+			soundActive = true;
+			steppedTile = STONE;
+		}
+	}
+	// stop all sounds of walking if walking speed is (0, 0)
+	if (newXSpeed == 0 && newYSpeed == 0)
+	{
+		current.stop();
+		soundActive = false;
+	}
 
 	Entity::rMove(newXSpeed, newYSpeed,false);
 }

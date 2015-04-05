@@ -91,12 +91,13 @@ class Vessel : public Marx::VEntity, public Creature
 		float yPos;
 		int direction;	//0 = right, 1 = left //why not a bool?
 		bool movingLeft;
-	  bool movingRight;
+	    bool movingRight;
 		bool movingUp;
-	  bool movingDown;
+	    bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
 		SGO &mask_sprite;
 		SGO &weapon_sprite;
+		id_resource grassWalkSound, stoneWalkSound;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
