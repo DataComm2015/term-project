@@ -22,6 +22,9 @@
 #define _ATTACKACTION_H_
 
 #include <SFML/System/Time.hpp>
+#include "Action.h"
+#include "../Logic/Event.h"
+#include "Projectile.h"
 
 namespace Marx
 {
@@ -34,6 +37,6 @@ namespace Marx
 		private:
 			float damage;
 	};
-}
+};
 
 #endif

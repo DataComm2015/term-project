@@ -49,6 +49,9 @@ namespace Marx
 			void setTarget(sf::Vector2f t);
 			void setCurrentPos(float x, float y );
 			void setAct(Action * act);
+			sf::Time getTTL();
+			void setTTL(sf::Time t);
+			sf::Vector2f getVector();
 	};
 }
 

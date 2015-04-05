@@ -8,6 +8,7 @@ This class is a pure virtual class that details implementation for the Projectil
 #define _ACTION_H_
 
 #include <SFML/System/Time.hpp>
+#include "Entity.h"
 
 namespace Marx
 {

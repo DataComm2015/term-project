@@ -31,6 +31,10 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
     );
 
+	projSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
+    );
+
     vesselSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Player/Idle/Body/vessel-idle.png")
     );
@@ -47,6 +51,11 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
     gkSGO.sprite().setScale(1, 1);
     gkSGO.middleAnchorPoint(true);
+
+	projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
+    projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    projSGO.sprite().setScale(1, 1);
+    projSGO.middleAnchorPoint(true);
 
     vesselSGO.sprite().setTexture(*Manager::TextureManager::get(vesselSprite));
     vesselSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -101,7 +110,7 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
         std::cout << "MAKE ME AN ATTACK" << std::endl;
         sf::Vector2f v(ms->cellx, ms->celly);
         Marx::AttackAction act(sf::seconds(10), 10.0f);
-        return new Marx::Projectile(maskSGO, cMap, ms->srcx, ms->srcy, &act, v, cont, 1.0, 1.0);
+        return new Marx::Projectile(projSGO, cMap, ms->srcx, ms->srcy, &act, v, cont, 1.0, 1.0);
 
     }
     else
