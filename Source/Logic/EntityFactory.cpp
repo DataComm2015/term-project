@@ -51,7 +51,7 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
 	projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
-    projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 8, 8));
     projSGO.sprite().setScale(1, 1);
     projSGO.middleAnchorPoint(true);
 
