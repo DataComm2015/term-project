@@ -123,5 +123,14 @@ int SkillAttackEvent::getDestY()
 	return desty;
 }
 
+/* ------------------------------- Set Health Event ------------------------------------*/
+SetHealthEvent::SetHealthEvent(float _change) : change(_change), Event(Marx::SET_HEALTH)
+{
+}
+
+float SetHealthEvent::getChange()
+{
+    return change;
+}
 
 

@@ -132,6 +132,18 @@ void ClientNetworkController::parseEventMessage( Message& message )
 		addEvent(ev);
 		break;
 	}
+    case ::Marx::SET_HEALTH:
+	{
+		// case message payload
+		SetHealthMessage* mm = (SetHealthMessage*) message.data;
+
+		// create event from message data
+		SetHealthEvent *ev = new SetHealthEvent(mm->entid, mm->change);
+
+		// add event to event queue
+		addEvent(ev);
+		break;
+	}
     default:
     {
         printf("WARNING: ClientNetworkController::parseEventMessage received an "

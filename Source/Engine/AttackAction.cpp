@@ -19,5 +19,10 @@ void AttackAction::onUpdate(Entity * me, sf::Time time)
 
 void AttackAction::onHit(Entity * me, Entity *e)
 {
-	// give damage / point score event.
+    ServerNetworkController *cont = (ServerNetworkController*)e->getController();
+    /*           Set Health            */
+    SetHealthEvent event(cont->getId(), attack);
+    cont->addEvent(event);
+    /*           Set Points            */
+    
 }

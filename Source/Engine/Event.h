@@ -40,10 +40,11 @@ namespace Marx
     {
         MOVE,
       	R_MOVE,
-	A_MOVE,
-	ATTACK,
-	SK_ATTACK,
-        UPDATE
+        A_MOVE,
+        ATTACK,
+        SK_ATTACK,
+        UPDATE,
+        SET_HEALTH
     };
 
     /*
