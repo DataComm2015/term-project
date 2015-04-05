@@ -257,6 +257,7 @@ void ServerGameScene::createPlayers()
 
 void ServerGameScene::createStructure(ENTITY_TYPES type, float x, float y)
 {
+/*
     EnemyControllerInit initData;
     initData.type = ENTITY_TYPES::STRUCTURES;
     initData.x = (float) x;
@@ -268,6 +269,7 @@ void ServerGameScene::createStructure(ENTITY_TYPES type, float x, float y)
 
     Entity *entity = EntityFactory::getInstance()->makeEntity(type,NULL,cMap,x,y);
     command->getGameState()->registerWithAllPlayers((Networking::NetworkEntity*) entity, &msg);
+*/
 }
 
 std::vector<Vessel*> ServerGameScene::getPlayerList()
