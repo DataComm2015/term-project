@@ -13,7 +13,7 @@
 
 using namespace Networking;
 
-static int SESSION_SET_SEM_KEY = 226;
+static int SESSION_SET_SEM_KEY = 228;
 static int SESSION_SEM = initSessionSem(SESSION_SET_SEM_KEY);
 static int MESSAGE_SEM_KEY = 9956;
 static std::set<Session*> SESSIONS;
