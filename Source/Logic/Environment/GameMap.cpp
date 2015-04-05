@@ -205,7 +205,7 @@ void GameMap::cleanMap()
 
 				// Delete all entities
 				//delete (*it)->getController();
-				
+
 				//delete *it;
 			}
 		}
