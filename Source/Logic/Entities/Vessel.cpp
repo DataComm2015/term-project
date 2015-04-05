@@ -72,8 +72,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	myX = 0;
 	myY = 0;
 
-	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.wav"));
-	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.wav"));
+	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
+	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
 
 	//abilities = abilityList;
 /*
