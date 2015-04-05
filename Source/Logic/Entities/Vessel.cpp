@@ -16,7 +16,7 @@
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
 --
--- PROGRAMMER: Sebastian Pelka, Sanders Lee
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
@@ -112,9 +112,6 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
-
-   // newXSpeed = 0;
-   // newYSpeed = 0;
 
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
