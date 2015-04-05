@@ -110,8 +110,8 @@ void ClientNetworkController::parseEventMessage( Message& message )
         }
         case ::Marx::UPDATE:
         {
-            UpdateMessage *um (UpdateMessage*) message.data;
-            UpdateEvent *ev = new UpdateEvent(message.x, update.y);
+            UpdateMessage *um = (UpdateMessage*) message.data;
+            UpdateEvent *ev = new UpdateEvent(um->x, um->y);
             addEvent(ev);
         }
         default:
