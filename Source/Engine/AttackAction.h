@@ -31,8 +31,8 @@ namespace Marx
 	class AttackAction : public Action
 	{
 		public:
-			AttackAction(sf::Time, float);
-			virtual void onUpdate(Entity * me, sf::Time);
+			AttackAction(float, float);
+			virtual void onUpdate(Entity * me, float);
 			virtual void onHit(Entity * me, Entity * e );
 		private:
 			float damage;

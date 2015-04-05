@@ -200,7 +200,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 			SetHealthMessage sm;
 			//sm.entid 	= sh->getEntity();
 			sm.change	= sh->getChange();
-			
+
 			// message to be sent over the network
 			Message message;
 			message.data = &sm;
