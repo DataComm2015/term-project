@@ -79,30 +79,16 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "making tileset" << std::endl;
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
-	championSprite = Manager::TextureManager::store(
-		Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
-		);
-	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
-	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
+	
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
-	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
-	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
 	placeholderSprite = Manager::TextureManager::store(
 		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
 		);
 
+	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
+	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
+
 	cMap->setTexture(tilemap);
-	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
-	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO.middleAnchorPoint(true);
-
-	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
-	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	maskSGO.middleAnchorPoint(true);
-
-	wepSGO.sprite().setTexture(*Manager::TextureManager::get(wepSprite));
-	wepSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	wepSGO.middleAnchorPoint(true);
 
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
 	placeHolderSGO.middleAnchorPoint(true);
@@ -119,15 +105,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	tb->toggleSelected(true);
 	tb->text().setFont(*arial);
 
-	// Link game objects (not everything is linked, for example purposes only)
-	// as of now, the hierarchy system is barely used in this example
-	//maskSGO.add(*tb);
-
 	// Generate stuff
-
-	// center the cell map
-	std::cout << "centering map" << std::endl;
-	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 
 	if (!gMap->generateMap(0))
 	{
@@ -159,9 +137,9 @@ void GameScene::onLoad()
 	viewUI = AppWindow::getInstance().getCurrentView();
 
 	// position buttons
-
 	generateUI();
 	positionUI();
+
 	// Enable buttons
 	b1->toggleEnabled(true);
 	b2->toggleEnabled(true);
@@ -265,9 +243,12 @@ void GameScene::update(sf::Time t)
 		(*it)->onUpdate();
 	}
 
-	if (myVessel != NULL)
+	if (myVessel != NULL) // SHOULD MOVE THIS INTO VESSEL's UPDATE FUNCTION
 	{
-		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(0,0));
+		//to test:
+		//myVessel->getSprite().sprite().rotate(1);
+
+		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 	}
 
 	/*
