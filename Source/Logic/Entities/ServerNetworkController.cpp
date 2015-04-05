@@ -190,6 +190,26 @@ void ServerNetworkController::sendEventMessage(Event *event)
 			update(message);
 			break;
 		}
+        case ::Marx::SET_HEALTH:
+		{
+			// cast event to event subclass
+			SetHealthEvent *sh = (SetHealthEvent*) event;
+
+			// parse attack event into move message
+			SetHealthMessage sm;
+			//sm.entid 	= sh->getEntity();
+			sm.change	= sh->getChange();
+			
+			// message to be sent over the network
+			Message message;
+			message.data = &sm;
+			message.len = sizeof(SetHealthMessage);
+			message.type = ::Marx::SET_HEALTH;
+
+			// send the network event
+			update(message);
+			break;
+		}
     	default:
         	printf("\r\nWARNING: NetworkController::sendEventMessage received an "
             	"unknown event type. please add new case to switch statement\r\n");

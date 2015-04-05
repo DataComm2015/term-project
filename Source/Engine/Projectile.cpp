@@ -74,3 +74,18 @@ void Projectile::setAct(Action * act)
 	act = act;
 	TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
 }
+
+sf::Time Projectile::getTTL() 
+{
+	return TimeToLive;
+}
+
+void Projectile::setTTL(sf::Time t) 
+{ 
+	TimeToLive = t; 
+}
+
+sf::Vector2f Projectile::getVector()
+{
+	return heading;
+}

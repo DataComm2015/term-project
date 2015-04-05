@@ -172,6 +172,12 @@ void Vessel::onUpdate()
 				std::cout << "ATTACK" << std::endl;
 				createSkAttack(*saev, satk_sprite, left, top);
 			}
+            case ::Marx::SET_HEALTH:
+            {
+                SetHealthEvent* ev = (SetHealthEvent*) (*it);
+                
+                setHealth(ev->getChange());
+            }
 		}
 	}
 	getController()->clearEvents();
@@ -502,28 +508,6 @@ void Vessel::decreaseHP( int hp )
 	}
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getHP
---
--- DATE:
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER:	Sanders Lee
---
--- PROGRAMMER:	Sanders Lee
---
--- INTERFACE: int Vessel::getHP()
---
--- RETURNS: current HP as an integer
---
--- NOTES:
--- This function returns the current HP the Vessel has
-----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getHP()
-{
-	return currentHealth;
-}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getMaxHP
@@ -1021,6 +1005,29 @@ void Vessel::setHealth(int health)
         currentHealth = 0;
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getHealth
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: int Vessel::getHealth()
+--
+-- RETURNS: int - The current health of the vessel.
+--
+-- NOTES:
+-- This function returns the current health of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
+int Vessel::getHealth()
+{
+    return currentHealth;
 }
 
 /*------------------------------------------------------------------------------------------------------------------

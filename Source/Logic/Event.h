@@ -91,4 +91,19 @@ private:
 	int desty;
 };
 
+struct SetHealthMessage
+{
+	int entid; // Entity id source
+	float change;
+};
+
+class SetHealthEvent : public ::Marx::Event
+{
+public:
+	SetHealthEvent(float _change);
+	float getChange();
+private:
+	float change;
+};
+
 #endif
