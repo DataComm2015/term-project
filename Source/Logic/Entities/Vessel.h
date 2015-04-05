@@ -101,6 +101,7 @@ class Vessel : public Marx::VEntity, public Creature
 		Ability* abilities;	//3 abilities for each Vessel
 		SGO &mask_sprite;
 		SGO &weapon_sprite;
+		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
