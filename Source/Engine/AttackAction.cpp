@@ -21,8 +21,8 @@ void AttackAction::onHit(Entity * me, Entity *e)
 {
     ServerNetworkController *cont = (ServerNetworkController*)e->getController();
     /*           Set Health            */
-    SetHealthEvent event(cont->getId(), attack);
-    cont->addEvent(event);
+    SetHealthEvent event(damage);
+    cont->addEvent(&event);
     /*           Set Points            */
     
 }

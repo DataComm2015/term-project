@@ -176,7 +176,7 @@ void Vessel::onUpdate()
             {
                 SetHealthEvent* ev = (SetHealthEvent*) (*it);
                 
-                setHealth(ev->getChange);
+                setHealth(ev->getChange());
             }
 		}
 	}
