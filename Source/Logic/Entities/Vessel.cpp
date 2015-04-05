@@ -1,6 +1,21 @@
 #include <iostream>
+#include <time.h>
+#include <cmath>
 #include "Vessel.h"
 #include "../Event.h"
+#include "../../Multimedia/manager/SoundManager.h"
+
+using namespace Manager;
+
+
+sf::Sound footstep;
+sf::Sound voice;
+
+//TO DO:
+//1) GIVE IT A SPRITE
+//2) MAKE THE SPRITE ANIMATE
+//3) DIAGONAL MODEMENT
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel constructor
 --
@@ -10,7 +25,7 @@
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
 --
--- PROGRAMMER: Sebastian Pelka, Sanders Lee
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
@@ -22,24 +37,45 @@
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( SGO &_sprite,
-	Marx::Map * gmap,
-	float x,
-	float y,
-	Marx::Controller* controller,
-	float height,
-	float width
-	/*, job_class jobClass, Ability* abilityList*/ )
-			: Marx::VEntity(_sprite, gmap, x, y, NULL, 1.0, 1.0 )
-			,_controller(controller)
+Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
+								Marx::Map * gmap,
+								float x,
+								float y,
+								Marx::Controller* controller_,
+								float height,
+								float width
+								/*, job_class jobClass, Ability* abilityList*/ )
+								: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+								mask_sprite(_mask),
+								weapon_sprite(_weapon)
+								//,_controller(controller)
 {
+
 	direction = 1; //start facing right
 
 	resetEXP();
+	xSpeed = 0.08;
+	ySpeed = 0.08;
+	movingLeft = false;
+	movingRight = false;
+	movingUp = false;
+	movingDown = false;
+	attackPower = 0;
+    newXSpeed = 0;
+    newYSpeed = 0;
 
-	xSpeed = 0;
-	ySpeed = 0;
-	moving = false;
+	xPos = x;
+	yPos = y;
+
+	servX = 0;
+	servY = 0;
+
+	myX = 0;
+	myY = 0;
+
+	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
+	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
+
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -78,62 +114,163 @@ Vessel::Vessel( SGO &_sprite,
 		travelSpeed = 42;
 		//weapon = BOWL_OF_LAKSA;
 	}*/
+	this->add(mask_sprite);
+	this->add(weapon_sprite);
+
 	std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
 /*-------------------------------------------
 --
+-- PROGRAMMER:  ???
+--				Sanders Lee (Debugged synchronization problem across clients)
 --
--- Called every game loop. dequeus all events from the entity's
+-- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
 ---------------------------------------------*/
-void Vessel::onUpdate()
+void Vessel::onUpdate(float deltaTime)
 {
-	std::vector< Marx::Event > eventQueue = controller->getEvents();
+	static bool soundActive = false;
+	static BlockZone steppedTile = GRASS;
 
-	for( std::vector< Marx::Event >::iterator it = eventQueue.begin()
-		; it != eventQueue.end()
+	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
+		; it != eventQueue->end()
 		; ++it )
 	{
-			// switch on type
-			switch(it->type)
-			{
+		// switch on type
+		switch((*it)->type)
+		{
 			case ::Marx::MOVE:
-					MoveEvent* ev = (MoveEvent*) (&*it);
-					printf( "move: x:%f y:%f force:%d\n",
-							ev->getX(), ev->getY(), ev->forced() );
-					//move( ev->getX(), ev->getY(), ev->forced() );
-					break;
+			{
+				MoveEvent* ev = (MoveEvent*) (*it);
+				int xDir = ev->getXDir();
+				int yDir = ev->getYDir();
+
+				// set position to last known position on server to avoid
+				// sync problems across the clients
+	      		Entity::aMove(ev->getX(), ev->getY(), false);
+				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
+
+				if (yDir == -1)
+				{
+					newYSpeed -= ySpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+				else if (yDir == 1)
+				{
+					newYSpeed += ySpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+				else if (xDir == 1)
+				{
+					newXSpeed += xSpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+				else if (xDir == -1)
+				{
+					newXSpeed -= xSpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+
+
+				break;
 			}
+			case ::Marx::UPDATE:
+			{
+				UpdateEvent* ev = (UpdateEvent*) (*it);
+				myX = left;
+				myY = top;
+
+				servX = ev->_x;
+				servY = ev->_y;
+
+				Entity::aMove(ev->_x, ev->_y, false);
+			}
+		}
 	}
-	eventQueue.clear();
+	getController()->clearEvents();
+
+
+// Needs improvement?
+/*	if (std::abs(servX - myX) > 1 || std::abs(servY - myY) > 1)
+	{
+		float syncX = myX - (deltaTime * (myX - servX));
+		float syncY = myY - (deltaTime * (myY - servY));
+
+		Entity::aMove(syncX, syncY, false);
+	}
+
+	else if (std::abs(servX - myX) > 0.5 || std::abs(servY - myY) > 0.5)
+	{
+		Entity::aMove(servX, servY, false);
+	}*/
+	/***
+	*
+	* Code for playing sounds
+	*
+	***/
+	// Sounds for walking:
+	// first get the tile type we're walking on
+	Cell* footstepTile = *getCell().begin();
+	sf::Vector2f soundPos;
+	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
+	{
+		// we need the extra soundActive boolean to make sure we're not playing a new
+		// sound when there's already a walking sound active for our vessel
+		if (((newXSpeed != 0 || newYSpeed != 0) && !soundActive) ||
+			(soundActive && steppedTile != GRASS))
+		{
+			footstep.stop();
+			footstep = SoundManager::play(grassWalkSound, soundPos);
+			footstep.setLoop(true);
+			footstep.play();
+			soundActive = true;
+			steppedTile = GRASS;
+		}
+	}
+	else if (footstepTile->getTileId() >= STONE_TL && footstepTile->getTileId() <= ARBITER_BR)
+	{
+		if (((newXSpeed != 0 || newYSpeed != 0) && !soundActive) ||
+			(soundActive && steppedTile != STONE))
+		{
+			footstep.stop();
+			footstep = SoundManager::play(stoneWalkSound, soundPos);
+			footstep.setLoop(true);
+			footstep.play();
+			soundActive = true;
+			steppedTile = STONE;
+		}
+	}
+	// stop all sounds of walking if walking speed is (0, 0)
+	if ((newXSpeed == 0 && newYSpeed == 0) && soundActive)
+	{
+		footstep.stop();
+		soundActive = false;
+	}
+
+	Entity::rMove(newXSpeed, newYSpeed,false);
+
 }
 
-void Vessel::turn()
+/*---------
+-- Calls the function to draw the body around, and handles the movement of the
+-- mask and weapon in Vessel.cpp
+--
+--------------*/
+/*
+void Vessel::draw(Renderer& renderer, sf::RenderStates states) const
 {
+	std::cout << "vessel's draw called" << std::endl;
+	VEntity::draw(renderer, states);
+	sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
+	states.transform.translate(left * tile->width, (top + height) * tile->height);
+
+	renderer.draw(mask_sprite, states);
+	renderer.draw(weapon_sprite, states);
 
 }
-
-Marx::Entity* Vessel::move(float, float, bool)
-{
-
-}
-
-std::set<Marx::Cell*> Vessel::getCell()
-{
-
-}
-
-void Vessel::onCreate()
-{
-
-}
-
-
-void Vessel::onDestroy()
-{
-
-}
+*/
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel destructor
@@ -157,33 +294,6 @@ Vessel::~Vessel()
 {
 	if( abilities != NULL )
 		delete[] abilities;
-}
-
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: setPosition
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sebastian Pelka
---
--- PROGRAMMER: Sebastian Pelka
---
--- INTERFACE: void Vessel::setPosition( int x, int y )
--- int x, int y: the coordinates to set the Vessel on the map
---
--- RETURNS: nothing
---
--- NOTES:
--- This function is used to directly position a Vessel on a map, can be used for teleportation.
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::setPosition( float x, float y )
-{
-	xPosition = x;
-	yPosition = y;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -779,114 +889,6 @@ void Vessel::die()
 
 }
 
-
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: detectMove
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee, Sebastian Pelka
---
--- PROGRAMMER: Sanders Lee, Sebastian Pelka
---
--- INTERFACE: void Vessel::detectMove()
---
--- RETURNS: nothing
---
--- NOTES:
--- This function sets the vessel to a moving state and changes velocity
--- according to key presses.
---
--- Bookmarks:
--- http://en.sfml-dev.org/forums/index.php?topic=11539.0
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::detectMove()
-{
-	moving = false;	//if no movement buttons were pressed in the last frame, stop moving
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		moving = true;
-		ySpeed = -travelSpeed;
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		moving = true;
-		ySpeed = travelSpeed;
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		moving = true;
-		xSpeed = -travelSpeed;
-		direction = 0;	//signal to animate left facing sprite
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		moving = true;
-		xSpeed = travelSpeed;
-		direction = 1; //signal to animate right facing sprite
-	}
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: move
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: void Vessel::move()
---
--- RETURNS: nothing
---
--- NOTES:
--- Moves the vessel's coordinates according to velocity.
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::move()
-{
-	setPosition( getXPosition() + xSpeed, getYPosition() + ySpeed ); //updates internal positioning
-	//Entity::move( getXPosition(), getYPosition(), false ); //updates position on Map
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: stop
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: void Vessel::stop( int keyReleased )
--- int keyReleased: the key code for the key that was released
---
--- RETURNS: nothing
---
--- NOTES:
--- Stops moving in a particular direction depending on the direction key released.
-----------------------------------------------------------------------------------------------------------------------*/
-void Vessel::stop( int keyReleased )
-{
-	if( (keyReleased == sf::Keyboard::D) || (keyReleased == sf::Keyboard::A) )
-		xSpeed = 0;
-	if( (keyReleased == sf::Keyboard::W) || (keyReleased == sf::Keyboard::S) )
-		ySpeed = 0;
-	moving = false;
-}
-
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: normalAttack
 --
@@ -934,54 +936,6 @@ void Vessel::normalAttack( int x, int y )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::useAbility( int abilityNum, int x, int y )		//possibly need an Entity parameter for abilities that target an entity, such as healing
 {
-}
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getXPosition
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: float Vessel::getXPosition()
---
--- RETURNS: x positon as float
---
--- NOTES:
--- Returns the x position of the vessel.
-----------------------------------------------------------------------------------------------------------------------*/
-float Vessel::getXPosition()
-{
-	return xPosition;
-}
-
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getYPosition
---
--- DATE: February 27, 2015
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER: Sanders Lee
---
--- PROGRAMMER: Sanders Lee
---
--- INTERFACE: float Vessel::getYPosition()
---
--- RETURNS: y position as float
---
--- NOTES:
--- Returns the y position of the vessel.
-----------------------------------------------------------------------------------------------------------------------*/
-float Vessel::getYPosition()
-{
-	return yPosition;
 }
 
 
@@ -1052,7 +1006,7 @@ int Vessel::getYSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::isMoving()
 {
-	return moving;
+	return (movingLeft || movingRight || movingUp || movingDown);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -1100,4 +1054,92 @@ int Vessel::getDirection()
 job_class Vessel::getJobClass()
 {
 	return jobClass;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setHealth
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void setHealth(int health)
+-- int attack: the amount to set health to
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- This function provides a common interface for setting health for
+-- all Creatures.
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::setHealth(int health)
+{
+    currentHealth = health;
+
+    if (currentHealth < 0)
+        currentHealth = 0;
+    else if (currentHealth > maxHealth)
+        currentHealth = maxHealth;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setAttack
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void setAttack(int attack)
+-- int attack: the amount to set attack power to
+--
+-- RETURNS: nothing
+--
+-- NOTES:
+-- This function provides a common interface for increasing attack power for
+-- all Creatures.
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::setAttack(int attack)
+{
+    attackPower = attack;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: setAttack
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: Entity *getEntity()
+--
+-- RETURNS: The Entity associated with the Creature
+--
+-- NOTES:
+-- This function provides a method for retrieving the Entity from the Creature.
+----------------------------------------------------------------------------------------------------------------------*/
+Entity *Vessel::getEntity()
+{
+    return this;
+}
+
+float Vessel::getYPosition()
+{
+	return xPos;
+}
+
+float Vessel::getXPosition()
+{
+	return yPos;
 }

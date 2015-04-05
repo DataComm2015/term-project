@@ -63,6 +63,8 @@
 #include "../../Engine/VEntity.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
+#include "../Creature.h"
+#include "../../Engine/TileManager.h"
 
 #define MAX_LEVEL 10;
 
@@ -71,7 +73,7 @@ typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
-class Vessel : public Marx::VEntity
+class Vessel : public Marx::VEntity, public Creature
 {
 	protected:
 		job_class jobClass;
@@ -82,36 +84,41 @@ class Vessel : public Marx::VEntity
 		int currentLevel;
 		int defaultSpeed;
 		int travelSpeed;
-		float xPosition;
-		float yPosition;
-		int xSpeed;
-		int ySpeed;
+		int attackPower;
+		float xSpeed;
+		float ySpeed;
+		float xPos;
+		float yPos;
+		float myX;
+		float myY;
+		float servX;
+		float servY;
 		int direction;	//0 = right, 1 = left //why not a bool?
-		bool moving;
-		Weapon* weapon;
+		bool movingLeft;
+	  bool movingRight;
+		bool movingUp;
+	  bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
+		SGO &mask_sprite;
+		SGO &weapon_sprite;
+		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
-		Vessel( SGO &_sprite,
-			Marx::Map * gmap,
-			float x,
-			float y,
-			Marx::Controller* controller,
-			float height,
-			float width
-			/*, job_class jobClass, Ability* abilityList*/ );
-
+        float newXSpeed;
+        float newYSpeed;
+		Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
+						Marx::Map * gmap,
+						float x,
+						float y,
+						Marx::Controller* controller,
+						float height,
+						float width
+						/*, job_class jobClass, Ability* abilityList*/ );
 		//inherited methods
 		virtual ~Vessel();
-		virtual void onUpdate();
-		virtual void turn();
-		virtual Marx::Entity* move(float, float, bool);
-		virtual std::set<Marx::Cell*> getCell();
-		virtual void onCreate();
-		virtual void onDestroy();
-
-		const Marx::Controller* _controller;
+		virtual void onUpdate(float);
+		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
 
 		void setPosition( float x, float y );
 		float getXPosition();
@@ -125,7 +132,7 @@ class Vessel : public Marx::VEntity
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
-    int  getNextLevelEXP();
+		int  getNextLevelEXP();
 		int  getLevel();
 		void increaseLevel();
 
@@ -152,12 +159,15 @@ class Vessel : public Marx::VEntity
 		bool checkDeath();
 		void die();
 
-		void detectMove();
 		void move();
 		void stop(int key);
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
+
+		virtual void setHealth(int health);
+		virtual void setAttack(int attack);
+		virtual Entity *getEntity();
 };
 
 #endif

@@ -5,6 +5,10 @@
 #include "../Network/Session.h"
 #include "../Engine/Scene.h"
 
+class ServerGameState;
+class ServerLobbyScene;
+class ServerGameScene;
+
 using Networking::Server;
 using Networking::Session;
 using Marx::Scene;
@@ -21,12 +25,27 @@ using Marx::Scene;
 class ServerCommand : public Server
 {
     public:
-        ServerCommand(Scene *scene);
+        ServerCommand();
         virtual void onConnect(Session* session);
         virtual void onMessage(Session* session, char* data, int len);
         virtual void onDisconnect(Session* session, int remote);
+        Scene *getActiveScene();
+        ServerGameState *getGameState();
+        ServerGameScene *getGameScene();
+        bool isGameInProgress();
+        void goToLobby();
+        void prepareForGameState();
+        void goToGame();
+        void goToScoreboard();
+        
+        void playerLeft(Session *session);
+
     private:
-        Scene *scene;
+	    ServerLobbyScene *lobbyScene;
+	    ServerGameScene *gameScene;
+        Scene *activeScene;
+        
+        ServerGameState *gameState;
 };
 
 #endif

@@ -6,6 +6,9 @@
 #include <iostream>
 #include "Engine/Scene.h"
 #include "Logic/GameScene.h"
+#include "Logic/MainMenuScene.h"
+#include "Logic/ClientLobbyScene.h"
+#include "Logic/ClientScoreboardScene.h"
 
 
 namespace Marx

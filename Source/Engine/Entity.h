@@ -24,7 +24,6 @@
 #define ENTITY_H_
 
 #include "Cell.h"
-#include "Controller.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "Map.h"
 
@@ -33,24 +32,31 @@
 
 namespace Marx
 {
+	class Controller;
+
 	class Entity : public sf::FloatRect, public BGO
 	{
-	private:
-		bool move__;
-	protected:
-		Controller * controller;
-		std::set<Cell*> occupiedCells;
-		Map * map;
 	public:
 		Entity(Map * _map, float x, float y, Controller * ctrl, float h, float w);
 		virtual ~Entity();
 		virtual void turn();
 		Entity * move(float, float, bool);
+		Entity * rMove(float, float, bool);
+		Entity * aMove(float, float, bool);
+		Controller *getController();
 		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		virtual bool operator==(const Entity&);
+		void setBlocking(bool);
+		bool getBlocking();
+	protected:
+		std::set<Cell*> occupiedCells;
+		Map * map;
+		bool blocking;
+	private:
+		Controller * controller;
 	};
 };
 #endif

@@ -20,27 +20,22 @@
 #include "../../../Engine/Map.h"
 #include "../../../Engine/Cell.h"
 #include "../../../Engine/Controller.h"
+#include "../../Creature.h"
+#include "../../../Multimedia/graphics/Animation.h"
 
-class GateKeeper : public Marx::VEntity
+class GateKeeper : public Marx::VEntity, public Creature
 {
 
 	public:
-		GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl = NULL, float h = 1.0, float w = 1.0) :
-			VEntity(sprite, map, x, y, ctrl, h, w)
-			,_ctrl(ctrl)
-			{
-				_range = 1;
-				_health = 100;
-				_type = 1;
-				_attack = 1;
-				_attackSpeed = 1;
-				_movementSpeed = 1;
-				_incombat = false;
-				_cooldown = 1;
-			};
-
+		GateKeeper(SGO &sprite,
+			Marx::Map* map,
+			float x,
+			float y,
+			Marx::Controller* ctrl,
+			float h,
+			float w
+		);
 		virtual ~GateKeeper();
-		virtual void update(const sf::Time& t) override;
 		virtual void detectPlayers();
 		virtual void enterCombat();
 		virtual void leaveCombat();
@@ -52,6 +47,9 @@ class GateKeeper : public Marx::VEntity
 		virtual void setMovementSPed(int ms);
 		virtual void setTarget(/*Player*/);
 		virtual void setCooldown(/*Timer*/);
+		virtual void setPosition(float x, float y);
+		virtual void setXSpeed(float x);
+		virtual void setYSpeed(float y);
 		virtual int getRange();
 		virtual int getHealth();
 		virtual int getAttack();
@@ -62,25 +60,45 @@ class GateKeeper : public Marx::VEntity
 		virtual void turn();
 		virtual void onCreate();
 		virtual void onDestroy();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		virtual bool operator==(const VEntity&);
+    virtual Entity* getEntity();
+		virtual bool isMoving();
 
 
-	private:
+	protected:
+		bool movingLeft;
+    bool movingRight;
+		bool movingUp;
+    bool movingDown;
 		int _range;
 		int _type;
 		int _health;
 		int _attack;
 		int _attackSpeed;
 		int _movementSpeed;
+		float _xSpeed;
+		float _ySpeed;
+		float newXSpeed = 0;
+		float newYSpeed = 0;
+		int _direction;
+		float _xPos;
+		float _yPos;
 		bool _incombat;
+		bool _moving;
+		Marx::Controller* _ctrl;
 		time_t _cooldown;
+		SGO* _sprite;
+
+
+	private:
+
 		//Player _target;
 		//PatrolRadius _radius;
 		//Timer _cooldownTimer;
 		//AI _ai;
 
-		Marx::Controller* _ctrl;
+
 
 };
 #endif

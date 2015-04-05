@@ -2,7 +2,10 @@
 #include "AppWindow.h"
 
 #include "Network/Client.h"
+
 #include "Logic/Entities/ClientMux.h"
+#include "Logic/EntityFactory.h"
+#include "Logic/GameScene.h"
 
 using Networking::NetworkEntityMultiplexer;
 using Networking::Client;
@@ -17,17 +20,14 @@ int main(int argc, char* argv[])
     printf("USAGE: %s [REMOTE_IP] [REMOTE_PORT]\n",argv[0]);
     fflush(stdout);
 
-    GameScene *scene = new GameScene();
-
-    // Initialize a Client Entity Multiplexer
-    NetworkEntityMultiplexer::setInstance(new ClientMux(scene));
-    
-    Client* client = new Client();
-    short port = atoi(argv[2]);
-    client->connect(argv[1], port);
+    // force the entity factory to create their graphics on the main thread
+    EntityFactory::getInstance();
 
     AppWindow::getInstance().setVerticalSyncEnabled(true);
-	AppWindow::getInstance().addScene(scene);
+
+    AppWindow::getInstance().addScene(MainMenuScene::getInstance());
+    //AppWindow::getInstance().addScene(ClientScoreboardScene::getInstance());
+
     AppWindow::getInstance().run();
 
     return EXIT_SUCCESS;

@@ -20,8 +20,6 @@ namespace GUI
 	Label::Label(SGO* theBackground, std::string theText)
 	{
 		back_enabled = true;
-		background = theBackground;
-		add(*background);
 
 		text().setString(theText);
 	}

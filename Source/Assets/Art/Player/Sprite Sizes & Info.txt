@@ -19,3 +19,8 @@ Weapons
 To Align a weapon on a base:
 ==============================
 origin point = 29, 23
+
+----------
+PROJECTILE
+----------
+8x8 and 4 frames

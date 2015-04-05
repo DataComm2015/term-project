@@ -22,14 +22,20 @@
 #ifndef _NETWORK_SESSION_H_
 #define _NETWORK_SESSION_H_
 
+#include <deque>
 #include <set>
+#include <cstring>
+#include <cstdlib>
+
 
 namespace Networking
 {
+    class Session;
     class NetworkEntity;
     class NetworkEntityMultiplexer;
-
     struct Message;
+
+    void handleSessionMessages();
 
     class Session
     {
@@ -43,11 +49,16 @@ namespace Networking
         void disconnect();
         void onMessage(Message* msg);
         void onDisconnect(int remote);
+        void handleMessages();
+        void markForDeletion();
 
     private:
         int socket;
+        int messagesSem;
+        std::deque<Message*> messages;
         NetworkEntityMultiplexer* entityMux;
         std::set<NetworkEntity*> registeredEntities;
+
     };
 }
 

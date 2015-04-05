@@ -19,11 +19,14 @@
 #include "../Multimedia/graphics/Animation.h"
 #include "../Multimedia/gui/Button.h"
 #include "../Multimedia/gui/TextBox.h"
+#include "../Multimedia/gui/HealthBar.h"
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
 #include "../Engine/VEntity.h"
 #include "../Engine/EGTheSpinner.h"
 #include "Entities/Vessel.h"
+#include "../Logic/PlayerMode.h"
+
 
 #include "KeyListener.h"
 
@@ -38,6 +41,22 @@
 /*
 *	This is the In-game Scene where all round-events occur.
 */
+struct btnStatus
+{
+	GUI::Button* btn;
+	int coolDown = 0;
+};
+
+void onClickDemiseThree();
+void onClickDemiseTwo();
+void onClickDemiseOne();
+void onClickVitalityThree();
+void onClickVitalityTwo();
+void onClickVitalityOne();
+
+static btnStatus bs[3];
+
+
 class GameScene : public Scene
 {
 	public:
@@ -53,10 +72,20 @@ class GameScene : public Scene
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
 
+		void generateMap(int seed);
 		void generateWater();
 		void generateUI();
-		void positionButtons();
-		
+		void positionUI();
+		void setPlayerVessel(Vessel *vessel);
+
+
+		friend void onClickVitalityOne();
+		friend void onClickVitalityTwo();
+		friend void onClickVitalityThree();
+		friend void onClickDemiseOne();
+		friend void onClickDemiseTwo();
+		friend void onClickDemiseThree();
+
 	private:
 		/**
 		 * set of registered key listeners that should be notified whenever a
@@ -64,43 +93,53 @@ class GameScene : public Scene
 		 */
 		std::set<KeyListener*> keyListeners;
 
-		GameMap *gMap;
+		// Renderer & views
 
 		Renderer renderer;
-
 		sf::View viewMain;
 		sf::View viewUI;
 
-		sf::Sound current;
+		// Resources
 
 		id_resource tilemap;
 		id_resource championSprite;
 		id_resource maskSprite;
 		id_resource wepSprite;
-		id_resource butSprite;
+
+		id_resource hbarSprite;
+		id_resource hbgSprite;
 		id_resource scat_music;
 		id_resource chick_sound;
 		id_resource placeholderSprite;
+
+		id_resource butSprite;
+		id_resource demiseBtn;
+		id_resource vitalityBtn;
+		id_resource warriorBtn;
+		id_resource shamanBtn;
+
+		//VITALITY
+		id_resource buffskillbtn;
+		id_resource healskillbtn;
+		id_resource healingcircleskillbtn;
+
+		//DEMISE
+		id_resource debuffskillbtn;
+		id_resource hurtskillbtn;
+		id_resource summonskillbtn;
 
 		sf::Shader waveShader;
 		float phase;
 
 		// Game Objects
-		Vessel *vessel;
 
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
-		Marx::Projectile * p;
 
-		SGO championSGO;
-		SGO championSGO2;
-		SGO maskSGO;
-		SGO wepSGO;
-		SGO placeHolderSGO;
-		TheSpinner *s;
-		TheSpinner *s2;
+		Vessel *myVessel;
 
 		// UI
+
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
@@ -108,6 +147,28 @@ class GameScene : public Scene
 		GUI::Button *b5;
 		GUI::Button *b6;
 		GUI::TextBox *tb;
+		GUI::HealthBar *hb;
+		GUI::TextBox *levelInd;
+
+		// Misc
+
+		GameMap *gMap;
+
+		PLAYER_MODE characterType;
+		int classType;
+
+		sf::Sound current;
+
+		// tech demos:
+
+		SGO placeHolderSGO;
+		TheSpinner *s;
+		TheSpinner *s2;
+		sf::Vector2f butSize;
+		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
+
+		void checkBtns(sf::Time);
+		void setUI();
 };
 
 #endif

@@ -172,6 +172,43 @@ void Block::setDeco(vector<CellTile> *tiles)
 
 
 /******************************************************************************
+*	FUNCTION: getRandomCell
+*
+*	DATE: March 31, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: Cell* getRandomCell();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		Cell* - the cell to return
+*
+*	NOTES:
+*		This function returns a vacant cell within the block.
+******************************************************************************/
+Cell* Block::getRandomCell()
+{
+	Cell *tempCell;
+
+	// Search until an empty, unblocking cell is found
+	do
+	{
+		int cellNum = rand() % (BLOCK_WIDTH * BLOCK_HEIGHT);
+		tempCell = (*cellMap)[cellNum];
+	}
+	while (tempCell->getBlocking() || tempCell->getEntity().size() != 0);
+
+	return tempCell;
+}
+
+
+/******************************************************************************
 *	FUNCTION: getType
 *
 *	DATE: February 17, 2015
