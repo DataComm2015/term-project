@@ -639,17 +639,17 @@ void GameScene::setUI()
 			switch(classType)
 			{
 				case 1: //VITALITY
-					b1 = new GUI::Button(*Manager::TextureManager::get(healskillbtn), butSize, viewUI, onClickVitalityOne);
-					b2 = new GUI::Button(*Manager::TextureManager::get(buffskillbtn), butSize, viewUI, onClickVitalityTwo);
-					b3 = new GUI::Button(*Manager::TextureManager::get(healingcircleskillbtn), butSize, viewUI, onClickVitalityThree);
+					b1 = new GUI::Button(*Manager::TextureManager::get(healskillbtn), skillbtn, viewUI, onClickVitalityOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(buffskillbtn), skillbtn, viewUI, onClickVitalityTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(healingcircleskillbtn), skillbtn, viewUI, onClickVitalityThree);
 					b4 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
 					b5 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickLevelup);
 					b6 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickHealthTest);
 				break;
 				case 2: //DEMISE
-					b1 = new GUI::Button(*Manager::TextureManager::get(hurtskillbtn), butSize, viewUI, onClickDemiseOne);
-					b2 = new GUI::Button(*Manager::TextureManager::get(debuffskillbtn), butSize, viewUI, onClickDemiseTwo);
-					b3 = new GUI::Button(*Manager::TextureManager::get(summonskillbtn), butSize, viewUI, onClickDemiseThree);
+					b1 = new GUI::Button(*Manager::TextureManager::get(hurtskillbtn), skillbtn, viewUI, onClickDemiseOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(debuffskillbtn), skillbtn, viewUI, onClickDemiseTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(summonskillbtn), skillbtn, viewUI, onClickDemiseThree);
 					b4 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
 					b5 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickLevelup);
 					b6 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickHealthTest);

@@ -165,6 +165,7 @@ class GameScene : public Scene
 		TheSpinner *s;
 		TheSpinner *s2;
 		sf::Vector2f butSize;
+		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
 
 		void checkBtns(sf::Time);
 		void setUI();
