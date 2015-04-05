@@ -100,6 +100,8 @@ class Vessel : public Marx::VEntity, public Creature
 		//TO DO: pointer to the game map needed in the future
 
 	public:
+        float newXSpeed;
+        float newYSpeed;
 		Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 						Marx::Map * gmap,
 						float x,

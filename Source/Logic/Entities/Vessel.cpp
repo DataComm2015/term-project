@@ -16,7 +16,7 @@
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
 --
--- PROGRAMMER: Sebastian Pelka, Sanders Lee
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
@@ -52,6 +52,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	movingUp = false;
 	movingDown = false;
 	attackPower = 0;
+    newXSpeed = 0;
+    newYSpeed = 0;
 
 	xPos = x;
 	yPos = y;
@@ -111,9 +113,6 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 void Vessel::onUpdate()
 {
 
-	static float newXSpeed = 0;
-	static float newYSpeed = 0;
-
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
@@ -129,7 +128,7 @@ void Vessel::onUpdate()
 
 				// set position to last known position on server to avoid
 				// sync problems across the clients
-				Entity::aMove(ev->getX(), ev->getY(), false);
+                Entity::aMove(ev->getX(), ev->getY(), false);
 				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)
