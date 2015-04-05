@@ -42,12 +42,10 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     // sound set loaded should be determined by enemy type
     if (_type == 1) // if (_type == BEE )
     {
-        //grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-    	//stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-        grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
-    	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
-        hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
-    	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
+        grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+    	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+        hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+    	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
     }
   };
 
