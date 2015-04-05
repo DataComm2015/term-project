@@ -94,12 +94,13 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 {
     if( msg->type == Marx::ATTACK )
     {
-
         AttackMessage * ms = (AttackMessage *) msg->data;
 
         std::cout << "MAKE ME AN ATTACK" << std::endl;
         sf::Vector2f v(ms->cellx, ms->celly);
         Marx::AttackAction act(sf::seconds(10), 10.0f);
+	std::cout << "At: " << ms->srcx << " " << ms->srcy << std::endl;
+	std::cout << "To: " << v.x << " " << v.y << std::endl;
         return new Marx::Projectile(projSGO, cMap, ms->srcx, ms->srcy, &act, v, cont, 1.0, 1.0);
 
     }

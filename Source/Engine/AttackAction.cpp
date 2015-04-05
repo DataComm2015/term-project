@@ -1,4 +1,5 @@
 #include "AttackAction.h"
+#include <iostream>
 
 using namespace Marx;
 
@@ -10,6 +11,7 @@ Action(_TTL), damage(_damage)
 
 void AttackAction::onUpdate(Entity * me, sf::Time time)
 {
+	std::cout << "Update AttackAction" << std::endl;
 	(static_cast<Projectile*>(me))->setTTL((static_cast<Projectile*>(me))->getTTL() - time);
 	MoveEvent * m = new MoveEvent(me->left, me->top, (static_cast<Projectile*>(me))->getVector().x * 100, 
 																	(static_cast<Projectile*>(me))->getVector().y * 100, true);

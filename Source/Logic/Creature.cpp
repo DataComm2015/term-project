@@ -1,4 +1,5 @@
 #include "Creature.h"
+#include <iostream>
 
 void Creature::setHealth(int health)
 {
@@ -21,6 +22,7 @@ int Creature::getHealth()
 
 Marx::Projectile* Creature::createAttack(AttackEvent & event, SGO &sprite, float x, float y)
 {
+	std::cout << "Creature Create Attack" << std::endl;	
 	sf::Vector2f v(event.getCellX(), event.getCellY());
 	Marx::Action *action = actionList[event.getAction()];
 	return Manager::ProjectileManager::getProjectile(sprite, getEntity()->getMap(),  getEntity(), action, v, 1.0, 1.0);

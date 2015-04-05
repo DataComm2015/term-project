@@ -47,6 +47,7 @@ void Projectile::onDestroy()
 
 void Projectile::onUpdate(sf::Time t)
 {
+	std::cout << "Update Projectile" << std::endl;
 	if(TimeToLive > sf::seconds(0))
 	{
 		act->onUpdate(this, t);

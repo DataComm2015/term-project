@@ -405,6 +405,9 @@ void GameScene::processEvents(sf::Event& e)
 	{
 		sf::Vector2i mouse = sf::Mouse::getPosition();
 		sf::Vector2f viewVector = viewMain.getCenter();
+		std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
+		std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
+		
 		for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
 		{
 			(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
