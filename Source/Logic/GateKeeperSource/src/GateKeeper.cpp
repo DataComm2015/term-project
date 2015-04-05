@@ -33,8 +33,8 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     _cooldown = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.05;
-    _ySpeed = 0.05;
+    _xSpeed = 0.09;
+    _ySpeed = 0.09;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
   };
@@ -48,7 +48,7 @@ GateKeeper::~GateKeeper()
 -- PROGRAMMER:  ???
 --				Sanders Lee (Debugged synchronization problem across clients)
 ***/
-void GateKeeper::onUpdate()
+void GateKeeper::onUpdate(float deltaTime)
 {
 
 

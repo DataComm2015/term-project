@@ -47,7 +47,7 @@ namespace Marx
 		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		virtual bool operator==(const Entity&);
 		void setBlocking(bool);
 		bool getBlocking();

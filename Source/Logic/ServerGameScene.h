@@ -17,6 +17,8 @@
 #include "Environment/GameMap.h"
 #include "PlayerMode.h"
 
+#define SYNC_INTERVAL 1
+
 class ServerEnemyController;
 class ServerCommand;
 class Creature;
@@ -51,6 +53,7 @@ class ServerGameScene : public Scene
         ServerCommand *command;
         int worldSeed;
         float timer;
+        float syncTimer;
         float lobtimer;
         std::vector<Creature*> enemies;
         std::vector<ServerEnemyController*> enemyControllers;
