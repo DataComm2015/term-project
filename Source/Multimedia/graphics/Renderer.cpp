@@ -13,6 +13,7 @@
  *             > All basic game object rendering
  *             > Sprite batching
  *             > Map rendering
+ *             > Visible entities rendering
  */
 
 #include "Renderer.h"
@@ -305,7 +306,7 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
  *
  * @programmer Melvin Loho
  *
- * @param      map    The specified Map
+ * @param      map    The specified map
  * @param      states The render states
  */
 void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
@@ -397,6 +398,20 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 	count = 0;
 }
 
+/**
+ * Draws the specified visible entity.
+ *
+ * @date       2015-04-03
+ *
+ * @revisions
+ *
+ * @designer   Melvin Loho
+ *
+ * @programmer Melvin Loho
+ *
+ * @param      map    The specified visible entity
+ * @param      states The render states
+ */
 void Renderer::draw(const Marx::VEntity& ve, sf::RenderStates states)
 {
 	if (!active) throw "Renderer is not active.";
