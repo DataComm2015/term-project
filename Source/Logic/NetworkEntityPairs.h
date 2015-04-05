@@ -36,7 +36,12 @@ enum class NetworkEntityPair
      * a {ServerGameState} instance on the server side is connected to a
      *   {ClientGameState} instance on the client side.
      */
-    SERVERGAMESTATE_CLIENTGAMESTATE
+    SERVERGAMESTATE_CLIENTGAMESTATE,
+
+    /**
+     * a static structure instance mirrored on Server and Client
+     */
+    STRUCTURE_MIRROR
 };
 
 //////////////////////////////////////////////////////////////////////////////

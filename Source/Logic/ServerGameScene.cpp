@@ -255,6 +255,12 @@ void ServerGameScene::createPlayers()
     }
 }
 
+void createStructure(ENTITY_TYPES type, float x, float y)
+{
+    Entity *entity = EntityFactory::getInstance()->makeEntity(type,NULL,cMap,x,y);
+    command->getGameState()->registerWithAllPlayers((EntityFactory*) entity, &msg);
+}
+
 std::vector<Vessel*> ServerGameScene::getPlayerList()
 {
   return playerList;
