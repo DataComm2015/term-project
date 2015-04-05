@@ -12,6 +12,7 @@
 class Structure : public Marx::VEntity, public Networking::NetworkEntity
 {
 	public:
+        Structure(int id, SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h, float w);
 		Structure(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h, float w);
 		virtual ~Structure();
 		virtual void turn();
