@@ -45,7 +45,7 @@ GateKeeper::~GateKeeper()
 }
 
 /***
--- PROGRAMMER:  ???
+-- PROGRAMMER:  Filip Gutica
 --				Sanders Lee (Debugged synchronization problem across clients)
 ***/
 void GateKeeper::onUpdate()
@@ -66,16 +66,16 @@ void GateKeeper::onUpdate()
     	{
     		case ::Marx::MOVE:
     			MoveEvent* ev = (MoveEvent*) (*it);
-                  int xDir = ev->getXDir();
-                  int yDir = ev->getYDir();
+                int xDir = ev->getXDir();
+                int yDir = ev->getYDir();
 
-                  // set position to last known position on server to avoid
-                  // sync problems across the clients
-                  Entity::aMove(ev->getX(), ev->getY(), false);
+                // set position to last known position on server to avoid
+                // sync problems across the clients
+                Entity::aMove(ev->getX(), ev->getY(), false);
 
-                  newXSpeed = ((float)xDir/10.0);
-                  newYSpeed = ((float)yDir/10.0);
-    			break;
+                newXSpeed = ((float)xDir/10.0);
+                newYSpeed = ((float)yDir/10.0);
+			break;
     	}
 
     }

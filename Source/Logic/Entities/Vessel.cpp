@@ -1,7 +1,12 @@
 #include <iostream>
 #include "Vessel.h"
 #include "../Event.h"
+#include "../../Multimedia/manager/SoundManager.h"
 
+using namespace Manager;
+
+id_resource grassWalkSound, stoneWalkSound;
+sf::Sound current;
 //TO DO:
 //1) GIVE IT A SPRITE
 //2) MAKE THE SPRITE ANIMATE
@@ -55,6 +60,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 
 	xPos = x;
 	yPos = y;
+
+	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.wav"));
 
 	//abilities = abilityList;
 /*
@@ -132,25 +139,38 @@ void Vessel::onUpdate()
 				Entity::aMove(ev->getX(), ev->getY(), false);
 				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
+				//use getCell() to see whether to play grass or stone walking sound
+				std::set<Cell*>::iterator i = getCell().begin();
+				if (*i->getTileId() == GRASS_TL)
+				{
+					if (newXSpeed == 0 && newYSpeed == 0)
+					{
+						sf::Vector2f soundPos;
+						current = SoundManager::play(grassWalkSound, soundPos);
+						current.play();
+						printf("sound active, id: %d\n", grassWalkSound);
+					}
+				}
+
 				if (yDir == -1)
 				{
 					newYSpeed -= ySpeed;
-					printf("Vessel.cpp: moving up\n");
+					printf("Vessel.cpp: moving up, speed: %f\n", newYSpeed);
 				}
 				else if (yDir == 1)
 				{
 					newYSpeed += ySpeed;
-					printf("Vessel.cpp: moving up\n");
+					printf("Vessel.cpp: moving down, speed: %f\n", newYSpeed);
 				}
 				else if (xDir == 1)
 				{
 					newXSpeed += xSpeed;
-					printf("Vessel.cpp: moving up\n");
+					printf("Vessel.cpp: moving right, speed: %f\n", newXSpeed);
 				}
 				else if (xDir == -1)
 				{
 					newXSpeed -= xSpeed;
-					printf("Vessel.cpp: moving up\n");
+					printf("Vessel.cpp: moving left, speed: %f\n", newXSpeed);
 				}
 
 				//old code - replaced with the if-else block above
