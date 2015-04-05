@@ -110,7 +110,7 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 {
 	if (generated)
 	{
-		cleanMap();
+		//cleanMap();
 		generated = false;
 	}
 
