@@ -41,6 +41,22 @@
 /*
 *	This is the In-game Scene where all round-events occur.
 */
+struct btnStatus
+{
+	GUI::Button* btn;
+	int coolDown = 0;
+};
+
+void onClickDemiseThree();
+void onClickDemiseTwo();
+void onClickDemiseOne();
+void onClickVitalityThree();
+void onClickVitalityTwo();
+void onClickVitalityOne();
+
+static btnStatus bs[3];
+
+
 class GameScene : public Scene
 {
 	public:
@@ -56,11 +72,19 @@ class GameScene : public Scene
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
 
-  		void generateMap(int seed);
+		void generateMap(int seed);
 		void generateWater();
 		void generateUI();
 		void positionUI();
 		void setPlayerVessel(Vessel *vessel);
+
+
+		friend void onClickVitalityOne();
+		friend void onClickVitalityTwo();
+		friend void onClickVitalityThree();
+		friend void onClickDemiseOne();
+		friend void onClickDemiseTwo();
+		friend void onClickDemiseThree();
 
 	private:
 		/**
@@ -93,6 +117,16 @@ class GameScene : public Scene
 		id_resource vitalityBtn;
 		id_resource warriorBtn;
 		id_resource shamanBtn;
+
+		//VITALITY
+		id_resource buffskillbtn;
+		id_resource healskillbtn;
+		id_resource healingcircleskillbtn;
+
+		//DEMISE
+		id_resource debuffskillbtn;
+		id_resource hurtskillbtn;
+		id_resource summonskillbtn;
 
 		sf::Shader waveShader;
 		float phase;
@@ -130,6 +164,11 @@ class GameScene : public Scene
 		SGO placeHolderSGO;
 		TheSpinner *s;
 		TheSpinner *s2;
+		sf::Vector2f butSize;
+		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
+
+		void checkBtns(sf::Time);
+		void setUI();
 };
 
 #endif

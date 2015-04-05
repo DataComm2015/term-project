@@ -17,7 +17,7 @@
 #include "Environment/GameMap.h"
 #include "PlayerMode.h"
 
-#define SYNC_INTERVAL 3
+#define SYNC_INTERVAL 1
 
 class ServerEnemyController;
 class ServerCommand;
