@@ -21,6 +21,7 @@
 #include "../../../Engine/Cell.h"
 #include "../../../Engine/Controller.h"
 #include "../../Creature.h"
+#include "../../../Multimedia/graphics/Animation.h"
 
 class GateKeeper : public Marx::VEntity, public Creature
 {
@@ -65,7 +66,6 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual bool isMoving();
 
 
-
 	protected:
 		bool movingLeft;
     bool movingRight;
@@ -88,6 +88,8 @@ class GateKeeper : public Marx::VEntity, public Creature
 		bool _moving;
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
+		SGO* _sprite;
+
 
 	private:
 

@@ -110,7 +110,7 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 {
 	if (generated)
 	{
-		//cleanMap();
+		cleanMap();
 		generated = false;
 	}
 
@@ -138,19 +138,16 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 
 		// Place mini-bosses
 	    generateMiniBosses();
-	}
 
-	// Define placeholder blocks
-	generatePlaceholderBlocks();
+		// Define placeholder blocks
+		generatePlaceholderBlocks();
 
-	if (gameScene != NULL)
-	{
 		// Generate enemies
 		generateEnemies();
-	}
 
-	// Generate miscellaneous objects
-	generateStructures();
+		// Generate miscellaneous objects
+		generateStructures();
+	}
 
 	// Generate tiles
 	if (gameScene == NULL)
@@ -208,7 +205,7 @@ void GameMap::cleanMap()
 
 				// Delete all entities
 				//delete (*it)->getController();
-				
+
 				//delete *it;
 			}
 		}
@@ -737,7 +734,8 @@ void GameMap::generateStructures()
 					destCell = blockMap[i][j].getRandomCell();
 
 					// Place the structure
-					ef->makeEntity(STRUCTURES, NULL, cellMap, destCell->getX(), destCell->getY());
+					gameScene->createStructure(STRUCTURES, destCell->getX(), destCell->getY());
+					//cout << "Made entity at: " << destCell->getX() << ", " << destCell->getY() << endl;
 				}
 			}
 		}

@@ -96,24 +96,30 @@ void ClientNetworkController::parseEventMessage( Message& message )
 {
     switch(message.type)
     {
-    case ::Marx::MOVE:
-    {
-        // case message payload
-        MoveMessage* mm = (MoveMessage*) message.data;
+        case ::Marx::MOVE:
+        {
+            // case message payload
+            MoveMessage* mm = (MoveMessage*) message.data;
 
-        // create event from message data
-        MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->xDir, mm->yDir, mm->forced);
+            // create event from message data
+            MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->xDir, mm->yDir, mm->forced);
 
-        // add event to event queue
-        addEvent(ev);
-        break;
-    }
-    default:
-    {
-        printf("WARNING: ClientNetworkController::parseEventMessage received an "
-            "unknown event type. please add new case to switch statement");
-        fflush(stdout);
-        break;
-    }
+            // add event to event queue
+            addEvent(ev);
+            break;
+        }
+        case ::Marx::UPDATE:
+        {
+            UpdateMessage *um = (UpdateMessage*) message.data;
+            UpdateEvent *ev = new UpdateEvent(um->x, um->y);
+            addEvent(ev);
+        }
+        default:
+        {
+            printf("WARNING: ClientNetworkController::parseEventMessage received an "
+                "unknown event type. please add new case to switch statement");
+            fflush(stdout);
+            break;
+        }
     }
 }

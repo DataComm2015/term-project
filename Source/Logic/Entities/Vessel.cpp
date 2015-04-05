@@ -7,6 +7,7 @@
 
 using namespace Manager;
 
+
 sf::Sound footstep;
 sf::Sound voice;
 
@@ -53,8 +54,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	direction = 1; //start facing right
 
 	resetEXP();
-	xSpeed = 0.1;
-	ySpeed = 0.1;
+	xSpeed = 0.08;
+	ySpeed = 0.08;
 	movingLeft = false;
 	movingRight = false;
 	movingUp = false;
