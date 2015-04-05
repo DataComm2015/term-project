@@ -48,8 +48,12 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
         if ((targetVessel = detectVessels()) == NULL)
         {
-          event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
-          addEvent(event);
+          if (moving)
+          {
+            event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
+            addEvent(event);
+            moving = false;
+          }
           return;
         }
         else
@@ -89,6 +93,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
         if (prevX != xDirection || prevY != yDirection)
         {
+          moving = true;
           std::cout << "Adding move event" << std::endl;
           std::cout << "X Direction " << xDirection << std::endl;
           std::cout << "Y Direction " << yDirection << std::endl;
