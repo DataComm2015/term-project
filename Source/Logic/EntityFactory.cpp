@@ -49,8 +49,6 @@ EntityFactory::EntityFactory()
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    gkSGO.sprite().setScale(1, 1);
-    gkSGO.middleAnchorPoint(true);
 
 	projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
     projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -59,8 +57,6 @@ EntityFactory::EntityFactory()
 
     vesselSGO.sprite().setTexture(*Manager::TextureManager::get(vesselSprite));
     vesselSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    vesselSGO.sprite().setScale(1, 1);
-    vesselSGO.middleAnchorPoint(true);
 
     // Structures
     structImage = Manager::TextureManager::store(
@@ -69,18 +65,12 @@ EntityFactory::EntityFactory()
 
     structSprite.sprite().setTexture(*Manager::TextureManager::get(structImage));
     structSprite.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    structSprite.sprite().setScale(1, 1);
-    structSprite.middleAnchorPoint(false);
 
     maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
     maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    maskSGO.sprite().setScale(1, 1);
-    maskSGO.middleAnchorPoint(true);
 
     spearSGO.sprite().setTexture(*Manager::TextureManager::get(spearSprite));
     spearSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-    spearSGO.sprite().setScale(1, 1);
-    spearSGO.middleAnchorPoint(true);
 }
 
 EntityFactory::~EntityFactory()

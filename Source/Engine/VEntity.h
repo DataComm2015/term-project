@@ -14,17 +14,18 @@ namespace Marx
 	public:
 		VEntity(SGO & _sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w);
 
-
-		const sf::Transform& getLocalTransform() const override;
+		sf::Transform getLocalTransform() const override;
 
 		const SGO& getSprite() const;
+		SGO& getSprite();
 		void setSprite(SGO& _sprite);
 
 	protected:
 		
 		virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
 		bool drawable;
-		SGO& sprite;
+
+		SGO* sprite;
 	};
 
 };

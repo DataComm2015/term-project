@@ -24,7 +24,6 @@
 #define ENTITY_H_
 
 #include "Cell.h"
-#include "Controller.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "Map.h"
 
@@ -50,7 +49,7 @@ namespace Marx
 		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		virtual bool operator==(const Entity&);
 		void setBlocking(bool);
 		bool getBlocking();

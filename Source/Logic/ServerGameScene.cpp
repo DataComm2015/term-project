@@ -64,14 +64,31 @@ ServerGameScene::~ServerGameScene()
 
 void ServerGameScene::update(sf::Time time)
 {
-    auto entities = cMap->getEntities();
-    for ( auto it = entities.begin(); it != entities.end(); ++it)
-    {
-      (*it)->onUpdate();
-    }
 
     if (timer > 0)
     {
+        if (syncTimer > 0)
+        {
+          syncTimer -= time.asSeconds();
+        }
+        else
+        {
+          for (int i = 0; i < playerList.size(); i++)
+          {
+            Vessel* curVessel = playerList[i];
+            static_cast<ServerNetworkController*>(curVessel->getController())->
+                addEvent(new UpdateEvent(curVessel->left, curVessel->top));
+          }
+
+          syncTimer = SYNC_INTERVAL;
+        }
+
+        auto entities = cMap->getEntities();
+        for ( auto it = entities.begin(); it != entities.end(); ++it)
+        {
+          (*it)->onUpdate(time.asSeconds());
+        }
+
         for (int i = 0; i < enemyControllers.size(); i++)
             enemyControllers[i]->updateBehaviour(time.asSeconds());
         timer -= time.asSeconds();
@@ -258,6 +275,12 @@ void ServerGameScene::createPlayers()
             }
         }
     }
+}
+
+void createStructure(ENTITY_TYPES type, float x, float y)
+{
+    Entity *entity = EntityFactory::getInstance()->makeEntity(type,NULL,cMap,x,y);
+    command->getGameState()->registerWithAllPlayers((EntityFactory*) entity, &msg);
 }
 
 std::vector<Vessel*> ServerGameScene::getPlayerList()

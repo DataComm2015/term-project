@@ -3,12 +3,13 @@
 
 
 #include <SFML/Graphics.hpp>
+#include "../../Network/NetworkEntity.h"
 #include "../../Engine/VEntity.h"
 #include "../../Engine/Map.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
 
-class Structure : public Marx::VEntity
+class Structure : public Marx::VEntity, public Networking::NetworkEntity
 {
 	public:
 		Structure(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h, float w);

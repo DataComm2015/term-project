@@ -41,12 +41,36 @@ float MoveEvent::getX()
 }
 
 /**
+ * Sets the x coordinate, for synchronization across clients.
+ * DESIGNER:    Sanders Lee
+ * PROGRAMMER:  Sanders Lee
+ * @return    the x coordinate it has been set to
+ */
+float MoveEvent::setX(float _x)
+{
+    x = _x;
+    return x;
+}
+
+/**
  * returns the y property of the move event.
  *
  * @return   y property of the move event.
  */
 float MoveEvent::getY()
 {
+    return y;
+}
+
+/**
+ * Sets the y coordinate, for synchronization across clients.
+ * DESIGNER:    Sanders Lee
+ * PROGRAMMER:  Sanders Lee
+ * @return    the y coordinate it has been set to
+ */
+float MoveEvent::setY(float _y)
+{
+    y = _y;
     return y;
 }
 

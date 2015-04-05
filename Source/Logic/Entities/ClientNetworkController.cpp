@@ -144,12 +144,18 @@ void ClientNetworkController::parseEventMessage( Message& message )
 		addEvent(ev);
 		break;
 	}
-    default:
-    {
-        printf("WARNING: ClientNetworkController::parseEventMessage received an "
-            "unknown event type. please add new case to switch statement");
-        fflush(stdout);
-        break;
-    }
+        case ::Marx::UPDATE:
+        {
+            UpdateMessage *um (UpdateMessage*) message.data;
+            UpdateEvent *ev = new UpdateEvent(message.x, update.y);
+            addEvent(ev);
+        }
+        default:
+        {
+            printf("WARNING: ClientNetworkController::parseEventMessage received an "
+                "unknown event type. please add new case to switch statement");
+            fflush(stdout);
+            break;
+        }
     }
 }

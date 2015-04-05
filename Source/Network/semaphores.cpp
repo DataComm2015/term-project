@@ -90,7 +90,7 @@
 
         if( (semop(sid, sembuf_ptr, 1)) == -1)
         {
-            perror("accessSem");
+            //perror("accessSem");
             return false;
         }
         free(sembuf_ptr);
@@ -124,7 +124,7 @@
 
             if ((semop(sid,sembuf_ptr,1)) == -1)
         {
-            printf("semop error\n");
+            //printf("semop error\n");
             return false;
         }
         free(sembuf_ptr);
