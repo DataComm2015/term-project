@@ -16,7 +16,7 @@
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
 --
--- PROGRAMMER: Sebastian Pelka, Sanders Lee
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
@@ -29,17 +29,17 @@
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
-	Marx::Map * gmap,
-	float x,
-	float y,
-	Marx::Controller* controller_,
-	float height,
-	float width
-	/*, job_class jobClass, Ability* abilityList*/ )
-			: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
-			mask_sprite(_mask),
-			weapon_sprite(_weapon)
-			//,_controller(controller)
+								Marx::Map * gmap,
+								float x,
+								float y,
+								Marx::Controller* controller_,
+								float height,
+								float width
+								/*, job_class jobClass, Ability* abilityList*/ )
+								: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+								mask_sprite(_mask),
+								weapon_sprite(_weapon)
+								//,_controller(controller)
 {
 
 	direction = 1; //start facing right
@@ -48,10 +48,12 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	xSpeed = 0.1;
 	ySpeed = 0.1;
 	movingLeft = false;
-    movingRight = false;
-    movingUp = false;
-    movingDown = false;
+	movingRight = false;
+	movingUp = false;
+	movingDown = false;
 	attackPower = 0;
+    newXSpeed = 0;
+    newYSpeed = 0;
 
 	xPos = x;
 	yPos = y;
@@ -102,52 +104,55 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 
 /*-------------------------------------------
 --
+-- PROGRAMMER:  ???
+--				Sanders Lee (Debugged synchronization problem across clients)
 --
--- Called every game loop. dequeus all events from the entity's
+-- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
 ---------------------------------------------*/
 void Vessel::onUpdate()
 {
-
-	static float newXSpeed = 0;
-	static float newYSpeed = 0;
 
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
 		; ++it )
 	{
-
 		// switch on type
 		switch((*it)->type)
 		{
 			case ::Marx::MOVE:
 				MoveEvent* ev = (MoveEvent*) (*it);
-                int xDir = ev->getXDir();
-                int yDir = ev->getYDir();
+				int xDir = ev->getXDir();
+				int yDir = ev->getYDir();
 
-								if (yDir == -1)
-								{
-									newYSpeed -= ySpeed;
-									std::cout << "Vessel.cpp: moving up" << std::endl;
-								}
-								else if (yDir == 1)
-								{
-									newYSpeed += ySpeed;
-									std::cout << "Vessel.cpp: moving down" << std::endl;
-								}
-								else if (xDir == 1)
-								{
-									newXSpeed += xSpeed;
-									std::cout << "Vessel.cpp: moving right" << std::endl;
-								}
-								else if (xDir == -1)
-								{
-									newXSpeed -= xSpeed;
-									std::cout << "Vessel.cpp: moving left" << std::endl;
-								}
+				// set position to last known position on server to avoid
+				// sync problems across the clients
+                Entity::aMove(ev->getX(), ev->getY(), false);
+				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
-								//old code - replaced with the if-else block above
+				if (yDir == -1)
+				{
+					newYSpeed -= ySpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+				else if (yDir == 1)
+				{
+					newYSpeed += ySpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+				else if (xDir == 1)
+				{
+					newXSpeed += xSpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+				else if (xDir == -1)
+				{
+					newXSpeed -= xSpeed;
+					printf("Vessel.cpp: moving up\n");
+				}
+
+				//old code - replaced with the if-else block above
                 //movingLeft = (xDir < 0);
                 //movingRight = (xDir > 0);
                 //movingUp = (yDir < 0);
@@ -168,7 +173,7 @@ void Vessel::onUpdate()
   //       newYSpeed = ySpeed;
 
 
-  Entity::rMove(newXSpeed, newYSpeed,false);
+	Entity::rMove(newXSpeed, newYSpeed,false);
 }
 
 /*---------

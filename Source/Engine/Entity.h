@@ -24,7 +24,6 @@
 #define ENTITY_H_
 
 #include "Cell.h"
-#include "Controller.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "Map.h"
 
@@ -33,6 +32,8 @@
 
 namespace Marx
 {
+	class Controller;
+
 	class Entity : public sf::FloatRect, public BGO
 	{
 	public:
