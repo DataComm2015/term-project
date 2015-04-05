@@ -73,6 +73,7 @@ void ServerGameScene::update(sf::Time time)
         }
         else
         {
+
           for (int i = 0; i < playerList.size(); i++)
           {
             Vessel* curVessel = playerList[i];

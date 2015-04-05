@@ -158,7 +158,7 @@ Entity* EntityFactory::makeEntity(
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
         case STRUCTURES:
-            entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
+            //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
             break;
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:
@@ -195,7 +195,7 @@ Entity* EntityFactory::makeEntity(
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
         case STRUCTURES:
-            entity = new Structure(id, structSprite, map, x, y, cont, 1.0, 1.0);
+            //entity = new Structure(id, structSprite, map, x, y, cont, 1.0, 1.0);
             break;
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:
