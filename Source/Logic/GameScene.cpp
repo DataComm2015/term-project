@@ -568,11 +568,20 @@ void GameScene::generateUI()
 	shamanBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/shaman-btn.png"));
 
 
+
+	buffskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/buff-skill-btn.png"));
+	healskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/heal-skill-btn.png"));
+	healingcircleskillbtn	= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/healingcircle-skill-btn"));
+	debuffskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/debuff-skill-btn.png"));
+	hurtskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/hurt-skill-btn.png"));
+	summonskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/summon-skill-btn.png"));
+
+
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
 
-	sf::Vector2f butSize = sf::Vector2f(width, height);
+	butSize = sf::Vector2f(width, height);
 
 	setUI();
 
@@ -630,17 +639,17 @@ void GameScene::setUI()
 			switch(classType)
 			{
 				case 1: //VITALITY
-					b1 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onClickVitalityOne);
-					b2 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onClickVitalityTwo);
-					b3 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onClickVitalityThree);
+					b1 = new GUI::Button(*Manager::TextureManager::get(healskillbtn), butSize, viewUI, onClickVitalityOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(buffskillbtn), butSize, viewUI, onClickVitalityTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(healingcircleskillbtn), butSize, viewUI, onClickVitalityThree);
 					b4 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
 					b5 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickLevelup);
 					b6 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickHealthTest);
 				break;
 				case 2: //DEMISE
-					b1 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onClickDemiseOne);
-					b2 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onClickDemiseTwo);
-					b3 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onClickDemiseThree);
+					b1 = new GUI::Button(*Manager::TextureManager::get(hurtskillbtn), butSize, viewUI, onClickDemiseOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(debuffskillbtn), butSize, viewUI, onClickDemiseTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(summonskillbtn), butSize, viewUI, onClickDemiseThree);
 					b4 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
 					b5 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickLevelup);
 					b6 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickHealthTest);

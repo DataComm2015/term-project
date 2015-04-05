@@ -118,6 +118,16 @@ class GameScene : public Scene
 		id_resource warriorBtn;
 		id_resource shamanBtn;
 
+		//VITALITY
+		id_resource buffskillbtn;
+		id_resource healskillbtn;
+		id_resource healingcircleskillbtn;
+
+		//DEMISE
+		id_resource debuffskillbtn;
+		id_resource hurtskillbtn;
+		id_resource summonskillbtn;
+
 		sf::Shader waveShader;
 		float phase;
 
