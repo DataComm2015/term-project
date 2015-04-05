@@ -86,7 +86,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 		);
 
 	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
-	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
+	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.ogg"));
 
 	cMap->setTexture(tilemap);
 
