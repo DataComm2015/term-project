@@ -262,7 +262,7 @@ void GameScene::update(sf::Time t)
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
 	{
-		(*it)->onUpdate();
+		(*it)->onUpdate(t.asSeconds());
 	}
 
 	if (myVessel != NULL)

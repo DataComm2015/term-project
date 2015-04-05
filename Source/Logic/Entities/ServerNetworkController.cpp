@@ -147,6 +147,22 @@ void ServerNetworkController::sendEventMessage(Event *event)
             update(message);
             break;
     }
+    case ::Marx::UPDATE:
+    {
+          UpdateMessage um;
+          um.x      = getEntity()->left;
+          um.y      = getEntity()->top;
+
+          Message message;
+
+          message.data = &um;
+          message.len  = sizeof(UpdateMessage);
+          message.type = ::Marx::UPDATE;
+
+          // send the network event
+          update(message);
+          break;
+    }
     default:
         printf("\r\nWARNING: NetworkController::sendEventMessage received an "
             "unknown event type. please add new case to switch statement\r\n");
