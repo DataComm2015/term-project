@@ -571,7 +571,7 @@ void GameScene::generateUI()
 
 	buffskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/buff-skill-btn.png"));
 	healskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/heal-skill-btn.png"));
-	healingcircleskillbtn	= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/healingcircle-skill-btn"));
+	healingcircleskillbtn	= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/healingcircle-skill-btn.png"));
 	debuffskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/debuff-skill-btn.png"));
 	hurtskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/hurt-skill-btn.png"));
 	summonskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/summon-skill-btn.png"));
