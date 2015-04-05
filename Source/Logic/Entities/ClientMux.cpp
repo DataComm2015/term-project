@@ -135,7 +135,8 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
         }
 
         case NetworkEntityPair::STRUCTURE_MIRROR:
-            EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,NULL);
+            Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
+            EntityFactory::getInstance()->makeEntityFromNetworkMessage(id, cMap,&msg,NULL);
             break;
     }
 

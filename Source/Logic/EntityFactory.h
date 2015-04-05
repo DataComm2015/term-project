@@ -28,7 +28,19 @@ class EntityFactory
             Marx::Map* cMap,
             Networking::Message* msg,
             Marx::Controller* cont);
+        Entity* makeEntityFromNetworkMessage(
+            int id,
+            Marx::Map* cMap,
+            Networking::Message* msg,
+            Marx::Controller* cont);
         Entity* makeEntity(
+            ENTITY_TYPES type,
+            Marx::Controller* controller,
+            Marx::Map* map,
+            float x,
+            float y);
+        Entity* makeEntity(
+            int id,
             ENTITY_TYPES type,
             Marx::Controller* controller,
             Marx::Map* map,

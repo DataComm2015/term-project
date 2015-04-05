@@ -119,6 +119,24 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 }
 }
 
+Entity* EntityFactory::makeEntityFromNetworkMessage(
+    int id,
+    Map* cMap,
+    Message* msg,
+    Controller* cont)
+{
+    // Parse Network Message
+    EnemyControllerInit* init = (EnemyControllerInit*) msg->data;
+
+    // Init Data:
+    // init->type  ENTITY_TYPES
+    // init->x     float
+    // init->y     float
+
+    // Create the enemy
+    return EntityFactory::makeEntity(id, init->type,cont,cMap,init->x,init->y);
+}
+
 
 Entity* EntityFactory::makeEntity(
     ENTITY_TYPES type,
@@ -150,7 +168,39 @@ Entity* EntityFactory::makeEntity(
             //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
             break;
         default:
-            entity = new ProperEntity(map,x,y,cont,1.0,1.0);
+            break;
+    }
+
+    return entity;
+}
+
+Entity* EntityFactory::makeEntity(
+    int id,
+    ENTITY_TYPES type,
+    Controller* cont,
+    Map* map,
+    float x,
+    float y)
+{
+    Entity* entity;
+
+
+    switch(type)
+    {
+        case ENTITY_TYPES::BASIC_TYPE:
+            entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            break;
+        case ENTITY_TYPES::VESSEL:
+            entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
+            break;
+        case STRUCTURES:
+            entity = new Structure(id, structSprite, map, x, y, cont, 1.0, 1.0);
+            break;
+        case ENTITY_TYPES::I_DONT_KNOW:
+        case ENTITY_TYPES::BAWS:
+        case ENTITY_TYPES::MINION:
+        case ENTITY_TYPES::MINI_BOSS:
+        default:
             break;
     }
 
