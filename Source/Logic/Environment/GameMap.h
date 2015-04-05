@@ -68,6 +68,7 @@ class GameMap
 		void generatePlaceholderBlocks();
 		void generateTiles();
 		void generateStructures();
+		void cleanMap();
 
 		BlockType makeBlockType(BlockZone z, int rRoll);
 		ENTITY_TYPES getEnemyType(std::string enemy);
@@ -81,6 +82,7 @@ class GameMap
 		int bHeight;
 		int stoneWidth;
 		int stoneHeight;
+		bool generated;
 };
 
 #endif
