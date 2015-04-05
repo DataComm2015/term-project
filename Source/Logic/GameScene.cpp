@@ -79,7 +79,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "making tileset" << std::endl;
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
-	
+
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
 	placeholderSprite = Manager::TextureManager::store(
 		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
@@ -236,6 +236,7 @@ GameScene::~GameScene()
 
 void GameScene::update(sf::Time t)
 {
+	checkBtns(t);
 	// static int listEntity = 100;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
@@ -567,71 +568,22 @@ void GameScene::generateUI()
 	shamanBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/shaman-btn.png"));
 
 
+
+	buffskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/buff-skill-btn.png"));
+	healskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/heal-skill-btn.png"));
+	healingcircleskillbtn	= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/healingcircle-skill-btn.png"));
+	debuffskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/debuff-skill-btn.png"));
+	hurtskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/hurt-skill-btn.png"));
+	summonskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/summon-skill-btn.png"));
+
+
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
 
-	sf::Vector2f butSize = sf::Vector2f(width, height);
+	butSize = sf::Vector2f(width, height);
 
-	switch (characterType)
-	{
-		case PLAYER_MODE::VESSEL: // VESSEL
-			switch(classType)
-			{
-				case 1: //SHAMAN
-					b1 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b4 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b5 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclickLevelup);
-					b6 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclickHealthTest);
-				break;
-				case 2: //WARRIOR
-					b1 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b4 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b5 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclickLevelup);
-					b6 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclickHealthTest);
-				break;
-		 }break;
-		case PLAYER_MODE::DEITY: // DEMISE
-			switch(classType)
-			{
-				case 1: //VITALITY
-					b1 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
-					b4 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
-					b5 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickLevelup);
-					b6 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickHealthTest);
-				break;
-				case 2: //DEMISE
-					b1 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
-					b4 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
-					b5 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickLevelup);
-					b6 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickHealthTest);
-				break;
-			}break;
-		case PLAYER_MODE::GHOST: // GHOST
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
-			b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
-			break;
-		default: //ORIGINAL
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
-			b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
-	}
-
+	setUI();
 
 	// Create health bar (If statement here if vessel or deity)
 	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
@@ -658,3 +610,101 @@ void GameScene::generateUI()
 	levelInd->setText("01");
 	pubLevelInd = levelInd;
 }
+
+void GameScene::setUI()
+{
+	switch (characterType)
+	{
+		case PLAYER_MODE::VESSEL: // VESSEL
+			switch(classType)
+			{
+				case 1: //SHAMAN
+					b1 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b4 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclickHealthTest);
+				break;
+				case 2: //WARRIOR
+					b1 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b4 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclickHealthTest);
+				break;
+		}break;
+		case PLAYER_MODE::DEITY: // DEMISE
+			switch(classType)
+			{
+				case 1: //VITALITY
+					b1 = new GUI::Button(*Manager::TextureManager::get(healskillbtn), skillbtn, viewUI, onClickVitalityOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(buffskillbtn), skillbtn, viewUI, onClickVitalityTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(healingcircleskillbtn), skillbtn, viewUI, onClickVitalityThree);
+					b4 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(vitalityBtn), butSize, viewUI, onclickHealthTest);
+				break;
+				case 2: //DEMISE
+					b1 = new GUI::Button(*Manager::TextureManager::get(hurtskillbtn), skillbtn, viewUI, onClickDemiseOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(debuffskillbtn), skillbtn, viewUI, onClickDemiseTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(summonskillbtn), skillbtn, viewUI, onClickDemiseThree);
+					b4 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclick);
+					b5 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickLevelup);
+					b6 = new GUI::Button(*Manager::TextureManager::get(demiseBtn), butSize, viewUI, onclickHealthTest);
+				break;
+			}break;
+		case PLAYER_MODE::GHOST: // GHOST
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
+			b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+			break;
+		default: //ORIGINAL
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
+			b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+	}
+
+	bs[0].btn = b1;
+	bs[1].btn = b2;
+	bs[2].btn = b3;
+
+}
+
+void GameScene::checkBtns(sf::Time t)
+{
+		for(int i = 0; i<3; i++)
+		{
+			if(bs[i].coolDown > 0) //Update cooldown if cooldown was set
+			{
+				bs[i].coolDown -= t.asMilliseconds();
+				if(bs[i].coolDown < 0) //make sure coolDown does not go below 0
+				{
+					bs[i].coolDown = 0;
+				}
+			}
+
+			if(bs[i].coolDown > 0) //Check current new cooldown
+			{
+				bs[i].btn->toggleEnabled(false);
+			}
+			else
+			{
+				bs[i].btn->toggleEnabled(true);
+			}
+		}
+}
+
+void onClickVitalityOne()		{	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;}
+void onClickVitalityTwo()		{	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;}
+void onClickVitalityThree()	{	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;}
+void onClickDemiseOne()			{	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;}
+void onClickDemiseTwo()			{ bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;}
+void onClickDemiseThree()   { bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;}

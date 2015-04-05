@@ -72,6 +72,7 @@ void ServerGameScene::update(sf::Time time)
         }
         else
         {
+
           for (int i = 0; i < playerList.size(); i++)
           {
             Vessel* curVessel = playerList[i];
@@ -253,6 +254,23 @@ void ServerGameScene::createPlayers()
             }
         }
     }
+}
+
+void ServerGameScene::createStructure(ENTITY_TYPES type, float x, float y)
+{
+/*
+    EnemyControllerInit initData;
+    initData.type = ENTITY_TYPES::STRUCTURES;
+    initData.x = (float) x;
+    initData.y = (float) y;
+
+    Message msg;
+    msg.data = (void*) &initData;
+    msg.len = sizeof(initData);
+
+    Entity *entity = EntityFactory::getInstance()->makeEntity(type,NULL,cMap,x,y);
+    command->getGameState()->registerWithAllPlayers((Networking::NetworkEntity*) entity, &msg);
+*/
 }
 
 std::vector<Vessel*> ServerGameScene::getPlayerList()

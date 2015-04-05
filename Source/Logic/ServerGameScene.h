@@ -42,6 +42,7 @@ class ServerGameScene : public Scene
         int getWorldSeed();
         void createPlayers();
         void createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y);
+        void createStructure(ENTITY_TYPES type, float x, float y);
 
         std::vector<Vessel*> getPlayerList();
 
