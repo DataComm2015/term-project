@@ -1,3 +1,18 @@
+/********************************************************************************
+**	SOURCE FILE:	ServerEnemyController.cpp -  	GateKeeper server class controller class
+**                                              maintains and updates gatekeper behaviour on
+**                                              the server.
+**	PROGRAM:	Term_Project
+**
+**	DATE: 		February 15, 2015
+**
+**
+**	DESIGNER: 	Calvin Rempel
+**
+**	PROGRAMMER: Calvin Rempel
+**              Filip Gutica A00781910
+**
+***********************************************************************************/
 #include "ServerEnemyController.h"
 
 #include "../NetworkEntityPairs.h"
@@ -32,7 +47,6 @@ void ServerEnemyController::init()
 
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
-
     float vessel_X;
     float vessel_Y;
 
