@@ -1,3 +1,18 @@
+/********************************************************************************
+**	SOURCE FILE:	ServerEnemyController.cpp -  	GateKeeper server class controller class
+**                                              maintains and updates gatekeper behaviour on
+**                                              the server.
+**	PROGRAM:	Term_Project
+**
+**	DATE: 		February 15, 2015
+**
+**
+**	DESIGNER: 	Calvin Rempel
+**
+**	PROGRAMMER: Calvin Rempel
+**              Filip Gutica A00781910
+**
+***********************************************************************************/
 #include "ServerEnemyController.h"
 
 #include "../NetworkEntityPairs.h"
@@ -32,7 +47,6 @@ void ServerEnemyController::init()
 
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
-
     float vessel_X;
     float vessel_Y;
 
@@ -48,8 +62,12 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
         if ((targetVessel = detectVessels()) == NULL)
         {
-          event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
-          addEvent(event);
+          if (moving)
+          {
+            event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
+            addEvent(event);
+            moving = false;
+          }
           return;
         }
         else
@@ -89,6 +107,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
         if (prevX != xDirection || prevY != yDirection)
         {
+          moving = true;
           std::cout << "Adding move event" << std::endl;
           std::cout << "X Direction " << xDirection << std::endl;
           std::cout << "Y Direction " << yDirection << std::endl;

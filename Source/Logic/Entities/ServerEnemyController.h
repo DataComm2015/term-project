@@ -27,7 +27,6 @@ class ServerEnemyController : public ServerNetworkController
 
     private:
         Behaviour *behaviour;
-        bool moving;
         Entity* _currEntity;
         ServerGameScene* _servGameScene;
         int prevX = 0;
@@ -35,6 +34,7 @@ class ServerEnemyController : public ServerNetworkController
         int xDirection;
         int yDirection;
         Vessel* targetVessel;
+        bool moving;
 };
 
 #endif
