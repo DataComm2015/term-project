@@ -1,0 +1,34 @@
+CXX=g++
+CPPFLAGS=-std=c++11
+EXE=app
+
+## FILES
+
+FILES_ENGINE=		AppWindow.o Engine/Scene.o Engine/Cell.o Engine/Controller.o Engine/Map.o \
+					Engine/TextureManager.o Engine/TileManager.o Engine/ServerGameScene.o Engine/Entity.o
+
+FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o Multimedia/graphics/object/SGO.o Multimedia/graphics/object/TGO.o \
+					Multimedia/graphics/Renderer.o Multimedia/manager/ResourceManager.o Multimedia/graphics/Animation.o \
+					Multimedia/gui/Label.o Multimedia/gui/Button.o Multimedia/gui/Container.o Multimedia/gui/TextBox.o
+
+FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/Champion/Vessel.o \
+					Logic/Environment/EnemyHierarchy.o
+
+
+FILES_NETWORK=
+
+FILE_MAIN=			ChampionTest.cpp
+
+##
+
+all: $(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
+	$(CXX) $(CPPFLAGS) \
+	-o $(EXE) -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system \
+	$(FILES_ENGINE) $(FILES_MULTIMEDIA) $(FILES_LOGIC) $(FILES_NETWORK) $(FILE_MAIN)
+
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) -c $< -o $@
+
+clean:
+	find . -name "*.o" -type f -delete
+	rm -f $(EXE)

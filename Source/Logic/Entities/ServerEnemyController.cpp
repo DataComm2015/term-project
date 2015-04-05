@@ -1,9 +1,24 @@
+/********************************************************************************
+**	SOURCE FILE:	ServerEnemyController.cpp -  	GateKeeper server class controller class
+**                                              maintains and updates gatekeper behaviour on
+**                                              the server.
+**	PROGRAM:	Term_Project
+**
+**	DATE: 		February 15, 2015
+**
+**
+**	DESIGNER: 	Calvin Rempel
+**
+**	PROGRAMMER: Calvin Rempel
+**              Filip Gutica A00781910
+**
+***********************************************************************************/
 #include "ServerEnemyController.h"
 
 #include "../NetworkEntityPairs.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
-
+#include <cmath>
 
 #include <cstdio>
 
@@ -24,23 +39,14 @@ ServerEnemyController::~ServerEnemyController()
 void ServerEnemyController::init()
 {
     if (behaviour)
+    {
         behaviour->init();
+    }
 }
 
 
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
-    static float time = 0.05;
-    static int xDirection;
-    static int yDirection;
-
-    time -= deltaTime;
-
-    if (time > 0)
-      return;
-
-    time = 0.05;
-
     float vessel_X;
     float vessel_Y;
 
@@ -51,64 +57,103 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
     if (_servGameScene && _currEntity)
     {
+        gk_X = _currEntity->left;
+        gk_Y = _currEntity->top;
 
-
-      for(int i = 0; i < _servGameScene->getPlayerList().size(); i++)
-      {
-
-          gk_X = _currEntity->left;
-          gk_Y = _currEntity->top;
-
-          vessel_X = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->left;
-          vessel_Y = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->top;
-
-          std::cout << "Vessel x: " << vessel_X << std::endl;
-          std::cout << "Vessel y: " << vessel_Y << std::endl;
-
-          xDirection = 0;
-          yDirection = 0;
-
-          if (vessel_X > gk_X )
+        if ((targetVessel = detectVessels()) == NULL)
+        {
+          if (moving)
           {
-            xDirection += 1;
-            std::cout << "GATEKEEPER CHANGE DIRECTION RIGHT" << std::endl;
-            std::cout << "GateKeeper x: " << gk_X << std::endl;
-            std::cout << "GateKeeper y: " << gk_Y << std::endl;
+            event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
+            addEvent(event);
+            moving = false;
           }
-          if (vessel_X < gk_X)
-          {
-            xDirection -= 1;
-            std::cout << "GATEKEEPER CHANGE DIRECTION LEFT" << std::endl;
-            std::cout << "GateKeeper x: " << gk_X << std::endl;
-            std::cout << "GateKeeper y: " << gk_Y << std::endl;
-          }
-          if (vessel_Y > gk_Y)
-          {
-            yDirection += 1;
-            std::cout << "GATEKEEPER CHANGE DIRECTION DOWN" << std::endl;
-            std::cout << "GateKeeper x: " << gk_X << std::endl;
-            std::cout << "GateKeeper y: " << gk_Y << std::endl;
-          }
-          if (vessel_Y < gk_Y)
-          {
-            yDirection -= 1;
-            std::cout << "GATEKEEPER CHANGE DIRECTION UP" << std::endl;
-            std::cout << "GateKeeper x: " << gk_X << std::endl;
-            std::cout << "GateKeeper y: " << gk_Y << std::endl;
-          }
+          return;
+        }
+        else
+        {
+          vessel_X = targetVessel->left;
+          vessel_Y = targetVessel->top;
+        }
+
+      //  std::cout << "Vessel x: " << vessel_X << std::endl;
+      //  std::cout << "Vessel y: " << vessel_Y << std::endl;
+
+        xDirection = 0;
+        yDirection = 0;
+
+        if (vessel_X > gk_X + THRESHOLD || vessel_X > gk_X - THRESHOLD)
+        {
+          xDirection = 1;
+
+        }
+        else
+        {
+          xDirection = -1;
+
+        }
+
+        if ((vessel_Y > gk_Y + THRESHOLD || vessel_Y > gk_Y - THRESHOLD) )
+        {
+          yDirection = 1;
+
+        }
+        else
+        {
+          yDirection = -1;
 
 
-          event = new MoveEvent(0, 0, xDirection, yDirection, 0);
+        }
+
+        if (prevX != xDirection || prevY != yDirection)
+        {
+          moving = true;
+          std::cout << "Adding move event" << std::endl;
+          std::cout << "X Direction " << xDirection << std::endl;
+          std::cout << "Y Direction " << yDirection << std::endl;
+
+          prevX = xDirection;
+          prevY = yDirection;
+
+          event = new MoveEvent(gk_X, gk_Y, xDirection, yDirection, 0);
           addEvent(event);
-      }
+        }
 
     }
 
-
     if (behaviour)
+    {
         behaviour->update(deltaTime);
+    }
 }
 
+Vessel* ServerEnemyController::detectVessels()
+{
+  float x1 = _currEntity->left;
+  float y1 = _currEntity->top;
+
+  float x2, y2;
+
+  for(int i = 0; i < _servGameScene->getPlayerList().size(); i++)
+  {
+    x2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->left;
+    y2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->top;
+
+    if (getDistance(x1, y1, x2, y2) <= AGGRO_RADIUS)
+      return static_cast<Vessel*>(_servGameScene->getPlayerList()[i]);
+  }
+
+  return NULL;
+}
+
+float ServerEnemyController::getDistance(float x1, float y1, float x2, float y2 )
+{
+  float result;
+
+  result = std::abs( std::pow((x2 - x1), 2) + std::pow((y2 - y1), 2) );
+
+  return result;
+}
 
 void ServerEnemyController::setEntity(Entity* e)
 {

@@ -496,7 +496,7 @@ void GameMap::generatePlayers()
 ******************************************************************************/
 void GameMap::generateEnemies()
 {
-	/*
+
 	for (int i = 0; i < bHeight; i++)
 	{
 		for (int j = 0; j < bWidth; j++)
@@ -509,7 +509,7 @@ void GameMap::generateEnemies()
 			}
 		}
 	}
-	*/
+
 }
 
 

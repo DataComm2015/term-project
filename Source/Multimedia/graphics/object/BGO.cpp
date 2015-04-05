@@ -220,7 +220,7 @@ void BGO::ignoreChildren(bool arg)
 	m_ignoringChildren = arg;
 }
 
-const sf::Transform& BGO::getLocalTransform() const
+sf::Transform BGO::getLocalTransform() const
 {
 	return sf::Transform::Identity;
 }

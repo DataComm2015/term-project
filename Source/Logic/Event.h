@@ -15,6 +15,12 @@ struct MoveMessage
     bool forced;
 };
 
+struct UpdateMessage
+{
+  float x;
+  float y;
+};
+
 /*
  * Move Event Class
  */
@@ -25,7 +31,9 @@ public:
     MoveEvent(MoveEvent&& other);
     MoveEvent(const MoveEvent& other);
     float getX();
+    float setX(float _x);
     float getY();
+    float setY(float _y);
     int getXDir();
     int getYDir();
     bool forced();
@@ -40,7 +48,10 @@ private:
 class UpdateEvent: public ::Marx::Event
 {
 public:
-  UpdateEvent() : Event(Marx::UPDATE){}
+  UpdateEvent(float x, float y) : Event(Marx::UPDATE), _x(x), _y(y){}
+  float _x;
+  float _y;
+
 };
 
 #endif

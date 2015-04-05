@@ -25,7 +25,7 @@ public:
 	bool hasChildren() const;
 	void ignoreChildren(bool arg);
 
-	virtual const sf::Transform& getLocalTransform() const;
+	virtual sf::Transform getLocalTransform() const;
 	const sf::Transform& getGlobalTransform() const;
 
 	void updateSG(const sf::Time& t);
