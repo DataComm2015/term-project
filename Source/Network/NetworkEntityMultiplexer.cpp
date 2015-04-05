@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdexcept>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace Networking;
 

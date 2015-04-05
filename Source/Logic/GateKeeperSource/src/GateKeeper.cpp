@@ -18,6 +18,7 @@
 #include <typeinfo>
 #include <iostream>
 
+// bug fix by Sanders Lee
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
   VEntity(sprite, map, x, y, ctrl, h, w)
 //  _ctrl(ctrl)
@@ -32,9 +33,9 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     _cooldown = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.01;
-    _ySpeed = 0.01;
-    _moving = false;
+    _xSpeed = 0.09;
+    _ySpeed = 0.09;
+    movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
   };
 
@@ -43,10 +44,13 @@ GateKeeper::~GateKeeper()
 
 }
 
-void GateKeeper::onUpdate()
+/***
+-- PROGRAMMER:  ???
+--				Sanders Lee (Debugged synchronization problem across clients)
+***/
+void GateKeeper::onUpdate(float deltaTime)
 {
-  float newXSpeed = 0;
-  float newYSpeed = 0;
+
 
 //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
@@ -61,11 +65,40 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 	{
 		case ::Marx::MOVE:
 			MoveEvent* ev = (MoveEvent*) (*it);
-              int xDir = ev->getXDir();
-              int yDir = ev->getYDir();
+      int xDir = ev->getXDir();
+      int yDir = ev->getYDir();
 
-              newXSpeed = ((float)xDir/10.0);
-              newYSpeed = ((float)yDir/10.0);
+      Entity::aMove(ev->getX(), ev->getY(), false);
+
+      if (yDir < 0)
+      {
+        newYSpeed = -_ySpeed;
+      }
+      else
+      {
+        newYSpeed = _ySpeed;
+      }
+
+      if (xDir > 0)
+      {
+        newXSpeed = _xSpeed;
+      }
+      else
+      {
+        newXSpeed = -_xSpeed;
+      }
+
+      if (xDir == 0)
+        newXSpeed = 0;
+
+      if (yDir == 0)
+        newYSpeed = 0;
+
+      //old code - replaced with the if-else block above
+      //movingLeft = (xDir < 0);
+      //movingRight = (xDir > 0);
+      //movingUp = (yDir < 0);
+      //movingDown = (yDir > 0);
 			break;
 	}
 

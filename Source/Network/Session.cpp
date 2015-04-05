@@ -4,6 +4,7 @@
 #include "NetworkEntity.h"
 #include "NetworkEntityMultiplexer.h"
 
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -13,7 +14,7 @@
 
 using namespace Networking;
 
-static int SESSION_SET_SEM_KEY = 226;
+static int SESSION_SET_SEM_KEY = rand() % 5000 + 10;
 static int SESSION_SEM = initSessionSem(SESSION_SET_SEM_KEY);
 static int MESSAGE_SEM_KEY = 9956;
 static std::set<Session*> SESSIONS;

@@ -2,6 +2,7 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
+#include "../../Engine/Entity.h"
 #include <stdio.h>
 #include <cstring>
 
@@ -87,7 +88,7 @@ ServerNetworkController::~ServerNetworkController()
 --
 -- RETURNS:         void
 --
--- NOTES:           adds an even into the event queue, but since this is the
+-- NOTES:           adds an event into the event queue, but since this is the
 --                  server side, it will send the event to the clients first,
 --                  so that they can enqueue it into their own event queue, and
 --                  then the server enqueues the event into its event queue.
@@ -108,6 +109,7 @@ void ServerNetworkController::addEvent(Event *event)
 -- DESIGNER:        Eric Tsang
 --
 -- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--                  Sanders Lee (Debugged synchronization problem across clients)
 --
 -- INTERFACE:       void ServerNetworkController::sendEventMessage(Event *event)
 --
@@ -128,8 +130,9 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
             // parse move event into move message
             MoveMessage mm;
-            mm.x      = me->getX();
-            mm.y      = me->getY();
+            printf("entity server x, y: %f %f\n", getEntity()->left, getEntity()->top);
+            mm.x      = getEntity()->left;
+            mm.y      = getEntity()->top;
             mm.xDir   = me->getXDir();
             mm.yDir   = me->getYDir();
             mm.forced = me->forced();
@@ -148,8 +151,6 @@ void ServerNetworkController::sendEventMessage(Event *event)
 		{
 			// cast event to event subclass
 			AttackEvent *ae = (AttackEvent*) event;
-
-
 
 			// parse attack event into move message
 			AttackMessage am;
@@ -210,12 +211,28 @@ void ServerNetworkController::sendEventMessage(Event *event)
 			update(message);
 			break;
 		}
-    	default:
-        	printf("\r\nWARNING: NetworkController::sendEventMessage received an "
-            	"unknown event type. please add new case to switch statement\r\n");
-        	fflush(stdout);
-        	break;
-    }
+		case ::Marx::UPDATE:
+		{
+		      UpdateMessage um;
+		      um.x      = getEntity()->left;
+		      um.y      = getEntity()->top;
+
+		      Message message;
+
+		      message.data = &um;
+		      message.len  = sizeof(UpdateMessage);
+		      message.type = ::Marx::UPDATE;
+
+		      // send the network event
+		      update(message);
+		      break;
+		}
+		default:
+		    printf("\r\nWARNING: NetworkController::sendEventMessage received an "
+		        "unknown event type. please add new case to switch statement\r\n");
+		    fflush(stdout);
+		    break;
+	}
 }
 
 /*------------------------------------------------------------------------------
@@ -228,6 +245,8 @@ void ServerNetworkController::sendEventMessage(Event *event)
 -- DESIGNER:        Eric Tsang
 --
 -- PROGRAMMER:      Calvin Rempel, Eric Tsang
+--		            Sanders Lee (Debugged synchronization problem across clients)
+--
 --
 -- INTERFACE:       void ServerNetworkController::onUpdate(Message msg)
 --                  msg - message received from the update
@@ -239,57 +258,59 @@ void ServerNetworkController::sendEventMessage(Event *event)
 ------------------------------------------------------------------------------*/
 void ServerNetworkController::onUpdate(Message msg)
 {
-	int *moveValues;
+    float x = getEntity()->left;
+    float y = getEntity()->top;
+
     switch((PlayerCommandMsgType)msg.type)
     {
         case PlayerCommandMsgType::START_MV_LEFT_COMMAND:
-        {
-			MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
+		{
+			MoveEvent *event = new MoveEvent(x,y,-1,0,0);
 			addEvent(event);
 			break;
-        }
-        case PlayerCommandMsgType::START_MV_RIGHT_COMMAND:
-        {
-			MoveEvent *event = new MoveEvent(1,0,1,0,0);
+		}
+		case PlayerCommandMsgType::START_MV_RIGHT_COMMAND:
+		{
+			MoveEvent *event = new MoveEvent(x,y,1,0,0);
 			addEvent(event);
 			break;
-        }
-        case PlayerCommandMsgType::START_MV_UP_COMMAND:
-        {
-			MoveEvent *event = new MoveEvent(0,-1,0,-1,0);
+		}
+		case PlayerCommandMsgType::START_MV_UP_COMMAND:
+		{
+			MoveEvent *event = new MoveEvent(x,y,0,-1,0);
 			addEvent(event);
 			break;
-        }
-        case PlayerCommandMsgType::START_MV_DOWN_COMMAND:
-        {
-			MoveEvent *event = new MoveEvent(0,1,0,1,0);
+		}
+		case PlayerCommandMsgType::START_MV_DOWN_COMMAND:
+		{
+			MoveEvent *event = new MoveEvent(x,y,0,1,0);
 			addEvent(event);
 			break;
-        }
-        case PlayerCommandMsgType::STOP_MV_LEFT_COMMAND:
-        {
-            MoveEvent *event = new MoveEvent(1,0,1,0,0);
-            addEvent(event);
-            break;
-        }
-        case PlayerCommandMsgType::STOP_MV_RIGHT_COMMAND:
-        {
-            MoveEvent *event = new MoveEvent(-1,0,-1,0,0);
-            addEvent(event);
-            break;
-        }
-        case PlayerCommandMsgType::STOP_MV_UP_COMMAND:
-        {
-            MoveEvent *event = new MoveEvent(0,1,0,1,0);
-            addEvent(event);
-            break;
-        }
-        case PlayerCommandMsgType::STOP_MV_DOWN_COMMAND:
-        {
-            MoveEvent *event = new MoveEvent(0,-1,0,-1,0);
-            addEvent(event);
-            break;
-        }
+		}
+		case PlayerCommandMsgType::STOP_MV_LEFT_COMMAND:
+		{
+			MoveEvent *event = new MoveEvent(x,y,1,0,0);
+			addEvent(event);
+			break;
+		}
+		case PlayerCommandMsgType::STOP_MV_RIGHT_COMMAND:
+		{
+			MoveEvent *event = new MoveEvent(x,y,-1,0,0);
+			addEvent(event);
+			break;
+		}
+		case PlayerCommandMsgType::STOP_MV_UP_COMMAND:
+		{
+			MoveEvent *event = new MoveEvent(x,y,0,1,0);
+			addEvent(event);
+			break;
+		}
+		case PlayerCommandMsgType::STOP_MV_DOWN_COMMAND:
+		{
+			MoveEvent *event = new MoveEvent(x,y,0,-1,0);
+			addEvent(event);
+			break;
+		}
 		case PlayerCommandMsgType::START_ATT_COMMAND:
 		{
             printf("Starting attack");

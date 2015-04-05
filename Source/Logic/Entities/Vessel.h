@@ -89,31 +89,37 @@ class Vessel : public Marx::VEntity, public Creature
 		float ySpeed;
 		float xPos;
 		float yPos;
+		float myX;
+		float myY;
+		float servX;
+		float servY;
 		int direction;	//0 = right, 1 = left //why not a bool?
 		bool movingLeft;
-        bool movingRight;
+	  bool movingRight;
 		bool movingUp;
-        bool movingDown;
+	  bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
 		SGO &mask_sprite;
 		SGO atk_sprite;
 		SGO satk_sprite;
 		SGO &weapon_sprite;
+		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
+        float newXSpeed;
+        float newYSpeed;
 		Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
-			Marx::Map * gmap,
-			float x,
-			float y,
-			Marx::Controller* controller,
-			float height,
-			float width
-			/*, job_class jobClass, Ability* abilityList*/ );
-
+						Marx::Map * gmap,
+						float x,
+						float y,
+						Marx::Controller* controller,
+						float height,
+						float width
+						/*, job_class jobClass, Ability* abilityList*/ );
 		//inherited methods
 		virtual ~Vessel();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
 
 		void setPosition( float x, float y );

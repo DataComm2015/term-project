@@ -26,7 +26,7 @@
 #define MIN_ENEMY_GROUP 2
 
 /* The maximum size of an enemy group */
-#define MAX_ENEMY_GROUP 10
+#define MAX_ENEMY_GROUP 2
 
 /* The minimum number of structures in a block */
 #define MIN_STRUCTURE_GROUP 1
@@ -68,6 +68,7 @@ class GameMap
 		void generatePlaceholderBlocks();
 		void generateTiles();
 		void generateStructures();
+		void cleanMap();
 
 		BlockType makeBlockType(BlockZone z, int rRoll);
 		ENTITY_TYPES getEnemyType(std::string enemy);
@@ -81,6 +82,7 @@ class GameMap
 		int bHeight;
 		int stoneWidth;
 		int stoneHeight;
+		bool generated;
 };
 
 #endif

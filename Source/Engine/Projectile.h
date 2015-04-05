@@ -13,8 +13,10 @@
 -- REVISIONS:
 --
 -- DESIGNER: Thomas Tallentire
+--					 Sanders Lee
 --
 -- PROGRAMMER: Thomas Tallentire
+--						 Sanders Lee
 --
 -- NOTES:
 --        This file defines the Entity class members

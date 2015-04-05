@@ -59,7 +59,7 @@ class GameScene : public Scene
 		void addClickListener(ClickListener* listener);
 		void rmClickListener(ClickListener* listener);
 
-  	void generateMap(int seed);
+  		void generateMap(int seed);
 		void generateWater();
 		void generateUI();
 		void positionUI();
@@ -73,15 +73,13 @@ class GameScene : public Scene
 		std::set<KeyListener*> keyListeners;
 		std::set<ClickListener*> clickListeners;
 
-
-		GameMap *gMap;
+		// Renderer & views
 
 		Renderer renderer;
-
 		sf::View viewMain;
 		sf::View viewUI;
 
-		sf::Sound current;
+		// Resources
 
 		id_resource tilemap;
 		id_resource championSprite;
@@ -94,8 +92,6 @@ class GameScene : public Scene
 		id_resource chick_sound;
 		id_resource placeholderSprite;
 
-
-		//buttons
 		id_resource butSprite;
 		id_resource demiseBtn;
 		id_resource vitalityBtn;
@@ -106,21 +102,14 @@ class GameScene : public Scene
 		float phase;
 
 		// Game Objects
-		Vessel *vessel;
-		Vessel *myVessel;
 
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
-		Marx::Projectile * p;
 
-		SGO championSGO;
-		SGO maskSGO;
-		SGO wepSGO;
-		SGO placeHolderSGO;
-		TheSpinner *s;
-		TheSpinner *s2;
+		Vessel *myVessel;
 
 		// UI
+
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
@@ -131,8 +120,20 @@ class GameScene : public Scene
 		GUI::HealthBar *hb;
 		GUI::TextBox *levelInd;
 
+		// Misc
+
+		GameMap *gMap;
+
 		PLAYER_MODE characterType;
 		int classType;
+
+		sf::Sound current;
+
+		// tech demos:
+
+		SGO placeHolderSGO;
+		TheSpinner *s;
+		TheSpinner *s2;
 };
 
 #endif

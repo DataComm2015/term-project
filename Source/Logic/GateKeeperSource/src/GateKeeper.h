@@ -59,7 +59,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void turn();
 		virtual void onCreate();
 		virtual void onDestroy();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		virtual bool operator==(const VEntity&);
     virtual Entity* getEntity();
 		virtual bool isMoving();
@@ -79,6 +79,8 @@ class GateKeeper : public Marx::VEntity, public Creature
 		int _movementSpeed;
 		float _xSpeed;
 		float _ySpeed;
+		float newXSpeed = 0;
+		float newYSpeed = 0;
 		int _direction;
 		float _xPos;
 		float _yPos;
