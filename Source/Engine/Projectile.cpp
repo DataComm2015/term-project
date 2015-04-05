@@ -47,6 +47,7 @@ void Projectile::onDestroy()
 
 void Projectile::onUpdate(sf::Time t)
 {
+    std::cout << "UPDATED!" << std::endl;
 	if(TimeToLive > sf::seconds(0))
 	{
 		act->onUpdate(this, t);
@@ -75,14 +76,14 @@ void Projectile::setAct(Action * act)
 	TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
 }
 
-sf::Time Projectile::getTTL() 
+sf::Time Projectile::getTTL()
 {
 	return TimeToLive;
 }
 
-void Projectile::setTTL(sf::Time t) 
-{ 
-	TimeToLive = t; 
+void Projectile::setTTL(sf::Time t)
+{
+	TimeToLive = t;
 }
 
 sf::Vector2f Projectile::getVector()
