@@ -76,6 +76,7 @@ void GateKeeper::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
+      {
     		MoveEvent* ev = (MoveEvent*) (*it);
         int xDir = ev->getXDir();
         int yDir = ev->getYDir();
@@ -129,6 +130,7 @@ void GateKeeper::onUpdate(float deltaTime)
         }
 
     		break;
+      }
     }
 
     playSound(newXSpeed, newYSpeed);
