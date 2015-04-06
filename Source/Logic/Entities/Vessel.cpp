@@ -92,7 +92,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	this->add(mask_sprite);
   this->add(weapon_sprite);
 
-	std::cout << "Vessel constructed successfully!" << std::endl;
+	//std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
 /*-------------------------------------------
@@ -262,7 +262,7 @@ break;
 
 	if ( elapsedTime > frameTime )
 	{
-			std::cout << "updating animation" << std::endl;
+			//std::cout << "updating animation" << std::endl;
 			runAnim->update(frameTime);
 			runAnim_mask->update(frameTime);
 			runAnim_wep->update(frameTime);
