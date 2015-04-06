@@ -31,10 +31,14 @@ ServerEnemyController::ServerEnemyController(Behaviour *behaviour, ServerGameSce
   moving = false;
 
   _servGameScene = sgs;
+
+  prevX = 0;
+  prevY = 0;
 }
 
 ServerEnemyController::~ServerEnemyController()
 {
+
 }
 
 void ServerEnemyController::init()
@@ -54,6 +58,9 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
     float gk_X;
     float gk_Y;
 
+    xDirection = 0;
+    yDirection = 0;
+
     MoveEvent *event;
 
     if (_servGameScene && _currEntity)
@@ -61,49 +68,54 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         gk_X = _currEntity->left;
         gk_Y = _currEntity->top;
 
+        //Check for nearby vessels
         if ((targetVessel = detectVessels()) == NULL)
         {
           if (moving)
           {
+            //Stop the gatekeeper if moving, and vessel is out of range
             event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
             addEvent(event);
             moving = false;
+            return;
           }
           return;
         }
-        else
+        else  // Set target x and y
         {
           vessel_X = targetVessel->left;
           vessel_Y = targetVessel->top;
         }
 
-      //  std::cout << "Vessel x: " << vessel_X << std::endl;
-      //  std::cout << "Vessel y: " << vessel_Y << std::endl;
-
-        xDirection = 0;
-        yDirection = 0;
-
+        //If vessel is to the Right
         if (vessel_X > gk_X + THRESHOLD || vessel_X > gk_X - THRESHOLD)
         {
           xDirection = 1;
 
         }
+        //If vessel is to the Left
         else
         {
           xDirection = -1;
 
         }
 
+        //If vessel is below
         if ((vessel_Y > gk_Y + THRESHOLD || vessel_Y > gk_Y - THRESHOLD) )
         {
           yDirection = 1;
         }
+        //If vessel is above
         else
         {
           yDirection = -1;
 
         }
 
+        /**
+        * if only send move events if the previous direction the gate keeper was moving in
+        * is not the same direction in which we want the gate keeper to move in now.
+        **/
         if (prevX != xDirection || prevY != yDirection)
         {
           moving = true;
@@ -120,10 +132,6 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
     }
 
-    if (behaviour)
-    {
-        behaviour->update(deltaTime);
-    }
 }
 
 Vessel* ServerEnemyController::detectVessels()
@@ -141,7 +149,9 @@ Vessel* ServerEnemyController::detectVessels()
     y2 = (_servGameScene->getPlayerList()->at(i))->top;
 
     if (getDistance(x1, y1, x2, y2) <= AGGRO_RADIUS)
+    {
       return (_servGameScene->getPlayerList()->at(i));
+    }
   }
 
   return NULL;
