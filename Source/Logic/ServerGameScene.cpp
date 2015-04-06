@@ -235,6 +235,7 @@ void ServerGameScene::createPlayers()
                 // create the controller, and bind it with the player
                 ServerNetworkController* cont = new ServerNetworkController();
                 currPlayer->setController(cont);
+                currPlayer->setSGameScene(this);
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;

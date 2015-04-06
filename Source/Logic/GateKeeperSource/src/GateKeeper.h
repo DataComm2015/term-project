@@ -45,11 +45,13 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void setAttackSpeed(int as);
 		virtual void setXSpeed(float x);
 		virtual void setYSpeed(float y);
+        virtual void setSpeed(int _speed);
 		virtual int getRange();
 		virtual int getHealth();
 		virtual int getAttack();
 		virtual int getAttackSpeed();
 		virtual int getMovementSpeed();
+        virtual int getSpeed();
 		//virtual Vessel getTarget();
 		virtual time_t getCooldown();
 		virtual void turn();

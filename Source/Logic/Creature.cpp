@@ -2,7 +2,16 @@
 #include "../Engine/AttackAction.h"
 #include <iostream>
 
+    
 void Creature::setHealth(int health)
+{
+}
+
+int Creature::getSpeed()
+{
+}
+
+void Creature::setSpeed(int _speed)
 {
 }
 
