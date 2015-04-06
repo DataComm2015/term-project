@@ -1,3 +1,29 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: AbilityManager.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:
+--		AbilityManager(Map *m);
+--		Ability getAbilityDetails(AbilityId id);
+--		bool castAbility(int x, int y, AbilityId id);
+--		bool castAbility(Entity *e, AbilityId id);
+--		AbilityManager* getInstance(Map *m);		
+--
+-- DATE: March 23, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: Chris Klassen
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--        This file contains the implementation of the ability manager.
+--		  This handles retrieving ability information and casting abilities.
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "AbilityManager.h"
 
 using namespace Marx;
