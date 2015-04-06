@@ -184,17 +184,24 @@ void Vessel::onUpdate(float deltaTime)
 			}
 			case ::Marx::ATTACK:
 			{
-				AttackEvent* aev = (AttackEvent*) (*it);
-				std::cout << "ATTACK" << std::endl;
-				createAttack(*aev, atk_sprite, left, top);
+				if (Manager::ProjectileManager::getServer())
+				{
+					std::cout << "Vessel:: ATTACK" << std::endl;
+					AttackEvent* aev = (AttackEvent*) (*it);
+					std::cout << "ATTACK" << std::endl;
+					createAttack(*aev, atk_sprite, left, top);
+				}
                 break;
 			}
 			case ::Marx::SK_ATTACK:
 			{
-
-				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-				std::cout << "ATTACK" << std::endl;
-				createSkAttack(*saev, satk_sprite, left, top);
+				if (Manager::ProjectileManager::getServer())
+				{
+					std::cout << "Vessel:: SK_ATTACK" << std::endl;
+					SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+					std::cout << "ATTACK" << std::endl;
+					createSkAttack(*saev, satk_sprite, left, top);
+				}
                 break;
 			}
             case ::Marx::SET_HEALTH:
@@ -240,6 +247,11 @@ void Vessel::onUpdate(float deltaTime)
 				}
 				
 				break;
+			}
+			case ::Marx::ADD_POINTS:
+			{
+				AddPointsEvent *pointsEvent = (AddPointsEvent*)(*it);
+				pointsEvent->getPoints();
 			}
 		}
 	}

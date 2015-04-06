@@ -96,13 +96,16 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 {
     if( msg->type == Marx::ATTACK )
     {
+	std::cout << "EnittyFactory::makeEntity" << std::endl;
         AttackMessage * ms = (AttackMessage *) msg->data;
 
         sf::Vector2f v(ms->cellx, ms->celly);
-        Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
+        Marx::AttackAction * action = new Marx::AttackAction(100.0f, 10.0f);
 
         std::cout << action << std::endl;
         Entity * e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ms->srcid))->getEntity();
+	
+	std::cout << "EnittyFactory::after dynamic_cast" << std::endl;
 
         return makeProjectile(cMap, e, action, v, 1.0f, 1.0f, cont);
 
@@ -222,6 +225,7 @@ Projectile* EntityFactory::makeProjectile(
     float width,
     Marx::Controller * cont = NULL)
 {
-    std::cout << "Map!" << std::endl;
+    std::cout << "MakeProjectile" << std::endl;
     return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }
+

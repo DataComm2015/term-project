@@ -41,8 +41,9 @@ namespace Marx
 			sf::Vector2f heading;
 			float TimeToLive;
 			Action * act;
+			Entity *shooter;
 		public:
-			Projectile(SGO&, Map*, float, float, Action *, sf::Vector2f, Controller *, float, float);
+			Projectile(SGO&, Map*, Entity *, float, float, Action *, sf::Vector2f, Controller *, float, float);
 			Entity * move(float, float, bool);
 			virtual void setSpeed(float);
 			virtual void onCreate();
@@ -53,6 +54,7 @@ namespace Marx
 			void setAct(Action * act);
 			float getTTL();
 			void setTTL(float t);
+			Entity* getShooter();
 			sf::Vector2f getVector();
 	};
 }

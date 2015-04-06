@@ -8,6 +8,7 @@
 
 std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
 ServerCommand * Manager::ProjectileManager::SERVER = nullptr;
+Marx::Map * Manager::ProjectileManager::cMap = nullptr;
 
 using namespace Manager;
 
@@ -32,11 +33,13 @@ using namespace Manager;
 Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0, Marx::Controller * _cont = NULL)
 {
+	ProjectileManager::cMap = map;
 	std::cout << "Projectile Q: " << projectile_pool.size() << std::endl;
 	if (projectile_pool.size() < 1)
 	{
 		if(SERVER)
 		{
+			std::cout << "ProjectileManager:: server make proj" << std::endl;
 			ServerNetworkController * cont;
 
 			Message msg;
@@ -56,7 +59,11 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
 		}
 		else
-			return new Marx::Projectile(_sprite, map, e->left, e->top, action, v, _cont, h, w);
+		{
+			std::cout << "ProjectileManager:: not server make proj" << std::endl;
+			std::cout << "ProjectileManager:: sprite: " << sizeof(_sprite) << std::endl;
+			return new Marx::Projectile(_sprite, map, e, e->left, e->top, action, v, _cont, h, w);
+		}
 	}
 	else
 	{
@@ -76,12 +83,14 @@ void ProjectileManager::
 enqueue(Marx::Projectile * projectile)
 {
 	projectile_pool.insert(projectile);
+	ProjectileManager::cMap->rem(*projectile);
 }
 
 void ProjectileManager::
 dequeue(Marx::Projectile* projectile)
 {
 	projectile_pool.erase(projectile);
+	ProjectileManager::cMap->add(*projectile);
 }
 
 void ProjectileManager::

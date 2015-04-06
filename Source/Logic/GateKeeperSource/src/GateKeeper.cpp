@@ -73,6 +73,11 @@ void GateKeeper::onUpdate(float deltaTime)
   //Perform the generic gatekeeper animation
   gkAnimation->step(1);
 
+	if (_health <= 0)
+	{
+		// Die.
+	}
+
   //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
   std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
   for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
@@ -85,45 +90,60 @@ void GateKeeper::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
+		{
     		MoveEvent* ev = (MoveEvent*) (*it);
-        int xDir = ev->getXDir();
-        int yDir = ev->getYDir();
+		    int xDir = ev->getXDir();
+		    int yDir = ev->getYDir();
 
-        Entity::aMove(ev->getX(), ev->getY(), false);
+		    Entity::aMove(ev->getX(), ev->getY(), false);
 
-        if (yDir < 0)
-        {
-          newYSpeed = -_ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-        }
-        else
-        {
-          newYSpeed = _ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-        }
+		    if (yDir < 0)
+		    {
+		      newYSpeed = -_ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		    }
+		    else
+		    {
+		      newYSpeed = _ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		    }
 
-        if (xDir > 0)
-        {
-          newXSpeed = _xSpeed;
+		    if (xDir > 0)
+		    {
+		      newXSpeed = _xSpeed;
 
-          getSprite().sprite().setScale(1, 1);
-        }
-        else
-        {
-          newXSpeed = -_xSpeed;
+		      getSprite().sprite().setScale(1, 1);
+		    }
+		    else
+		    {
+		      newXSpeed = -_xSpeed;
 
-          getSprite().sprite().setScale(-1, 1);
-        }
+		      getSprite().sprite().setScale(-1, 1);
+		    }
 
-        if (xDir == 0)
-          newXSpeed = 0;
+		    if (xDir == 0)
+		      newXSpeed = 0;
 
-        if (yDir == 0)
-          newYSpeed = 0;
+		    if (yDir == 0)
+		      newYSpeed = 0;
 
     		break;
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			SetHealthEvent* ev = (SetHealthEvent*) (*it);
+
+            setHealth(ev->getChange());
+			Controller *attackerCont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
+			if (ev->getChange() > 0)
+			{
+				AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
+				attackerCont->addEvent(pointsEvent);
+			}
+            break;
+		}
     }
 
     /***
