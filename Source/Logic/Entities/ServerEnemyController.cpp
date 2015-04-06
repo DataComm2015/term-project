@@ -97,12 +97,10 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         if ((vessel_Y > gk_Y + THRESHOLD || vessel_Y > gk_Y - THRESHOLD) )
         {
           yDirection = 1;
-
         }
         else
         {
           yDirection = -1;
-
 
         }
 

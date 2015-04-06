@@ -127,7 +127,6 @@ class ClientLobbyScene : public Scene
         const int SCN_HEIGHT = 768;
 
         const int CIRCLE_WH = 200;
-
         const int VESSEL_ART_H = 56;
         const int VESSEL_ART_W = 64;
 

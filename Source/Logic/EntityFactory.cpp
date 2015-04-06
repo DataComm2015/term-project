@@ -4,6 +4,8 @@
 #include "EntityTypes.h"
 #include "Creature.h"
 
+#include "../Engine/AttackAction.h"
+
 #include "../Engine/Controller.h"
 #include "../Engine/TextureManager.h"
 
@@ -14,6 +16,8 @@
 #include "Entities/ProperEntity.h"
 #include "Entities/Vessel.h"
 #include "Entities/Structure.h"
+
+#include <iostream>
 
 using Networking::Message;
 using Marx::Controller;
@@ -27,6 +31,10 @@ EntityFactory::EntityFactory()
     // initialize instance variables
     gkSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
+    );
+
+	projSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
     );
 
     vesselSprite = Manager::TextureManager::store(
@@ -43,6 +51,11 @@ EntityFactory::EntityFactory()
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+	projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
+    projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 8, 8));
+    projSGO.sprite().setScale(1, 1);
+    projSGO.middleAnchorPoint(true);
 
     vesselSGO.sprite().setTexture(*Manager::TextureManager::get(vesselSprite));
     vesselSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -81,6 +94,19 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
     Message* msg,
     Controller* cont)
 {
+    if( msg->type == Marx::ATTACK )
+    {
+        AttackMessage * ms = (AttackMessage *) msg->data;
+
+        sf::Vector2f v(ms->cellx, ms->celly);
+        Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
+
+        std::cout << action << std::endl;
+        return new Marx::Projectile(projSGO, cMap, ms->srcx, ms->srcy, action, v, cont, 1.0, 1.0);
+
+    }
+    else
+    {
     // Parse Network Message
     EnemyControllerInit* init = (EnemyControllerInit*) msg->data;
 
@@ -89,8 +115,10 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
     // init->x     float
     // init->y     float
 
+
     // Create the enemy
     return EntityFactory::makeEntity(init->type,cont,cMap,init->x,init->y);
+}
 }
 
 Entity* EntityFactory::makeEntityFromNetworkMessage(
@@ -139,6 +167,10 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         case ENTITY_TYPES::MINI_BOSS:
+			break;
+        case PROJECTILE:
+            //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
+            break;
         default:
             break;
     }

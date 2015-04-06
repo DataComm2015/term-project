@@ -27,6 +27,7 @@ namespace Networking
         void registerSession(Session * session, Message message);
         void unregisterSession(Session * session, Message message);
         int getType();
+	    int getId();
     protected:
         virtual void onRegister(Session *session);
         virtual void onUnregister(Session * session, Message message);

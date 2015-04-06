@@ -123,6 +123,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             {
                  _gameScene->setPlayerVessel(static_cast<Vessel*>(entity));
             }
+
             break;
         }
 

@@ -61,6 +61,7 @@ ServerGameScene::~ServerGameScene()
 	delete cMap;
 }
 
+
 void ServerGameScene::update(sf::Time time)
 {
 
@@ -91,7 +92,6 @@ void ServerGameScene::update(sf::Time time)
 
         for (int i = 0; i < enemyControllers.size(); i++)
             enemyControllers[i]->updateBehaviour(time.asSeconds());
-
         timer -= time.asSeconds();
     }
     else
@@ -100,7 +100,6 @@ void ServerGameScene::update(sf::Time time)
         {
             command->goToScoreboard();
         }
-
         if (lobtimer > 0)
         {
             lobtimer -= time.asSeconds();
@@ -110,12 +109,8 @@ void ServerGameScene::update(sf::Time time)
             command->goToLobby();
         }
     }
-
-
-
-
-	return;
 }
+
 
 void ServerGameScene::processEvents(sf::Event& e)
 {
@@ -180,6 +175,33 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
+
+/*void ServerGameScene::createProjectile(Marx::Action &action, float x, float y)
+{
+    EnemyControllerInit initData;
+    initData.type = ENTITY_TYPES::PROJECTILE;
+    initData.x = x;
+    initData.y = y;
+
+    Message msg;
+    msg.type = 0;
+    msg.data = (void*) &initData;
+    msg.len = sizeof(initData);
+
+    // Create the enemy
+    command->getGameState()->registerWithAllPlayers(enemyController, &msg);
+
+	std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+	PlayerEntity* currPlayer;
+
+    // create vessel, pass it server vessel controller too
+    Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
+
+    cont->registerSession(currSession,msg);
+
+    command->getGameState()->registerWithAllPlayers(cont,&msg);
+
+}*/
 
 /**
 
