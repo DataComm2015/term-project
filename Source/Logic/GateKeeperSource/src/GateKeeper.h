@@ -24,6 +24,7 @@
 #include "../../Creature.h"
 #include "../../../Engine/TileManager.h"
 #include "../../../Multimedia/manager/SoundManager.h"
+#include "../../../Multimedia/graphics/Animation.h"
 
 class GateKeeper : public Marx::VEntity, public Creature
 {
@@ -68,7 +69,6 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual bool isMoving();
 
 
-
 	protected:
 		bool movingLeft;
     bool movingRight;
@@ -92,6 +92,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
 		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
+		SGO* _sprite;
 
 	private:
 		sf::Sound footstep;

@@ -20,23 +20,22 @@
 
 using namespace Manager;
 
+Animation *gkAnimation;
+
+
 // bug fix by Sanders Lee
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
   VEntity(sprite, map, x, y, ctrl, h, w)
-//  _ctrl(ctrl)
-  {
+{
     _range = 1;
     _health = 100;
     _type = 1;
     _attack = 1;
     _attackSpeed = 1;
-    _movementSpeed = 1;
-    _incombat = false;
-    _cooldown = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.09;
-    _ySpeed = 0.09;
+    _xSpeed = 0.06;
+    _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
     // sound set loaded should be determined by enemy type
@@ -47,7 +46,12 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
         hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
     	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
     }
-  };
+
+    _sprite = &sprite;
+
+    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
+
+}
 
 GateKeeper::~GateKeeper()
 {
@@ -55,12 +59,14 @@ GateKeeper::~GateKeeper()
 }
 
 /***
--- PROGRAMMER:  ???
+-- PROGRAMMER:  Filip Gutica
 --				Sanders Lee (Debugged synchronization problem across clients)
 ***/
 void GateKeeper::onUpdate(float deltaTime)
 {
 
+
+  gkAnimation->step(1);
 
 //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
 
@@ -94,10 +100,14 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
       if (xDir > 0)
       {
         newXSpeed = _xSpeed;
+
+        _sprite->sprite().setScale(1, 1);
       }
       else
       {
         newXSpeed = -_xSpeed;
+
+        _sprite->sprite().setScale(-1, 1);
       }
 
       if (xDir == 0)
@@ -106,11 +116,7 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
       if (yDir == 0)
         newYSpeed = 0;
 
-      //old code - replaced with the if-else block above
-      //movingLeft = (xDir < 0);
-      //movingRight = (xDir > 0);
-      //movingUp = (yDir < 0);
-      //movingDown = (yDir > 0);
+
 			break;
 	}
 
