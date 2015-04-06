@@ -156,7 +156,6 @@ class Vessel : public Marx::VEntity, public Creature
 		void attackPowerDown( int attackpower );
 		int  getAttackPower();
 		int  getDefaultAttackPower();
-		void setAttack(int attack);
 
 		void resetSpeed();
 		void speedUp( int speed );

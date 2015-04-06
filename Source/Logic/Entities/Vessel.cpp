@@ -1099,11 +1099,6 @@ void Vessel::setHealth(int health)
         currentHealth = maxHealth;
 }
 
-int Vessel::getHealth()
-{
-	return currentHealth;
-}
-
 void Vessel::setSpeed(int _speed)
 {
 	travelSpeed = _speed;
