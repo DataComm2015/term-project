@@ -290,7 +290,7 @@ void BGO::update(const sf::Time& t)
  * @param      renderer The renderer
  * @param      states   The render states
  */
-void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
+void BGO::drawSceneGraph(Renderer& renderer, sf::RenderStates states) const
 {
 	// Draw self
 	draw(renderer, states);
@@ -325,7 +325,7 @@ void BGO::drawChildren(Renderer& renderer, sf::RenderStates states) const
 	
 	for (const BGO* bgo : m_children)
 	{
-		bgo->drawSG(renderer, states);
+		bgo->drawSceneGraph(renderer, states);
 	}
 }
 

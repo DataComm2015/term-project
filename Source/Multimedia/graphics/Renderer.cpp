@@ -212,7 +212,7 @@ void Renderer::draw(const BGO *bgo, sf::RenderStates states)
 
 	mergeRenderStates(states);
 
-	bgo->drawSG(*this, states);
+	bgo->drawSceneGraph(*this, states);
 }
 
 /**
