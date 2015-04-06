@@ -34,7 +34,8 @@ namespace Marx
         MOVE,
       	R_MOVE,
       	A_MOVE,
-        UPDATE
+        UPDATE,
+        SKILL
     };
 
     /*

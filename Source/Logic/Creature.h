@@ -14,7 +14,11 @@ using Marx::Entity;
 class Creature
 {
     public:
-        virtual void setHealth(int health);
+        virtual int getHealth();
+        virtual void setHealth(int _health);
+        virtual int getSpeed();
+        virtual void setSpeed(int _speed);
+        
         virtual void setAttack(int attack);
         virtual Entity *getEntity();
 };

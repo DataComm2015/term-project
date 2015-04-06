@@ -54,4 +54,28 @@ public:
 
 };
 
+class SkillEvent: public ::Marx::Event
+{
+    public:
+        SkillEvent(float _x, float _y, float _radius, int _value, int _skillType);
+        SkillEvent(const SkillEvent& other);
+        float getX();
+        void setX(float _x);
+        float getY();
+        void setY(float _y);
+        float getRadius();
+        void setRadius(float _radius);
+        int getValue();
+        void setValue(int _value);
+        int getSkillType();
+        void setSkillType(int _skillType);
+        
+    private:
+        float x;
+        float y;
+        float radius;
+        int value;
+        int skillType;
+};
+
 #endif

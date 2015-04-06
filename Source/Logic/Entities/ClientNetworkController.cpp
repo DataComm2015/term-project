@@ -114,6 +114,11 @@ void ClientNetworkController::parseEventMessage( Message& message )
             UpdateEvent *ev = new UpdateEvent(um->x, um->y);
             addEvent(ev);
         }
+        case ::Marx::SKILL:
+        {
+            // turn network message back into skill event, and call addEvent()
+            break;
+        }
         default:
         {
             printf("WARNING: ClientNetworkController::parseEventMessage received an "

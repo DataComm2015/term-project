@@ -163,6 +163,11 @@ void ServerNetworkController::sendEventMessage(Event *event)
           update(message);
           break;
     }
+    case ::Marx::SKILL:
+    {
+        // change event mack into a network message, and call update
+        break;
+    }
     default:
         printf("\r\nWARNING: NetworkController::sendEventMessage received an "
             "unknown event type. please add new case to switch statement\r\n");

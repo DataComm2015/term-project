@@ -186,6 +186,11 @@ void Vessel::onUpdate(float deltaTime)
 
 				Entity::aMove(ev->_x, ev->_y, false);
 			}
+			case ::Marx::SKILL:
+			{
+				// process the skill event, and increase/decrease hp and stuff
+				break;
+			}
 		}
 	}
 	getController()->clearEvents();
@@ -1083,6 +1088,21 @@ void Vessel::setHealth(int health)
         currentHealth = 0;
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
+}
+
+int Vessel::getHealth()
+{
+	return health;
+}
+
+void Vessel::setSpeed(int _speed)
+{
+	travelSpeed = _speed;
+}
+
+int Vessel::getSpeed()
+{
+	return travelSpeed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------

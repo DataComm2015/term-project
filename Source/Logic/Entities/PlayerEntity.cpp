@@ -98,6 +98,65 @@ void PlayerEntity::onUpdate(Message msg)
 
             break;
         }
+        
+        //struct skill{
+        //  float curX;
+        //  float curY;
+        //  int radius;
+        //  int val;
+        //  SKILLTYPE st;
+        //};
+        case PlayerCommandMsgType::SKILL:
+        {
+            Vessel *vessel = NULL;
+            sk = ((skill) msg.data);
+            
+            //for(int i = 0; i < 5; i++)
+            //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
+
+            float x1 = sk.curX;
+            float y1 = sk.curY;
+            float x2, y2;
+
+            for(int i = 0; i < serverRef->getPlayerList().size(); i++)
+            {
+                x2 = static_cast<Creature*>(serverRef->getPlayerList()[i])->left;
+                y2 = static_cast<Creature*>(serverRef->getPlayerList()[i])->top;
+
+                if (getDistance(x1, y1, x2, y2) <= sk.radius)
+                {
+                    vessel = static_cast<Creature*>(serverRef->getPlayerList()[i]);
+                    
+                    if(vessel == NULL)
+                        continue;
+                    
+                    switch(sk.st)
+                    {
+                        case HEAL:
+                            vessel->increaseHP(sk.value);
+                            vessel->getController()->addEvent(skill event);
+                        break;
+                        case DMG:
+                            vessel->decreaseHP(sk.value);
+                            vessel->getController()->addEvent();
+                        break;
+                        case BUFF:
+                            vessel->speedup(sk.value);
+                            vessel->getController()->addEvent();
+                        break;
+                        case DEBUFF:
+                            vessel->speeddown(sk.value);
+                            vessel->getController()->addEvent();
+                        break;
+                    }
+                    
+                }
+            }
+            
+            
+            
+            break;
+        }
 
         // if the player entity doesn't understand the network message, it
         // forwards it to the controller which controls a vessel, or deity
@@ -117,4 +176,18 @@ char* PlayerEntity::getNickname()
     fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
     fflush(stdout);
     return nickname;
+}
+
+float PlayerEntity::getDistance(float x1, float y1, float x2, float y2 )
+{
+  float result;
+
+  result = std::abs( std::pow((x2 - x1), 2) + std::pow((y2 - y1), 2) );
+
+  return result;
+}
+
+void setSGameScene(ServerGameScene *ref)
+{
+    serverRef = ref;
 }

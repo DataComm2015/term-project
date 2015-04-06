@@ -686,7 +686,7 @@ void onClickVitalityOne() //healskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, +100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::HEAL);
 }
 void onClickVitalityTwo()//buffskillbtn
 {
@@ -694,7 +694,7 @@ void onClickVitalityTwo()//buffskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, +100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::BUFF);
 }
 void onClickVitalityThree() //healingcircleskillbtn
 {
@@ -702,7 +702,7 @@ void onClickVitalityThree() //healingcircleskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 50, +100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 50, 100, SKILLTYPE::HEAL);
 }
 void onClickDemiseOne() //hurtskillbtn
 {
@@ -710,7 +710,7 @@ void onClickDemiseOne() //hurtskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, -100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DMG);
 }
 void onClickDemiseTwo() //debuffskillbtn
 {
@@ -718,7 +718,7 @@ void onClickDemiseTwo() //debuffskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, -100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DEBUFF);
 }
 void onClickDemiseThree() //summonskillbtn
 {

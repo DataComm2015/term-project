@@ -165,8 +165,12 @@ class Vessel : public Marx::VEntity, public Creature
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
 
-		virtual void setHealth(int health);
-		virtual void setAttack(int attack);
+		
+        virtual int getHealth();
+        virtual void setHealth(int _health);
+        virtual int getSpeed();
+        virtual void setSpeed(int _speed);
+
 		virtual Entity *getEntity();
 };
 
