@@ -2,9 +2,7 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
-#include "../Skills.h"
 #include "../ServerCommand.h"
-#include "../Creature.h"
 #include "ServerNetworkController.h"
 #include "ServerGameState.h"
 
@@ -100,69 +98,6 @@ void PlayerEntity::onUpdate(Message msg)
 
             break;
         }
-        
-        //struct skill{
-        //  float curX;
-        //  float curY;
-        //  int radius;
-        //  int val;
-        //  SKILLTYPE st;
-        //};
-        case PlayerCommandMsgType::SKILL:
-        {
-            Vessel *vessel = NULL;
-            skill *sk = ((skill*) msg.data);
-            
-            //for(int i = 0; i < 5; i++)
-            //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
-
-            float x1 = sk->curX;
-            float y1 = sk->curY;
-            float x2, y2;
-
-            for(int i = 0; i < serverRef->getPlayerList()->size(); i++)
-            {
-                x2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->left;
-                y2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->top;
-
-                if (getDistance(x1, y1, x2, y2) <= sk->radius)
-                {
-                    vessel = static_cast<Vessel*>(serverRef->getPlayerList()->at(i));
-
-                    
-                    if(vessel == NULL)
-                        continue;                    
-                    
-                    SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
-                    
-                    switch(sk->st)
-                    {
-                        case SKILLTYPE::HEAL:
-                            vessel->setHealth(vessel->getHealth() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DMG:
-                            vessel->setHealth(vessel->getHealth() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::BUFF:
-                            vessel->setSpeed(vessel->getSpeed() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DEBUFF:
-                            vessel->setSpeed(vessel->getSpeed() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                    }
-                    
-                    vessel = NULL;
-                }
-            }
-            
-            
-            
-            break;
-        }
 
         // if the player entity doesn't understand the network message, it
         // forwards it to the controller which controls a vessel, or deity
@@ -182,18 +117,4 @@ char* PlayerEntity::getNickname()
     fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
     fflush(stdout);
     return nickname;
-}
-
-float PlayerEntity::getDistance(float x1, float y1, float x2, float y2 )
-{
-  float result;
-
-  result = std::abs( std::pow((x2 - x1), 2) + std::pow((y2 - y1), 2) );
-
-  return result;
-}
-
-void PlayerEntity::setSGameScene(ServerGameScene *ref)
-{
-    serverRef = ref;
 }

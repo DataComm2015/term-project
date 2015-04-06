@@ -38,6 +38,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 			float h,
 			float w
 		);
+
 		virtual ~GateKeeper();
 		virtual void setRange(int r);
 		virtual void setHealth(int h);
@@ -45,15 +46,13 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void setAttackSpeed(int as);
 		virtual void setXSpeed(float x);
 		virtual void setYSpeed(float y);
-        virtual void setSpeed(int _speed);
+    virtual void setSpeed(int _speed);
 		virtual int getRange();
 		virtual int getHealth();
 		virtual int getAttack();
 		virtual int getAttackSpeed();
 		virtual int getMovementSpeed();
-        virtual int getSpeed();
-		//virtual Vessel getTarget();
-		virtual time_t getCooldown();
+    virtual int getSpeed();
 		virtual void turn();
 		virtual void onCreate();
 		virtual void onDestroy();
@@ -62,6 +61,8 @@ class GateKeeper : public Marx::VEntity, public Creature
         virtual void stopAllSounds();
     virtual Entity* getEntity();
 		virtual bool isMoving();
+		virtual void playSound(float, float);
+		virtual void animate();
 
 
 	protected:
@@ -86,16 +87,12 @@ class GateKeeper : public Marx::VEntity, public Creature
 		bool _moving;
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
+		SGO* _sprite;
 		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
-
-	private:
 		sf::Sound footstep;
 		sf::Sound voice;
-		//Player _target;
-		//PatrolRadius _radius;
-		//Timer _cooldownTimer;
-		//AI _ai;
-
+		bool soundActive;
+		BlockZone steppedTile;
 
 
 };

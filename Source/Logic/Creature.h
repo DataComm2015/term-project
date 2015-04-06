@@ -3,7 +3,6 @@
 
 #include "Event.h"
 #include "../Engine/Entity.h"
-#include "../Engine/Controller.h"
 #include "../Engine/Action.h"
 #include "../Engine/ProjectileManager.h"
 

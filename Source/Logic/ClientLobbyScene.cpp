@@ -188,7 +188,6 @@ void ClientLobbyScene::onLoad()
     MainMenuScene::clearGameScene();
     MainMenuScene::getGameScene();
     ((ClientMux*)NetworkEntityMultiplexer::getInstance())->getCommandEntity()->attachListeners();
-
     title.play();
     clck.restart();
 

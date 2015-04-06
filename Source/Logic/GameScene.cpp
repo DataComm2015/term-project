@@ -1,7 +1,6 @@
 #include "GameScene.h"
 #include "Entities/CommandEntity.h"
 #include "PlayerLobbyChoices.h"
-#include "Skills.h"
 #include <iostream>
 
 using std::cout;
@@ -151,6 +150,9 @@ void GameScene::onLoad()
 	b1->toggleEnabled(true);
 	b2->toggleEnabled(true);
 	b3->toggleEnabled(true);
+	b4->toggleEnabled(true);
+	b5->toggleEnabled(true);
+	b6->toggleEnabled(true);
 
 //	Manager::MusicManager::get(scat_music)->setVolume(60);
 //	Manager::MusicManager::get(scat_music)->play();
@@ -170,14 +172,20 @@ void GameScene::positionUI()
 	b1->sprite().setScale(buttonScale, buttonScale);
 	b2->sprite().setScale(buttonScale, buttonScale);
 	b3->sprite().setScale(buttonScale, buttonScale);
+	b4->sprite().setScale(buttonScale, buttonScale);
+	b5->sprite().setScale(buttonScale, buttonScale);
+	b6->sprite().setScale(buttonScale, buttonScale);
 
 	// position scaled buttons
 	float buttonWidth = b1->sprite().getGlobalBounds().width;
 	float buttonHeight = b1->sprite().getGlobalBounds().height;
 
-	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 3*buttonHeight);
-	b2->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 3*buttonHeight);
-	b3->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 3*buttonHeight);
+	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 3), windowSize.y - 1.25*buttonHeight);
+	b2->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
+	b3->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 1.25*buttonHeight);
+	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
+	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
+	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
 
 	// Scale healthbar
 	hb->sprite().setScale(3, 3);
@@ -211,6 +219,9 @@ void GameScene::unLoad()
 	b1->toggleEnabled(false);
 	b2->toggleEnabled(false);
 	b3->toggleEnabled(false);
+	b4->toggleEnabled(false);
+	b5->toggleEnabled(false);
+	b6->toggleEnabled(false);
 
 	//Manager::MusicManager::get(scat_music)->stop();
 }
@@ -748,7 +759,7 @@ SKILLTYPE
 	1 = -DEBUFF/+BUFF
 
 */
-void onClickVitalityOne() //healskillbtn
+/*void onClickVitalityOne() //healskillbtn
 {
 	sf::View vm;
 	vm = AppWindow::getInstance().getCurrentView();
@@ -791,4 +802,4 @@ void onClickDemiseTwo() //debuffskillbtn
 void onClickDemiseThree() //summonskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
-}
+}*/
