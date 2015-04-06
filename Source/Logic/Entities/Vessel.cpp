@@ -80,6 +80,9 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	myX = 0;
 	myY = 0;
 
+	currentHealth = 500;
+	maxHealth = 1000;
+
 	//abilities = abilityList;
 /*
 	//class-specific instantiation
@@ -220,7 +223,7 @@ void Vessel::onUpdate(float deltaTime)
 			{
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
-				
+				printf("Vessel BEFORE Health: %d\n", currentHealth);
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -238,6 +241,14 @@ void Vessel::onUpdate(float deltaTime)
 						ySpeed -= ev->getValue();
 					break;
 				}
+				
+				if(currentHealth <= 0)
+				{
+					std::cout << "Moving vessel to ambiguous destination!!" << std::endl;
+					Entity::aMove(-1, -1, true);
+				}
+				
+				printf("Vessel AFTER Health: %d\n", currentHealth);
 				
 				break;
 			}

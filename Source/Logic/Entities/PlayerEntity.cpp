@@ -138,30 +138,33 @@ void PlayerEntity::onUpdate(Message msg)
                 if (getDistance(x1, y1, x2, y2) <= sk->radius)
                 {
                     vessel = serverRef->getPlayerList()->at(i);
-                    if(vessel == NULL)
-                        continue;
 
                     SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
                     std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
-                    switch(sk->st)
-                    {
-                        case SKILLTYPE::HEAL:
-                            vessel->setHealth(vessel->getHealth() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DMG:
-                            vessel->setHealth(vessel->getHealth() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::BUFF:
-                            vessel->setSpeed(vessel->getSpeed() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DEBUFF:
-                            vessel->setSpeed(vessel->getSpeed() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                    }
+                    std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
+                    std::cout << "Entity VALUE: " << sk->val << std::endl;
+                    std::cout << "index: " << i << std::endl;
+                    //switch(sk->st)
+                    //{
+                    //    case SKILLTYPE::HEAL:
+                    //        vessel->setHealth(vessel->getHealth() + sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //    case SKILLTYPE::DMG:
+                    //        vessel->setHealth(vessel->getHealth() - sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //    case SKILLTYPE::BUFF:
+                    //        vessel->setSpeed(vessel->getSpeed() + sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //    case SKILLTYPE::DEBUFF:
+                    //        vessel->setSpeed(vessel->getSpeed() - sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //}
+                    vessel->getController()->addEvent(ev);
+                    std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
 
                     vessel = NULL;
                 }
