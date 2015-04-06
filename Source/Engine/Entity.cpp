@@ -27,6 +27,7 @@
 --        This file implements the Entity class members
 --
 ----------------------------------------------------------------------------------------------------------------------*/
+#include "Controller.h"
 #include "Entity.h"
 #include "Map.h"
 #include <iostream>
@@ -56,14 +57,17 @@ using namespace Marx;
 Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
     map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
 {
-	occupiedCells = std::set<Cell*>();
+    if(ctrl != NULL)
+      ctrl->setEntity(this);
+
+	  occupiedCells = std::set<Cell*>();
 
     for(int i = floor(x); i < width + floor(x); i++)
     {
         for(int j = floor(y); j < height + floor(y); j++)
         {
             occupiedCells.emplace(map->getCell(floor(i),floor(j)));
-			map->getCell(floor(i),floor(j))->addEntity(this);
+			      map->getCell(floor(i),floor(j))->addEntity(this);
         }
     }
 }
@@ -143,6 +147,33 @@ Entity * Entity::rMove(float x, float y, bool force = false)
 }
 
 /*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::rMove
+--
+-- DATE: March 31, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: move(sf::Vector2f & v, float scaler, bool force)
+--					sf::Vector2f & v : A unit vector of the position you want to travel to.
+--					float scaler : a scaler to apply to the vector.
+--					bool force: if the entity can pass through other entities.
+--
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
+--
+-- NOTES: This function provides an interface to move entities relivate to their current position.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Entity * Entity::rMove( sf::Vector2f& v, float scaler, bool force = false )
+{
+	return rMove( v.x * scaler, v.y * scaler, force );
+}
+
+/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION:
 --
 -- DATE: February 19, 2015
@@ -162,7 +193,7 @@ Entity * Entity::rMove(float x, float y, bool force = false)
 -- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
 --			entity would collide with.
 --
--- NOTES: DEPRICATED.
+-- NOTES: DEPRECATED.
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 Entity * Entity::move(float x, float y, bool force = false)
@@ -210,8 +241,6 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		}
     }
 
-
-
 	// loop through all cells in the temporary array. looping for
     for(Cell *c : tempCell)
 	{
@@ -242,6 +271,7 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		c->addEntity(this);
 	}
 
+
 	// checks if any cells are blocking.
 	for(Cell *c : tempCell)
 		if( c->getBlocking() )	// This doesn't return anything.
@@ -253,8 +283,6 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 		}
 
 	occupiedCells = tempCell;
-
-
 
 	return nullptr;
 }
@@ -397,7 +425,7 @@ void Entity::onDestroy()
 -- NOTES:
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-void Entity::onUpdate()
+void Entity::onUpdate(float deltaTime)
 {
 	// logic team
 }
@@ -410,4 +438,9 @@ void Entity::setBlocking(bool b)
 bool Entity::getBlocking()
 {
 	return blocking;
+}
+
+Map * Entity::getMap()
+{
+    return map;
 }

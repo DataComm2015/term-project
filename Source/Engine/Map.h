@@ -54,10 +54,11 @@ namespace Marx
             void setTexture(const uint texture_id);
             uint getTexture() const;
 			std::set<Entity*> getEntities() const;
-			const sf::Transform& getLocalTransform() const override;
+			sf::Transform getLocalTransform() const override;
 			sf::Transform trans;
             
 	protected:
+        void drawChildren(Renderer& renderer, sf::RenderStates states) const override;
 		void draw(Renderer& renderer, sf::RenderStates states) const override;
 
         private:

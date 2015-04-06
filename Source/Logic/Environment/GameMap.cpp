@@ -3,14 +3,18 @@
 #include <vector>
 #include <cmath>
 #include <cstdlib>
+#include <set>
 #include <iostream>
 #include "EnemyHierarchy.h"
+#include "../EntityFactory.h"
+#include "../Entities/Structure.h"
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::max;
 using std::vector;
+using std::set;
 
 using namespace Marx;
 
@@ -48,6 +52,7 @@ GameMap::GameMap(Map *cMap)
 	height = cMap->getHeight();
 	bWidth = 0;
 	bHeight = 0;
+	generated = false;
 }
 
 
@@ -103,6 +108,12 @@ GameMap::~GameMap()
 ******************************************************************************/
 bool GameMap::generateMap(int seed, ServerGameScene *gs)
 {
+	if (generated)
+	{
+		cleanMap();
+		generated = false;
+	}
+
     srand(seed);
     gameScene = gs;
 
@@ -133,9 +144,10 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 
 		// Generate enemies
 		generateEnemies();
-	}
 
-	// Generate miscellaneous objects
+		// Generate miscellaneous objects
+		generateStructures();
+	}
 
 	// Generate tiles
 	if (gameScene == NULL)
@@ -143,7 +155,61 @@ bool GameMap::generateMap(int seed, ServerGameScene *gs)
 		generateTiles();
 	}
 
+	generated = true;
+
 	return true;
+}
+
+
+/******************************************************************************
+*	FUNCTION: cleanMap
+*
+*	DATE: April 3, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: void cleanMap();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function removes all entities from the game map so that it can
+*		be regenerated.
+******************************************************************************/
+void GameMap::cleanMap()
+{
+	Cell *tempCell;
+
+	// Delete all entities
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			tempCell = cellMap->getCell(j, i);
+
+			// Retrieve the entities of the cell
+			set<Entity*> entities = tempCell->getEntity();
+
+			set<Entity*>::iterator it;
+			for (it = entities.begin(); it != entities.end(); it++)
+			{
+				// Move entities to an unused cell
+				(*it)->aMove(0, 0, false);
+
+				// Delete all entities
+				//delete (*it)->getController();
+
+				//delete *it;
+			}
+		}
+	}
 }
 
 
@@ -427,20 +493,20 @@ void GameMap::generatePlayers()
 ******************************************************************************/
 void GameMap::generateEnemies()
 {
-	/*
+
 	for (int i = 0; i < bHeight; i++)
 	{
 		for (int j = 0; j < bWidth; j++)
 		{
 			// If this block is an enemies block
-			if (blockMap[j][i].getType() == ENEMIES)
+			if (blockMap[i][j].getType() == ENEMIES)
 			{
 				int size = (rand() % MAX_ENEMY_GROUP) + MIN_ENEMY_GROUP;
-				createEnemyGroup(&blockMap[j][i], blockMap[j][i].getZone(), size);
+				createEnemyGroup(&blockMap[i][j], blockMap[i][j].getZone(), size);
 			}
 		}
 	}
-	*/
+
 }
 
 
@@ -473,6 +539,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 {
 	EnemyHierarchy *eh = EnemyHierarchy::getInstance();
 	string enemy;
+	Cell *cell;
 
 	switch(z)
 	{
@@ -487,9 +554,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 
 						int xPos = block->getRandomCell()->getX();
 						int yPos = block->getRandomCell()->getY();
@@ -502,9 +571,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "grass/lost_grass/air_grass");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 					}
 
 					break;
@@ -525,9 +596,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "stone/lost_stone/ground_stone");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 					}
 
 					break;
@@ -537,9 +610,11 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 				{
 					for (int i = 0; i < num; i++)
 					{
+						cell = block->getRandomCell();
+
 						eh->getEnemy(&enemy, "stone/lost_stone/air_stone");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							block->getRandomCell()->getX(), block->getRandomCell()->getY());
+							cell->getX(), cell->getY());
 					}
 
 					break;
@@ -612,6 +687,56 @@ void GameMap::getVesselPosition(int vesselNum, int *xPos, int *yPos)
 				*yPos = tempCell->getY();
 
 				return;
+			}
+		}
+	}
+}
+
+
+/******************************************************************************
+*   FUNCTION: generateStructures
+*
+*   DATE: April 1, 2015
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: Chris Klassen
+*
+*   PROGRAMMER: Chris Klassen
+*
+*   INTERFACE: void generateStructures();
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+*		This function creates structures on the map.
+******************************************************************************/
+void GameMap::generateStructures()
+{
+	EntityFactory *ef = EntityFactory::getInstance();
+	Cell *destCell;
+
+	for (int i = 0; i < bHeight; i++)
+	{
+		for (int j = 0; j < bWidth; j++)
+		{
+			// If this block is a structures block
+			if (blockMap[i][j].getType() == STRUCTURE)
+			{
+				// Determine the number of structures to generate
+				int numStructs = (rand() % MAX_STRUCTURE_GROUP) + MIN_STRUCTURE_GROUP;
+
+				for (int k = 0; k < numStructs; k++)
+				{
+					// Get the destination cell
+					destCell = blockMap[i][j].getRandomCell();
+
+					// Place the structure
+					gameScene->createStructure(STRUCTURES, destCell->getX(), destCell->getY());
+					//cout << "Made entity at: " << destCell->getX() << ", " << destCell->getY() << endl;
+				}
 			}
 		}
 	}

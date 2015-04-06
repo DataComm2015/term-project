@@ -1,4 +1,7 @@
 #include "GameScene.h"
+#include "Entities/CommandEntity.h"
+#include "PlayerLobbyChoices.h"
+#include "Skills.h"
 #include <iostream>
 
 using std::cout;
@@ -50,7 +53,7 @@ void onclickLevelup()
 void updateMainView(sf::View& v)
 {
 	v = AppWindow::getInstance().getCurrentView();
-	v.zoom(0.66);
+	v.zoom(0.33);
 }
 
 
@@ -63,7 +66,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
 		{
-			Cell *tempCell = new Cell();
+			Cell *tempCell = new Cell(j, i);
 			tempCell->setTileId(1);
 
 			cMap->setCell(j, i, tempCell);
@@ -74,74 +77,22 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	myVessel = NULL;
 
-	/* THIS IS TO SHOW HOW TO MOVE / CREATE ENTITIES / PROJECTILES. PLEASE REMOVE WHEN PROPERLY IMPLEMENTED */
-	/* SIDE NOTE PROJECTILES SHOULD NOT GET CREATED LIKE THIS THEY SHOULD BE CREATED VIA THE PROJECTILE MANAGER */
-
-	/*std::cout << "Entity / Projectile move example (GameScene.cpp)" << std::endl;
-
- p = new Projectile(cMap, 10, 10, NULL, 1, 1);
-	//				   map, x, y, controller, height, width
-	Projectile p2 = Projectile(cMap, 20, 20, NULL, 1, 1);
-
-	std::cout << "projectile 1 " << p << std::endl;
-	std::cout << "projectile 2 " << &p2 << std::endl;
-
-	// move the second projectile to collide with the first.
-	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
-	// Entities all extend sf::Rect so you can get their x, y by checking the top left.
-	// As a side note, both entities and cells are FloatRects so are view ports intersect can be used to
-	// see if an entity or cell should be visible on the map.
-	// this should be useful for figuring out what needs to be rendered down the road.
-	std::cout << "Projectile 1 hit: " << p->move(p->top + 10, p->left + 10, false) << std::endl;
-	std::cout << "Projectile 1 hit: " << p->move(p->top + 20, p->left + 10, false) << std::endl;
-	std::cout << "Projectile 2 hit: " << p2.move(10, 10, false) << std::endl;
-
-	delete p;
-*/
-	/* END SAMPLE CREATION */
-
 	std::cout << "making tileset" << std::endl;
 	// Load the tileset
 	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
-	championSprite = Manager::TextureManager::store(
-		Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
-		);
-	maskSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png"));
-	wepSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/staff-run-sheet.png"));
+
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
-	scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
-	chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
 	placeholderSprite = Manager::TextureManager::store(
 		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
 		);
 
-	// an example, obviously...
-	/*
-	v = new Vessel(SHAMAN, nullptr, 0, 0);
-
-	runAnim = new Animation(&championSGO, sf::Vector2i(32, 32), 8, 7);
-	runAnim_mask = new Animation(&maskSGO, sf::Vector2i(32, 32), 8, 7);
-	runAnim_wep = new Animation(&wepSGO, sf::Vector2i(32, 32), 8, 7);
-	*/
+	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
+	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.ogg"));
 
 	cMap->setTexture(tilemap);
-	championSGO.sprite().setTexture(*Manager::TextureManager::get(championSprite));
-	championSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	championSGO.sprite().setScale(2, 2);
-	championSGO.middleAnchorPoint(true);
-
-	maskSGO.sprite().setTexture(*Manager::TextureManager::get(maskSprite));
-	maskSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	maskSGO.sprite().setScale(2, 2);
-	maskSGO.middleAnchorPoint(true);
-
-	wepSGO.sprite().setTexture(*Manager::TextureManager::get(wepSprite));
-	wepSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
-	wepSGO.sprite().setScale(2, 2);
-	wepSGO.middleAnchorPoint(true);
 
 	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
-	placeHolderSGO.sprite().setScale(1, 1);
+	placeHolderSGO.middleAnchorPoint(true);
 
 	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
 	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
@@ -155,18 +106,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	tb->toggleSelected(true);
 	tb->text().setFont(*arial);
 
-	Manager::MusicManager::get(scat_music)->setVolume(60);
-	Manager::MusicManager::get(scat_music)->play();
-
-	// Link game objects (not everything is linked, for example purposes only)
-	// as of now, the hierarchy system is barely used in this example
-	maskSGO.add(*tb);
-
 	// Generate stuff
-
-	// center the cell map
-	std::cout << "centering map" << std::endl;
-	cMap->trans.translate(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 
 	if (!gMap->generateMap(0))
 	{
@@ -181,20 +121,39 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 void GameScene::onLoad()
 {
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	characterType = cm->getCommandEntity()->getPlayerMode();
+	switch (characterType)
+	{
+		case PLAYER_MODE::VESSEL:
+			classType = cm->getCommandEntity()->getLobbyOption()->vesselChoice;
+		case PLAYER_MODE::DEITY:
+			classType = cm->getCommandEntity()->getLobbyOption()->deityChoice;
+	}
+
+	printf("characterType: %d, classType: %d\n",characterType,classType);
+
 	// update views
 	updateMainView(viewMain);
 	viewUI = AppWindow::getInstance().getCurrentView();
 
+	// minimap view
+	viewMinimap = viewMain;
+	viewMinimap.setViewport(sf::FloatRect(0.76f,0.01f,0.23f,0.23f));
+	viewMinimap.zoom(2.f);
+
+
 	// position buttons
+	generateUI();
 	positionUI();
 
 	// Enable buttons
 	b1->toggleEnabled(true);
 	b2->toggleEnabled(true);
 	b3->toggleEnabled(true);
-	b4->toggleEnabled(true);
-	b5->toggleEnabled(true);
-	b6->toggleEnabled(true);
+
+//	Manager::MusicManager::get(scat_music)->setVolume(60);
+//	Manager::MusicManager::get(scat_music)->play();
 }
 
 
@@ -211,20 +170,14 @@ void GameScene::positionUI()
 	b1->sprite().setScale(buttonScale, buttonScale);
 	b2->sprite().setScale(buttonScale, buttonScale);
 	b3->sprite().setScale(buttonScale, buttonScale);
-	b4->sprite().setScale(buttonScale, buttonScale);
-	b5->sprite().setScale(buttonScale, buttonScale);
-	b6->sprite().setScale(buttonScale, buttonScale);
 
 	// position scaled buttons
 	float buttonWidth = b1->sprite().getGlobalBounds().width;
 	float buttonHeight = b1->sprite().getGlobalBounds().height;
 
-	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 3), windowSize.y - 1.25*buttonHeight);
-	b2->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
-	b3->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 1.25*buttonHeight);
-	b4->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
-	b5->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
-	b6->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth * 2), windowSize.y - 1.25*buttonHeight);
+	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 3*buttonHeight);
+	b2->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 3*buttonHeight);
+	b3->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 3*buttonHeight);
 
 	// Scale healthbar
 	hb->sprite().setScale(3, 3);
@@ -233,10 +186,8 @@ void GameScene::positionUI()
 	hb->sprite().setPosition(20, 20);
 
 	// position and scale level indicator
-	levelInd->text().move(14, 10);
+	levelInd->text().setPosition(15, 10);
 	levelInd->text().setScale(1.5, 1.5);
-
-
 }
 
 void GameScene::setPlayerVessel(Vessel *vessel)
@@ -249,9 +200,8 @@ void GameScene::unLoad()
 	b1->toggleEnabled(false);
 	b2->toggleEnabled(false);
 	b3->toggleEnabled(false);
-	b4->toggleEnabled(false);
-	b5->toggleEnabled(false);
-	b6->toggleEnabled(false);
+
+	//Manager::MusicManager::get(scat_music)->stop();
 }
 
 
@@ -279,20 +229,39 @@ GameScene::~GameScene()
 	delete waterMap;
 }
 
+
+/**
+--
+--	PROGRAMMER: ???
+--				Sanders Lee (Fixed hearing center for sounds)
+--
+**/
 void GameScene::update(sf::Time t)
 {
-
+	checkBtns(t);
 	// static int listEntity = 100;
 	auto entities = cMap->getEntities();
 	for ( auto it = entities.begin(); it != entities.end(); ++it)
 	{
-		(*it)->onUpdate();
+		(*it)->onUpdate(t.asSeconds());
 	}
 
-	if (myVessel != 0)
+	if (myVessel != NULL) // SHOULD MOVE THIS INTO VESSEL's UPDATE FUNCTION
 	{
-		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint((myVessel->left)*32.0F, (myVessel->top)*32.0F));
+		//to test:
+		//myVessel->getSprite().sprite().rotate(1);
+
+		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
+
+		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 	}
+
+	/*
+	sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
+	std::cout << "mouse : " << mousePos.x << ", " << mousePos.y << std::endl;
+	cout << "vessel:   " << myVessel->left << ", " << myVessel->top << endl;
+	cout << "viewmain: " << viewMain.getCenter().x << ", " << viewMain.getCenter().y << endl;
+	*/
 
 	// listEntity = false;
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
@@ -334,7 +303,10 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x-45, viewMain.getCenter().y-45, 0);
+	if(myVessel != NULL)
+	{
+		sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+	}
 
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*
@@ -354,11 +326,9 @@ void GameScene::update(sf::Time t)
 	b1->update(t);
 	b2->update(t);
 	b3->update(t);
-	b4->update(t);
-	b5->update(t);
-	b6->update(t);
 
-//	cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
+
+	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
 	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
 
 	// Increment the wave phase
@@ -368,53 +338,57 @@ void GameScene::update(sf::Time t)
 
 void GameScene::processEvents(sf::Event& e)
 {
+	static std::set<int> depressedKeys;
 	Scene::processEvents(e);
 	if (e.type == sf::Event::Closed)
 	{
         ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
 		AppWindow::getInstance().close();
-
-		AppWindow::getInstance().close();
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
-		for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+		if(characterType == PLAYER_MODE::VESSEL)
 		{
-			(*l)->onKeyPressed(e.key.code);
+			if (depressedKeys.find((int)e.key.code) == depressedKeys.end())
+			{
+				depressedKeys.insert((int)e.key.code);
+				for (auto l = keyListeners.begin(); l != keyListeners.end(); ++l)
+				{
+					(*l)->onKeyPressed(e.key.code);
+				}
+			}
 		}
-
-		// ALL OF THE FOLLOWING IS TEMPORARY
-
+		else
 		{
-			/*float camSpeed = 15;
+			float camSpeed = 15;
 			switch (e.key.code)
 			{
-
-				case sf::Keyboard::A:
+				case sf::Keyboard::Left:
 				{
 					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
 					break;
 				}
-				case sf::Keyboard::D:
+				case sf::Keyboard::Right:
 				{
 					viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
 					break;
 				}
-				case sf::Keyboard::W:
+				case sf::Keyboard::Up:
 				{
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
 					break;
 				}
-				case sf::Keyboard::S:
+				case sf::Keyboard::Down:
 				{
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
 					break;
 				}
-			    case sf::Keyboard::Return:
-			    {
+			    	case sf::Keyboard::Return:
+			    	{
 				    break;
-			    }
-			}*/
+			    	}
+			}
+			viewMinimap.setCenter(viewMain.getCenter().x, viewMain.getCenter().y);
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
@@ -423,6 +397,7 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			(*l)->onKeyReleased(e.key.code);
 		}
+		depressedKeys.erase((int)e.key.code);
 
 		// v->stop(e.key.code);
 	}
@@ -431,18 +406,27 @@ void GameScene::processEvents(sf::Event& e)
 		// update views
 		updateMainView(viewMain);
 		viewUI = AppWindow::getInstance().getCurrentView();
+		viewMinimap = AppWindow::getInstance().getCurrentView();
 		positionUI();
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
-		if (e.mouseButton.button == sf::Mouse::Left)
+		if(characterType == PLAYER_MODE::VESSEL)
 		{
-			current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
-			current.play();
+			sf::Vector2i mouse = sf::Mouse::getPosition();
+			sf::Vector2f viewVector = viewMain.getCenter();
+			std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
+			std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
+
+			for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
+			{
+				(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
+									ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
+				//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+				//current.play();
+			}
 		}
 	}
-
-
 
 	tb->process(e);
 }
@@ -461,16 +445,7 @@ void GameScene::draw()
 	renderer.states.shader = &waveShader;
 	renderer.draw(waterMap);
 	renderer.states.shader = nullptr;
-	renderer.draw(cMap, true);
-
-	renderer.end();
-/*
-	renderer.begin();
-
-	// draw the objects
-	//renderer.draw(championSGO2);
-	//renderer.draw(&maskSGO, true);
-	//renderer.draw(wepSGO);
+	renderer.draw(cMap);
 
 	renderer.end();
 
@@ -479,17 +454,47 @@ void GameScene::draw()
 
 	renderer.begin();
 
-	renderer.draw(b1);
-	renderer.draw(b2);
-	renderer.draw(b3);
-	renderer.draw(b4);
-	renderer.draw(b5);
-	renderer.draw(b6);
-	renderer.draw(hb, true);
-	renderer.draw(levelInd);
+	if(characterType == PLAYER_MODE::DEITY)
+	{
+		renderer.draw(b1);
+		renderer.draw(b2);
+		renderer.draw(b3);
+	}
+
+	if(characterType == PLAYER_MODE::VESSEL)
+	{
+		renderer.draw(hb);
+		renderer.draw(levelInd);
+	}
+	renderer.end();
+
+	//the border for the minimap
+	minimapBorder.setSize(
+		sf::Vector2f(viewMinimap.getViewport().width*window.getSize().x,
+			     viewMinimap.getViewport().height*window.getSize().y));
+
+	minimapBorder.setPosition(
+		sf::Vector2f(viewMinimap.getViewport().left*window.getSize().x,
+		  	     viewMinimap.getViewport().top*window.getSize().y));
+
+	minimapBorder.setFillColor(sf::Color::Black);
+	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
+
+	window.draw(minimapBorder);
+
+
+	//draw the minimap
+	window.setView(viewMinimap);
+
+	renderer.begin();
+
+	renderer.states.shader = &waveShader;
+	renderer.draw(waterMap);
+	renderer.states.shader = nullptr;
+	renderer.draw(cMap);
 
 	renderer.end();
-*/
+
 	window.display();
 }
 
@@ -501,6 +506,16 @@ void GameScene::addKeyListener(KeyListener* listener)
 void GameScene::rmKeyListener(KeyListener* listener)
 {
 	keyListeners.erase(listener);
+}
+
+void GameScene::addClickListener(ClickListener* listener)
+{
+	clickListeners.insert(listener);
+}
+
+void GameScene::rmClickListener(ClickListener* listener)
+{
+	clickListeners.erase(listener);
 }
 
 void GameScene::generateMap(int seed)
@@ -597,20 +612,30 @@ void GameScene::generateWater()
 void GameScene::generateUI()
 {
 	// Create buttons
-	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
+	butSprite = Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Menu/shaman-btn.png"));
+
+	demiseBtn = Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Menu/demise-btn.png"));
+	vitalityBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/vitality-btn.png"));
+	warriorBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/warrior-btn.png"));
+	shamanBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/shaman-btn.png"));
+
+
+
+	buffskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/buff-skill-btn.png"));
+	healskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/heal-skill-btn.png"));
+	healingcircleskillbtn	= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/healingcircle-skill-btn.png"));
+	debuffskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/debuff-skill-btn.png"));
+	hurtskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/hurt-skill-btn.png"));
+	summonskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/summon-skill-btn.png"));
+
 
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
 
-	sf::Vector2f butSize = sf::Vector2f(width, height);
+	butSize = sf::Vector2f(width, height);
 
-	b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b4 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-	b5 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickLevelup);
-	b6 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclickHealthTest);
+	setUI();
 
 	// Create health bar (If statement here if vessel or deity)
 	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
@@ -636,4 +661,131 @@ void GameScene::generateUI()
 	levelInd->text().setFont(*arial);
 	levelInd->setText("01");
 	pubLevelInd = levelInd;
+}
+
+void GameScene::setUI()
+{
+	switch (characterType)
+	{
+		case PLAYER_MODE::VESSEL: // VESSEL
+			switch(classType)
+			{
+				case 1: //SHAMAN
+					b1 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
+				break;
+				case 2: //WARRIOR
+					b1 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
+				break;
+		}break;
+		case PLAYER_MODE::DEITY: // DEMISE
+			switch(classType)
+			{
+				case 1: //VITALITY
+					b1 = new GUI::Button(*Manager::TextureManager::get(healskillbtn), skillbtn, viewUI, onClickVitalityOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(buffskillbtn), skillbtn, viewUI, onClickVitalityTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(healingcircleskillbtn), skillbtn, viewUI, onClickVitalityThree);
+				break;
+				case 2: //DEMISE
+					b1 = new GUI::Button(*Manager::TextureManager::get(hurtskillbtn), skillbtn, viewUI, onClickDemiseOne);
+					b2 = new GUI::Button(*Manager::TextureManager::get(debuffskillbtn), skillbtn, viewUI, onClickDemiseTwo);
+					b3 = new GUI::Button(*Manager::TextureManager::get(summonskillbtn), skillbtn, viewUI, onClickDemiseThree);
+				break;
+			}break;
+		case PLAYER_MODE::GHOST: // GHOST
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			break;
+		default: //ORIGINAL
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+	}
+
+	bs[0].btn = b1;
+	bs[1].btn = b2;
+	bs[2].btn = b3;
+
+}
+
+void GameScene::checkBtns(sf::Time t)
+{
+		for(int i = 0; i<3; i++)
+		{
+			if(bs[i].coolDown > 0) //Update cooldown if cooldown was set
+			{
+				bs[i].coolDown -= t.asMilliseconds();
+				if(bs[i].coolDown < 0) //make sure coolDown does not go below 0
+				{
+					bs[i].coolDown = 0;
+				}
+			}
+
+			if(bs[i].coolDown > 0) //Check current new cooldown
+			{
+				bs[i].btn->toggleEnabled(false);
+			}
+			else
+			{
+				bs[i].btn->toggleEnabled(true);
+			}
+		}
+}
+
+
+/*
+
+void CommandEntity::SendSkill(float curX, float curY, int radius, int value, int skilltype)
+SKILLTYPE
+	0 = -DMG/+HEAL
+	1 = -DEBUFF/+BUFF
+
+*/
+void onClickVitalityOne() //healskillbtn
+{
+	sf::View vm;
+	vm = AppWindow::getInstance().getCurrentView();
+	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::HEAL);
+}
+void onClickVitalityTwo()//buffskillbtn
+{
+	sf::View vm;
+	vm = AppWindow::getInstance().getCurrentView();
+	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::BUFF);
+}
+void onClickVitalityThree() //healingcircleskillbtn
+{
+	sf::View vm;
+	vm = AppWindow::getInstance().getCurrentView();
+	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 50, 100, SKILLTYPE::HEAL);
+}
+void onClickDemiseOne() //hurtskillbtn
+{
+	sf::View vm;
+	vm = AppWindow::getInstance().getCurrentView();
+	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DMG);
+}
+void onClickDemiseTwo() //debuffskillbtn
+{
+	sf::View vm;
+	vm = AppWindow::getInstance().getCurrentView();
+	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DEBUFF);
+}
+void onClickDemiseThree() //summonskillbtn
+{
+	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 }

@@ -1,7 +1,9 @@
 #include "Session.h"
 #include "Message.h"
+#include "semaphores.h"
 #include "NetworkEntity.h"
 #include "NetworkEntityMultiplexer.h"
+
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -11,6 +13,12 @@
 // #define DEBUG
 
 using namespace Networking;
+
+static int SESSION_SET_SEM_KEY = rand() % 5000 + 10;
+static int SESSION_SEM = initSessionSem(SESSION_SET_SEM_KEY);
+static int MESSAGE_SEM_KEY = 9956;
+static std::set<Session*> SESSIONS;
+static std::set<Session*> sessionsToDelete;
 
 Session::Session(int socket)
 {
@@ -30,9 +38,7 @@ Session::Session(int socket)
 
 Session::~Session()
 {
-    accessSem(SESSION_SEM);
     SESSIONS.erase(this);
-    releaseSem(SESSION_SEM);
 
     Message* m;
     while(!messages.empty())
@@ -138,16 +144,34 @@ void Session::handleMessages()
 
 void Networking::handleSessionMessages()
 {
+    // obtain synchronization objects
     accessSem(SESSION_SEM);
-   // printf("this sessions size: %d\n", SESSIONS.size());
+
+    // handle all pending messages
     for(auto it = SESSIONS.begin(); it != SESSIONS.end(); it++)
     {
-      //  printf("handle session messages call\n");
         (*it)->handleMessages();
-      //  printf(" after handle session messages call\n");
     }
+
+    // delete all sessions marked for deletion
+    while(sessionsToDelete.size() > 0)
+    {
+        delete *(sessionsToDelete.begin());
+        sessionsToDelete.erase(*(sessionsToDelete.begin()));
+    }
+
+    // release synchronization objects
     releaseSem(SESSION_SEM);
 }
 
+void Session::markForDeletion()
+{
+    // obtain synchronization objects
+    accessSem(SESSION_SEM);
 
+    // mark the session for deletion
+    sessionsToDelete.insert(this);
 
+    // release synchronization objects
+    releaseSem(SESSION_SEM);
+}

@@ -6,8 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdexcept>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace Networking;
 
@@ -106,6 +107,40 @@ NetworkEntityMultiplexer::NetworkEntityMultiplexer()
 NetworkEntityMultiplexer::~NetworkEntityMultiplexer()
 {
 }
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: NetworkEntityMultiplexer::getEntityById
+--
+-- DATE: March 30, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Thomas Tallentire
+--
+-- PROGRAMMER: Thomas Tallentire
+--
+-- INTERFACE: NetworkEntity* getEntityById(int id);
+--
+-- PARAMETERS: id - Network Entity id of the entity you want
+--
+-- RETURNS: NetworkEntity* - The entity corresponding to the given ID
+--
+-- NOTES:
+-- Function returns NetworkEntity corresponding to given ID if it exists.
+----------------------------------------------------------------------------------------------------------------------*/
+NetworkEntity* NetworkEntityMultiplexer::getEntityById(int id)
+{
+	try
+	{
+		return (entities.at(id));
+	}
+	catch (const std::out_of_range& oor)
+	{
+		printf("NetworkEntityMultiplexer::getEntityById::Index Out of Bounds\n");
+	}
+	return nullptr;
+}
+
 /**
  * method with the same signature as the Session::onMessage. this
  *   function should be invoked within the session's onMessage method
@@ -464,3 +499,4 @@ void NetworkEntityMultiplexer::onUnregister(int id, Session* session, Message ms
 {
     entities[id]->onUnregister(session,msg);
 }
+

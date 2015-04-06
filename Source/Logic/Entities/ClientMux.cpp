@@ -123,6 +123,7 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             {
                  _gameScene->setPlayerVessel(static_cast<Vessel*>(entity));
             }
+
             break;
         }
 
@@ -132,6 +133,11 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             ret = gameState;
             break;
         }
+
+        case NetworkEntityPair::STRUCTURE_MIRROR:
+            Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
+            EntityFactory::getInstance()->makeEntityFromNetworkMessage(id, cMap,&msg,NULL);
+            break;
     }
 
     return ret;
@@ -163,4 +169,9 @@ void ClientMux::shutdown()
 
     // unregister our {Session} from the server
     command->unregisterSession(session, msg);
+}
+
+CommandEntity* ClientMux::getCommandEntity()
+{
+  return command;
 }

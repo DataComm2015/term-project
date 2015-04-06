@@ -24,15 +24,17 @@
 #define ENTITY_H_
 
 #include "Cell.h"
-#include "Controller.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "Map.h"
 
 #include <set>
 #include <cmath>
 
+
 namespace Marx
 {
+	class Controller;
+
 	class Entity : public sf::FloatRect, public BGO
 	{
 	public:
@@ -41,15 +43,17 @@ namespace Marx
 		virtual void turn();
 		Entity * move(float, float, bool);
 		Entity * rMove(float, float, bool);
+		Entity * rMove(sf::Vector2f &, float, bool);
 		Entity * aMove(float, float, bool);
 		Controller *getController();
 		virtual std::set<Cell*> getCell();
 		virtual void onCreate();
 		virtual void onDestroy();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		virtual bool operator==(const Entity&);
 		void setBlocking(bool);
 		bool getBlocking();
+		Map * getMap();
 	protected:
 		std::set<Cell*> occupiedCells;
 		Map * map;

@@ -36,7 +36,12 @@ enum class NetworkEntityPair
      * a {ServerGameState} instance on the server side is connected to a
      *   {ClientGameState} instance on the client side.
      */
-    SERVERGAMESTATE_CLIENTGAMESTATE
+    SERVERGAMESTATE_CLIENTGAMESTATE,
+
+    /**
+     * a static structure instance mirrored on Server and Client
+     */
+    STRUCTURE_MIRROR
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -66,6 +71,16 @@ enum class PlayerCommandMsgType
      *   instance.
      */
     START_MV_DOWN_COMMAND,
+	/**
+     * {Command} instance is sending a "attack" command to the {Player}
+     *   instance.
+     */
+	START_ATT_COMMAND,
+	/**
+     * {Command} instance is sending a "skill attack" command to the {Player}
+     *   instance.
+     */
+	START_SK_ATT_COMMAND,
     /**
      * {Command} instance is sending a "stop moving left" command to the {Player}
      *   instance.
@@ -108,7 +123,13 @@ enum class PlayerCommandMsgType
     /**
      * Clients sends the selected type of deity to the server
      */
-    SERVER_SELECTED_DEITY
+    SERVER_SELECTED_DEITY,
+
+    /**
+     * Client sends that this will be a skill to tht eserver
+     */
+
+    SKILL
 };
 
 /////////////////////////////////////////////////////////////////////

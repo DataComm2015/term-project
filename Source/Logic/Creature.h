@@ -1,7 +1,11 @@
 #ifndef _CREATURE_H_
 #define _CREATURE_H_
 
+#include "Event.h"
 #include "../Engine/Entity.h"
+#include "../Engine/Controller.h"
+#include "../Engine/Action.h"
+#include "../Engine/ProjectileManager.h"
 
 using Marx::Entity;
 
@@ -10,13 +14,24 @@ using Marx::Entity;
  * including the player. This allows them to be buffed/debuffed identically.
  *
  * PROGRAMMER: Calvin Rempel
+*				Thomas Tallentire
  */
 class Creature
 {
     public:
-        virtual void setHealth(int health);
+        virtual int getHealth();
+        virtual void setHealth(int _health);
+        virtual int getSpeed();
+        virtual void setSpeed(int _speed);
+        
+        
         virtual void setAttack(int attack);
-        virtual Entity *getEntity();
+		virtual int getAttack();
+		virtual Marx::Projectile* createAttack(AttackEvent&, SGO &sprite, float x, float y);
+		virtual Marx::Projectile* createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y);
+        virtual Entity * getEntity();
+	private:
+		std::map<enum ActionType, Marx::Action*> actionList;
 };
 
 #endif

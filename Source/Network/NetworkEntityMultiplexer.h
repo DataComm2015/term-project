@@ -22,6 +22,7 @@ namespace Networking
         static NetworkEntityMultiplexer* getInstance();
         static void setInstance(NetworkEntityMultiplexer* mux);
         void onMessage(Session* session, Message msg);
+	NetworkEntity* getEntityById(int);
     protected:
         NetworkEntityMultiplexer();
         virtual ~NetworkEntityMultiplexer();

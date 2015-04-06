@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../Engine/Scene.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
@@ -24,7 +25,10 @@
 #define CLASS_BTN_HEIGHT 49
 
 #define CLASS_BTN_WIDTH_B 52
-#define CLASS_BTN_HEIGHT_B 52
+#define CLASS_BTN_HEIGHT_B 53
+
+#define BACK_BTN_WIDTH 48
+#define BACK_BTN_HEIGHT 17
 
 /*
 *   This is the Lobby scene.
@@ -42,9 +46,8 @@ class ClientLobbyScene : public Scene
         static void onLeaveClick();
         static void onVesselOneClick();
         static void onVesselTwoClick();
-        static void onDeityOneClick();
-        static void onDeityTwoClick();
-        static void easterEggClick();
+        static void ondeityVitalityClick();
+        static void ondeityDemiseClick();
         void updateMainView(sf::View& v);
         static int vesselChoice;
         static int deityChoice;
@@ -60,11 +63,14 @@ class ClientLobbyScene : public Scene
         sf::View viewMain;
         Renderer renderer;
 
+        double height;
+        double cur_movement;
+        double speed;
+        double total_movement;
+        double height_mov;
+
         SGO *background;
         id_resource backgroundImg;
-
-        GUI::Button *easterEggBtn;
-        id_resource easterEggImg;
 
         id_resource circle;
         GUI::TextBox * countdownBox;
@@ -72,29 +78,48 @@ class ClientLobbyScene : public Scene
 
         SGO *vesselOneCircleSGO;
         SGO *vesselTwoCircleSGO;
-        SGO *deityOneCircleSGO;
-        SGO *deityTwoCircleSGO;
+        SGO *deityVitalityCircleSGO;
+        SGO *deityDemiseCircleSGO;
 
         SGO *vesselOneSGO;
         SGO *vesselTwoSGO;
-        SGO *easterEggSGO;
+
+        SGO *deityVitalitySGO;
+        SGO *deityDemiseSGO;
+
+        SGO *playerTwoSGO;
+        SGO *playerThreeSGO;
+        SGO *playerFourSGO;
+
+        SGO *playerTwoShadowSGO;
+        SGO *playerThreeShadowSGO;
+        SGO *playerFourShadowSGO;
+
+        SGO *vesselShadowSGO;
 
         GUI::Button * vesselOneBtn;
         GUI::Button * vesselTwoBtn;
 
-        GUI::Button * deityOneBtn;
-        GUI::Button * deityTwoBtn;
+        GUI::Button * deityVitalityBtn;
+        GUI::Button * deityDemiseBtn;
 
         GUI::Button * leaveBtn;
 
         id_resource vesselOneArt;
         id_resource vesselTwoArt;
 
+        id_resource otherPlayerArt;
+
         id_resource vesselOneImg;
         id_resource vesselTwoImg;
 
-        id_resource deityOneImg;
-        id_resource deityTwoImg;
+        id_resource deityVitalityImg;
+        id_resource deityDemiseImg;
+
+        id_resource deityVitalityArt;
+        id_resource deityDemiseArt;
+
+        id_resource vesselShadowImg;
 
         id_resource leaveImg;
 
@@ -102,7 +127,6 @@ class ClientLobbyScene : public Scene
         const int SCN_HEIGHT = 768;
 
         const int CIRCLE_WH = 200;
-
         const int VESSEL_ART_H = 56;
         const int VESSEL_ART_W = 64;
 
@@ -121,6 +145,8 @@ class ClientLobbyScene : public Scene
         GameScene * gameScene;
         ClientMux * clientMux;
         PlayerLobbyChoices playerSelections;
+
+        sf::Sound title;
 };
 
 #endif

@@ -8,7 +8,9 @@ enum ENTITY_TYPES
     I_DONT_KNOW,
     BAWS,
     MINION,
-    MINI_BOSS
+    MINI_BOSS,
+	PROJECTILE,
+    STRUCTURES
 };
 
 #endif

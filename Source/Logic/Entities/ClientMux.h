@@ -32,6 +32,7 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
         virtual ~ClientMux();
         virtual NetworkEntity* onRegister(int id, int entityType,
             Session* session, Message msg);
+        CommandEntity* getCommandEntity();
         void shutdown();
     private:
         /**
@@ -47,7 +48,7 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
          */
         ClientLobbyScene* _lobbyScene;
         /**
-         * pointer to the singleton {ClientScoreboardScene} instance.
+         * pointer to the singleton {CommandEntity} instance.
          */
         ClientScoreboardScene* _scoreScene;
         /**

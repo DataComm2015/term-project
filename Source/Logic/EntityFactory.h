@@ -28,7 +28,19 @@ class EntityFactory
             Marx::Map* cMap,
             Networking::Message* msg,
             Marx::Controller* cont);
+        Entity* makeEntityFromNetworkMessage(
+            int id,
+            Marx::Map* cMap,
+            Networking::Message* msg,
+            Marx::Controller* cont);
         Entity* makeEntity(
+            ENTITY_TYPES type,
+            Marx::Controller* controller,
+            Marx::Map* map,
+            float x,
+            float y);
+        Entity* makeEntity(
+            int id,
             ENTITY_TYPES type,
             Marx::Controller* controller,
             Marx::Map* map,
@@ -39,8 +51,8 @@ class EntityFactory
         ~EntityFactory();
     private:
         static EntityFactory* instance;
-        id_resource gkSprite, vesselSprite, maskSprite, spearSprite;
-        SGO gkSGO, vesselSGO, maskSGO, spearSGO;
+        id_resource gkSprite, projSprite, vesselSprite, maskSprite, spearSprite, structImage;
+        SGO gkSGO, projSGO, vesselSGO, maskSGO, spearSGO, structSprite;
 };
 
 #endif

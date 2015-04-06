@@ -24,11 +24,14 @@ CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstan
     // background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
     mainmenu = mainmen;
+
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/credits-background.png"));
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
-    background->sprite().setScale(5, 5);
+    //set scale to (3, 3) and the image will fit in perfectly with borders 
+    background->sprite().setScale(3, 3);
 
     creditImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/credits.png"));
+
     creditText = new SGO(*Manager::TextureManager::get(creditImg));
     creditText->sprite().setScale(3, 3);
     /* Get texture assets */
@@ -56,6 +59,7 @@ void CreditScene::onLoad()
     /* Set button positions */
 
     backBtn->sprite().setPosition(350, 550);
+    creditText->sprite().move(0, AppWindow::getInstance().getSize().y);
 
     /* Set the active view */
     updateMainView(viewMain);
@@ -68,6 +72,11 @@ void CreditScene::update(sf::Time t)
     if(creditText->sprite().getPosition().y > -2500 )
     {
         creditText->sprite().move(0, -t.asSeconds() * 100);
+    }
+    else
+    {
+      cout << "HELLO -> the credits are done" << endl;
+      CreditScene::onClick();
     }
 }
 
@@ -83,18 +92,18 @@ void CreditScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
 
-    window.clear(sf::Color::Blue);
+    window.clear();
 
     window.setView(viewMain);
 
     renderer.begin();
 
-    renderer.draw( background, true );
+    renderer.draw( background );
 
     // draw the objects
-    renderer.draw( creditText, true);
+    renderer.draw( creditText );
 
-    renderer.draw( backBtn );
+    //renderer.draw( backBtn );
 
     renderer.end();
 
@@ -106,9 +115,6 @@ void CreditScene::onClick()
     AppWindow::getInstance().removeScene(1);
 
     AppWindow::getInstance().addScene(CreditScene::getInstance()->mainmenu);
-
-    AppWindow::getInstance().run();
-
 }
 
 void CreditScene::updateMainView(sf::View& v)

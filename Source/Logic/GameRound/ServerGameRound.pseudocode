@@ -1,0 +1,107 @@
+Server Game Round
+  start Connection Initiation Thread to catch incoming players
+  start Connection Checking Thread to kick timed-out players
+  start Lobby
+
+Lobby Function
+  loop once every game frame
+    check each player for messages  // for such things, override
+                                    // PlayerEntity::onUpdate(msg)
+      if a player sends a valid roles message
+        assign player with roles
+        remove message
+    if >= 4 players on player list (we need at least 4 vessels)
+      start or continue countdown of 20 seconds
+      send to all players start countdown message // PlayerEntity::update(msg)
+    else
+      stop and reset countdown
+      send to all players stop countdown message
+    if countdown ends
+      randomly assign 4 players to vessels
+      randomly assign up to 4 other players to deities
+      unassigned players are ghosts
+      send start loading screen signal
+      enter Loading Screen
+
+Connection Initiation Thread
+  loop once every game frame
+    check for new players // override ServerCommand::onConnect()
+      put any new players in player list
+      if game not in session
+        send lobby entry confirmation message to new player
+      else
+        send game-in-session message to new player
+        wait for new player to go into Loading Screen
+        send alive server controllers (assoc. w/ entities) to new player
+        send game start message to new player
+
+Connection Checking Thread
+  loop once every game frame
+    check through all players in player list for messages
+      if a player has sent a message of any kind
+        reset player's consecutive miss count = 0
+        if the message is a simple check-in message
+          remove message
+        if the message is a quit message
+          /* override PlayerEntity::onUpdate(quit message)
+             to implement the following two lines */
+          remove message
+          Kick Player (player who left)
+      if a player misses 20 consecutive check-ins
+        Kick Player (player who timed out)
+
+Kick Player (player)
+  if player is a vessel
+    change random available deity to vessel
+    change random available ghost to deity
+  else if player is a deity
+    change random available ghost to deity
+  remove player from player list
+  disconnect player // call Session::disconnect() for specified player
+
+Loading Screen Function
+  generate seed
+  /* the following are all automatically generated on client
+     side once generated here on the server */
+  generate map from seed
+  generate obstacles from seed
+  generate minions from seed
+  generate mini-bosses from seed
+  generate boss from seed
+  for up to 20 seconds
+    if not all players finished generating yet
+      check each player for messages
+        if a players has finished generating
+          check off player as finished generating
+          remove message
+    else if everyone is done already
+      end for loop
+  if all 20 seconds have passed
+    check each player for game generation
+      Kick Player (player not finished generating)
+  game is now in session
+  send game start message to all players
+  enter Game Field
+  once a game is done, return to Lobby
+
+Game Field Function
+  loop once every game frame
+    if time not expired yet and players alive > 1
+      all entities pull messages from controllers
+        evaluate messages and updates game state
+        send game state to all players
+        // the above 2 lines are implemented by the following
+        /*
+           player input, client          process player input, server
+           CommandEntity::update(msg) -> PlayerEntity::onUpdate(msg)
+                            all of this line on server
+           PlayerEntity::onUpdate(msg) -> ServerCommandEntity::update(msg)
+           all entities, server                all entities, all clients
+           ServerCommandEntity::update(msg) -> NetworkController::onUpdate(msg)
+        */
+    else
+      send game over message to all players
+      send game results to all players
+      clean up memory
+      wait for 7 seconds
+      game is done, return to Loading Screen

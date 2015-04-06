@@ -97,7 +97,7 @@ const sf::Sprite& SGO::sprite() const
  *
  * @return     The transformation matrix
  */
-const sf::Transform& SGO::getLocalTransform() const
+sf::Transform SGO::getLocalTransform() const
 {
 	return data.getTransform();
 }
@@ -143,6 +143,5 @@ void SGO::middleAnchorPoint(bool arg)
  */
 void SGO::draw(Renderer& renderer, sf::RenderStates states) const
 {
-	std::cout << "SGO draw called" << std::endl;
 	renderer.draw(*this, states);
 }
