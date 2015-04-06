@@ -18,6 +18,7 @@
 #include <typeinfo>
 #include <iostream>
 
+using namespace Manager;
 
 Animation *gkAnimation;
 
@@ -25,7 +26,7 @@ Animation *gkAnimation;
 // bug fix by Sanders Lee
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
   VEntity(sprite, map, x, y, ctrl, h, w)
-  {
+{
     _range = 1;
     _health = 100;
     _type = 1;
@@ -37,11 +38,20 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
     _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
+    // sound set loaded should be determined by enemy type
+    if (_type == 1) // if (_type == BEE )
+    {
+        grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+    	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+        hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+    	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+    }
+
     _sprite = &sprite;
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
 
-  }
+}
 
 GateKeeper::~GateKeeper()
 {
@@ -50,7 +60,8 @@ GateKeeper::~GateKeeper()
 
 /***
 -- PROGRAMMER:  Filip Gutica
---				Sanders Lee (Debugged synchronization problem across clients)
+--				Sanders Lee (Debugged synchronization problem across clients,
+--                           Added sound for GateKeeper travel)
 ***/
 void GateKeeper::onUpdate(float deltaTime)
 {
@@ -65,6 +76,8 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
   ; it != eventQueue->end()
   ; ++it )
 {
+    static bool soundActive = false;
+    static BlockZone steppedTile = GRASS;
 
   // switch on type
 	switch((*it)->type)
@@ -107,6 +120,51 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 
 			break;
 	}
+
+    /***
+	*
+	* Code for playing sounds
+	*
+	***/
+	// Sounds for walking:
+	// first get the tile type we're walking on
+	Cell* footstepTile = *getCell().begin();
+	sf::Vector2f soundPos(left, top);
+    //*
+	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
+	{
+		// we need the extra soundActive boolean to make sure we're not playing a new
+		// sound when there's already a walking sound active for our vessel
+		if (((newXSpeed != 0 || newYSpeed != 0) && !soundActive) ||
+			(soundActive && steppedTile != GRASS))
+		{
+			footstep.stop();
+			footstep = SoundManager::play(grassWalkSound, soundPos);
+			footstep.setLoop(true);
+			footstep.play();
+			soundActive = true;
+			steppedTile = GRASS;
+		}
+	}
+	else if (footstepTile->getTileId() >= STONE_TL && footstepTile->getTileId() <= ARBITER_BR)
+	{
+		if (((newXSpeed != 0 || newYSpeed != 0) && !soundActive) ||
+			(soundActive && steppedTile != STONE))
+		{
+			footstep.stop();
+			footstep = SoundManager::play(stoneWalkSound, soundPos);
+			footstep.setLoop(true);
+			footstep.play();
+			soundActive = true;
+			steppedTile = STONE;
+		}
+	}
+    // stop all sounds of walking if travelling speed is (0, 0)
+	if ((newXSpeed == 0 && newYSpeed == 0) && soundActive)
+	{
+		footstep.stop();
+		soundActive = false;
+	}//*/
 
 }
 getController()->clearEvents();

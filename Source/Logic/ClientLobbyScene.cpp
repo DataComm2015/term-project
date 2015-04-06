@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/System/Time.hpp>
 #include "Entities/ClientMux.h"
+#include "../Multimedia/manager/SoundManager.h"
 
 using std::cout;
 using std::cerr;
@@ -9,6 +10,8 @@ using std::endl;
 using namespace Marx;
 
 using Networking::NetworkEntityMultiplexer;
+
+using namespace Manager;
 
 int ClientLobbyScene::vesselChoice;
 int ClientLobbyScene::deityChoice;
@@ -29,6 +32,7 @@ int ClientLobbyScene::currScrollHeight;
 -- DESIGNER: Calvin Rempel, Alex Lam and Michael Chimick
 --
 -- PROGRAMMER: Calvin Rempel, Alex Lam and Michael Chimick
+--             Sanders Lee (Added title call)
 --
 -- INTERFACE: ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 --
@@ -121,6 +125,10 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     playerBox->text().setScale(0.7, 0.7);
     playerBox->toggleSelected(false);
     playerBox->text().setFont(*font);
+
+    sf::Vector2f soundPos;
+    id_resource titleSound = SoundManager::store(SoundManager::load("Assets/Sound/Announcer/title.ogg"));
+    title = SoundManager::play(titleSound, soundPos);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -162,6 +170,7 @@ ClientLobbyScene::~ClientLobbyScene()
 -- DESIGNER: Alex Lam and Michael Chimick
 --
 -- PROGRAMMER: Alex Lam and Michael Chimick
+--             Sanders Lee (Added title call)
 --
 -- INTERFACE: void ClientLobbyScene::onLoad()
 --
@@ -174,6 +183,8 @@ ClientLobbyScene::~ClientLobbyScene()
 void ClientLobbyScene::onLoad()
 {
     clck.restart();
+
+    title.play();
 
     /* Set btntest positions */
     background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));
