@@ -108,7 +108,7 @@ EntityFactory::EntityFactory()
     minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
     minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
-    miniBossSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
+    miniBossSGO.sprite().setTexture(*Manager::TextureManager::get(miniBossSprite));
     miniBossSGO.sprite().setTextureRect(sf::IntRect(0, 0, 30, 42));
 
 	  projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
