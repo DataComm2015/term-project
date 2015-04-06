@@ -589,7 +589,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 	{
 		case GRASS:
 		{
-			int grassChoices = 2;
+			int grassChoices = 1;
 			int selection = rand() % grassChoices;
 
 			switch(selection)
@@ -600,26 +600,12 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
+						eh->getEnemy(&enemy, "grass", true, 5);
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 
 						int xPos = block->getRandomCell()->getX();
 						int yPos = block->getRandomCell()->getY();
-					}
-
-					break;
-				}
-
-				case 1:
-				{
-					for (int i = 0; i < num; i++)
-					{
-						cell = block->getRandomCell();
-
-						eh->getEnemy(&enemy, "grass/lost_grass/air_grass");
-						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							cell->getX(), cell->getY());
 					}
 
 					break;
@@ -642,7 +628,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "stone/lost_stone/ground_stone");
+						eh->getEnemy(&enemy, "grass");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
@@ -656,7 +642,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "stone/lost_stone/air_stone");
+						eh->getEnemy(&enemy, "stone");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
@@ -811,13 +797,13 @@ void GameMap::generateStructures()
 ******************************************************************************/
 ENTITY_TYPES GameMap::getEnemyType(string enemy)
 {
-	if (enemy.compare("test1") == 0)
+	if (enemy.compare("wisp") == 0)
+	{
+		return MINION;
+	}
+	else if (enemy.compare("queen_bee") == 0)
 	{
 		return BASIC_TYPE;
-	}
-	else if (enemy.compare("test2") == 0)
-	{
-		return I_DONT_KNOW;
 	}
 }
 
