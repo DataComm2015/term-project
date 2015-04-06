@@ -4,7 +4,10 @@
 enum class SKILLTYPE
 {
     HEAL,
-    BUFF
+    DMG,
+    BUFF,
+    DEBUFF
+    
 };
 
 struct skill{

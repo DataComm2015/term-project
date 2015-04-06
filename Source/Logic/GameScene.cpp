@@ -87,7 +87,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 		);
 
 	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
-	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
+	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.ogg"));
 
 	cMap->setTexture(tilemap);
 
@@ -136,6 +136,12 @@ void GameScene::onLoad()
 	// update views
 	updateMainView(viewMain);
 	viewUI = AppWindow::getInstance().getCurrentView();
+
+	// minimap view
+	viewMinimap = viewMain;
+	viewMinimap.setViewport(sf::FloatRect(0.76f,0.01f,0.23f,0.23f));
+	viewMinimap.zoom(2.f);
+
 
 	// position buttons
 	generateUI();
@@ -223,6 +229,13 @@ GameScene::~GameScene()
 	delete waterMap;
 }
 
+
+/**
+--
+--	PROGRAMMER: ???
+--				Sanders Lee (Fixed hearing center for sounds)
+--
+**/
 void GameScene::update(sf::Time t)
 {
 	checkBtns(t);
@@ -239,6 +252,8 @@ void GameScene::update(sf::Time t)
 		//myVessel->getSprite().sprite().rotate(1);
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
+
+		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 	}
 
 	/*
@@ -288,7 +303,7 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
+	sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
 
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*
@@ -365,11 +380,12 @@ void GameScene::processEvents(sf::Event& e)
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
 					break;
 				}
-		    case sf::Keyboard::Return:
-		    {
-			    break;
-		    }
+			    	case sf::Keyboard::Return:
+			    	{
+				    break;
+			    	}
 			}
+			viewMinimap.setCenter(viewMain.getCenter().x, viewMain.getCenter().y);
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
@@ -387,12 +403,20 @@ void GameScene::processEvents(sf::Event& e)
 		// update views
 		updateMainView(viewMain);
 		viewUI = AppWindow::getInstance().getCurrentView();
+		viewMinimap = AppWindow::getInstance().getCurrentView();
 		positionUI();
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
-		if (e.mouseButton.button == sf::Mouse::Left)
+		sf::Vector2i mouse = sf::Mouse::getPosition();
+		sf::Vector2f viewVector = viewMain.getCenter();
+		std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
+		std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
+		
+		for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
 		{
+			(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
+								ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
 			//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
 			//current.play();
 		}
@@ -440,6 +464,33 @@ void GameScene::draw()
 	}
 	renderer.end();
 
+	//the border for the minimap
+	minimapBorder.setSize(
+		sf::Vector2f(viewMinimap.getViewport().width*window.getSize().x, 
+			     viewMinimap.getViewport().height*window.getSize().y));
+
+	minimapBorder.setPosition(
+		sf::Vector2f(viewMinimap.getViewport().left*window.getSize().x, 	
+		  	     viewMinimap.getViewport().top*window.getSize().y));
+
+	minimapBorder.setFillColor(sf::Color::Black);
+	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
+
+	window.draw(minimapBorder);
+
+
+	//draw the minimap
+	window.setView(viewMinimap);
+
+	renderer.begin();
+
+	renderer.states.shader = &waveShader;
+	renderer.draw(waterMap);
+	renderer.states.shader = nullptr;
+	renderer.draw(cMap);
+
+	renderer.end();
+
 	window.display();
 }
 
@@ -451,6 +502,16 @@ void GameScene::addKeyListener(KeyListener* listener)
 void GameScene::rmKeyListener(KeyListener* listener)
 {
 	keyListeners.erase(listener);
+}
+
+void GameScene::addClickListener(ClickListener* listener)
+{
+	clickListeners.insert(listener);
+}
+
+void GameScene::rmClickListener(ClickListener* listener)
+{
+	clickListeners.erase(listener);
 }
 
 void GameScene::generateMap(int seed)
@@ -686,7 +747,7 @@ void onClickVitalityOne() //healskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, +100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::HEAL);
 }
 void onClickVitalityTwo()//buffskillbtn
 {
@@ -694,7 +755,7 @@ void onClickVitalityTwo()//buffskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, +100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::BUFF);
 }
 void onClickVitalityThree() //healingcircleskillbtn
 {
@@ -702,7 +763,7 @@ void onClickVitalityThree() //healingcircleskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 50, +100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 50, 100, SKILLTYPE::HEAL);
 }
 void onClickDemiseOne() //hurtskillbtn
 {
@@ -710,7 +771,7 @@ void onClickDemiseOne() //hurtskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, -100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DMG);
 }
 void onClickDemiseTwo() //debuffskillbtn
 {
@@ -718,7 +779,7 @@ void onClickDemiseTwo() //debuffskillbtn
 	vm = AppWindow::getInstance().getCurrentView();
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, -100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DEBUFF);
 }
 void onClickDemiseThree() //summonskillbtn
 {

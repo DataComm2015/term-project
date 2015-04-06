@@ -2,14 +2,18 @@
 #include "Map.h"
 #include "TileManager.h"
 #include "../Logic/Entities/Vessel.h"
-
 #include <iostream>
+#include "../Multimedia/graphics/Animation.h"
+
+
 
 Marx::VEntity::VEntity(SGO & _sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w) :
 Entity(_map, x, y, ctrl, h, w)
 {
 	setSprite(_sprite);
+
 	_map->add(*this);
+	drawable = true;
 }
 
 sf::Transform Marx::VEntity::getLocalTransform() const
@@ -44,5 +48,6 @@ void Marx::VEntity::setSprite(SGO& _sprite)
 
 void Marx::VEntity::draw(Renderer& renderer, sf::RenderStates states) const
 {
-	renderer.draw(*this, states);
+	if(drawable)
+		renderer.draw(*this, states);
 }

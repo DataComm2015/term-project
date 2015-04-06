@@ -312,3 +312,27 @@ int Networking::NetworkEntity::silentUnregister( Session* session )
     return hasSession;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        NetworkEntity::getID
+--
+-- DATE:            March 30, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Thomas Tallentire
+--
+-- PROGRAMMER:      Thomas Tallentire
+--
+-- INTERFACE:       int NetworkEntity::getId()
+--
+-- PARAMETER:		
+--
+-- RETURNS:         id - The id of this networkentity
+--
+-- NOTES:           Function returns the id of the networkEntity
+-----------------------------------------------------------------------------------------------*/
+int Networking::NetworkEntity::getId()
+{
+	return id;
+}
+

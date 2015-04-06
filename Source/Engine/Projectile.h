@@ -28,6 +28,7 @@
 #include <SFML/System/Time.hpp>
 #include "VEntity.h"
 #include "ProjectileManager.h"
+#include "Action.h"
 #include "Map.h"
 
 namespace Marx
@@ -38,15 +39,21 @@ namespace Marx
 			float _speed;
 			std::function<void(Entity*)> onHit;
 			sf::Vector2f heading;
-			sf::Time TimeToLive;
+			float TimeToLive;
+			Action * act;
 		public:
-			Projectile(SGO&, Map*, float, float, Controller *, float, float);
-
+			Projectile(SGO&, Map*, float, float, Action *, sf::Vector2f, Controller *, float, float);
 			Entity * move(float, float, bool);
-			void setSpeed(float);
-			void onCreate();
-			void onDestroy();
-			void onUpdate();
+			virtual void setSpeed(float);
+			virtual void onCreate();
+			virtual void onDestroy();
+			virtual void onUpdate(float);
+			void setTarget(sf::Vector2f t);
+			void setCurrentPos(float x, float y );
+			void setAct(Action * act);
+			float getTTL();
+			void setTTL(float t);
+			sf::Vector2f getVector();
 	};
 }
 

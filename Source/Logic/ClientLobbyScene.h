@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../Engine/Scene.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
@@ -126,7 +127,6 @@ class ClientLobbyScene : public Scene
         const int SCN_HEIGHT = 768;
 
         const int CIRCLE_WH = 200;
-
         const int VESSEL_ART_H = 56;
         const int VESSEL_ART_W = 64;
 
@@ -145,6 +145,8 @@ class ClientLobbyScene : public Scene
         GameScene * gameScene;
         ClientMux * clientMux;
         PlayerLobbyChoices playerSelections;
+
+        sf::Sound title;
 };
 
 #endif

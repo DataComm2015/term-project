@@ -24,11 +24,7 @@ FILES_LOGIC=		Logic/Environment/Block.o Logic/Environment/GameMap.o Logic/GameSc
 
 
 FILES_NETWORK=		Network/Client.o Network/Server.o Network/Session.o Network/select_helper.o Network/net_helper.o \
-<<<<<<< HEAD
-                    Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o Network/semaphores.o
-=======
-									Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
->>>>>>> a216295ca80460fbed936afc06cfa7294ee0c697
+					Network/NetworkEntityMultiplexer.o Network/NetworkEntity.o
 
 FILE_CLIENT=			Client.cpp
 FILE_SERVER=			Server.cpp

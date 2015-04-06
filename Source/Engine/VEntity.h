@@ -21,7 +21,9 @@ namespace Marx
 		void setSprite(SGO& _sprite);
 
 	protected:
+		
 		virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
+		bool drawable;
 
 		SGO* sprite;
 	};

@@ -63,13 +63,20 @@ void Controller::clearEvents()
     }
 }
 
-Controller::Controller()
-{
-  entity = NULL;
-}
-
 Controller::~Controller()
 {
+    clearEvents();
+	entity = NULL;
+}
+
+void Controller::register_my_entity(Entity * e)
+{
+    my_entity = e;
+}
+
+Entity * Controller::get_my_entity()
+{
+    return my_entity;
 }
 
 /***

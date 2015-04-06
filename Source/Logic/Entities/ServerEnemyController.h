@@ -6,6 +6,7 @@
 
 #include "ServerNetworkController.h"
 #include "../Artificial Intelligence/Behaviour.h"
+#include "../GateKeeperSource/src/GateKeeper.h"
 #include "../Event.h"
 #include "../../Engine/VEntity.h"
 #include "../ServerGameScene.h"
@@ -19,7 +20,7 @@ class ServerEnemyController : public ServerNetworkController
     public:
         ServerEnemyController(Behaviour *behaviour, ServerGameScene*);
         virtual ~ServerEnemyController();
-        void setEntity(Entity*);
+        void setEntity(GateKeeper*);
         void init();
         void updateBehaviour(float deltaTime);
         Vessel* detectVessels();
@@ -27,7 +28,7 @@ class ServerEnemyController : public ServerNetworkController
 
     private:
         Behaviour *behaviour;
-        Entity* _currEntity;
+        GateKeeper* _currEntity;
         ServerGameScene* _servGameScene;
         int prevX = 0;
         int prevY = 0;

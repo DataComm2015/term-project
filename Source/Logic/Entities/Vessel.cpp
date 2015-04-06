@@ -3,12 +3,10 @@
 #include <cmath>
 #include "Vessel.h"
 #include "../Event.h"
+#include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
 
 using namespace Manager;
-
-sf::Sound footstep;
-sf::Sound voice;
 
 //TO DO:
 //1) GIVE IT A SPRITE
@@ -37,24 +35,27 @@ sf::Sound voice;
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
-								Marx::Map * gmap,
-								float x,
-								float y,
-								Marx::Controller* controller_,
-								float height,
-								float width
-								/*, job_class jobClass, Ability* abilityList*/ )
-								: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
-								mask_sprite(_mask),
-								weapon_sprite(_weapon)
-								//,_controller(controller)
+		Marx::Map * gmap,
+		float x,
+		float y,
+		Marx::Controller* controller_,
+		float height,
+		float width
+		/*, job_class jobClass, Ability* abilityList*/ )
+		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+		mask_sprite(_mask),
+		weapon_sprite(_weapon)
+		//,_controller(controller)
 {
 
 	direction = 1; //start facing right
 
+	atk_sprite = *(new SGO());
+	satk_sprite = *(new SGO());
+
 	resetEXP();
-	xSpeed = 0.1;
-	ySpeed = 0.1;
+	xSpeed = 0.08;
+	ySpeed = 0.08;
 	movingLeft = false;
 	movingRight = false;
 	movingUp = false;
@@ -74,6 +75,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 
 	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
 	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
+	hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
+	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
 	//abilities = abilityList;
 /*
@@ -122,7 +125,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 /*-------------------------------------------
 --
 -- PROGRAMMER:  ???
---				Sanders Lee (Debugged synchronization problem across clients)
+--				Sanders Lee (Debugged synchronization problem across clients,
+--							 Added sound for walking)
 --
 -- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
@@ -137,6 +141,7 @@ void Vessel::onUpdate(float deltaTime)
 		; it != eventQueue->end()
 		; ++it )
 	{
+		std::cout << (*it)->type << std::endl;
 		// switch on type
 		switch((*it)->type)
 		{
@@ -148,33 +153,52 @@ void Vessel::onUpdate(float deltaTime)
 
 				// set position to last known position on server to avoid
 				// sync problems across the clients
-	      		Entity::aMove(ev->getX(), ev->getY(), false);
-				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
+	      Entity::aMove(ev->getX(), ev->getY(), false);
+			//	printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)
 				{
 					newYSpeed -= ySpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (yDir == 1)
 				{
 					newYSpeed += ySpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == 1)
 				{
 					newXSpeed += xSpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == -1)
 				{
 					newXSpeed -= xSpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 
 
 				break;
 			}
+			case ::Marx::ATTACK:
+			{
+				AttackEvent* aev = (AttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createAttack(*aev, atk_sprite, left, top);
+			}
+			case ::Marx::SK_ATTACK:
+			{
+
+				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createSkAttack(*saev, satk_sprite, left, top);
+			}
+            case ::Marx::SET_HEALTH:
+            {
+                SetHealthEvent* ev = (SetHealthEvent*) (*it);
+                
+                setHealth(ev->getChange());
+            }
 			case ::Marx::UPDATE:
 			{
 				UpdateEvent* ev = (UpdateEvent*) (*it);
@@ -185,6 +209,31 @@ void Vessel::onUpdate(float deltaTime)
 				servY = ev->_y;
 
 				Entity::aMove(ev->_x, ev->_y, false);
+			}
+			case ::Marx::SKILL:
+			{
+				// process the skill event, and increase/decrease hp and stuff
+				SkillEvent *ev = (SkillEvent*)(*it);
+				
+				switch(ev->getSkillType())
+				{
+					case SKILLTYPE::HEAL:
+						currentHealth += ev->getValue();
+					break;
+					case SKILLTYPE::DMG:
+						currentHealth -= ev->getValue();
+					break;
+					case SKILLTYPE::BUFF:
+						xSpeed += ev->getValue();
+						ySpeed += ev->getValue();
+					break;
+					case SKILLTYPE::DEBUFF:
+						xSpeed -= ev->getValue();
+						ySpeed -= ev->getValue();
+					break;
+				}
+				
+				break;
 			}
 		}
 	}
@@ -212,7 +261,10 @@ void Vessel::onUpdate(float deltaTime)
 	// Sounds for walking:
 	// first get the tile type we're walking on
 	Cell* footstepTile = *getCell().begin();
-	sf::Vector2f soundPos;
+	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's player character's
+	 															 // footsteps from fading & being off-center
+
 	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
 	{
 		// we need the extra soundActive boolean to make sure we're not playing a new
@@ -556,6 +608,12 @@ void Vessel::increaseHP( int hp )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::decreaseHP( int hp )
 {
+	sf::Vector2f soundPos(left, top);
+	voice.stop();
+	voice = SoundManager::play(hurtSound, soundPos);
+	voice.setLoop(true);
+	voice.play();
+
 	currentHealth -= hp;
 	if( currentHealth < 0 )
 	{
@@ -564,28 +622,6 @@ void Vessel::decreaseHP( int hp )
 	}
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getHP
---
--- DATE:
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER:	Sanders Lee
---
--- PROGRAMMER:	Sanders Lee
---
--- INTERFACE: int Vessel::getHP()
---
--- RETURNS: current HP as an integer
---
--- NOTES:
--- This function returns the current HP the Vessel has
-----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getHP()
-{
-	return currentHealth;
-}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getMaxHP
@@ -794,29 +830,6 @@ void Vessel::speedDown( int speed )
 {
 	if( travelSpeed > 1 )
 		speed--;
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getSpeed
---
--- DATE:
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER:	Sanders Lee
---
--- PROGRAMMER:	Sanders Lee
---
--- INTERFACE: int Vessel::getSpeed()
---
--- RETURNS: current speed as an integer
---
--- NOTES:
--- This function returns the current speed the Vessel has
-----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getSpeed()
-{
-    return travelSpeed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -1083,6 +1096,39 @@ void Vessel::setHealth(int health)
         currentHealth = 0;
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
+}
+
+void Vessel::setSpeed(int _speed)
+{
+	travelSpeed = _speed;
+}
+
+int Vessel::getSpeed()
+{
+	return travelSpeed;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getHealth
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: int Vessel::getHealth()
+--
+-- RETURNS: int - The current health of the vessel.
+--
+-- NOTES:
+-- This function returns the current health of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
+int Vessel::getHealth()
+{
+    return currentHealth;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
