@@ -113,7 +113,13 @@ enum class PlayerCommandMsgType
     /**
      * Clients sends the selected type of deity to the server
      */
-    SERVER_SELECTED_DEITY
+    SERVER_SELECTED_DEITY,
+
+    /**
+     * Client sends that this will be a skill to tht eserver
+     */
+
+    SKILL
 };
 
 /////////////////////////////////////////////////////////////////////
