@@ -175,9 +175,9 @@ void GameScene::positionUI()
 	float buttonWidth = b1->sprite().getGlobalBounds().width;
 	float buttonHeight = b1->sprite().getGlobalBounds().height;
 
-	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 1.25*buttonHeight);
-	b2->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 1.25*buttonHeight);
-	b3->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 1.25*buttonHeight);
+	b1->sprite().setPosition((windowSize.x / 2.0) - (buttonWidth), windowSize.y - 3*buttonHeight);
+	b2->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 3*buttonHeight);
+	b3->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 3*buttonHeight);
 
 	// Scale healthbar
 	hb->sprite().setScale(3, 3);
@@ -303,7 +303,10 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+	if(myVessel != NULL)
+	{
+		sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+	}
 
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*
@@ -408,21 +411,22 @@ void GameScene::processEvents(sf::Event& e)
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
-		sf::Vector2i mouse = sf::Mouse::getPosition();
-		sf::Vector2f viewVector = viewMain.getCenter();
-		std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
-		std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
-		
-		for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
+		if(characterType == PLAYER_MODE::VESSEL)
 		{
-			(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
-								ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
-			//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
-			//current.play();
+			sf::Vector2i mouse = sf::Mouse::getPosition();
+			sf::Vector2f viewVector = viewMain.getCenter();
+			std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
+			std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
+
+			for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
+			{
+				(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
+									ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
+				//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+				//current.play();
+			}
 		}
 	}
-
-
 
 	tb->process(e);
 }
@@ -466,11 +470,11 @@ void GameScene::draw()
 
 	//the border for the minimap
 	minimapBorder.setSize(
-		sf::Vector2f(viewMinimap.getViewport().width*window.getSize().x, 
+		sf::Vector2f(viewMinimap.getViewport().width*window.getSize().x,
 			     viewMinimap.getViewport().height*window.getSize().y));
 
 	minimapBorder.setPosition(
-		sf::Vector2f(viewMinimap.getViewport().left*window.getSize().x, 	
+		sf::Vector2f(viewMinimap.getViewport().left*window.getSize().x,
 		  	     viewMinimap.getViewport().top*window.getSize().y));
 
 	minimapBorder.setFillColor(sf::Color::Black);
