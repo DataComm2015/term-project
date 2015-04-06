@@ -1,3 +1,23 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: MainMenuScene.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:      
+--
+-- DATE: March 30, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--        
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "../AppWindow.h"
 #include "../Network/Message.h"
 #include "../Network/Client.h"
@@ -53,7 +73,7 @@ MainMenuScene * MainMenuScene::getInstance()
 --
 -- DESIGNER: Alex Lam, Manuel Gonzales and Georgi Hristov
 --
--- PROGRAMMER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- PROGRAMMER: Alex Lam, Manuel Gonzales, Chris Klassen and Georgi Hristov
 --
 -- INTERFACE: MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
 --
@@ -192,7 +212,7 @@ MainMenuScene::~MainMenuScene()
 --
 -- DESIGNER: Alex Lam, Manuel Gonzales and Georgi Hristov
 --
--- PROGRAMMER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- PROGRAMMER: Alex Lam, Chris Klassen, Manuel Gonzales and Georgi Hristov
 --
 -- INTERFACE: void MainMenuScene::onLoad()
 --
@@ -300,9 +320,9 @@ void MainMenuScene::processEvents(sf::Event& e)
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- DESIGNER: Alex Lam, Chris Klassen, Manuel Gonzales and Georgi Hristov
 --
--- PROGRAMMER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- PROGRAMMER: Alex Lam, Chris Klassen, Manuel Gonzales and Georgi Hristov
 --
 -- INTERFACE: void MainMenuScene::draw()
 --

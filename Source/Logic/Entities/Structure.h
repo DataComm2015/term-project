@@ -9,6 +9,12 @@
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
 
+/*
+	The Structure is a simple collidable entity designed to block player
+	and enemy movement through the map.
+
+	It is generated server-side and populated for the clients.
+*/
 class Structure : public Marx::VEntity, public Networking::NetworkEntity
 {
 	public:

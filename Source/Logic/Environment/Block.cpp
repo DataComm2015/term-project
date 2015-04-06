@@ -1,3 +1,35 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: Block.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:
+--		Block();
+--		~Block();
+--		void setCells(vector<Cell> *cells);
+--		void setZone(BlockZone z);
+--		void setType(BlockType t);
+--		void setTile(tile_id id);
+--		void setDeco(vector<CellTile> *tiles);
+--		Cell* getRandomCell();
+--		BlockType getType();
+--		BlockZone getZone();
+--		BlockZone getZone();
+--
+-- DATE: February 11, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: Chris Klassen
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--        This file contains the implementation of the block class.
+--		  The block is a logical segment of the game map.
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "Block.h"
 
 
@@ -31,6 +63,27 @@ Block::Block()
 }
 
 
+/******************************************************************************
+*	FUNCTION: ~Block
+*
+*	DATE: February 11, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: ~Block();
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*		nothing
+*
+*	NOTES:
+*		This is the destructor of the Block class.
+******************************************************************************/
 Block::~Block()
 {
 	delete cellMap;
@@ -122,6 +175,28 @@ void Block::setType(BlockType t)
 }
 
 
+/******************************************************************************
+*	FUNCTION: setTile
+*
+*	DATE: March 4, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: void setTile(tile_id id);
+*
+*	PARAMETERS:
+*		id - the tile id to assign to each cell in the block
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function assigns a tile to every cell in the block.
+******************************************************************************/
 void Block::setTile(tile_id id)
 {
 	for (vector<Cell*>::iterator it = cellMap->begin(); it != cellMap->end(); it++)
@@ -131,6 +206,28 @@ void Block::setTile(tile_id id)
 }
 
 
+/******************************************************************************
+*	FUNCTION: setDeco
+*
+*	DATE: March 4, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: void setDeco(vector<CellTile> *tiles);
+*
+*	PARAMETERS:
+*		tiles - a vector of possible decorative tiles to use
+*
+*	RETURNS:
+*		void
+*
+*	NOTES:
+*		This function assigns random decorations to the block.
+******************************************************************************/
 void Block::setDeco(vector<CellTile> *tiles)
 {
 	int decoChance;

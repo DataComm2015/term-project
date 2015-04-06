@@ -1,3 +1,24 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: EntityFactory.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:       
+--
+-- DATE: 
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: 
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--        
+----------------------------------------------------------------------------------------------------------------------*/
+
+
+
 #include "GateKeeperSource/src/GateKeeper.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
@@ -26,6 +47,26 @@ using Marx::Map;
 
 EntityFactory* EntityFactory::instance = 0;
 
+
+/******************************************************************************
+*   FUNCTION: EntityFactory
+*
+*   DATE: 
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: 
+*
+*   PROGRAMMER: Chris Klassen
+*
+*   INTERFACE: EntityFactory();
+*
+*   PARAMETERS:
+*
+*   RETURNS: nothing
+*
+*   NOTES:
+******************************************************************************/
 EntityFactory::EntityFactory()
 {
     // initialize instance variables
@@ -75,11 +116,51 @@ EntityFactory::EntityFactory()
     spearSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 }
 
+
+/******************************************************************************
+*   FUNCTION: 
+*
+*   DATE: 
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: 
+*
+*   PROGRAMMER: 
+*
+*   INTERFACE: 
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 EntityFactory::~EntityFactory()
 {
     // release recourses
 }
 
+
+/******************************************************************************
+*   FUNCTION: 
+*
+*   DATE: 
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: 
+*
+*   PROGRAMMER: 
+*
+*   INTERFACE: 
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 EntityFactory* EntityFactory::getInstance()
 {
     if(instance == 0)
@@ -89,6 +170,26 @@ EntityFactory* EntityFactory::getInstance()
     return instance;
 }
 
+
+/******************************************************************************
+*   FUNCTION: 
+*
+*   DATE: 
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: 
+*
+*   PROGRAMMER: 
+*
+*   INTERFACE: 
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntityFromNetworkMessage(
     Map* cMap,
     Message* msg,
@@ -121,6 +222,26 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 }
 }
 
+
+/******************************************************************************
+*   FUNCTION: 
+*
+*   DATE: 
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: 
+*
+*   PROGRAMMER: 
+*
+*   INTERFACE: 
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntityFromNetworkMessage(
     int id,
     Map* cMap,
@@ -140,6 +261,25 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 }
 
 
+/******************************************************************************
+*   FUNCTION: 
+*
+*   DATE: 
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: 
+*
+*   PROGRAMMER: 
+*
+*   INTERFACE: 
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntity(
     ENTITY_TYPES type,
     Controller* cont,
@@ -178,6 +318,26 @@ Entity* EntityFactory::makeEntity(
     return entity;
 }
 
+
+/******************************************************************************
+*   FUNCTION: 
+*
+*   DATE: 
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER: 
+*
+*   PROGRAMMER: 
+*
+*   INTERFACE: 
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntity(
     int id,
     ENTITY_TYPES type,
