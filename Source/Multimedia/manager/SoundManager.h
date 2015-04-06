@@ -6,7 +6,7 @@
 #include "ResourceManager.h"
 
 #define POS_DIV 10
-#define ATTENUATION 0.1
+#define ATTENUATION 1
 
 namespace Manager
 {

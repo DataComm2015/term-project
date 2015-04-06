@@ -163,17 +163,17 @@ void Vessel::onUpdate(float deltaTime)
 				else if (yDir == 1)
 				{
 					newYSpeed += ySpeed;
-				//	printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving down\n");
 				}
 				else if (xDir == 1)
 				{
 					newXSpeed += xSpeed;
-				//	printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving right\n");
 				}
 				else if (xDir == -1)
 				{
 					newXSpeed -= xSpeed;
-				//	printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving left\n");
 				}
 
 
@@ -195,7 +195,7 @@ void Vessel::onUpdate(float deltaTime)
             case ::Marx::SET_HEALTH:
             {
                 SetHealthEvent* ev = (SetHealthEvent*) (*it);
-                
+
                 setHealth(ev->getChange());
             }
 			case ::Marx::UPDATE:
@@ -238,6 +238,7 @@ void Vessel::onUpdate(float deltaTime)
 	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
 	footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's player character's
 	 															 // footsteps from fading & being off-center
+	footstep.setMinDistance(3.0);
 
 	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
 	{
