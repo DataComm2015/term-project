@@ -35,6 +35,7 @@ protected:
 	friend class Renderer;
 
 	void drawSG(Renderer& renderer, sf::RenderStates states) const;
+	virtual void drawChildren(Renderer& renderer, sf::RenderStates states) const;
 	virtual void draw(Renderer& renderer, sf::RenderStates states) const;
 
 private:
