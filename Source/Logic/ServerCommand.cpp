@@ -22,7 +22,7 @@ using Networking::Session;
 
 ServerCommand::ServerCommand()
 {
-    gameScene = new ServerGameScene(this);
+    gameScene = NULL;
     lobbyScene = new ServerLobbyScene(this);
     gameState = new ServerGameState(this);
     goToLobby();
@@ -124,6 +124,8 @@ void ServerCommand::prepareForGameState()
 
 void ServerCommand::goToGame()
 {
+    if (!isGameInProgress())
+        gameScene = new ServerGameScene(this);
     activeScene = gameScene;
     gameScene->enterScene();
 }

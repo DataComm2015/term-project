@@ -31,6 +31,7 @@ class Creature
 		virtual int getAttack();
 		virtual Marx::Projectile* createAttack(AttackEvent&, SGO &sprite, float x, float y);
 		virtual Marx::Projectile* createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y);
+        virtual void stopAllSounds() = 0;
         virtual Entity * getEntity();
 	private:
 		std::map<enum ActionType, Marx::Action*> actionList;

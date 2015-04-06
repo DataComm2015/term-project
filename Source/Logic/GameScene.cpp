@@ -15,6 +15,21 @@ Animation *runAnim_mask;
 Animation *runAnim_wep;
 */
 
+id_resource GameScene::tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
+id_resource GameScene::butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
+id_resource GameScene::demiseBtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/demise-btn.png"));
+id_resource GameScene::vitalityBtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/vitality-btn.png"));
+id_resource GameScene::warriorBtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/warrior-btn.png"));
+id_resource GameScene::shamanBtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
+id_resource GameScene::buffskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/buff-skill-btn.png"));
+id_resource GameScene::healskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/heal-skill-btn.png"));
+id_resource GameScene::healingcircleskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/healingcircle-skill-btn.png"));
+id_resource GameScene::debuffskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/debuff-skill-btn.png"));
+id_resource GameScene::hurtskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/hurt-skill-btn.png"));
+id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/summon-skill-btn.png"));
+id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
+id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
+
 void onclick()
 {
 	static int i = 0;
@@ -77,25 +92,10 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	myVessel = NULL;
 
-	std::cout << "making tileset" << std::endl;
-	// Load the tileset
-	tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
-
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
-	placeholderSprite = Manager::TextureManager::store(
-		Manager::TextureManager::load("Assets/Art/Misc/placeholder_32.png")
-		);
-
-	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
-	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.ogg"));
 
 	cMap->setTexture(tilemap);
 
-	placeHolderSGO.sprite().setTexture(*Manager::TextureManager::get(placeholderSprite));
-	placeHolderSGO.middleAnchorPoint(true);
-
-	s = new TheSpinner(placeHolderSGO, cMap, 25, 25, 5, 1);
-	s2 = new TheSpinner(placeHolderSGO, cMap, 25, 35, 5, -1);
 
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
@@ -195,6 +195,17 @@ void GameScene::setPlayerVessel(Vessel *vessel)
 	myVessel = vessel;
 }
 
+void GameScene::stopAllSounds()
+{
+    auto entities = cMap->getEntities();
+	for ( auto it = entities.begin(); it != entities.end(); ++it)
+	{
+        Creature *creature = dynamic_cast<Creature*>((*it));
+        if (creature)
+            creature->stopAllSounds();
+	}
+}
+
 void GameScene::unLoad()
 {
 	b1->toggleEnabled(false);
@@ -246,14 +257,14 @@ void GameScene::update(sf::Time t)
 		(*it)->onUpdate(t.asSeconds());
 	}
 
-	if (myVessel != NULL) // SHOULD MOVE THIS INTO VESSEL's UPDATE FUNCTION
+	if (myVessel != NULL)
 	{
 		//to test:
 		//myVessel->getSprite().sprite().rotate(1);
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
-
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
+        sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
 	}
 
 	/*
@@ -303,11 +314,6 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	if(myVessel != NULL)
-	{
-		sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
-	}
-
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*
 	championSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
@@ -318,9 +324,6 @@ void GameScene::update(sf::Time t)
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
 	*/
-
-	s2->update(t);
-	s->update(t);
 
 	// Update buttons
 	b1->update(t);
