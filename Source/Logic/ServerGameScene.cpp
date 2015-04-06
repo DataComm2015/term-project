@@ -76,9 +76,9 @@ void ServerGameScene::update(sf::Time time)
 
           for (int i = 0; i < playerList.size(); i++)
           {
-            Vessel* curVessel = playerList[i];
-            static_cast<ServerNetworkController*>(curVessel->getController())->
-                addEvent(new UpdateEvent(curVessel->left, curVessel->top));
+            //Vessel* curVessel = playerList[i];
+            //static_cast<ServerNetworkController*>(curVessel->getController())->
+              //addEvent(new UpdateEvent(curVessel->left, curVessel->top));
           }
 
           syncTimer = SYNC_INTERVAL;
