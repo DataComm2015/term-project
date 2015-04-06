@@ -3,18 +3,18 @@
 --
 -- PROGRAM: Sojourn
 --
--- FUNCTIONS:       
+-- FUNCTIONS:
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: N/A
 --
--- DESIGNER: 
+-- DESIGNER:
 --
 -- PROGRAMMER:  Chris Klassen
 --
 -- NOTES:
---        
+--
 ----------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -51,11 +51,11 @@ EntityFactory* EntityFactory::instance = 0;
 /******************************************************************************
 *   FUNCTION: EntityFactory
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
 *   PROGRAMMER: Chris Klassen
 *
@@ -79,15 +79,15 @@ EntityFactory::EntityFactory()
     );
 
     vesselSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Body/vessel-idle.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
     );
 
     maskSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Masks/vessel-idle-mask01.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png")
     );
 
     spearSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Weapons/spear-idle.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/spear-run-sheet.png")
     );
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
@@ -118,17 +118,17 @@ EntityFactory::EntityFactory()
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -143,17 +143,17 @@ EntityFactory::~EntityFactory()
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -172,17 +172,17 @@ EntityFactory* EntityFactory::getInstance()
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -224,17 +224,17 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -262,17 +262,17 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -320,17 +320,17 @@ Entity* EntityFactory::makeEntity(
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
