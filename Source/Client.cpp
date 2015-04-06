@@ -25,6 +25,8 @@ int main(int argc, char* argv[])
 
     AppWindow::getInstance().setVerticalSyncEnabled(true);
 
+    AppWindow::getInstance().setKeyRepeatEnabled(false);
+
     AppWindow::getInstance().addScene(MainMenuScene::getInstance());
     //AppWindow::getInstance().addScene(ClientScoreboardScene::getInstance());
 

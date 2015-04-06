@@ -148,7 +148,7 @@ void Vessel::onUpdate(float deltaTime)
 
 				// set position to last known position on server to avoid
 				// sync problems across the clients
-	      		Entity::aMove(ev->getX(), ev->getY(), false);
+	      Entity::aMove(ev->getX(), ev->getY(), false);
 				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)

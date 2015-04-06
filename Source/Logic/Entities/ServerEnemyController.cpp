@@ -142,7 +142,7 @@ Vessel* ServerEnemyController::detectVessels()
     x2 = (_servGameScene->getPlayerList()->at(i))->left;
     y2 = (_servGameScene->getPlayerList()->at(i))->top;
 
-    if (getDistance(x1, y1, x2, y2) <= _currEntity->getRange())
+    if (getDistance(x1, y1, x2, y2) <= AGGRO_RADIUS)
       return (_servGameScene->getPlayerList()->at(i));
   }
 

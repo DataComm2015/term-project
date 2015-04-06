@@ -17,6 +17,7 @@
 #include "../../Entities/ServerEnemyController.h"
 #include <typeinfo>
 #include <iostream>
+#include <cstdlib>
 
 using namespace Manager;
 
