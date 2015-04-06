@@ -149,9 +149,6 @@ class GameScene : public Scene
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
-		GUI::Button *b4;
-		GUI::Button *b5;
-		GUI::Button *b6;
 		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
 		GUI::TextBox *levelInd;
