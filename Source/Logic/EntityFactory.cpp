@@ -84,15 +84,15 @@ EntityFactory::EntityFactory()
     );
 
     vesselSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Body/vessel-idle.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
     );
 
     maskSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Masks/vessel-idle-mask01.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png")
     );
 
     spearSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Weapons/spear-idle.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/spear-run-sheet.png")
     );
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
