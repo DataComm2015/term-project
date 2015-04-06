@@ -21,6 +21,7 @@
 
 #include "GateKeeperSource/src/GateKeeper.h"
 #include "GateKeeperSource/src/Minion.h"
+#include "GateKeeperSource/src/MiniBoss.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
 #include "EntityTypes.h"
@@ -60,6 +61,8 @@ EntityFactory* EntityFactory::instance = 0;
 *
 *   PROGRAMMER: Chris Klassen
 *
+*   REVISIONS: Filip Gutica     -Added resources and SGO for different enemy types.
+*
 *   INTERFACE: EntityFactory();
 *
 *   PARAMETERS:
@@ -77,6 +80,10 @@ EntityFactory::EntityFactory()
 
     minionSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-magma-sheet.png")
+    );
+
+    miniBossSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/Guardians/wanderer-sheet.png")
     );
 
 	projSprite = Manager::TextureManager::store(
@@ -100,6 +107,9 @@ EntityFactory::EntityFactory()
 
     minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
     minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    miniBossSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
+    miniBossSGO.sprite().setTextureRect(sf::IntRect(0, 0, 30, 42));
 
 	  projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
     projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 8, 8));
@@ -321,6 +331,11 @@ Entity* EntityFactory::makeEntity(
           break;
         }
         case ENTITY_TYPES::MINI_BOSS:
+        {
+          GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
+          entity = miniboss;
+          break;
+        }
 			break;
         case PROJECTILE:
             //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
@@ -386,6 +401,11 @@ Entity* EntityFactory::makeEntity(
           break;
         }
         case ENTITY_TYPES::MINI_BOSS:
+        {
+          GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
+          entity = miniboss;
+          break;
+        }
         default:
             break;
     }
