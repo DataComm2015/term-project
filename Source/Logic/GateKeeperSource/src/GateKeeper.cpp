@@ -130,7 +130,10 @@ for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 	// first get the tile type we're walking on
 	Cell* footstepTile = *getCell().begin();
 	sf::Vector2f soundPos(left, top);
-    //*
+    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's GateKeeper's
+	 															 // footsteps from fading & being off-center
+    footstep.setMinDistance(3.0);
+
 	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
 	{
 		// we need the extra soundActive boolean to make sure we're not playing a new
