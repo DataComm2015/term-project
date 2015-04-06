@@ -120,6 +120,9 @@ void ServerNetworkController::addEvent(Event *event)
 ------------------------------------------------------------------------------*/
 void ServerNetworkController::sendEventMessage(Event *event)
 {
+    if(getEntity() == NULL)
+        return;
+
     // create network message from event
     switch(event->type)
     {
@@ -200,7 +203,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 			SetHealthMessage sm;
 			//sm.entid 	= sh->getEntity();
 			sm.change	= sh->getChange();
-			
+
 			// message to be sent over the network
 			Message message;
 			message.data = &sm;

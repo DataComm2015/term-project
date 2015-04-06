@@ -17,7 +17,7 @@
 #include "Environment/GameMap.h"
 #include "PlayerMode.h"
 
-#define SYNC_INTERVAL 3
+#define SYNC_INTERVAL 1
 
 class ServerEnemyController;
 class ServerCommand;
@@ -45,7 +45,7 @@ class ServerGameScene : public Scene
         void createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y);
         void createStructure(ENTITY_TYPES type, float x, float y);
 
-        std::vector<Vessel*> getPlayerList();
+        std::vector<Vessel*> *getPlayerList();
 
     private:
         SGO gkSGO;

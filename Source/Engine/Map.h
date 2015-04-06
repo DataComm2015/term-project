@@ -58,6 +58,7 @@ namespace Marx
 			sf::Transform trans;
             
 	protected:
+        void drawChildren(Renderer& renderer, sf::RenderStates states) const override;
 		void draw(Renderer& renderer, sf::RenderStates states) const override;
 
         private:

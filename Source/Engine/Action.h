@@ -15,12 +15,12 @@ namespace Marx
 	class Action
 	{
 		protected:
-			sf::Time TTL;
+			float TTL;
 		public:
-			Action(sf::Time _TTL) : TTL(_TTL) {}
-			virtual void onUpdate(Entity * me, sf::Time) = 0;
+			Action(float _TTL) : TTL(_TTL) {}
+			virtual void onUpdate(Entity * me, float) = 0;
 			virtual void onHit(Entity * me, Entity * e ) = 0;
-			sf::Time getTTL(){ return TTL; };
+			float getTTL(){ return TTL; };
 	};
 };
 
