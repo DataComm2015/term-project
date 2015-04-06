@@ -30,8 +30,8 @@ class ServerEnemyController : public ServerNetworkController
         Behaviour *behaviour;
         GateKeeper* _currEntity;
         ServerGameScene* _servGameScene;
-        int prevX = 0;
-        int prevY = 0;
+        int prevX;
+        int prevY;
         int xDirection;
         int yDirection;
         Vessel* targetVessel;

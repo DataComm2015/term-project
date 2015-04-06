@@ -137,7 +137,8 @@ void GateKeeper::onUpdate(float deltaTime)
   getController()->clearEvents();
 
 
-  Entity::rMove(newXSpeed, newYSpeed,false);
+  if (isMoving())
+    Entity::rMove(newXSpeed, newYSpeed, false);
 
 }
 
