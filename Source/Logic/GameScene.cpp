@@ -409,7 +409,7 @@ void GameScene::processEvents(sf::Event& e)
 		viewMinimap = AppWindow::getInstance().getCurrentView();
 		positionUI();
 	}
-	else if (e.type == sf::Event::MouseButtonPressed)
+/*	else if (e.type == sf::Event::MouseButtonPressed)
 	{
 		sf::Vector2i mouse = sf::Mouse::getPosition();
 		sf::Vector2f viewVector = viewMain.getCenter();
@@ -424,7 +424,7 @@ void GameScene::processEvents(sf::Event& e)
 			//current.play();
 		}
 	}
-
+*/
 
 
 	tb->process(e);
