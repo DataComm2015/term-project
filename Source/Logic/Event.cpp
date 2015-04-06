@@ -219,12 +219,28 @@ int SkillAttackEvent::getDestY()
 }
 
 /* ------------------------------- Set Health Event ------------------------------------*/
-SetHealthEvent::SetHealthEvent(float _change) : change(_change), Event(Marx::SET_HEALTH)
+SetHealthEvent::SetHealthEvent(int id, float _change) : entid(id), change(_change), Event(Marx::SET_HEALTH)
 {
+}
+
+int SetHealthEvent::getEntId()
+{
+	return entid;
 }
 
 float SetHealthEvent::getChange()
 {
     return change;
+}
+
+
+/* ------------------------------- Add Points Event ------------------------------------*/
+AddPointsEvent::AddPointsEvent(float _points) : points(_points), Event(Marx::ADD_POINTS)
+{
+}
+
+float AddPointsEvent::getPoints()
+{
+	return points;
 }
 

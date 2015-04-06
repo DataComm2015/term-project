@@ -50,6 +50,7 @@ namespace Manager
 		private:
 			static std::set<Marx::Projectile*> projectile_pool;
 			static ServerCommand * SERVER;
+			static Marx::Map *cMap;
 		public:
 			static Marx::Projectile* getProjectile(SGO &, Marx::Map *,  Marx::Entity *, Marx::Action *, sf::Vector2f &, float, float, Marx::Controller *);
 			static void enqueue(Marx::Projectile*);

@@ -45,7 +45,8 @@ namespace Marx
         SK_ATTACK,
         UPDATE,
         SET_HEALTH,
-        SKILL
+        SKILL,
+	ADD_POINTS
     };
 
     /*
