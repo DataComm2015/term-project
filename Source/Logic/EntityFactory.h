@@ -53,7 +53,8 @@ class EntityFactory
             Marx::Action * action,
             sf::Vector2f & v,
             float height,
-            float width);
+            float width,
+            Marx::Controller *);
     protected:
         EntityFactory();
         ~EntityFactory();
