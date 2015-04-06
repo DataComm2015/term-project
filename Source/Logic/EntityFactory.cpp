@@ -20,6 +20,7 @@
 
 
 #include "GateKeeperSource/src/GateKeeper.h"
+#include "GateKeeperSource/src/Minion.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
 #include "EntityTypes.h"
@@ -74,6 +75,10 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
     );
 
+    minionSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-magma-sheet.png")
+    );
+
 	projSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
     );
@@ -93,7 +98,10 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
-	projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
+    minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
+    minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+	  projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
     projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 8, 8));
     projSGO.sprite().setScale(1, 1);
     projSGO.middleAnchorPoint(true);
@@ -294,7 +302,8 @@ Entity* EntityFactory::makeEntity(
     {
         case ENTITY_TYPES::BASIC_TYPE:
         {
-            entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            entity = gk;
             break;
         }
         case ENTITY_TYPES::VESSEL:
@@ -306,6 +315,11 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
+        {
+          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          entity = minion;
+          break;
+        }
         case ENTITY_TYPES::MINI_BOSS:
 			break;
         case PROJECTILE:
@@ -352,8 +366,11 @@ Entity* EntityFactory::makeEntity(
     switch(type)
     {
         case ENTITY_TYPES::BASIC_TYPE:
-            entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+        {
+            GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            entity = gk;
             break;
+        }
         case ENTITY_TYPES::VESSEL:
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
@@ -363,6 +380,11 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
+        {
+          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          entity = minion;
+          break;
+        }
         case ENTITY_TYPES::MINI_BOSS:
         default:
             break;
