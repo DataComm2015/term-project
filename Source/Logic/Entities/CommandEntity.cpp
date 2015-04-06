@@ -12,6 +12,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../ClientLobbyScene.h"
 
+#include "../ServerGameScene.h"
 #include "../../Network/Client.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"

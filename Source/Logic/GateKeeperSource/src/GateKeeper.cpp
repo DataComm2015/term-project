@@ -208,6 +208,17 @@ void GateKeeper::setYSpeed(float y)
   _ySpeed = y;
 }
 
+void GateKeeper::setSpeed(int _speed)
+{
+    _xSpeed = _speed;
+    _ySpeed = _speed;
+}
+
+int GateKeeper::getSpeed()
+{
+	return _xSpeed;
+}
+
 int GateKeeper::getRange()
 {
   return _range;

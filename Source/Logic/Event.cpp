@@ -94,7 +94,7 @@ bool MoveEvent::forced()
 }
 
 
-SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, int _skillType) :Event(Marx::SKILL)
+SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType) :Event(Marx::SKILL)
 {
     x = _x;
     y = _y;
@@ -110,7 +110,7 @@ SkillEvent::SkillEvent(const SkillEvent& other)
     y = other.y;
     radius = other.radius;
     value = other.value;
-    force = other.force;
+    skillType = other.skillType;
 }
 
 float SkillEvent::getX()
@@ -118,10 +118,9 @@ float SkillEvent::getX()
     return x;
 }
 
-float SkillEvent::setX(float _x)
+void SkillEvent::setX(float _x)
 {
     x = _x;
-    return x;
 }
 
 float SkillEvent::getY()
@@ -129,10 +128,9 @@ float SkillEvent::getY()
     return y;
 }
 
-float SkillEvent::setY(float _y)
+void SkillEvent::setY(float _y)
 {
     y = _y;
-    return y;
 }
 
 float SkillEvent::getRadius()
@@ -155,12 +153,12 @@ void SkillEvent::setValue(int _value)
     value = _value;
 }
 
-int SkillEvent::getSkillType()
+SKILLTYPE SkillEvent::getSkillType()
 {
     return skillType;
 }
 
-void SkillEvent::setSkillType(int _skillType)
+void SkillEvent::setSkillType(SKILLTYPE _skillType)
 {
     skillType = _skillType;
 }

@@ -8,6 +8,7 @@
 #include "../PlayerMode.h"
 #include "../PlayerLobbyChoices.h"
 #include "../Skills.h"
+#include "../ServerGameScene.h"
 #include "ServerNetworkController.h"
 
 class ServerCommand;
@@ -46,7 +47,6 @@ class PlayerEntity : public NetworkEntity
 
     private:
         char* nickname;
-        skill sk;
         ServerGameScene *serverRef;
         ServerNetworkController* controller;
         ServerCommand *server;

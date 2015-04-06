@@ -2,6 +2,7 @@
 #define _CREATURE_H_
 
 #include "../Engine/Entity.h"
+#include "../Engine/Controller.h"
 
 using Marx::Entity;
 
@@ -18,6 +19,7 @@ class Creature
         virtual void setHealth(int _health);
         virtual int getSpeed();
         virtual void setSpeed(int _speed);
+        
         
         virtual void setAttack(int attack);
         virtual Entity *getEntity();

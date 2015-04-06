@@ -2,6 +2,7 @@
 #define LOGIC_EVENT_H_
 
 #include "../Engine/Event.h"
+#include "Skills.h"
 
 /*
  * move event message used to send move events over network
@@ -57,7 +58,7 @@ public:
 class SkillEvent: public ::Marx::Event
 {
     public:
-        SkillEvent(float _x, float _y, float _radius, int _value, int _skillType);
+        SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType);
         SkillEvent(const SkillEvent& other);
         float getX();
         void setX(float _x);
@@ -67,15 +68,15 @@ class SkillEvent: public ::Marx::Event
         void setRadius(float _radius);
         int getValue();
         void setValue(int _value);
-        int getSkillType();
-        void setSkillType(int _skillType);
+        SKILLTYPE getSkillType();
+        void setSkillType(SKILLTYPE _skillType);
         
     private:
         float x;
         float y;
         float radius;
         int value;
-        int skillType;
+        SKILLTYPE skillType;
 };
 
 #endif

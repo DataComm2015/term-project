@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Vessel.h"
 #include "../Event.h"
+#include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
 
 using namespace Manager;
@@ -189,6 +190,26 @@ void Vessel::onUpdate(float deltaTime)
 			case ::Marx::SKILL:
 			{
 				// process the skill event, and increase/decrease hp and stuff
+				SkillEvent *ev = (SkillEvent*)(*it);
+				
+				switch(ev->getSkillType())
+				{
+					case SKILLTYPE::HEAL:
+						currentHealth += ev->getValue();
+					break;
+					case SKILLTYPE::DMG:
+						currentHealth -= ev->getValue();
+					break;
+					case SKILLTYPE::BUFF:
+						xSpeed += ev->getValue();
+						ySpeed += ev->getValue();
+					break;
+					case SKILLTYPE::DEBUFF:
+						xSpeed -= ev->getValue();
+						ySpeed -= ev->getValue();
+					break;
+				}
+				
 				break;
 			}
 		}
@@ -811,29 +832,6 @@ void Vessel::speedDown( int speed )
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getSpeed
---
--- DATE:
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER:	Sanders Lee
---
--- PROGRAMMER:	Sanders Lee
---
--- INTERFACE: int Vessel::getSpeed()
---
--- RETURNS: current speed as an integer
---
--- NOTES:
--- This function returns the current speed the Vessel has
-----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getSpeed()
-{
-    return travelSpeed;
-}
-
-/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getDefaultSpeed
 --
 -- DATE: February 15, 2015
@@ -1101,7 +1099,7 @@ void Vessel::setHealth(int health)
 
 int Vessel::getHealth()
 {
-	return health;
+	return currentHealth;
 }
 
 void Vessel::setSpeed(int _speed)

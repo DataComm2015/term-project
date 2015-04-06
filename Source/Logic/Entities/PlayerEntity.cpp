@@ -2,7 +2,9 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
+#include "../Skills.h"
 #include "../ServerCommand.h"
+#include "../Creature.h"
 #include "ServerNetworkController.h"
 #include "ServerGameState.h"
 
@@ -109,47 +111,51 @@ void PlayerEntity::onUpdate(Message msg)
         case PlayerCommandMsgType::SKILL:
         {
             Vessel *vessel = NULL;
-            sk = ((skill) msg.data);
+            skill *sk = ((skill*) msg.data);
             
             //for(int i = 0; i < 5; i++)
             //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
 
-            float x1 = sk.curX;
-            float y1 = sk.curY;
+            float x1 = sk->curX;
+            float y1 = sk->curY;
             float x2, y2;
 
-            for(int i = 0; i < serverRef->getPlayerList().size(); i++)
+            for(int i = 0; i < serverRef->getPlayerList()->size(); i++)
             {
-                x2 = static_cast<Creature*>(serverRef->getPlayerList()[i])->left;
-                y2 = static_cast<Creature*>(serverRef->getPlayerList()[i])->top;
+                x2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->left;
+                y2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->top;
 
-                if (getDistance(x1, y1, x2, y2) <= sk.radius)
+                if (getDistance(x1, y1, x2, y2) <= sk->radius)
                 {
-                    vessel = static_cast<Creature*>(serverRef->getPlayerList()[i]);
+                    vessel = static_cast<Vessel*>(serverRef->getPlayerList()->at(i));
+
                     
                     if(vessel == NULL)
-                        continue;
+                        continue;                    
                     
-                    switch(sk.st)
+                    SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
+                    
+                    switch(sk->st)
                     {
-                        case HEAL:
-                            vessel->increaseHP(sk.value);
-                            vessel->getController()->addEvent(skill event);
+                        case SKILLTYPE::HEAL:
+                            vessel->setHealth(vessel->getHealth() + sk->val);
+                            vessel->getController()->addEvent(ev);
                         break;
-                        case DMG:
-                            vessel->decreaseHP(sk.value);
-                            vessel->getController()->addEvent();
+                        case SKILLTYPE::DMG:
+                            vessel->setHealth(vessel->getHealth() - sk->val);
+                            vessel->getController()->addEvent(ev);
                         break;
-                        case BUFF:
-                            vessel->speedup(sk.value);
-                            vessel->getController()->addEvent();
+                        case SKILLTYPE::BUFF:
+                            vessel->setSpeed(vessel->getSpeed() + sk->val);
+                            vessel->getController()->addEvent(ev);
                         break;
-                        case DEBUFF:
-                            vessel->speeddown(sk.value);
-                            vessel->getController()->addEvent();
+                        case SKILLTYPE::DEBUFF:
+                            vessel->setSpeed(vessel->getSpeed() - sk->val);
+                            vessel->getController()->addEvent(ev);
                         break;
                     }
                     
+                    vessel = NULL;
                 }
             }
             
@@ -187,7 +193,7 @@ float PlayerEntity::getDistance(float x1, float y1, float x2, float y2 )
   return result;
 }
 
-void setSGameScene(ServerGameScene *ref)
+void PlayerEntity::setSGameScene(ServerGameScene *ref)
 {
     serverRef = ref;
 }

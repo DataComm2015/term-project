@@ -2,6 +2,7 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
+#include "../Skills.h"
 #include "../../Engine/Entity.h"
 #include <stdio.h>
 #include <cstring>
@@ -168,7 +169,23 @@ void ServerNetworkController::sendEventMessage(Event *event)
     }
     case ::Marx::SKILL:
     {
-        // change event mack into a network message, and call update
+        // change event back into a network message, and call update
+        SkillEvent* sv = (SkillEvent*)event;
+        
+        skill a;
+        
+        a.curX = sv->getX();
+        a.curY = sv->getY();
+        a.radius = sv->getRadius();
+        a.val = sv->getValue();
+        a.st = sv->getSkillType();
+        
+        Message msg;
+        msg.type = ::Marx::SKILL;
+        msg.data = &a;
+        msg.len  = sizeof(a);
+        
+        
         break;
     }
     default:

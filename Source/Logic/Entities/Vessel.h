@@ -63,8 +63,8 @@
 #include "../../Engine/VEntity.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
-#include "../Creature.h"
 #include "../../Engine/TileManager.h"
+#include "../Creature.h"
 #include <SFML/Audio.hpp>
 
 #define MAX_LEVEL 10;
@@ -155,11 +155,11 @@ class Vessel : public Marx::VEntity, public Creature
 		void attackPowerDown( int attackpower );
 		int  getAttackPower();
 		int  getDefaultAttackPower();
+		void setAttack(int attack);
 
 		void resetSpeed();
 		void speedUp( int speed );
 		void speedDown( int speed );
-		int  getSpeed();
 		int  getDefaultSpeed();
 
 		bool checkDeath();
