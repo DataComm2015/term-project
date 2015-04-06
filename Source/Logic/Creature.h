@@ -18,6 +18,8 @@ using Marx::Entity;
 class Creature
 {
     public:
+        Creature();
+        ~Creature();
         virtual void setHealth(int health);
         virtual void setAttack(int attack);
 		virtual int getHealth();
