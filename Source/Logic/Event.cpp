@@ -94,7 +94,7 @@ bool MoveEvent::forced()
     return force;
 }
 
-// Ability event start \\
+// Ability event start 
 SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType) :Event(Marx::SKILL)
 {
     x = _x;
@@ -163,7 +163,7 @@ void SkillEvent::setSkillType(SKILLTYPE _skillType)
 {
     skillType = _skillType;
 }
-// Ability event end \\
+// Ability event end 
 
 /* ------------------------------- Attack Event ----------------------------------- */
 AttackEvent::AttackEvent(int _srcid, enum ActionType type, int _cellx, int _celly) :
