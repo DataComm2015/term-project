@@ -7,6 +7,7 @@
 #include "Logic/Entities/ServerNetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 #include "Engine/ProjectileManager.h"
+#include "Multimedia/manager/SoundManager.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -35,7 +36,7 @@ int main( int argc, char ** argv )
 
     ServerCommand server;
     Manager::ProjectileManager::setServer(&server);
-
+    Manager::SoundManager::disabled = true;
 
     server.startServer(atoi(argv[1]));
     run(&server);

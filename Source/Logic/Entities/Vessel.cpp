@@ -8,6 +8,11 @@
 
 using namespace Manager;
 
+id_resource Vessel::grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
+id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
+id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
+id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
+
 //TO DO:
 //1) GIVE IT A SPRITE
 //2) MAKE THE SPRITE ANIMATE
@@ -21,7 +26,6 @@ using namespace Manager;
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
---
 -- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
@@ -34,7 +38,7 @@ using namespace Manager;
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
+Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		Marx::Map * gmap,
 		float x,
 		float y,
@@ -67,16 +71,14 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	xPos = x;
 	yPos = y;
 
+    newYSpeed = 0;
+    newXSpeed = 0;
+
 	servX = 0;
 	servY = 0;
 
 	myX = 0;
 	myY = 0;
-
-	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
-	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
-	hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
-	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
 	//abilities = abilityList;
 /*
@@ -185,6 +187,7 @@ void Vessel::onUpdate(float deltaTime)
 				AttackEvent* aev = (AttackEvent*) (*it);
 				std::cout << "ATTACK" << std::endl;
 				createAttack(*aev, atk_sprite, left, top);
+                break;
 			}
 			case ::Marx::SK_ATTACK:
 			{
@@ -192,12 +195,14 @@ void Vessel::onUpdate(float deltaTime)
 				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
 				std::cout << "ATTACK" << std::endl;
 				createSkAttack(*saev, satk_sprite, left, top);
+                break;
 			}
             case ::Marx::SET_HEALTH:
             {
                 SetHealthEvent* ev = (SetHealthEvent*) (*it);
 
                 setHealth(ev->getChange());
+                break;
             }
 			case ::Marx::UPDATE:
 			{
@@ -209,6 +214,7 @@ void Vessel::onUpdate(float deltaTime)
 				servY = ev->_y;
 
 				Entity::aMove(ev->_x, ev->_y, false);
+                break;
 			}
 			case ::Marx::SKILL:
 			{
@@ -344,6 +350,8 @@ void Vessel::draw(Renderer& renderer, sf::RenderStates states) const
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::~Vessel()
 {
+    footstep.stop();
+
 	if( abilities != NULL )
 		delete[] abilities;
 }
@@ -1155,6 +1163,29 @@ int Vessel::getHealth()
 void Vessel::setAttack(int attack)
 {
     attackPower = attack;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: stopAllSounds
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void stopAllSounds()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Stops all sounds played by the vessel
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::stopAllSounds()
+{
+    footstep.stop();
 }
 
 /*------------------------------------------------------------------------------------------------------------------

@@ -25,7 +25,7 @@ Animation *gkAnimation;
 
 
 // bug fix by Sanders Lee
-GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
+GateKeeper::GateKeeper(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 VEntity(sprite, map, x, y, ctrl, h, w)
 {
     _range = 10;
@@ -52,9 +52,7 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
     }
 
-    _sprite = &sprite;
-
-    _sprite->sprite().setScale(randDirection, 1);
+    //getSprite().sprite().setScale(randDirection, 1);
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
 
@@ -62,7 +60,7 @@ VEntity(sprite, map, x, y, ctrl, h, w)
 
 GateKeeper::~GateKeeper()
 {
-
+    footstep.stop();
 }
 
 /***
@@ -97,26 +95,26 @@ void GateKeeper::onUpdate(float deltaTime)
         {
           newYSpeed = -_ySpeed;
           int randDirection = (rand() % 3) - 1;
-          _sprite->sprite().setScale(randDirection, 1);
+          getSprite().sprite().setScale(randDirection, 1);
         }
         else
         {
           newYSpeed = _ySpeed;
           int randDirection = (rand() % 3) - 1;
-          _sprite->sprite().setScale(randDirection, 1);
+          getSprite().sprite().setScale(randDirection, 1);
         }
 
         if (xDir > 0)
         {
           newXSpeed = _xSpeed;
 
-          _sprite->sprite().setScale(1, 1);
+          getSprite().sprite().setScale(1, 1);
         }
         else
         {
           newXSpeed = -_xSpeed;
 
-          _sprite->sprite().setScale(-1, 1);
+          getSprite().sprite().setScale(-1, 1);
         }
 
         if (xDir == 0)
@@ -275,6 +273,11 @@ void GateKeeper::onCreate()
 void GateKeeper::onDestroy()
 {
 
+}
+
+void GateKeeper::stopAllSounds()
+{
+    footstep.stop();
 }
 
 bool GateKeeper::operator==(const VEntity&)

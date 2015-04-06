@@ -26,7 +26,7 @@ class CommandEntity;
 class ClientGameState : public NetworkEntity
 {
     public:
-        ClientGameState(int id, CommandEntity *command, GameScene *scene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
+        ClientGameState(int id, CommandEntity *command, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
         ~ClientGameState();
 
     protected:
@@ -37,10 +37,6 @@ class ClientGameState : public NetworkEntity
          * pointer to the singleton {ClientScoreboardScene} instance.
          */
         ClientScoreboardScene* _scoreScene;
-        /**
-         * pointer to the singleton {GameScene} instance.
-         */
-        GameScene* _gameScene;
         /**
          * pointer to the singleton {ClientLobbyScene} instance.
          */

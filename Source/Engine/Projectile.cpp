@@ -56,6 +56,8 @@ void Projectile::onUpdate(float t)
 {
     if(TimeToLive > 0.0f)
     {
+		if(top = -1)
+			return;
         act->onUpdate(this, t);
         //std::cout << "X: " << left << "Y: " << top << "TimeToLive: " << TimeToLive << " Time Removed: " << t << std::endl;
         TimeToLive -= t;
