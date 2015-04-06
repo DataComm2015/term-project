@@ -136,6 +136,12 @@ void GameScene::onLoad()
 	updateMainView(viewMain);
 	viewUI = AppWindow::getInstance().getCurrentView();
 
+	// minimap view
+	viewMinimap = viewMain;
+	viewMinimap.setViewport(sf::FloatRect(0.76f,0.01f,0.23f,0.23f));
+	viewMinimap.zoom(2.f);
+
+
 	// position buttons
 	generateUI();
 	positionUI();
@@ -257,6 +263,8 @@ void GameScene::update(sf::Time t)
 		//myVessel->getSprite().sprite().rotate(1);
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
+
+		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 	}
 
 	/*
@@ -385,11 +393,12 @@ void GameScene::processEvents(sf::Event& e)
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
 					break;
 				}
-		    case sf::Keyboard::Return:
-		    {
-			    break;
-		    }
+			    	case sf::Keyboard::Return:
+			    	{
+				    break;
+			    	}
 			}
+			viewMinimap.setCenter(viewMain.getCenter().x, viewMain.getCenter().y);
 		}
 	}
 	else if (e.type == sf::Event::KeyReleased)
@@ -407,6 +416,7 @@ void GameScene::processEvents(sf::Event& e)
 		// update views
 		updateMainView(viewMain);
 		viewUI = AppWindow::getInstance().getCurrentView();
+		viewMinimap = AppWindow::getInstance().getCurrentView();
 		positionUI();
 	}
 	else if (e.type == sf::Event::MouseButtonPressed)
@@ -458,6 +468,33 @@ void GameScene::draw()
 		renderer.draw(hb);
 		renderer.draw(levelInd);
 	}
+	renderer.end();
+
+	//the border for the minimap
+	minimapBorder.setSize(
+		sf::Vector2f(viewMinimap.getViewport().width*window.getSize().x, 
+			     viewMinimap.getViewport().height*window.getSize().y));
+
+	minimapBorder.setPosition(
+		sf::Vector2f(viewMinimap.getViewport().left*window.getSize().x, 	
+		  	     viewMinimap.getViewport().top*window.getSize().y));
+
+	minimapBorder.setFillColor(sf::Color::Black);
+	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
+
+	window.draw(minimapBorder);
+
+
+	//draw the minimap
+	window.setView(viewMinimap);
+
+	renderer.begin();
+
+	renderer.states.shader = &waveShader;
+	renderer.draw(waterMap);
+	renderer.states.shader = nullptr;
+	renderer.draw(cMap);
+
 	renderer.end();
 
 	window.display();
