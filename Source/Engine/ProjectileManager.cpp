@@ -54,21 +54,22 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 			cont = new ServerNetworkController();
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
 
+			std::cout << action << std::endl;
 			return new Marx::Projectile(_sprite, map, e->left, e->top, action, v, cont, h, w);
 		}
-
-
+		else
+		{
+			std::cout << "Deck Attack" << std::endl;
+			temp = *projectile_pool.begin();
+			temp->setSprite(_sprite);
+			temp->setCurrentPos(e->left, e->top);
+			temp->setAct(action);
+			temp->setTarget(v);
+			projectile_pool.erase(*projectile_pool.begin());
+			return temp;
+		}
 	}
-	else
-	{
-		temp = *projectile_pool.begin();
-		temp->setSprite(_sprite);
-		temp->setCurrentPos(e->left, e->top);
-		temp->setAct(action);
-		temp->setTarget(v);
-		projectile_pool.erase(*projectile_pool.begin());
-		return temp;
-	}
+
 }
 
 void ProjectileManager::

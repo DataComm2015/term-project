@@ -1,11 +1,15 @@
  #include "Projectile.h"
 #include <iostream>
+#include <cmath>
 
 using namespace Marx;
 
 Projectile::Projectile(SGO &_sprite, Map *map, float x, float y, Action * _act, sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0) :
 	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
+    std::cout << act << std::endl;
+    float hy = hypot( vector.x , vector.y );
+    heading = sf::Vector2f(vector.x / hy, vector.y / hy);
 	_speed = 0;
 }
 
@@ -47,10 +51,11 @@ void Projectile::onDestroy()
 
 void Projectile::onUpdate(float t)
 {
-	std::cout << "Update Projectile" << std::endl;
+    std::cout << "X: " << left << "Y: " << top << std::endl;
 	if(TimeToLive > 0.0f)
 	{
 		act->onUpdate(this, t);
+        std::cout << "X: " << left << "Y: " << top << std::endl;
 		TimeToLive -= t;
 	}
 	else
@@ -72,14 +77,14 @@ void Projectile::setCurrentPos(float x, float y )
 
 void Projectile::setAct(Action * act)
 {
-	act = act;
-	TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
+    TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
 }
 
 float Projectile::getTTL()
 {
 	return TimeToLive;
 }
+
 
 void Projectile::setTTL(float t)
 {

@@ -17,6 +17,8 @@
 #include "Entities/Vessel.h"
 #include "Entities/Structure.h"
 
+#include <iostream>
+
 using Networking::Message;
 using Marx::Controller;
 using Marx::Entity;
@@ -96,12 +98,11 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
     {
         AttackMessage * ms = (AttackMessage *) msg->data;
 
-        std::cout << "MAKE ME AN ATTACK" << std::endl;
         sf::Vector2f v(ms->cellx, ms->celly);
-        Marx::AttackAction act(10.0f, 10.0f);
-	std::cout << "At: " << ms->srcx << " " << ms->srcy << std::endl;
-	std::cout << "To: " << v.x << " " << v.y << std::endl;
-        return new Marx::Projectile(projSGO, cMap, ms->srcx, ms->srcy, &act, v, cont, 1.0, 1.0);
+        Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
+
+        std::cout << action << std::endl;
+        return new Marx::Projectile(projSGO, cMap, ms->srcx, ms->srcy, action, v, cont, 1.0, 1.0);
 
     }
     else

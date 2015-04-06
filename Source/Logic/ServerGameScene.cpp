@@ -86,10 +86,6 @@ void ServerGameScene::update(sf::Time time)
         auto entities = cMap->getEntities();
         for ( auto it = entities.begin(); it != entities.end(); ++it)
         {
-            if(dynamic_cast<Projectile*>(*it))
-            {
-                printf("Projectile updating!");
-            }
           (*it)->onUpdate(time.asSeconds());
         }
 
