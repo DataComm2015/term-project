@@ -36,7 +36,7 @@ root
 			ground_grass
 			test_enemy1
 			leaf
-			test1
+			wisp
 
 		lost_grass
 		air_grass
@@ -45,7 +45,7 @@ root
 			air_grass
 			test_enemy3
 			leaf
-			test2
+			wisp
 
 # STONE #
 	
@@ -64,7 +64,7 @@ root
 			ground_stone
 			test_enemy1
 			leaf
-			test1
+			queen_bee
 
 		lost_stone
 		air_stone
@@ -73,4 +73,4 @@ root
 			air_stone
 			test_enemy3
 			leaf
-			test2
+			queen_bee

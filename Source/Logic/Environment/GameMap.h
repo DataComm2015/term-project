@@ -26,7 +26,7 @@
 #define MIN_ENEMY_GROUP 2
 
 /* The maximum size of an enemy group */
-#define MAX_ENEMY_GROUP 2
+#define MAX_ENEMY_GROUP 5
 
 /* The minimum number of structures in a block */
 #define MIN_STRUCTURE_GROUP 1
