@@ -262,7 +262,7 @@ break;
 
 	if ( elapsedTime > frameTime )
 	{
-			std::cout << "updating animation" << std::endl;
+			//std::cout << "updating animation" << std::endl;
 			runAnim->update(frameTime);
 			runAnim_mask->update(frameTime);
 			runAnim_wep->update(frameTime);
