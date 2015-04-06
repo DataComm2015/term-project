@@ -18,6 +18,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
+
 #include <cmath>
 
 #include <cstdio>
@@ -139,7 +140,7 @@ Vessel* ServerEnemyController::detectVessels()
     x2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->left;
     y2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->top;
 
-    if (getDistance(x1, y1, x2, y2) <= AGGRO_RADIUS)
+    if (getDistance(x1, y1, x2, y2) <= static_cast<GateKeeper*>(_currEntity)->getRange())
       return static_cast<Vessel*>(_servGameScene->getPlayerList()[i]);
   }
 
@@ -155,7 +156,7 @@ float ServerEnemyController::getDistance(float x1, float y1, float x2, float y2 
   return result;
 }
 
-void ServerEnemyController::setEntity(Entity* e)
+void ServerEnemyController::setEntity(GateKeeper* e)
 {
   _currEntity = e;
 }

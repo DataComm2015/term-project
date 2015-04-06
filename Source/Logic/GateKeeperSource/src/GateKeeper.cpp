@@ -24,9 +24,9 @@ Animation *gkAnimation;
 
 // bug fix by Sanders Lee
 GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
-  VEntity(sprite, map, x, y, ctrl, h, w)
-  {
-    _range = 1;
+VEntity(sprite, map, x, y, ctrl, h, w)
+{
+    _range = 10;
     _health = 100;
     _type = 1;
     _attack = 1;
@@ -41,7 +41,7 @@ GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Cont
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
 
-  }
+}
 
 GateKeeper::~GateKeeper()
 {
@@ -54,65 +54,61 @@ GateKeeper::~GateKeeper()
 ***/
 void GateKeeper::onUpdate(float deltaTime)
 {
-
-
+  //Perform the generic gatekeeper animation
   gkAnimation->step(1);
 
-//  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
+  //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
+  std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+  for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
+      ; it != eventQueue->end()
+      ; ++it )
+  {
+    // switch on type
+    switch((*it)->type)
+    {
+    	case ::Marx::MOVE:
+    		MoveEvent* ev = (MoveEvent*) (*it);
+        int xDir = ev->getXDir();
+        int yDir = ev->getYDir();
 
-std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
-for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
-  ; it != eventQueue->end()
-  ; ++it )
-{
+        Entity::aMove(ev->getX(), ev->getY(), false);
 
-  // switch on type
-	switch((*it)->type)
-	{
-		case ::Marx::MOVE:
-			MoveEvent* ev = (MoveEvent*) (*it);
-      int xDir = ev->getXDir();
-      int yDir = ev->getYDir();
+        if (yDir < 0)
+        {
+          newYSpeed = -_ySpeed;
+        }
+        else
+        {
+          newYSpeed = _ySpeed;
+        }
 
-      Entity::aMove(ev->getX(), ev->getY(), false);
+        if (xDir > 0)
+        {
+          newXSpeed = _xSpeed;
 
-      if (yDir < 0)
-      {
-        newYSpeed = -_ySpeed;
-      }
-      else
-      {
-        newYSpeed = _ySpeed;
-      }
+          _sprite->sprite().setScale(1, 1);
+        }
+        else
+        {
+          newXSpeed = -_xSpeed;
 
-      if (xDir > 0)
-      {
-        newXSpeed = _xSpeed;
+          _sprite->sprite().setScale(-1, 1);
+        }
 
-        _sprite->sprite().setScale(1, 1);
-      }
-      else
-      {
-        newXSpeed = -_xSpeed;
+        if (xDir == 0)
+          newXSpeed = 0;
 
-        _sprite->sprite().setScale(-1, 1);
-      }
+        if (yDir == 0)
+          newYSpeed = 0;
 
-      if (xDir == 0)
-        newXSpeed = 0;
+    		break;
+    }
 
-      if (yDir == 0)
-        newYSpeed = 0;
-
-
-			break;
-	}
-
-}
-getController()->clearEvents();
+  }
+  getController()->clearEvents();
 
 
-Entity::rMove(newXSpeed, newYSpeed,false);
+  Entity::rMove(newXSpeed, newYSpeed,false);
 
 
 }
@@ -122,74 +118,35 @@ bool GateKeeper::isMoving()
   return (movingLeft || movingRight || movingUp || movingDown);
 }
 
-void GateKeeper::detectPlayers()
-{
-
-}
-
-void GateKeeper::enterCombat()
-{
-
-}
-
-void GateKeeper::leaveCombat()
-{
-
-}
-
-bool GateKeeper::inCombatRange()
-{
-  return true;
-}
-
 void GateKeeper::setRange(int r)
 {
-
+  _range = r;
 }
 
 void GateKeeper::setHealth(int h)
 {
-
+  _health = h;
 }
 
-void GateKeeper::setAttack(int as)
+void GateKeeper::setAttack(int a)
 {
-
+  _attack = a;
 }
 
 void GateKeeper::setAttackSpeed(int as)
 {
-
+  _attackSpeed == as;
 }
 
-void GateKeeper::setMovementSPed(int ms)
-{
-
-}
-
-void GateKeeper::setTarget(/*Player*/)
-{
-
-}
-
-void GateKeeper::setCooldown(/*Timer*/)
-{
-
-}
-
-void GateKeeper::setPosition(float x, float y)
-{
-
-}
 
 void GateKeeper::setXSpeed(float x)
 {
-
+  _xSpeed = x;
 }
 
 void GateKeeper::setYSpeed(float y)
 {
-
+  _ySpeed = y;
 }
 
 int GateKeeper::getRange()
