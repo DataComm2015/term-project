@@ -1,9 +1,30 @@
 #include "Creature.h"
 #include "../Engine/AttackAction.h"
+#include "EntityFactory.h"
+#include "../Engine/Projectile.h"
+
 #include <iostream>
+
+Creature::Creature()
+{
+	actionList[normalAttack] = new Marx::AttackAction(10, 10);
+}
+
+Creature::~Creature()
+{
+}
 
 void Creature::setHealth(int health)
 {
+}
+
+int Creature::getSpeed()
+{
+}
+
+void Creature::setSpeed(int _speed)
+{
+
 }
 
 void Creature::setAttack(int attack)
@@ -25,8 +46,8 @@ Marx::Projectile* Creature::createAttack(AttackEvent & event, SGO &sprite, float
 {
 	std::cout << "Creature Create Attack" << std::endl;
 	sf::Vector2f v(event.getCellX(), event.getCellY());
-	Marx::Action *action = actionList[event.getAction()];
-	return Manager::ProjectileManager::getProjectile(sprite, getEntity()->getMap(),  getEntity(), action, v, 1.0, 1.0);
+
+	return EntityFactory::getInstance()->makeProjectile(getEntity()->getMap(),  getEntity(), actionList[normalAttack], v, 1.0, 1.0);
 }
 
 Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y)
@@ -34,9 +55,7 @@ Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, SGO &sprite,
 	sf::Vector2f v(event.getDestX(), event.getDestY());
 	//Marx::Action *action = actionList[event.getAction()];
 
-	Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
-
-	return Manager::ProjectileManager::getProjectile(sprite, getEntity()->getMap(), getEntity(), action, v, 1.0, 1.0);
+	return EntityFactory::getInstance()->makeProjectile(getEntity()->getMap(), getEntity(), actionList[normalAttack], v, 1.0, 1.0);
 }
 
 Entity * Creature::getEntity()

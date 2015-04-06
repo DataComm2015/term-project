@@ -1,7 +1,9 @@
 #include "ClientLobbyScene.h"
+#include "MainMenuScene.h"
 #include <iostream>
 #include <SFML/System/Time.hpp>
 #include "Entities/ClientMux.h"
+#include "Entities/CommandEntity.h"
 #include "../Multimedia/manager/SoundManager.h"
 
 using std::cout;
@@ -182,9 +184,12 @@ ClientLobbyScene::~ClientLobbyScene()
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLoad()
 {
-    clck.restart();
-
+    // Delete GameScene everytime player enters the lobby
+    MainMenuScene::clearGameScene();
+    MainMenuScene::getGameScene();
+    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->getCommandEntity()->attachListeners();
     title.play();
+    clck.restart();
 
     /* Set btntest positions */
     background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));

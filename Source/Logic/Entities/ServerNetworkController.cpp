@@ -133,7 +133,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
             // parse move event into move message
             MoveMessage mm;
-            printf("entity server x, y: %f %f\n", getEntity()->left, getEntity()->top);
+            //printf("entity server x, y: %f %f\n", getEntity()->left, getEntity()->top);
             mm.x      = getEntity()->left;
             mm.y      = getEntity()->top;
             mm.xDir   = me->getXDir();
@@ -316,7 +316,7 @@ void ServerNetworkController::onUpdate(Message msg)
 		}
 		case PlayerCommandMsgType::START_ATT_COMMAND:
 		{
-            printf("Starting attack");
+            //printf("Starting attack");
 			AttackMessage *mesg = (AttackMessage*) msg.data;
 			AttackEvent *aevent = new AttackEvent(mesg->srcid, mesg->action, mesg->cellx, mesg->celly);
 			addEvent(aevent);
@@ -324,7 +324,7 @@ void ServerNetworkController::onUpdate(Message msg)
 		}
 		case PlayerCommandMsgType::START_SK_ATT_COMMAND:
 		{
-            printf("Starting attack");
+            //printf("Starting attack");
 			SkillAttackMessage *smesg = (SkillAttackMessage*) msg.data;
 			SkillAttackEvent *saevent = new SkillAttackEvent(smesg->srcid, smesg->action, smesg->destx, smesg->desty);
 			addEvent(saevent);

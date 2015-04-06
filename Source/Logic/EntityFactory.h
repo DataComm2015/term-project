@@ -3,6 +3,7 @@
 
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/manager/ResourceManager.h"
+#include "../Engine/ProjectileManager.h"
 #include "EntityTypes.h"
 
 namespace Marx
@@ -46,6 +47,13 @@ class EntityFactory
             Marx::Map* map,
             float x,
             float y);
+        Marx::Projectile* makeProjectile(
+            Marx::Map * map,
+            Marx::Entity * entity,
+            Marx::Action * action,
+            sf::Vector2f & v,
+            float height,
+            float width);
     protected:
         EntityFactory();
         ~EntityFactory();

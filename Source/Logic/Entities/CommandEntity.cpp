@@ -11,6 +11,7 @@
 #include "../Event.h"
 #include "../NetworkEntityPairs.h"
 #include "../ClientLobbyScene.h"
+#include "../MainMenuScene.h"
 
 #include "../../Network/Client.h"
 #include "../../Network/Session.h"
@@ -23,20 +24,21 @@
 
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene* gameScene, ClientMux * client)
+CommandEntity::CommandEntity(int id, ClientMux * client)
     :NetworkEntity(id,(int)NetworkEntityPair::PLAYER_COMMAND)
-    ,_gameScene(gameScene)
 {
     clientmux = client;
-    _gameScene->addKeyListener(this);
-	_gameScene->addClickListener(this);
     playerMode = PLAYER_MODE::GHOST;
 }
 
 CommandEntity::~CommandEntity()
 {
-    _gameScene->rmKeyListener(this);
-	_gameScene->rmClickListener(this);
+}
+
+void CommandEntity::attachListeners()
+{
+    MainMenuScene::getGameScene()->addKeyListener(this);
+	MainMenuScene::getGameScene()->addClickListener(this);
 }
 
 PLAYER_MODE CommandEntity::getPlayerMode()

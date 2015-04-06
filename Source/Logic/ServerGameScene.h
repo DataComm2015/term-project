@@ -1,3 +1,4 @@
+
 #ifndef SERVER_GAME_SCENE_H_
 #define SERVER_GAME_SCENE_H_
 

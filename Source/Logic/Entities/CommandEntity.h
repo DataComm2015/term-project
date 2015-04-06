@@ -33,11 +33,12 @@ struct PlayerLobbyChoices;
 class CommandEntity : public NetworkEntity, public KeyListener, public ClickListener
 {
     public:
-        CommandEntity(int id, GameScene *gameScene, ClientMux* client);
+        CommandEntity(int id, ClientMux* client);
         ~CommandEntity();
 
         PLAYER_MODE getPlayerMode();
         PlayerLobbyChoices* getLobbyOption();
+        void attachListeners();
         void notifyServerLobbySelections(PlayerLobbyChoices *selections);
 
     protected:
@@ -51,7 +52,6 @@ class CommandEntity : public NetworkEntity, public KeyListener, public ClickList
     private:
         PlayerLobbyChoices *PLC;
         ClientMux* clientmux;
-        GameScene* _gameScene;
         PLAYER_MODE playerMode;
 };
 

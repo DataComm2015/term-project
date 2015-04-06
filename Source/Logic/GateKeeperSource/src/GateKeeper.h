@@ -30,7 +30,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 {
 
 	public:
-		GateKeeper(SGO &sprite,
+		GateKeeper(SGO& sprite,
 			Marx::Map* map,
 			float x,
 			float y,
@@ -58,6 +58,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void onDestroy();
 		virtual void onUpdate(float);
 		virtual bool operator==(const VEntity&);
+        virtual void stopAllSounds();
     virtual Entity* getEntity();
 		virtual bool isMoving();
 		virtual void playSound(float, float);
@@ -87,7 +88,6 @@ class GateKeeper : public Marx::VEntity, public Creature
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
 		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
-		SGO* _sprite;
 		sf::Sound footstep;
 		sf::Sound voice;
 		bool soundActive;

@@ -119,10 +119,11 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         if (prevX != xDirection || prevY != yDirection)
         {
           moving = true;
+          /*
           std::cout << "Adding move event" << std::endl;
           std::cout << "X Direction " << xDirection << std::endl;
           std::cout << "Y Direction " << yDirection << std::endl;
-
+          */
           prevX = xDirection;
           prevY = yDirection;
 

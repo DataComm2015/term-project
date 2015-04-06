@@ -188,7 +188,11 @@ enum class ServerGameStateClientGameStateMsgType
      * {ServerGameState} instance is sending a "start score scene" command to the
      *   {ClientGameState} instance.
      */
-    START_SCORE_SCENE
+    START_SCORE_SCENE,
+    /**
+     * When player joins late, they get a fake lobby until round ends.
+     */
+    FAKE_LOBBY
 };
 
 #endif

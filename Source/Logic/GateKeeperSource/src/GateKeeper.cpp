@@ -24,7 +24,7 @@ using namespace Manager;
 Animation *gkAnimation;
 
 // bug fix by Sanders Lee
-GateKeeper::GateKeeper(SGO &sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
+GateKeeper::GateKeeper(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 VEntity(sprite, map, x, y, ctrl, h, w)
 {
     _range = 10;
@@ -43,16 +43,14 @@ VEntity(sprite, map, x, y, ctrl, h, w)
 
     int randDirection = (rand() % 3) - 1;
 
-    _sprite = &sprite;
-
-    _sprite->sprite().setScale(randDirection, 1);
+    //getSprite().sprite().setScale(randDirection, 1);
 
     gkAnimation = new Animation(_sprite, sf::Vector2i(40, 40), 16, 7);
 }
 
 GateKeeper::~GateKeeper()
 {
-
+    footstep.stop();
 }
 
 /***
@@ -87,7 +85,7 @@ void GateKeeper::onUpdate(float deltaTime)
         {
           newYSpeed = -_ySpeed;
           int randDirection = (rand() % 3) - 1;
-          _sprite->sprite().setScale(randDirection, 1);
+          getSprite().sprite().setScale(randDirection, 1);
           movingUp = true;
           movingDown = false;
         }
@@ -95,7 +93,7 @@ void GateKeeper::onUpdate(float deltaTime)
         {
           newYSpeed = _ySpeed;
           int randDirection = (rand() % 3) - 1;
-          _sprite->sprite().setScale(randDirection, 1);
+          getSprite().sprite().setScale(randDirection, 1);
           movingDown = true;
           movingUp = false;
         }
@@ -103,14 +101,14 @@ void GateKeeper::onUpdate(float deltaTime)
         if (xDir > 0)
         {
           newXSpeed = _xSpeed;
-          _sprite->sprite().setScale(1, 1);
+          getSprite().sprite().setScale(1, 1);
           movingRight = true;
           movingLeft = false;
         }
         else
         {
           newXSpeed = -_xSpeed;
-          _sprite->sprite().setScale(-1, 1);
+          getSprite().sprite().setScale(-1, 1);
           movingLeft = true;
           movingRight = false;
         }
@@ -286,6 +284,11 @@ void GateKeeper::onCreate()
 void GateKeeper::onDestroy()
 {
 
+}
+
+void GateKeeper::stopAllSounds()
+{
+    footstep.stop();
 }
 
 bool GateKeeper::operator==(const VEntity&)

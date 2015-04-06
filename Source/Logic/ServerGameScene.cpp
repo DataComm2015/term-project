@@ -50,6 +50,17 @@ ServerGameScene::~ServerGameScene()
 {
 	delete gMap;
 
+    for (int i = 0; i < enemyControllers.size(); i++)
+    {
+        delete (enemyControllers[i]);
+    }
+
+    for (int i = 0; i < playerList.size(); i++)
+    {
+        delete (playerList[i]->getController());
+        delete (playerList[i]);
+    }
+
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
@@ -124,6 +135,8 @@ void ServerGameScene::draw()
 
 void ServerGameScene::enterScene()
 {
+    printf("HELLO DARKNESS\n");
+
     worldSeed = rand();
     timer = GAME_ROUND_LENGTH_SECONDS;
     lobtimer = SCOREBOARD_LENGTH_SECONDS;
