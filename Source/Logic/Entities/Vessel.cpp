@@ -92,7 +92,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	this->add(mask_sprite);
   this->add(weapon_sprite);
 
-	std::cout << "Vessel constructed successfully!" << std::endl;
+	//std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
 /*-------------------------------------------
