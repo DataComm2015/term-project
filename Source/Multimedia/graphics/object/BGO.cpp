@@ -211,18 +211,45 @@ bool BGO::hasChildren() const
  *
  * @programmer Melvin Loho
  *
- * @param      arg to ignore or not to ignore
+ * @param      arg To ignore or not to ignore
  */
 void BGO::ignoreChildren(bool arg)
 {
 	m_ignoringChildren = arg;
 }
 
+/**
+ * Gets the transformations of this game object.
+ *
+ * @date       2015-02-25
+ *
+ * @revisions
+ *
+ * @designer   Melvin Loho
+ *
+ * @programmer Melvin Loho
+ *
+ * @return     The local transform
+ */
 sf::Transform BGO::getLocalTransform() const
 {
 	return sf::Transform::Identity;
 }
 
+/**
+ * Gets the transformations of this game object
+ * that has been affected by the scene graph.
+ *
+ * @date       2015-04-03
+ *
+ * @revisions
+ *
+ * @designer   Melvin Loho
+ *
+ * @programmer Melvin Loho
+ *
+ * @return     The global transform
+ */
 const sf::Transform& BGO::getGlobalTransform() const
 {
 	return m_globaltrans;
