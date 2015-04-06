@@ -156,6 +156,14 @@ void ClientGameState::onUpdate(Message msg)
             break;
 
         /*
+         * indicates to the client to display the fake lobby.
+         */
+        case ServerGameStateClientGameStateMsgType::FAKE_LOBBY:
+            AppWindow::getInstance().removeScene(1);
+            AppWindow::getInstance().addScene(_lobbyScene);
+            break;
+
+        /*
          * indicates to the client that a new player has connected, so the
          *   player count in the lobby should be incremented.
          */
