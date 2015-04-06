@@ -1,3 +1,47 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: GameMap.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:
+--		GameMap(Map *cMap);
+--		~GameMap();
+--		bool generateMap(int seed, ServerGameScene *gs);
+--		void cleanMap();
+--		bool createBlockMap();
+--		void setCellBoundaries();
+--		void generateZones();
+--		void generatePlayers();
+--		void generateEnemies();
+--		void createEnemyGroup(Block *block, BlockZone z, int num);
+--		void getVesselPosition(int vesselNum, int *xPos, int *yPos);
+--		void generateStructures();
+--		ENTITY_TYPES getEnemyType(string enemy);
+--		void generateMiniBosses();
+--		void generatePlaceholderBlocks();
+--		BlockType makeBlockType(BlockZone z, int rRoll);
+--		void generateTiles();
+--		Map* getCellMap();
+--		Block** getBlockMap();
+--		int getWidth();
+--		int getHeight();
+--
+-- DATE: February 10, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: Chris Klassen
+--
+-- PROGRAMMER:  Chris Klassen
+--				Julian Brandrick
+--
+-- NOTES:
+--        This file contains the implementation of the game's map.
+--
+--		  This includes all map generation, object placement, and tiling.
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "../ServerGameScene.h"
 #include <algorithm>
 #include <vector>
@@ -29,12 +73,10 @@ using namespace Marx;
 *
 *	PROGRAMMER: Chris Klassen
 *
-*	INTERFACE: GameMap(Map *cMap, int w, int h);
+*	INTERFACE: GameMap(Map *cMap);
 *
 *	PARAMETERS:
 *		cMap - the cell map to use with the class
-*		w - the width of the cell map
-*		h - the height of the cell map
 *
 *	RETURNS:
 *		nothing
@@ -95,9 +137,11 @@ GameMap::~GameMap()
 *
 *	PROGRAMMER: Chris Klassen
 *
-*	INTERFACE: bool generateMap();
+*	INTERFACE: bool generateMap(int seed, ServerGameScene *gs);
 *
 *	PARAMETERS:
+*		seed - the seed to use to generate the map
+*		gs - the server game scene object to use if on the server side
 *
 *	RETURNS:
 *		bool - success or failure
