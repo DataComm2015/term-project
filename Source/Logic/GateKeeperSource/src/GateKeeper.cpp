@@ -21,7 +21,12 @@
 
 using namespace Manager;
 
-Animation *gkAnimation;
+// sound set loaded should be determined by enemy type
+static id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+static id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+static id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+
 
 
 // bug fix by Sanders Lee
@@ -42,12 +47,6 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     srand (time(NULL));
 
     int randDirection = (rand() % 3) - 1;
-
-    // sound set loaded should be determined by enemy type
-    grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-    stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-    hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-    attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 
     getSprite().sprite().setScale(randDirection, 1);
@@ -172,7 +171,7 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
       (soundActive && steppedTile != GRASS))
     {
       footstep.stop();
-      footstep = SoundManager::play(grassWalkSound, soundPos);
+      footstep = SoundManager::play(grassWalkSoundGK, soundPos);
       footstep.setLoop(true);
       footstep.play();
       soundActive = true;
@@ -185,7 +184,7 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
       (soundActive && steppedTile != STONE))
     {
       footstep.stop();
-      footstep = SoundManager::play(stoneWalkSound, soundPos);
+      footstep = SoundManager::play(stoneWalkSoundGK, soundPos);
       footstep.setLoop(true);
       footstep.play();
       soundActive = true;
