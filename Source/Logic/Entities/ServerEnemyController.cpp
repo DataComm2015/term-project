@@ -68,6 +68,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
             event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
             addEvent(event);
             moving = false;
+            return;
           }
           return;
         }

@@ -1,6 +1,5 @@
 /********************************************************************************
-**	SOURCE FILE:	GateKeeper.cpp -  	GateKeeper class implementation. Parent class
-**                                    for the enemies.
+**	SOURCE FILE:	Minion.cpp -
 **
 **	PROGRAM:	Term_Project
 **
@@ -12,7 +11,7 @@
 **	PROGRAMMER: Filip Gutica A00781910
 **
 ***********************************************************************************/
-#include "GateKeeper.h"
+#include "Minion.h"
 #include "../../Event.h"
 #include "../../Entities/ServerEnemyController.h"
 #include <typeinfo>
@@ -21,12 +20,10 @@
 
 using namespace Manager;
 
-Animation *gkAnimation;
-
 
 // bug fix by Sanders Lee
-GateKeeper::GateKeeper(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
-VEntity(sprite, map, x, y, ctrl, h, w)
+Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
+GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
     _range = 10;
     _health = 100;
@@ -56,7 +53,7 @@ VEntity(sprite, map, x, y, ctrl, h, w)
 
 }
 
-GateKeeper::~GateKeeper()
+Minion::~Minion()
 {
     footstep.stop();
 }
@@ -66,7 +63,7 @@ GateKeeper::~GateKeeper()
 --				Sanders Lee (Debugged synchronization problem across clients,
 --                           Added sound for GateKeeper travel)
 ***/
-void GateKeeper::onUpdate(float deltaTime)
+void Minion::onUpdate(float deltaTime)
 {
   //Perform the generic gatekeeper animation
   animate();
@@ -134,7 +131,7 @@ void GateKeeper::onUpdate(float deltaTime)
           movingDown = false;
         }
 
-        playSound(newXSpeed, newYSpeed);
+        //playSound(newXSpeed, newYSpeed);
 
     		break;
     }
@@ -151,7 +148,7 @@ void GateKeeper::onUpdate(float deltaTime)
 
 }
 
-void GateKeeper::playSound(float xSpeed, float ySpeed)
+void Minion::playSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;
@@ -200,7 +197,7 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
   }//*/
 }
 
-void GateKeeper::animate()
+void Minion::animate()
 {
   if (isMoving())
     gkAnimation->step(1);
@@ -208,99 +205,99 @@ void GateKeeper::animate()
     gkAnimation->step(5);
 }
 
-bool GateKeeper::isMoving()
+bool Minion::isMoving()
 {
   return (movingLeft || movingRight || movingUp || movingDown);
 }
 
-void GateKeeper::setRange(int r)
+void Minion::setRange(int r)
 {
   _range = r;
 }
 
-void GateKeeper::setHealth(int h)
+void Minion::setHealth(int h)
 {
   _health = h;
 }
 
-void GateKeeper::setAttack(int a)
+void Minion::setAttack(int a)
 {
   _attack = a;
 }
 
-void GateKeeper::setAttackSpeed(int as)
+void Minion::setAttackSpeed(int as)
 {
   _attackSpeed == as;
 }
 
 
-void GateKeeper::setXSpeed(float x)
+void Minion::setXSpeed(float x)
 {
   _xSpeed = x;
 }
 
-void GateKeeper::setYSpeed(float y)
+void Minion::setYSpeed(float y)
 {
   _ySpeed = y;
 }
 
-void GateKeeper::setSpeed(int _speed)
+void Minion::setSpeed(int _speed)
 {
     _xSpeed = _speed;
     _ySpeed = _speed;
 }
 
-int GateKeeper::getSpeed()
+int Minion::getSpeed()
 {
 	return _xSpeed;
 }
 
-int GateKeeper::getRange()
+int Minion::getRange()
 {
   return _range;
 }
 
-int GateKeeper::getHealth()
+int Minion::getHealth()
 {
   return _health;
 }
 
-int GateKeeper::getAttack()
+int Minion::getAttack()
 {
   return _attack;
 }
 
-int GateKeeper::getAttackSpeed()
+int Minion::getAttackSpeed()
 {
   return _attackSpeed;
 }
 
-int GateKeeper::getMovementSpeed()
+int Minion::getMovementSpeed()
 {
   return _movementSpeed;
 }
 
-void GateKeeper::turn()
+void Minion::turn()
 {
 
 }
 
-void GateKeeper::onCreate()
+void Minion::onCreate()
 {
 
 }
 
-void GateKeeper::onDestroy()
+void Minion::onDestroy()
 {
 
 }
 
-void GateKeeper::stopAllSounds()
+void Minion::stopAllSounds()
 {
     footstep.stop();
 }
 
-bool GateKeeper::operator==(const VEntity&)
+bool Minion::operator==(const VEntity&)
 {
   return true;
 }
@@ -323,7 +320,7 @@ bool GateKeeper::operator==(const VEntity&)
 -- NOTES:
 -- This function provides a method for retrieving the Entity from the Creature.
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity *GateKeeper::getEntity()
+Entity *Minion::getEntity()
 {
     return this;
 }
