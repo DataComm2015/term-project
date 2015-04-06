@@ -195,7 +195,7 @@ void Vessel::onUpdate(float deltaTime)
             case ::Marx::SET_HEALTH:
             {
                 SetHealthEvent* ev = (SetHealthEvent*) (*it);
-                
+
                 setHealth(ev->getChange());
             }
 			case ::Marx::UPDATE:
