@@ -86,7 +86,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 		);
 
 	//scat_music = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.ogg"));
-	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.wav"));
+	//chick_sound = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/sound.ogg"));
 
 	cMap->setTexture(tilemap);
 
@@ -240,6 +240,13 @@ GameScene::~GameScene()
 	delete waterMap;
 }
 
+
+/**
+--
+--	PROGRAMMER: ???
+--				Sanders Lee (Fixed hearing center for sounds)
+--
+**/
 void GameScene::update(sf::Time t)
 {
 	checkBtns(t);
@@ -307,7 +314,7 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
+	sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
 
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*

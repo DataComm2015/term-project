@@ -7,7 +7,7 @@ sf::SoundBuffer* Manager::SoundManager::load(const std::string path)
 	sf::SoundBuffer *sb = new sf::SoundBuffer();
 	if(sb->loadFromFile(path))
 		return sb;
-	
+
 	return NULL;
 }
 

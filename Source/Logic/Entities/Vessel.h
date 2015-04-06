@@ -65,6 +65,7 @@
 #include "../../Engine/Controller.h"
 #include "../Creature.h"
 #include "../../Engine/TileManager.h"
+#include <SFML/Audio.hpp>
 
 #define MAX_LEVEL 10;
 
@@ -73,8 +74,13 @@ typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
+
 class Vessel : public Marx::VEntity, public Creature
 {
+	private:
+		sf::Sound footstep;
+		sf::Sound voice;
+
 	protected:
 		job_class jobClass;
 		int currentHealth;

@@ -134,14 +134,16 @@ Vessel* ServerEnemyController::detectVessels()
   float y1 = _currEntity->top;
 
   float x2, y2;
+  std::vector<Vessel*> *players = _servGameScene->getPlayerList();
+  int len = players->size();
 
-  for(int i = 0; i < _servGameScene->getPlayerList().size(); i++)
+  for(int i = 0; i < _servGameScene->getPlayerList()->size(); i++)
   {
-    x2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->left;
-    y2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->top;
+    x2 = (_servGameScene->getPlayerList()->at(i))->left;
+    y2 = (_servGameScene->getPlayerList()->at(i))->top;
 
-    if (getDistance(x1, y1, x2, y2) <= static_cast<GateKeeper*>(_currEntity)->getRange())
-      return static_cast<Vessel*>(_servGameScene->getPlayerList()[i]);
+    if (getDistance(x1, y1, x2, y2) <= _currEntity->getRange())
+      return (_servGameScene->getPlayerList()->at(i));
   }
 
   return NULL;

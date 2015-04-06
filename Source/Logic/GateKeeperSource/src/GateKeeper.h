@@ -12,6 +12,7 @@
 **	DESIGNER: 	Filip Gutica A00781910
 **
 **	PROGRAMMER: Filip Gutica A00781910
+**				Sanders Lee
 **
 ***********************************************************************************/
 
@@ -21,6 +22,8 @@
 #include "../../../Engine/Cell.h"
 #include "../../../Engine/Controller.h"
 #include "../../Creature.h"
+#include "../../../Engine/TileManager.h"
+#include "../../../Multimedia/manager/SoundManager.h"
 #include "../../../Multimedia/graphics/Animation.h"
 
 class GateKeeper : public Marx::VEntity, public Creature
@@ -80,11 +83,12 @@ class GateKeeper : public Marx::VEntity, public Creature
 		bool _moving;
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
+		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		SGO* _sprite;
 
-
 	private:
-
+		sf::Sound footstep;
+		sf::Sound voice;
 		//Player _target;
 		//PatrolRadius _radius;
 		//Timer _cooldownTimer;
