@@ -44,7 +44,8 @@ namespace Marx
         ATTACK,
         SK_ATTACK,
         UPDATE,
-        SET_HEALTH
+        SET_HEALTH,
+        SKILL
     };
 
     /*

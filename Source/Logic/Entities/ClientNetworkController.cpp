@@ -8,6 +8,7 @@
 #include "../NetworkEntityPairs.h"
 
 #include "../Event.h"
+#include "../Skills.h"
 
 #include <stdio.h>
 
@@ -149,6 +150,16 @@ void ClientNetworkController::parseEventMessage( Message& message )
             UpdateMessage *um = (UpdateMessage*) message.data;
             UpdateEvent *ev = new UpdateEvent(um->x, um->y);
             addEvent(ev);
+        }
+        case ::Marx::SKILL:
+        {
+            // turn network message back into skill event, and call addEvent()
+            skill* sk = ((skill*)message.data);
+            
+            SkillEvent *ev = new SkillEvent(sk->curX, sk->curY, sk->radius, sk->val, sk->st);
+            
+            addEvent(ev);
+            break;
         }
         default:
         {
