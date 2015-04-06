@@ -2,6 +2,7 @@
 #define LOGIC_EVENT_H_
 
 #include "../Engine/Event.h"
+#include "Skills.h"
 
 /*
  * move event message used to send move events over network
@@ -48,8 +49,6 @@ private:
 struct AttackMessage
 {
 	int srcid; // Entity id source
-    float srcx;
-    float srcy;
 	enum ActionType action; // Type of attack to take
 	int cellx; // Coordinates of the cell you're attacking.
 	int celly;
@@ -114,6 +113,30 @@ public:
 	float getChange();
 private:
 	float change;
+};
+
+class SkillEvent: public ::Marx::Event
+{
+    public:
+        SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType);
+        SkillEvent(const SkillEvent& other);
+        float getX();
+        void setX(float _x);
+        float getY();
+        void setY(float _y);
+        float getRadius();
+        void setRadius(float _radius);
+        int getValue();
+        void setValue(int _value);
+        SKILLTYPE getSkillType();
+        void setSkillType(SKILLTYPE _skillType);
+
+    private:
+        float x;
+        float y;
+        float radius;
+        int value;
+        SKILLTYPE skillType;
 };
 
 #endif

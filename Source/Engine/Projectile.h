@@ -39,7 +39,7 @@ namespace Marx
 			float _speed;
 			std::function<void(Entity*)> onHit;
 			sf::Vector2f heading;
-			sf::Time TimeToLive;
+			float TimeToLive;
 			Action * act;
 		public:
 			Projectile(SGO&, Map*, float, float, Action *, sf::Vector2f, Controller *, float, float);
@@ -47,12 +47,12 @@ namespace Marx
 			virtual void setSpeed(float);
 			virtual void onCreate();
 			virtual void onDestroy();
-			virtual void onUpdate(sf::Time);
+			virtual void onUpdate(float);
 			void setTarget(sf::Vector2f t);
 			void setCurrentPos(float x, float y );
 			void setAct(Action * act);
-			sf::Time getTTL();
-			void setTTL(sf::Time t);
+			float getTTL();
+			void setTTL(float t);
 			sf::Vector2f getVector();
 	};
 }

@@ -11,7 +11,9 @@
 #include "../Event.h"
 #include "../NetworkEntityPairs.h"
 #include "../ClientLobbyScene.h"
+#include "../MainMenuScene.h"
 
+#include "../ServerGameScene.h"
 #include "../../Network/Client.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntityMultiplexer.h"
@@ -23,20 +25,21 @@
 
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene* gameScene, ClientMux * client)
+CommandEntity::CommandEntity(int id, ClientMux * client)
     :NetworkEntity(id,(int)NetworkEntityPair::PLAYER_COMMAND)
-    ,_gameScene(gameScene)
 {
     clientmux = client;
-    _gameScene->addKeyListener(this);
-	_gameScene->addClickListener(this);
     playerMode = PLAYER_MODE::GHOST;
 }
 
 CommandEntity::~CommandEntity()
 {
-    _gameScene->rmKeyListener(this);
-	_gameScene->rmClickListener(this);
+}
+
+void CommandEntity::attachListeners()
+{
+    MainMenuScene::getGameScene()->addKeyListener(this);
+	MainMenuScene::getGameScene()->addClickListener(this);
 }
 
 PLAYER_MODE CommandEntity::getPlayerMode()
@@ -212,4 +215,24 @@ void CommandEntity::onUpdate(Message msg)
 PlayerLobbyChoices* CommandEntity::getLobbyOption()
 {
     return PLC;
+}
+
+void CommandEntity::SendSkill(float curX, float curY, int radius, int value, SKILLTYPE st)
+{
+	skill a;
+
+	a.curX = curX;
+	a.curY = curY;
+	a.radius = radius;
+	a.val = value;
+	a.st = st;
+
+  // put the command into a message to be sent over the network
+  Message msg;
+  msg.type = (int)PlayerCommandMsgType::SKILL;
+  msg.data = &a;
+  msg.len  = sizeof(a);
+
+  // send the command over the network
+  update(msg);
 }

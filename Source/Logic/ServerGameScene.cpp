@@ -50,6 +50,17 @@ ServerGameScene::~ServerGameScene()
 {
 	delete gMap;
 
+    for (int i = 0; i < enemyControllers.size(); i++)
+    {
+        delete (enemyControllers[i]);
+    }
+
+    for (int i = 0; i < playerList.size(); i++)
+    {
+        delete (playerList[i]->getController());
+        delete (playerList[i]);
+    }
+
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
@@ -76,9 +87,9 @@ void ServerGameScene::update(sf::Time time)
 
           for (int i = 0; i < playerList.size(); i++)
           {
-            Vessel* curVessel = playerList[i];
-            static_cast<ServerNetworkController*>(curVessel->getController())->
-                addEvent(new UpdateEvent(curVessel->left, curVessel->top));
+            //Vessel* curVessel = playerList[i];
+            //static_cast<ServerNetworkController*>(curVessel->getController())->
+              //addEvent(new UpdateEvent(curVessel->left, curVessel->top));
           }
 
           syncTimer = SYNC_INTERVAL;
@@ -124,6 +135,8 @@ void ServerGameScene::draw()
 
 void ServerGameScene::enterScene()
 {
+    printf("HELLO DARKNESS\n");
+
     worldSeed = rand();
     timer = GAME_ROUND_LENGTH_SECONDS;
     lobtimer = SCOREBOARD_LENGTH_SECONDS;
@@ -168,10 +181,10 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     ServerEnemyController *enemyController = new ServerEnemyController(behaviour, this);
     enemyControllers.push_back(enemyController);
 
-    Entity *entity = EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y);
+    GateKeeper *entity = static_cast<GateKeeper*>(EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
 
     enemies.push_back((Creature*)entity);
-    enemyController->setEntity(entity);
+    enemyController->setEntity((GateKeeper*)entity);
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
@@ -235,6 +248,7 @@ void ServerGameScene::createPlayers()
                 // create the controller, and bind it with the player
                 ServerNetworkController* cont = new ServerNetworkController();
                 currPlayer->setController(cont);
+                currPlayer->setSGameScene(this);
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
@@ -295,7 +309,7 @@ void ServerGameScene::createStructure(ENTITY_TYPES type, float x, float y)
 */
 }
 
-std::vector<Vessel*> ServerGameScene::getPlayerList()
+std::vector<Vessel*> *ServerGameScene::getPlayerList()
 {
-  return playerList;
+  return &playerList;
 }

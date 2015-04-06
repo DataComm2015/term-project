@@ -6,9 +6,8 @@
 #include "../../Network/Message.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
+#include "../Skills.h"
 #include "../Event.h"
-
-class ClientMux;
 
 class ClientMux;
 
@@ -33,12 +32,14 @@ struct PlayerLobbyChoices;
 class CommandEntity : public NetworkEntity, public KeyListener, public ClickListener
 {
     public:
-        CommandEntity(int id, GameScene *gameScene, ClientMux* client);
+        CommandEntity(int id, ClientMux* client);
         ~CommandEntity();
 
         PLAYER_MODE getPlayerMode();
         PlayerLobbyChoices* getLobbyOption();
+        void attachListeners();
         void notifyServerLobbySelections(PlayerLobbyChoices *selections);
+        void SendSkill(float curX, float curY, int radius, int value, SKILLTYPE skilltype);
 
     protected:
         virtual void onKeyPressed(int key);
@@ -51,7 +52,6 @@ class CommandEntity : public NetworkEntity, public KeyListener, public ClickList
     private:
         PlayerLobbyChoices *PLC;
         ClientMux* clientmux;
-        GameScene* _gameScene;
         PLAYER_MODE playerMode;
 };
 

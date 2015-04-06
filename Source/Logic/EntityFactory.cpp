@@ -17,6 +17,8 @@
 #include "Entities/Vessel.h"
 #include "Entities/Structure.h"
 
+#include <iostream>
+
 using Networking::Message;
 using Marx::Controller;
 using Marx::Entity;
@@ -96,12 +98,13 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
     {
         AttackMessage * ms = (AttackMessage *) msg->data;
 
-        std::cout << "MAKE ME AN ATTACK" << std::endl;
         sf::Vector2f v(ms->cellx, ms->celly);
-        Marx::AttackAction act(sf::seconds(10), 10.0f);
-	std::cout << "At: " << ms->srcx << " " << ms->srcy << std::endl;
-	std::cout << "To: " << v.x << " " << v.y << std::endl;
-        return new Marx::Projectile(projSGO, cMap, ms->srcx, ms->srcy, &act, v, cont, 1.0, 1.0);
+        Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
+
+        std::cout << action << std::endl;
+        Entity * e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ms->srcid))->getEntity();
+
+        return makeProjectile(cMap, e, action, v, 1.0f, 1.0f, cont);
 
     }
     else
@@ -152,8 +155,10 @@ Entity* EntityFactory::makeEntity(
     switch(type)
     {
         case ENTITY_TYPES::BASIC_TYPE:
+        {
             entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
             break;
+        }
         case ENTITY_TYPES::VESSEL:
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
@@ -206,4 +211,17 @@ Entity* EntityFactory::makeEntity(
     }
 
     return entity;
+}
+
+Projectile* EntityFactory::makeProjectile(
+    Marx::Map *  map,
+    Marx::Entity * entity,
+    Marx::Action * action,
+    sf::Vector2f & v,
+    float height,
+    float width,
+    Marx::Controller * cont = NULL)
+{
+    std::cout << "Map!" << std::endl;
+    return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }

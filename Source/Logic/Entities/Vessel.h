@@ -63,8 +63,9 @@
 #include "../../Engine/VEntity.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
-#include "../Creature.h"
 #include "../../Engine/TileManager.h"
+#include "../Creature.h"
+#include <SFML/Audio.hpp>
 
 #define MAX_LEVEL 10;
 
@@ -73,8 +74,13 @@ typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
+
 class Vessel : public Marx::VEntity, public Creature
 {
+	private:
+		sf::Sound footstep;
+		sf::Sound voice;
+
 	protected:
 		job_class jobClass;
 		int currentHealth;
@@ -99,17 +105,17 @@ class Vessel : public Marx::VEntity, public Creature
 		bool movingUp;
 	  bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
-		SGO &mask_sprite;
+		SGO mask_sprite;
 		SGO atk_sprite;
 		SGO satk_sprite;
-		SGO &weapon_sprite;
-		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
+		SGO weapon_sprite;
+		static id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
         float newXSpeed;
         float newYSpeed;
-		Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
+		Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 						Marx::Map * gmap,
 						float x,
 						float y,
@@ -154,7 +160,6 @@ class Vessel : public Marx::VEntity, public Creature
 		void resetSpeed();
 		void speedUp( int speed );
 		void speedDown( int speed );
-		int  getSpeed();
 		int  getDefaultSpeed();
 
 		bool checkDeath();
@@ -166,9 +171,12 @@ class Vessel : public Marx::VEntity, public Creature
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
 
-		virtual void setHealth(int health);
-		virtual int getHealth();
+        virtual int getHealth();
+        virtual void setHealth(int _health);
+        virtual int getSpeed();
+        virtual void setSpeed(int _speed);
 		virtual void setAttack(int attack);
+        virtual void stopAllSounds();
 		virtual Entity *getEntity();
 };
 

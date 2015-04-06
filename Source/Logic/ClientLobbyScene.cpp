@@ -1,7 +1,10 @@
 #include "ClientLobbyScene.h"
+#include "MainMenuScene.h"
 #include <iostream>
 #include <SFML/System/Time.hpp>
 #include "Entities/ClientMux.h"
+#include "Entities/CommandEntity.h"
+#include "../Multimedia/manager/SoundManager.h"
 
 using std::cout;
 using std::cerr;
@@ -9,6 +12,8 @@ using std::endl;
 using namespace Marx;
 
 using Networking::NetworkEntityMultiplexer;
+
+using namespace Manager;
 
 int ClientLobbyScene::vesselChoice;
 int ClientLobbyScene::deityChoice;
@@ -29,6 +34,7 @@ int ClientLobbyScene::currScrollHeight;
 -- DESIGNER: Calvin Rempel, Alex Lam and Michael Chimick
 --
 -- PROGRAMMER: Calvin Rempel, Alex Lam and Michael Chimick
+--             Sanders Lee (Added title call)
 --
 -- INTERFACE: ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 --
@@ -121,6 +127,10 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     playerBox->text().setScale(0.7, 0.7);
     playerBox->toggleSelected(false);
     playerBox->text().setFont(*font);
+
+    sf::Vector2f soundPos;
+    id_resource titleSound = SoundManager::store(SoundManager::load("Assets/Sound/Announcer/title.ogg"));
+    title = SoundManager::play(titleSound, soundPos);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -162,6 +172,7 @@ ClientLobbyScene::~ClientLobbyScene()
 -- DESIGNER: Alex Lam and Michael Chimick
 --
 -- PROGRAMMER: Alex Lam and Michael Chimick
+--             Sanders Lee (Added title call)
 --
 -- INTERFACE: void ClientLobbyScene::onLoad()
 --
@@ -173,6 +184,12 @@ ClientLobbyScene::~ClientLobbyScene()
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLoad()
 {
+    // Delete GameScene everytime player enters the lobby
+    MainMenuScene::clearGameScene();
+    MainMenuScene::getGameScene();
+    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->getCommandEntity()->attachListeners();
+
+    title.play();
     clck.restart();
 
     /* Set btntest positions */
@@ -215,14 +232,15 @@ void ClientLobbyScene::onLoad()
 --
 -- DESIGNER: Alex Lam and Michael Chimick
 --
--- PROGRAMMER: Alex Lam and Michael Chimick
+-- PROGRAMMER: Alex Lam, Michael Chimick and Melvin Loho
 --
 -- INTERFACE: void ClientLobbyScene::update(sf::Time t)
 --
 -- RETURNS: void
 --
 -- NOTES:
--- updates buttons
+-- Updates buttons
+-- Updates timer if countdown is ongoing
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::update(sf::Time t)
 {
@@ -253,6 +271,39 @@ void ClientLobbyScene::update(sf::Time t)
         speed = speed/1.5;
       }
     }
+
+    if(currScrollHeight < MAX_SCROLL * 100 / 6)
+    {
+        sf::Time scrollTime = clck.getElapsedTime();
+        currScrollHeight = scrollTime.asMilliseconds();
+
+    }
+
+    //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));// + currScrollHeight * 6 / 100);
+
+    deityVitalitySGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
+    deityDemiseSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
+
+    playerTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6) - 48, SCN_HEIGHT / 3 - 48 - VESSEL_ART_H + total_movement);
+    playerThreeSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6) + 48, SCN_HEIGHT / 3 - 48 - VESSEL_ART_H + total_movement);
+    playerFourSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - 128 - VESSEL_ART_H + total_movement);
+
+    playerTwoShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 50, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 58 + total_movement);
+    playerThreeShadowSGO->sprite().setPosition((SCN_WIDTH / 2) + 46, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 58 + total_movement);
+    playerFourShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 2, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 138 + total_movement);
+
+
+    vesselOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
+    vesselTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
+
+    vesselShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 2, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 10 + total_movement);
+
+    if (timego)
+    {
+        countdownBox->setText(std::to_string((int)currentTime) + " SECONDS UNTIL THE MATCH" );
+    }
+
+    playerBox->setText(std::to_string(playerCount) + " PLAYER(S)");
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -284,8 +335,6 @@ void ClientLobbyScene::processEvents(sf::Event& e)
 		AppWindow::getInstance().close();
 	}
 
-
-
     countdownBox->process(e);
 }
 
@@ -298,7 +347,7 @@ void ClientLobbyScene::processEvents(sf::Event& e)
 --
 -- DESIGNER: Alex Lam and Michael Chimick
 --
--- PROGRAMMER: Alex Lam and Michael Chimick
+-- PROGRAMMER: Alex Lam, Michael Chimick and Melvin Loho
 --
 -- INTERFACE: void ClientLobbyScene::draw()
 --
@@ -307,7 +356,6 @@ void ClientLobbyScene::processEvents(sf::Event& e)
 -- NOTES:
 -- Renders the buttons, textboxes and sprites
 -- Creates border around currently selected buttons
--- Updates timer if countdown is ongoing
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::draw()
 {
@@ -320,42 +368,7 @@ void ClientLobbyScene::draw()
     renderer.begin();
 
     //Background has to go first
-
-    if(currScrollHeight < MAX_SCROLL * 100 / 6)
-    {
-        sf::Time scrollTime = clck.getElapsedTime();
-        currScrollHeight = scrollTime.asMilliseconds();
-
-    }
-
-    //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));// + currScrollHeight * 6 / 100);
-
-    deityVitalitySGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
-    deityDemiseSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H + total_movement);
-
-    playerTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6) - 48, SCN_HEIGHT / 3 - 48 - VESSEL_ART_H + total_movement);
-    playerThreeSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6) + 48, SCN_HEIGHT / 3 - 48 - VESSEL_ART_H + total_movement);
-    playerFourSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - 128 - VESSEL_ART_H + total_movement);
-
-    playerTwoShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 50, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 58 + total_movement);
-    playerThreeShadowSGO->sprite().setPosition((SCN_WIDTH / 2) + 46, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 58 + total_movement);
-    playerFourShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 2, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 138 + total_movement);
-
-
-    vesselOneSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
-    vesselTwoSGO->sprite().setPosition((SCN_WIDTH / 2) - (VESSEL_ART_W / 6), SCN_HEIGHT / 3 - VESSEL_ART_H +total_movement);
-
-    vesselShadowSGO->sprite().setPosition((SCN_WIDTH / 2) - 2, SCN_HEIGHT / 3 - (VESSEL_ART_H / 3) - 10 + total_movement);
-
-
     renderer.draw(background);
-
-    if (timego)
-    {
-        countdownBox->setText(std::to_string((int)currentTime) + " SECONDS UNTIL THE MATCH" );
-    }
-
-    playerBox->setText(std::to_string(playerCount) + " PLAYER(S)");
 
     // draw the objects
     renderer.draw(background);

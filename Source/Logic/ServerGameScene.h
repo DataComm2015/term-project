@@ -1,3 +1,4 @@
+
 #ifndef SERVER_GAME_SCENE_H_
 #define SERVER_GAME_SCENE_H_
 
@@ -45,7 +46,7 @@ class ServerGameScene : public Scene
         void createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y);
         void createStructure(ENTITY_TYPES type, float x, float y);
 
-        std::vector<Vessel*> getPlayerList();
+        std::vector<Vessel*> *getPlayerList();
 
     private:
         SGO gkSGO;

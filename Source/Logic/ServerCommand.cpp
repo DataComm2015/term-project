@@ -22,12 +22,19 @@ using Networking::Session;
 
 ServerCommand::ServerCommand()
 {
-    gameScene = new ServerGameScene(this);
+    gameScene = NULL;
     lobbyScene = new ServerLobbyScene(this);
     gameState = new ServerGameState(this);
     goToLobby();
 }
-
+/**
+ * @brief ServerCommand::onConnect
+ * When a new client connects, this handles adding them to
+ * the game
+ * @param session   session that connected
+ *
+ * @author Calvin Rempel, Jeff Bayntun
+ */
 void ServerCommand::onConnect(Session* session)
 {
     // create an entity that the new connection can use to communicate
@@ -58,7 +65,12 @@ void ServerCommand::onConnect(Session* session)
     else
     {
         player->setMode(PLAYER_MODE::GHOST);
-        gameState->goToGame(gameScene->getWorldSeed());
+        Message fake_lobby;
+        fake_lobby.type = (int)ServerGameStateClientGameStateMsgType::FAKE_LOBBY;
+        fake_lobby.data = (void*) session;
+        fake_lobby.len = strlen((char*)fake_lobby.data);
+
+        gameState->update(fake_lobby);
     }
 
 }
@@ -112,6 +124,8 @@ void ServerCommand::prepareForGameState()
 
 void ServerCommand::goToGame()
 {
+    if (!isGameInProgress())
+        gameScene = new ServerGameScene(this);
     activeScene = gameScene;
     gameScene->enterScene();
 }

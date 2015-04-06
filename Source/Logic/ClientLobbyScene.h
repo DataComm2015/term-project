@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../Engine/Scene.h"
 #include "../AppWindow.h"
 #include "../Engine/TextureManager.h"
@@ -144,6 +145,8 @@ class ClientLobbyScene : public Scene
         GameScene * gameScene;
         ClientMux * clientMux;
         PlayerLobbyChoices playerSelections;
+
+        sf::Sound title;
 };
 
 #endif

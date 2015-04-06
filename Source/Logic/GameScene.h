@@ -80,6 +80,7 @@ class GameScene : public Scene
 		void generateUI();
 		void positionUI();
 		void setPlayerVessel(Vessel *vessel);
+        void stopAllSounds();
 
 
 		friend void onClickVitalityOne();
@@ -102,35 +103,31 @@ class GameScene : public Scene
 		Renderer renderer;
 		sf::View viewMain;
 		sf::View viewUI;
+		sf::View viewMinimap;
+		sf::RectangleShape minimapBorder;
 
 		// Resources
 
-		id_resource tilemap;
-		id_resource championSprite;
-		id_resource maskSprite;
-		id_resource wepSprite;
+		static id_resource tilemap;
 
-		id_resource hbarSprite;
-		id_resource hbgSprite;
-		id_resource scat_music;
-		id_resource chick_sound;
-		id_resource placeholderSprite;
+		static id_resource hbarSprite;
+		static id_resource hbgSprite;
 
-		id_resource butSprite;
-		id_resource demiseBtn;
-		id_resource vitalityBtn;
-		id_resource warriorBtn;
-		id_resource shamanBtn;
+		static id_resource butSprite;
+		static id_resource demiseBtn;
+		static id_resource vitalityBtn;
+		static id_resource warriorBtn;
+		static id_resource shamanBtn;
 
 		//VITALITY
-		id_resource buffskillbtn;
-		id_resource healskillbtn;
-		id_resource healingcircleskillbtn;
+		static id_resource buffskillbtn;
+		static id_resource healskillbtn;
+		static id_resource healingcircleskillbtn;
 
 		//DEMISE
-		id_resource debuffskillbtn;
-		id_resource hurtskillbtn;
-		id_resource summonskillbtn;
+		static id_resource debuffskillbtn;
+		static id_resource hurtskillbtn;
+		static id_resource summonskillbtn;
 
 		sf::Shader waveShader;
 		float phase;
@@ -147,9 +144,6 @@ class GameScene : public Scene
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
-		GUI::Button *b4;
-		GUI::Button *b5;
-		GUI::Button *b6;
 		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
 		GUI::TextBox *levelInd;
@@ -164,10 +158,6 @@ class GameScene : public Scene
 		sf::Sound current;
 
 		// tech demos:
-
-		SGO placeHolderSGO;
-		TheSpinner *s;
-		TheSpinner *s2;
 		sf::Vector2f butSize;
 		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
 

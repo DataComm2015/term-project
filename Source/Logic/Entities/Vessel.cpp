@@ -3,13 +3,15 @@
 #include <cmath>
 #include "Vessel.h"
 #include "../Event.h"
+#include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
 
 using namespace Manager;
 
-
-sf::Sound footstep;
-sf::Sound voice;
+id_resource Vessel::grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
+id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
+id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
+id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
 //TO DO:
 //1) GIVE IT A SPRITE
@@ -24,7 +26,6 @@ sf::Sound voice;
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
---
 -- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
@@ -37,7 +38,7 @@ sf::Sound voice;
 -- NOTES:
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
-Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
+Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		Marx::Map * gmap,
 		float x,
 		float y,
@@ -70,14 +71,14 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	xPos = x;
 	yPos = y;
 
+    newYSpeed = 0;
+    newXSpeed = 0;
+
 	servX = 0;
 	servY = 0;
 
 	myX = 0;
 	myY = 0;
-
-	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
-	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
 
 	//abilities = abilityList;
 /*
@@ -126,7 +127,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 /*-------------------------------------------
 --
 -- PROGRAMMER:  ???
---				Sanders Lee (Debugged synchronization problem across clients)
+--				Sanders Lee (Debugged synchronization problem across clients,
+--							 Added sound for walking)
 --
 -- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
@@ -153,28 +155,28 @@ void Vessel::onUpdate(float deltaTime)
 
 				// set position to last known position on server to avoid
 				// sync problems across the clients
-	      		Entity::aMove(ev->getX(), ev->getY(), false);
-				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
+	      Entity::aMove(ev->getX(), ev->getY(), false);
+			//	printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)
 				{
 					newYSpeed -= ySpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (yDir == 1)
 				{
 					newYSpeed += ySpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving down\n");
 				}
 				else if (xDir == 1)
 				{
 					newXSpeed += xSpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving right\n");
 				}
 				else if (xDir == -1)
 				{
 					newXSpeed -= xSpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving left\n");
 				}
 
 
@@ -185,6 +187,7 @@ void Vessel::onUpdate(float deltaTime)
 				AttackEvent* aev = (AttackEvent*) (*it);
 				std::cout << "ATTACK" << std::endl;
 				createAttack(*aev, atk_sprite, left, top);
+                break;
 			}
 			case ::Marx::SK_ATTACK:
 			{
@@ -192,12 +195,14 @@ void Vessel::onUpdate(float deltaTime)
 				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
 				std::cout << "ATTACK" << std::endl;
 				createSkAttack(*saev, satk_sprite, left, top);
+                break;
 			}
             case ::Marx::SET_HEALTH:
             {
                 SetHealthEvent* ev = (SetHealthEvent*) (*it);
-                
+
                 setHealth(ev->getChange());
+                break;
             }
 			case ::Marx::UPDATE:
 			{
@@ -209,6 +214,32 @@ void Vessel::onUpdate(float deltaTime)
 				servY = ev->_y;
 
 				Entity::aMove(ev->_x, ev->_y, false);
+                break;
+			}
+			case ::Marx::SKILL:
+			{
+				// process the skill event, and increase/decrease hp and stuff
+				SkillEvent *ev = (SkillEvent*)(*it);
+				
+				switch(ev->getSkillType())
+				{
+					case SKILLTYPE::HEAL:
+						currentHealth += ev->getValue();
+					break;
+					case SKILLTYPE::DMG:
+						currentHealth -= ev->getValue();
+					break;
+					case SKILLTYPE::BUFF:
+						xSpeed += ev->getValue();
+						ySpeed += ev->getValue();
+					break;
+					case SKILLTYPE::DEBUFF:
+						xSpeed -= ev->getValue();
+						ySpeed -= ev->getValue();
+					break;
+				}
+				
+				break;
 			}
 		}
 	}
@@ -236,7 +267,11 @@ void Vessel::onUpdate(float deltaTime)
 	// Sounds for walking:
 	// first get the tile type we're walking on
 	Cell* footstepTile = *getCell().begin();
-	sf::Vector2f soundPos;
+	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's player character's
+	 															 // footsteps from fading & being off-center
+	footstep.setMinDistance(3.0);
+
 	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
 	{
 		// we need the extra soundActive boolean to make sure we're not playing a new
@@ -315,6 +350,8 @@ void Vessel::draw(Renderer& renderer, sf::RenderStates states) const
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::~Vessel()
 {
+    footstep.stop();
+
 	if( abilities != NULL )
 		delete[] abilities;
 }
@@ -580,6 +617,12 @@ void Vessel::increaseHP( int hp )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::decreaseHP( int hp )
 {
+	sf::Vector2f soundPos(left, top);
+	voice.stop();
+	voice = SoundManager::play(hurtSound, soundPos);
+	voice.setLoop(true);
+	voice.play();
+
 	currentHealth -= hp;
 	if( currentHealth < 0 )
 	{
@@ -796,29 +839,6 @@ void Vessel::speedDown( int speed )
 {
 	if( travelSpeed > 1 )
 		speed--;
-}
-
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getSpeed
---
--- DATE:
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER:	Sanders Lee
---
--- PROGRAMMER:	Sanders Lee
---
--- INTERFACE: int Vessel::getSpeed()
---
--- RETURNS: current speed as an integer
---
--- NOTES:
--- This function returns the current speed the Vessel has
-----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getSpeed()
-{
-    return travelSpeed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -1087,6 +1107,16 @@ void Vessel::setHealth(int health)
         currentHealth = maxHealth;
 }
 
+void Vessel::setSpeed(int _speed)
+{
+	travelSpeed = _speed;
+}
+
+int Vessel::getSpeed()
+{
+	return travelSpeed;
+}
+
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getHealth
 --
@@ -1133,6 +1163,29 @@ int Vessel::getHealth()
 void Vessel::setAttack(int attack)
 {
     attackPower = attack;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: stopAllSounds
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: void stopAllSounds()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Stops all sounds played by the vessel
+----------------------------------------------------------------------------------------------------------------------*/
+void Vessel::stopAllSounds()
+{
+    footstep.stop();
 }
 
 /*------------------------------------------------------------------------------------------------------------------

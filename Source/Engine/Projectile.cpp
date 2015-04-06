@@ -1,11 +1,18 @@
- #include "Projectile.h"
+#include "Projectile.h"
+#include "Event.h"
 #include <iostream>
+#include <cmath>
+#include <map>
+#include <SFML/System/Vector2.hpp>
 
 using namespace Marx;
 
 Projectile::Projectile(SGO &_sprite, Map *map, float x, float y, Action * _act, sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0) :
 	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
+    std::cout << act << std::endl;
+    float hy = hypot( vector.x , vector.y );
+    heading = sf::Vector2f(vector.x / hy, vector.y / hy);
 	_speed = 0;
 }
 
@@ -38,25 +45,43 @@ void Projectile::onCreate()
 
 void Projectile::onDestroy()
 {
-	setCurrentPos(-1, -1);
+    getController()->addEvent(new MoveEvent(-1, -1, 1, 1, true));
 	drawable = false;
 
 	Manager::ProjectileManager::enqueue(this);
 }
 
 
-void Projectile::onUpdate(sf::Time t)
+void Projectile::onUpdate(float t)
 {
-	std::cout << "Update Projectile" << std::endl;
-	if(TimeToLive > sf::seconds(0))
-	{
-		act->onUpdate(this, t);
-		TimeToLive -= t;
-	}
-	else
-	{
+    if(TimeToLive > 0.0f)
+    {
+		if(top = -1)
+			return;
+        act->onUpdate(this, t);
+        //std::cout << "X: " << left << "Y: " << top << "TimeToLive: " << TimeToLive << " Time Removed: " << t << std::endl;
+        TimeToLive -= t;
+    }
+    else
+    {
         onDestroy();
-	}
+    }
+
+    // Process events.
+    std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+    for(std::vector<Marx::Event*>::iterator it = eventQueue->begin(); it != eventQueue->end(); ++it )
+    {
+            switch((*it)->type)
+            {
+                case ::Marx::MOVE:
+                    MoveEvent * ev = static_cast<MoveEvent*>(*it);
+                    sf::Vector2f vec(ev->getX(), ev->getY());
+                    rMove( vec, t, true );
+
+            }
+    }
+
+
 }
 
 void Projectile::setTarget(sf::Vector2f t)
@@ -72,18 +97,18 @@ void Projectile::setCurrentPos(float x, float y )
 
 void Projectile::setAct(Action * act)
 {
-	act = act;
-	TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
+    TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
 }
 
-sf::Time Projectile::getTTL() 
+float Projectile::getTTL()
 {
 	return TimeToLive;
 }
 
-void Projectile::setTTL(sf::Time t) 
-{ 
-	TimeToLive = t; 
+
+void Projectile::setTTL(float t)
+{
+	TimeToLive = t;
 }
 
 sf::Vector2f Projectile::getVector()

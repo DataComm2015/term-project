@@ -543,6 +543,30 @@ void ServerGameState::unregisterFromAllPlayers(Networking::NetworkEntity *entity
         itr++;
     }
 }
+/**
+ * @brief ServerGameState::update
+ *  This overrides NetworkEntity on update so that if a player joins after,
+ *  they can be send to a fake lobby, but are then picked up by the game the
+ *  next round.
+ *
+ * @param message
+ * message to send
+ * @author  Jeff Bayntun
+ * @designer Jeff Bayntun
+ */
+void ServerGameState::update( Message message )
+{
+    if(message.type == (int)ServerGameStateClientGameStateMsgType::FAKE_LOBBY)
+    {
+        Session* session = (Session*) message.data;
+        std::set<Session*> mySet;
+        mySet.insert(session);
+        mux->update(id, mySet, message);
+        return;
+    }
+    NetworkEntity::update(message);
+
+}
 
 
 

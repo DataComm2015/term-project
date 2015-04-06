@@ -5,6 +5,7 @@
 
 #include "../GameScene.h"
 #include "../ClientLobbyScene.h"
+#include "../MainMenuScene.h"
 #include "../Event.h"
 #include "../NetworkEntityPairs.h"
 
@@ -46,10 +47,9 @@ using Networking::Client;
 --                  instance variables, and calls the {NetworkEntity} base
 --                  constructor.
 ------------------------------------------------------------------------------*/
-ClientGameState::ClientGameState(int id, CommandEntity *command, GameScene* gameScene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
+ClientGameState::ClientGameState(int id, CommandEntity *command, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
     : NetworkEntity(id,(int)NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE)
     , _lobbyScene(lobbyScene)
-    , _gameScene(gameScene)
     , _scoreScene(scoreScene)
     , command(command)
 {
@@ -143,14 +143,22 @@ void ClientGameState::onUpdate(Message msg)
             // go to the game scene, generating it with the seed sent from the
             // server
             AppWindow::getInstance().removeScene(1);
-            _gameScene->generateMap(*((int*) msg.data));
-            AppWindow::getInstance().addScene(_gameScene);
+            MainMenuScene::getGameScene()->generateMap(*((int*) msg.data));
+            AppWindow::getInstance().addScene(MainMenuScene::getGameScene());
             break;
 
         /*
          * indicates to the client to display the Lobby scene.
          */
         case ServerGameStateClientGameStateMsgType::START_LOBBY_SCENE:
+            AppWindow::getInstance().removeScene(1);
+            AppWindow::getInstance().addScene(_lobbyScene);
+            break;
+
+        /*
+         * indicates to the client to display the fake lobby.
+         */
+        case ServerGameStateClientGameStateMsgType::FAKE_LOBBY:
             AppWindow::getInstance().removeScene(1);
             AppWindow::getInstance().addScene(_lobbyScene);
             break;
@@ -186,6 +194,7 @@ void ClientGameState::onUpdate(Message msg)
             break;
 
         case ServerGameStateClientGameStateMsgType::START_SCORE_SCENE:
+            MainMenuScene::getGameScene()->stopAllSounds();
             memcpy(_scoreScene->data_received, msg.data, sizeof(Player) * 12);  
             AppWindow::getInstance().removeScene(1);
             AppWindow::getInstance().addScene(_scoreScene);
