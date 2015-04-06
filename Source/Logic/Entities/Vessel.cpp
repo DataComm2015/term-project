@@ -85,52 +85,9 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	myX = 0;
 	myY = 0;
 
-	//abilities = abilityList;
-/*
-	//class-specific instantiation
-	if ( jobClass == WARRIOR )			//warrior
-	{
-		currentHealth = 150;
-		maxHealth = 150;
-		travelSpeed = 2;
-		//Weapon = Spear;
-	}
-	else if ( jobClass == SHAMAN )		//shaman
-	{
-		currentHealth = 75;
-		maxHealth = 75;
-		travelSpeed = 6;
-		//weapon = Fireball;
-	}
-	else if ( jobClass == HUNTER )		//Hunter
-	{
-		currentHealth = 100;
-		maxHealth = 100;
-		travelSpeed = 6;
-		//weapon = Javelin;
-	}
-	else if ( jobClass == SCOUT ) 		//Scout
-	{
-		currentHealth = 125;
-		maxHealth = 125;
-		travelSpeed = 7;
-		//weapon = Sword;
-	}
-	else if (jobClass == TEGUH) 		//TEGUH
-	{
-		currentHealth = 4242;
-		maxHealth = 424242;
-		travelSpeed = 42;
-		//weapon = BOWL_OF_LAKSA;
-	}*/
-
-	//Animation *runAnim;
-	//Animation *runAnim_mask;
-	//Animation *runAnim_wep;
-
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 7);
-	runAnim_mask = new Animation(&_mask, sf::Vector2i(32, 32), 8, 7);
-	runAnim_wep = new Animation(&_weapon, sf::Vector2i(32, 32), 8, 7);
+	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 7);
+	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 7);
 
 	this->add(mask_sprite);
   this->add(weapon_sprite);
