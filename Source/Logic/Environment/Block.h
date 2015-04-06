@@ -43,7 +43,7 @@ enum CellTile {
 	STONE_TL, STONE_T1, STONE_T2, STONE_TR,
 	STONE_L1, STONE_D1, STONE_1, STONE_R1,
 	STONE_L2, STONE_D2, STONE_D3, STONE_R2,
-	STONE_BL, STONE_B1, STONE_B2, STONE_BR, 
+	STONE_BL, STONE_B1, STONE_B2, STONE_BR,
 
 	ARBITER_TL, ARBITER_T1, ARBITER_T2, ARBITER_TR,
 	ARBITER_L1, ARBITER_D1, ARBITER_1, ARBITER_R1,
@@ -77,7 +77,7 @@ class Block
 		BlockZone getZone();
 
 		char operator()();
-		
+
 	private:
 		BlockType type;
 		BlockZone zone;
