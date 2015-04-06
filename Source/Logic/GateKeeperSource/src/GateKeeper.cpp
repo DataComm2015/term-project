@@ -39,13 +39,14 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
     soundActive = false;
 
+
     srand (time(NULL));
 
     int randDirection = (rand() % 3) - 1;
 
     //getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(_sprite, sf::Vector2i(40, 40), 16, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
 }
 
 GateKeeper::~GateKeeper()

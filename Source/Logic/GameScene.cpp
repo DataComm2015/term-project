@@ -759,7 +759,7 @@ SKILLTYPE
 	1 = -DEBUFF/+BUFF
 
 */
-void onClickVitalityOne() //healskillbtn
+/*void onClickVitalityOne() //healskillbtn
 {
 	sf::View vm;
 	vm = AppWindow::getInstance().getCurrentView();
@@ -802,4 +802,4 @@ void onClickDemiseTwo() //debuffskillbtn
 void onClickDemiseThree() //summonskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
-}
+}*/
