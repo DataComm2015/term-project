@@ -52,7 +52,7 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
     }
 
-    _sprite = sprite;
+    _sprite = &sprite;
 
     _sprite->sprite().setScale(randDirection, 1);
 
