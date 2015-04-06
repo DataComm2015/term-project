@@ -28,7 +28,7 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
 {
     public:
         Message message;
-        ClientMux(GameScene* scene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
+        ClientMux(ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
         virtual ~ClientMux();
         virtual NetworkEntity* onRegister(int id, int entityType,
             Session* session, Message msg);
@@ -39,10 +39,6 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
          * pointer to the {Session} instance.
          */
         Session *session;
-        /**
-         * pointer to the singleton {GameScene} instance.
-         */
-        GameScene* _gameScene;
         /**
          * pointer to the singleton {ClientLobbyScene} instance.
          */

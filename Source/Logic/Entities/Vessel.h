@@ -105,17 +105,17 @@ class Vessel : public Marx::VEntity, public Creature
 		bool movingUp;
 	  bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
-		SGO &mask_sprite;
+		SGO mask_sprite;
 		SGO atk_sprite;
 		SGO satk_sprite;
-		SGO &weapon_sprite;
-		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
+		SGO weapon_sprite;
+		static id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
         float newXSpeed;
         float newYSpeed;
-		Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
+		Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 						Marx::Map * gmap,
 						float x,
 						float y,
@@ -176,6 +176,7 @@ class Vessel : public Marx::VEntity, public Creature
         virtual int getSpeed();
         virtual void setSpeed(int _speed);
 		virtual void setAttack(int attack);
+        virtual void stopAllSounds();
 		virtual Entity *getEntity();
 };
 

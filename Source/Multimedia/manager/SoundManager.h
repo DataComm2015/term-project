@@ -21,6 +21,7 @@ namespace Manager
 	{
 		public:
 			static ResourceManager<sf::SoundBuffer*> rm;
+            static bool disabled;
 
 			/**
 			* Loads sound from the specified file.
