@@ -2,6 +2,7 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
+#include "../Skills.h"
 #include "../../Engine/Entity.h"
 #include <stdio.h>
 #include <cstring>
@@ -133,7 +134,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
             // parse move event into move message
             MoveMessage mm;
-            printf("entity server x, y: %f %f\n", getEntity()->left, getEntity()->top);
+            //printf("entity server x, y: %f %f\n", getEntity()->left, getEntity()->top);
             mm.x      = getEntity()->left;
             mm.y      = getEntity()->top;
             mm.xDir   = me->getXDir();
@@ -168,10 +169,31 @@ void ServerNetworkController::sendEventMessage(Event *event)
 			message.len = sizeof(AttackMessage);
 			message.type = ::Marx::ATTACK;
 
-			// send the network event
-			update(message);
-			break;
-		}
+            // send the network event
+            update(message);
+            break;
+        }
+        case ::Marx::SKILL:
+        {
+            // change event back into a network message, and call update
+            SkillEvent* sv = (SkillEvent*)event;
+            
+            skill a;
+            
+            a.curX = sv->getX();
+            a.curY = sv->getY();
+            a.radius = sv->getRadius();
+            a.val = sv->getValue();
+            a.st = sv->getSkillType();
+            
+            Message msg;
+            msg.type = ::Marx::SKILL;
+            msg.data = &a;
+            msg.len  = sizeof(a);
+            
+            
+            break;
+        }
 		case ::Marx::SK_ATTACK:
 		{
 			// cast event to event subclass
@@ -316,7 +338,7 @@ void ServerNetworkController::onUpdate(Message msg)
 		}
 		case PlayerCommandMsgType::START_ATT_COMMAND:
 		{
-            printf("Starting attack");
+            //printf("Starting attack");
 			AttackMessage *mesg = (AttackMessage*) msg.data;
 			AttackEvent *aevent = new AttackEvent(mesg->srcid, mesg->action, mesg->cellx, mesg->celly);
 			addEvent(aevent);
@@ -324,7 +346,7 @@ void ServerNetworkController::onUpdate(Message msg)
 		}
 		case PlayerCommandMsgType::START_SK_ATT_COMMAND:
 		{
-            printf("Starting attack");
+            //printf("Starting attack");
 			SkillAttackMessage *smesg = (SkillAttackMessage*) msg.data;
 			SkillAttackEvent *saevent = new SkillAttackEvent(smesg->srcid, smesg->action, smesg->destx, smesg->desty);
 			addEvent(saevent);

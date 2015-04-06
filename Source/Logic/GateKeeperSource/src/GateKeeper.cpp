@@ -39,6 +39,10 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
+    srand (time(NULL));
+
+    int randDirection = (rand() % 3) - 1;
+
     // sound set loaded should be determined by enemy type
     if (_type == 1) // if (_type == BEE )
     {
@@ -49,6 +53,8 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     }
 
     _sprite = &sprite;
+
+    _sprite->sprite().setScale(randDirection, 1);
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
 
@@ -90,10 +96,14 @@ void GateKeeper::onUpdate(float deltaTime)
         if (yDir < 0)
         {
           newYSpeed = -_ySpeed;
+          int randDirection = (rand() % 3) - 1;
+          _sprite->sprite().setScale(randDirection, 1);
         }
         else
         {
           newYSpeed = _ySpeed;
+          int randDirection = (rand() % 3) - 1;
+          _sprite->sprite().setScale(randDirection, 1);
         }
 
         if (xDir > 0)
@@ -127,7 +137,10 @@ void GateKeeper::onUpdate(float deltaTime)
 	// first get the tile type we're walking on
 	Cell* footstepTile = *getCell().begin();
 	sf::Vector2f soundPos(left, top);
-    //*
+    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's GateKeeper's
+	 															 // footsteps from fading & being off-center
+    footstep.setMinDistance(3.0);
+
 	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
 	{
 		// we need the extra soundActive boolean to make sure we're not playing a new
@@ -206,6 +219,17 @@ void GateKeeper::setXSpeed(float x)
 void GateKeeper::setYSpeed(float y)
 {
   _ySpeed = y;
+}
+
+void GateKeeper::setSpeed(int _speed)
+{
+    _xSpeed = _speed;
+    _ySpeed = _speed;
+}
+
+int GateKeeper::getSpeed()
+{
+	return _xSpeed;
 }
 
 int GateKeeper::getRange()

@@ -3,6 +3,7 @@
 
 #include "Event.h"
 #include "../Engine/Entity.h"
+#include "../Engine/Controller.h"
 #include "../Engine/Action.h"
 #include "../Engine/ProjectileManager.h"
 
@@ -18,9 +19,15 @@ using Marx::Entity;
 class Creature
 {
     public:
-        virtual void setHealth(int health);
+        Creature();
+        ~Creature();
+        virtual int getHealth();
+        virtual void setHealth(int _health);
+        virtual int getSpeed();
+        virtual void setSpeed(int _speed);
+        
+        
         virtual void setAttack(int attack);
-		virtual int getHealth();
 		virtual int getAttack();
 		virtual Marx::Projectile* createAttack(AttackEvent&, SGO &sprite, float x, float y);
 		virtual Marx::Projectile* createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y);

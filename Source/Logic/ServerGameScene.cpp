@@ -76,9 +76,9 @@ void ServerGameScene::update(sf::Time time)
 
           for (int i = 0; i < playerList.size(); i++)
           {
-            Vessel* curVessel = playerList[i];
-            static_cast<ServerNetworkController*>(curVessel->getController())->
-                addEvent(new UpdateEvent(curVessel->left, curVessel->top));
+            //Vessel* curVessel = playerList[i];
+            //static_cast<ServerNetworkController*>(curVessel->getController())->
+              //addEvent(new UpdateEvent(curVessel->left, curVessel->top));
           }
 
           syncTimer = SYNC_INTERVAL;
@@ -235,6 +235,7 @@ void ServerGameScene::createPlayers()
                 // create the controller, and bind it with the player
                 ServerNetworkController* cont = new ServerNetworkController();
                 currPlayer->setController(cont);
+                currPlayer->setSGameScene(this);
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
