@@ -16,7 +16,8 @@ FILES_ENGINE=	AppWindow.o \
 				Engine/ProjectileManager.o \
 				Engine/Projectile.o \
 				Engine/VEntity.o \
-				Engine/EGTheSpinner.o
+				Engine/EGTheSpinner.o \
+				Engine/AttackAction.o
 
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o \
 					Multimedia/graphics/object/SGO.o \

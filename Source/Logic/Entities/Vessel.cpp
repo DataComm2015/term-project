@@ -35,20 +35,23 @@ using namespace Manager;
 -- This function is used to generate a Vessel and set up its position on the game map
 ----------------------------------------------------------------------------------------------------------------------*/
 Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
-								Marx::Map * gmap,
-								float x,
-								float y,
-								Marx::Controller* controller_,
-								float height,
-								float width
-								/*, job_class jobClass, Ability* abilityList*/ )
-								: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
-								mask_sprite(_mask),
-								weapon_sprite(_weapon)
-								//,_controller(controller)
+		Marx::Map * gmap,
+		float x,
+		float y,
+		Marx::Controller* controller_,
+		float height,
+		float width
+		/*, job_class jobClass, Ability* abilityList*/ )
+		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+		mask_sprite(_mask),
+		weapon_sprite(_weapon)
+		//,_controller(controller)
 {
 
 	direction = 1; //start facing right
+
+	atk_sprite = *(new SGO());
+	satk_sprite = *(new SGO());
 
 	resetEXP();
 	xSpeed = 0.08;
@@ -138,6 +141,7 @@ void Vessel::onUpdate(float deltaTime)
 		; it != eventQueue->end()
 		; ++it )
 	{
+		std::cout << (*it)->type << std::endl;
 		// switch on type
 		switch((*it)->type)
 		{
@@ -150,32 +154,51 @@ void Vessel::onUpdate(float deltaTime)
 				// set position to last known position on server to avoid
 				// sync problems across the clients
 	      Entity::aMove(ev->getX(), ev->getY(), false);
-				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
+			//	printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)
 				{
 					newYSpeed -= ySpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (yDir == 1)
 				{
 					newYSpeed += ySpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == 1)
 				{
 					newXSpeed += xSpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == -1)
 				{
 					newXSpeed -= xSpeed;
-					printf("Vessel.cpp: moving up\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 
 
 				break;
 			}
+			case ::Marx::ATTACK:
+			{
+				AttackEvent* aev = (AttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createAttack(*aev, atk_sprite, left, top);
+			}
+			case ::Marx::SK_ATTACK:
+			{
+
+				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createSkAttack(*saev, satk_sprite, left, top);
+			}
+            case ::Marx::SET_HEALTH:
+            {
+                SetHealthEvent* ev = (SetHealthEvent*) (*it);
+                
+                setHealth(ev->getChange());
+            }
 			case ::Marx::UPDATE:
 			{
 				UpdateEvent* ev = (UpdateEvent*) (*it);
@@ -599,28 +622,6 @@ void Vessel::decreaseHP( int hp )
 	}
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: getHP
---
--- DATE:
---
--- REVISIONS: (Date and Description)
---
--- DESIGNER:	Sanders Lee
---
--- PROGRAMMER:	Sanders Lee
---
--- INTERFACE: int Vessel::getHP()
---
--- RETURNS: current HP as an integer
---
--- NOTES:
--- This function returns the current HP the Vessel has
-----------------------------------------------------------------------------------------------------------------------*/
-int Vessel::getHP()
-{
-	return currentHealth;
-}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getMaxHP
@@ -1110,6 +1111,29 @@ void Vessel::setSpeed(int _speed)
 int Vessel::getSpeed()
 {
 	return travelSpeed;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getHealth
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Calvin Rempel
+--
+-- PROGRAMMER:	Calvin Rempel
+--
+-- INTERFACE: int Vessel::getHealth()
+--
+-- RETURNS: int - The current health of the vessel.
+--
+-- NOTES:
+-- This function returns the current health of the vessel.
+----------------------------------------------------------------------------------------------------------------------*/
+int Vessel::getHealth()
+{
+    return currentHealth;
 }
 
 /*------------------------------------------------------------------------------------------------------------------

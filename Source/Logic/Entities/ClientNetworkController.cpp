@@ -97,18 +97,54 @@ void ClientNetworkController::parseEventMessage( Message& message )
 {
     switch(message.type)
     {
-        case ::Marx::MOVE:
-        {
-            // case message payload
-            MoveMessage* mm = (MoveMessage*) message.data;
+		case ::Marx::MOVE:
+		{
+		    // case message payload
+		    MoveMessage* mm = (MoveMessage*) message.data;
 
-            // create event from message data
-            MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->xDir, mm->yDir, mm->forced);
+		    // create event from message data
+		    MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->xDir, mm->yDir, mm->forced);
 
-            // add event to event queue
-            addEvent(ev);
-            break;
-        }
+		    // add event to event queue
+		    addEvent(ev);
+		    break;
+		}
+		case ::Marx::ATTACK:
+		{
+			// case message payload
+			AttackMessage* mm = (AttackMessage*) message.data;
+
+			// create event from message data
+			AttackEvent *ev = new AttackEvent(mm->srcid, mm->action, mm->cellx, mm->celly);
+
+			// add event to event queue
+			addEvent(ev);
+			break;
+		}
+		case ::Marx::SK_ATTACK:
+		{
+			// case message payload
+			SkillAttackMessage* mm = (SkillAttackMessage*) message.data;
+
+			// create event from message data
+			SkillAttackEvent *ev = new SkillAttackEvent(mm->srcid, mm->action, mm->destx, mm->desty);
+
+			// add event to event queue
+			addEvent(ev);
+			break;
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			// case message payload
+			SetHealthMessage* mm = (SetHealthMessage*) message.data;
+
+			// create event from message data
+			SetHealthEvent *ev = new SetHealthEvent(mm->change);
+
+			// add event to event queue
+			addEvent(ev);
+			break;
+		}
         case ::Marx::UPDATE:
         {
             UpdateMessage *um = (UpdateMessage*) message.data;

@@ -46,13 +46,75 @@ private:
     bool force;
 };
 
+struct AttackMessage
+{
+	int srcid; // Entity id source
+    float srcx;
+    float srcy;
+	enum ActionType action; // Type of attack to take
+	int cellx; // Coordinates of the cell you're attacking.
+	int celly;
+};
+
 class UpdateEvent: public ::Marx::Event
 {
 public:
-  UpdateEvent(float x, float y) : Event(Marx::UPDATE), _x(x), _y(y){}
+  	UpdateEvent(float x, float y) : Event(Marx::UPDATE), _x(x), _y(y){}
   float _x;
   float _y;
+};
 
+class AttackEvent : public ::Marx::Event
+{
+public:
+	AttackEvent(int _srcid, enum ActionType type, int _cellx, int _celly);
+	int getSrc();
+	enum ActionType getAction();
+	int getCellX();
+	int getCellY();
+private:
+	int srcid;
+	enum ActionType action;
+	int cellx;
+	int celly;
+};
+
+struct SkillAttackMessage
+{
+	int srcid; // Entity id source
+	enum ActionType action; // Type of attack to take
+	float destx;
+	float desty;
+};
+
+class SkillAttackEvent : public ::Marx::Event
+{
+public:
+	SkillAttackEvent(int _srcid, enum ActionType type, int _destx, int _desty);
+	int getSrc();
+	enum ActionType getAction();
+	int getDestX();
+	int getDestY();
+private:
+	int srcid;
+	enum ActionType action;
+	int destx;
+	int desty;
+};
+
+struct SetHealthMessage
+{
+	int entid; // Entity id source
+	float change;
+};
+
+class SetHealthEvent : public ::Marx::Event
+{
+public:
+	SetHealthEvent(float _change);
+	float getChange();
+private:
+	float change;
 };
 
 class SkillEvent: public ::Marx::Event
