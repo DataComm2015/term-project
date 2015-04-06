@@ -48,7 +48,7 @@ class ClientMux : public Networking::NetworkEntityMultiplexer
          */
         ClientLobbyScene* _lobbyScene;
         /**
-         * pointer to the singleton {ClientScoreboardScene} instance.
+         * pointer to the singleton {CommandEntity} instance.
          */
         ClientScoreboardScene* _scoreScene;
         /**

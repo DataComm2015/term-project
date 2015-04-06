@@ -30,6 +30,7 @@
 #include <set>
 #include <cmath>
 
+
 namespace Marx
 {
 	class Controller;
@@ -42,6 +43,7 @@ namespace Marx
 		virtual void turn();
 		Entity * move(float, float, bool);
 		Entity * rMove(float, float, bool);
+		Entity * rMove(sf::Vector2f &, float, bool);
 		Entity * aMove(float, float, bool);
 		Controller *getController();
 		virtual std::set<Cell*> getCell();
@@ -51,6 +53,7 @@ namespace Marx
 		virtual bool operator==(const Entity&);
 		void setBlocking(bool);
 		bool getBlocking();
+		Map * getMap();
 	protected:
 		std::set<Cell*> occupiedCells;
 		Map * map;

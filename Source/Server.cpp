@@ -6,6 +6,7 @@
 #include "Logic/ServerCommand.h"
 #include "Logic/Entities/ServerNetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
+#include "Engine/ProjectileManager.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -26,10 +27,15 @@ void run(ServerCommand *server);
 
 int main( int argc, char ** argv )
 {
-    printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
-    fflush(stdout);
+    if( argc < 2 )
+    {
+        printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
+        fflush(stdout);
+    }
 
     ServerCommand server;
+    Manager::ProjectileManager::setServer(&server);
+
 
     server.startServer(atoi(argv[1]));
     run(&server);

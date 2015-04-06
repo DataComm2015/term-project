@@ -106,6 +106,8 @@ class Vessel : public Marx::VEntity, public Creature
 	  bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
 		SGO &mask_sprite;
+		SGO atk_sprite;
+		SGO satk_sprite;
 		SGO &weapon_sprite;
 		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
@@ -138,7 +140,7 @@ class Vessel : public Marx::VEntity, public Creature
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
-		int  getNextLevelEXP();
+    	int  getNextLevelEXP();
 		int  getLevel();
 		void increaseLevel();
 
@@ -147,7 +149,6 @@ class Vessel : public Marx::VEntity, public Creature
 		void resetHP();
 		void increaseHP( int hp );
 		void decreaseHP( int hp );
-		int  getHP();
 		int  getMaxHP();
 
 		void resetAttackPower();
@@ -172,6 +173,7 @@ class Vessel : public Marx::VEntity, public Creature
 		void useAbility( int abilityNum, int x, int y );
 
 		virtual void setHealth(int health);
+		virtual int getHealth();
 		virtual void setAttack(int attack);
 		virtual Entity *getEntity();
 };

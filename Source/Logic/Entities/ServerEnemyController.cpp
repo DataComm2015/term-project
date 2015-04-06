@@ -18,6 +18,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
+
 #include <cmath>
 
 #include <cstdio>
@@ -96,12 +97,10 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         if ((vessel_Y > gk_Y + THRESHOLD || vessel_Y > gk_Y - THRESHOLD) )
         {
           yDirection = 1;
-
         }
         else
         {
           yDirection = -1;
-
 
         }
 
@@ -133,14 +132,16 @@ Vessel* ServerEnemyController::detectVessels()
   float y1 = _currEntity->top;
 
   float x2, y2;
+  std::vector<Vessel*> *players = _servGameScene->getPlayerList();
+  int len = players->size();
 
-  for(int i = 0; i < _servGameScene->getPlayerList().size(); i++)
+  for(int i = 0; i < _servGameScene->getPlayerList()->size(); i++)
   {
-    x2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->left;
-    y2 = static_cast<Vessel*>(_servGameScene->getPlayerList()[i])->top;
+    x2 = (_servGameScene->getPlayerList()->at(i))->left;
+    y2 = (_servGameScene->getPlayerList()->at(i))->top;
 
     if (getDistance(x1, y1, x2, y2) <= AGGRO_RADIUS)
-      return static_cast<Vessel*>(_servGameScene->getPlayerList()[i]);
+      return (_servGameScene->getPlayerList()->at(i));
   }
 
   return NULL;
@@ -155,7 +156,7 @@ float ServerEnemyController::getDistance(float x1, float y1, float x2, float y2 
   return result;
 }
 
-void ServerEnemyController::setEntity(Entity* e)
+void ServerEnemyController::setEntity(GateKeeper* e)
 {
   _currEntity = e;
 }

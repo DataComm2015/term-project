@@ -147,6 +147,33 @@ Entity * Entity::rMove(float x, float y, bool force = false)
 }
 
 /*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::rMove
+--
+-- DATE: March 31, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: move(sf::Vector2f & v, float scaler, bool force)
+--					sf::Vector2f & v : A unit vector of the position you want to travel to.
+--					float scaler : a scaler to apply to the vector.
+--					bool force: if the entity can pass through other entities.
+--
+-- RETURNS: NULL if there is no entity that this entity would collide with. Returns a pointer to an entity that this
+--			entity would collide with.
+--
+-- NOTES: This function provides an interface to move entities relivate to their current position.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+Entity * Entity::rMove( sf::Vector2f& v, float scaler, bool force = false )
+{
+	return rMove( v.x * scaler, v.y * scaler, force );
+}
+
+/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION:
 --
 -- DATE: February 19, 2015
@@ -411,4 +438,9 @@ void Entity::setBlocking(bool b)
 bool Entity::getBlocking()
 {
 	return blocking;
+}
+
+Map * Entity::getMap()
+{
+    return map;
 }

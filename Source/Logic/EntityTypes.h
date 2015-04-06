@@ -9,6 +9,7 @@ enum ENTITY_TYPES
     BAWS,
     MINION,
     MINI_BOSS,
+	PROJECTILE,
     STRUCTURES
 };
 

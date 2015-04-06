@@ -39,18 +39,10 @@ class GateKeeper : public Marx::VEntity, public Creature
 			float w
 		);
 		virtual ~GateKeeper();
-		virtual void detectPlayers();
-		virtual void enterCombat();
-		virtual void leaveCombat();
-		virtual bool inCombatRange();
 		virtual void setRange(int r);
 		virtual void setHealth(int h);
 		virtual void setAttack(int a);
 		virtual void setAttackSpeed(int as);
-		virtual void setMovementSPed(int ms);
-		virtual void setTarget(/*Player*/);
-		virtual void setCooldown(/*Timer*/);
-		virtual void setPosition(float x, float y);
 		virtual void setXSpeed(float x);
 		virtual void setYSpeed(float y);
 		virtual int getRange();
