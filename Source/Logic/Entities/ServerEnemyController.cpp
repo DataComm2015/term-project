@@ -35,6 +35,7 @@ ServerEnemyController::ServerEnemyController(Behaviour *behaviour, ServerGameSce
 
 ServerEnemyController::~ServerEnemyController()
 {
+
 }
 
 void ServerEnemyController::init()
@@ -65,6 +66,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         {
           if (moving)
           {
+            //Stop the gatekeeper
             event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
             addEvent(event);
             moving = false;
@@ -76,9 +78,6 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
           vessel_X = targetVessel->left;
           vessel_Y = targetVessel->top;
         }
-
-      //  std::cout << "Vessel x: " << vessel_X << std::endl;
-      //  std::cout << "Vessel y: " << vessel_Y << std::endl;
 
         xDirection = 0;
         yDirection = 0;
@@ -104,12 +103,13 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
         }
 
+
         if (prevX != xDirection || prevY != yDirection)
         {
           moving = true;
-          std::cout << "Adding move event" << std::endl;
-          std::cout << "X Direction " << xDirection << std::endl;
-          std::cout << "Y Direction " << yDirection << std::endl;
+          //std::cout << "Adding move event" << std::endl;
+          //std::cout << "X Direction " << xDirection << std::endl;
+          //std::cout << "Y Direction " << yDirection << std::endl;
 
           prevX = xDirection;
           prevY = yDirection;
@@ -120,10 +120,6 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
     }
 
-    if (behaviour)
-    {
-        behaviour->update(deltaTime);
-    }
 }
 
 Vessel* ServerEnemyController::detectVessels()

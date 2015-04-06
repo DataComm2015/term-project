@@ -214,7 +214,7 @@ void Vessel::onUpdate(float deltaTime)
 			{
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
-				
+
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -232,7 +232,7 @@ void Vessel::onUpdate(float deltaTime)
 						ySpeed -= ev->getValue();
 					break;
 				}
-				
+
 				break;
 			}
 		}
