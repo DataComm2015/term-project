@@ -49,7 +49,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 8, 7);
 
 }
 

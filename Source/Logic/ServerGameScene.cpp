@@ -146,6 +146,7 @@ void ServerGameScene::enterScene()
 
     createPlayers();
 	  createEnemy(BASIC_TYPE, NULL, 48, 48);
+    createEnemy(MINION, NULL, 48, 48);
 }
 
 void ServerGameScene::leaveScene()
