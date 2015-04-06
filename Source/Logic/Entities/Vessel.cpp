@@ -3,7 +3,6 @@
 #include <cmath>
 #include "Vessel.h"
 #include "../Event.h"
-#include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
 
 using namespace Manager;
@@ -164,17 +163,17 @@ void Vessel::onUpdate(float deltaTime)
 				else if (yDir == 1)
 				{
 					newYSpeed += ySpeed;
-				//	printf("Vessel.cpp: moving down\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == 1)
 				{
 					newXSpeed += xSpeed;
-				//	printf("Vessel.cpp: moving right\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 				else if (xDir == -1)
 				{
 					newXSpeed -= xSpeed;
-				//	printf("Vessel.cpp: moving left\n");
+				//	printf("Vessel.cpp: moving up\n");
 				}
 
 
@@ -210,31 +209,6 @@ void Vessel::onUpdate(float deltaTime)
 
 				Entity::aMove(ev->_x, ev->_y, false);
 			}
-			case ::Marx::SKILL:
-			{
-				// process the skill event, and increase/decrease hp and stuff
-				SkillEvent *ev = (SkillEvent*)(*it);
-
-				switch(ev->getSkillType())
-				{
-					case SKILLTYPE::HEAL:
-						currentHealth += ev->getValue();
-					break;
-					case SKILLTYPE::DMG:
-						currentHealth -= ev->getValue();
-					break;
-					case SKILLTYPE::BUFF:
-						xSpeed += ev->getValue();
-						ySpeed += ev->getValue();
-					break;
-					case SKILLTYPE::DEBUFF:
-						xSpeed -= ev->getValue();
-						ySpeed -= ev->getValue();
-					break;
-				}
-
-				break;
-			}
 		}
 	}
 	getController()->clearEvents();
@@ -264,7 +238,6 @@ void Vessel::onUpdate(float deltaTime)
 	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
 	footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's player character's
 	 															 // footsteps from fading & being off-center
-	footstep.setMinDistance(3.0);
 
 	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
 	{
@@ -834,6 +807,29 @@ void Vessel::speedDown( int speed )
 }
 
 /*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getSpeed
+--
+-- DATE:
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:	Sanders Lee
+--
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE: int Vessel::getSpeed()
+--
+-- RETURNS: current speed as an integer
+--
+-- NOTES:
+-- This function returns the current speed the Vessel has
+----------------------------------------------------------------------------------------------------------------------*/
+int Vessel::getSpeed()
+{
+    return travelSpeed;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: getDefaultSpeed
 --
 -- DATE: February 15, 2015
@@ -1097,16 +1093,6 @@ void Vessel::setHealth(int health)
         currentHealth = 0;
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
-}
-
-void Vessel::setSpeed(int _speed)
-{
-	travelSpeed = _speed;
-}
-
-int Vessel::getSpeed()
-{
-	return travelSpeed;
 }
 
 /*------------------------------------------------------------------------------------------------------------------

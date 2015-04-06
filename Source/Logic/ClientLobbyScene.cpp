@@ -182,9 +182,9 @@ ClientLobbyScene::~ClientLobbyScene()
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLoad()
 {
-    title.play();
-
     clck.restart();
+
+    title.play();
 
     /* Set btntest positions */
     background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));

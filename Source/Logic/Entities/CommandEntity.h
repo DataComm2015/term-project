@@ -6,8 +6,9 @@
 #include "../../Network/Message.h"
 #include "../../Network/Session.h"
 #include "../../Network/NetworkEntity.h"
-#include "../Skills.h"
 #include "../Event.h"
+
+class ClientMux;
 
 class ClientMux;
 
@@ -38,7 +39,6 @@ class CommandEntity : public NetworkEntity, public KeyListener, public ClickList
         PLAYER_MODE getPlayerMode();
         PlayerLobbyChoices* getLobbyOption();
         void notifyServerLobbySelections(PlayerLobbyChoices *selections);
-        void SendSkill(float curX, float curY, int radius, int value, SKILLTYPE skilltype);
 
     protected:
         virtual void onKeyPressed(int key);

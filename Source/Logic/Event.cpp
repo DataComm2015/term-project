@@ -94,77 +94,6 @@ bool MoveEvent::forced()
     return force;
 }
 
-// Ability event start 
-SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType) :Event(Marx::SKILL)
-{
-    x = _x;
-    y = _y;
-    radius = _radius;
-    value = _value;
-    skillType = _skillType;
-}
-
-SkillEvent::SkillEvent(const SkillEvent& other)
-    :Event(other.type)
-{
-    x = other.x;
-    y = other.y;
-    radius = other.radius;
-    value = other.value;
-    skillType = other.skillType;
-}
-
-float SkillEvent::getX()
-{
-    return x;
-}
-
-void SkillEvent::setX(float _x)
-{
-    x = _x;
-}
-
-float SkillEvent::getY()
-{
-    return y;
-}
-
-void SkillEvent::setY(float _y)
-{
-    y = _y;
-}
-
-float SkillEvent::getRadius()
-{
-    return radius;
-}
-
-void SkillEvent::setRadius(float _radius)
-{
-    radius = _radius;
-}
-
-int SkillEvent::getValue()
-{
-    return value;
-}
-
-void SkillEvent::setValue(int _value)
-{
-    value = _value;
-}
-
-SKILLTYPE SkillEvent::getSkillType()
-{
-    return skillType;
-}
-
-void SkillEvent::setSkillType(SKILLTYPE _skillType)
-{
-    skillType = _skillType;
-}
-// Ability event end 
-
 /* ------------------------------- Attack Event ----------------------------------- */
 AttackEvent::AttackEvent(int _srcid, enum ActionType type, int _cellx, int _celly) :
 	Event(Marx::ATTACK), srcid(_srcid), action(type), cellx(_cellx), celly(_celly)
@@ -227,4 +156,5 @@ float SetHealthEvent::getChange()
 {
     return change;
 }
+
 
