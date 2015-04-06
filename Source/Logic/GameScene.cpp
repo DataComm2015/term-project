@@ -1213,7 +1213,7 @@ void onClickVitalityOne() //healskillbtn
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 100, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::HEAL);
 }
 
 
@@ -1352,13 +1352,13 @@ void onClickDemiseThree() //summonskillbtn
 float convertX(float x)
 {
 	float newCoord;
-	newCoord = (x - 0)/myMap->getWidth();
+	newCoord = (x - myMap->getGlobalTransform().transformPoint(0,0).x)/32;
 	return newCoord;
 }
 
 float convertY(float y)
 {
 	float newCoord;
-	newCoord = (y - 0)/myMap->getHeight();
+	newCoord = (y - myMap->getGlobalTransform().transformPoint(0,0).y)/32;
 	return newCoord;
 }
