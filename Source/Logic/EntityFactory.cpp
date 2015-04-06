@@ -210,3 +210,15 @@ Entity* EntityFactory::makeEntity(
 
     return entity;
 }
+
+Projectile* EntityFactory::makeProjectile(
+    Marx::Map *  map,
+    Marx::Entity * entity,
+    Marx::Action * action,
+    sf::Vector2f & v,
+    float height,
+    float width )
+{
+    std::cout << "Map!" << std::endl;
+    return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width);
+}

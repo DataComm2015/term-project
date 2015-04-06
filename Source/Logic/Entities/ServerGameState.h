@@ -6,6 +6,7 @@
 #include "../../Network/Session.h"
 
 #include <map>
+#include <set>
 
 using Networking::Session;
 using Networking::Message;
@@ -31,6 +32,7 @@ class ServerGameState : public Networking::NetworkEntity
         void notifyReadyForGame();
         void goToGame(int worldSeed);
         void goToScoreboard();
+        void update( Message message );
 
         void registerWithAllPlayers(Networking::NetworkEntity *entity, Message *msg);
         void unregisterFromAllPlayers(Networking::NetworkEntity *entity);

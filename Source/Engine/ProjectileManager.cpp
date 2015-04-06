@@ -1,4 +1,9 @@
 #include "ProjectileManager.h"
+#include "Controller.h"
+#include "../Logic/Event.h"
+#include "../Multimedia/manager/ResourceManager.h"
+#include "TextureManager.h"
+#include "../Multimedia/graphics/object/SGO.h"
 #include <iostream>
 
 std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
@@ -27,12 +32,11 @@ using namespace Manager;
 Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0)
 {
-	Marx::Projectile * temp;
+	std::cout << "Projectile Q: " << projectile_pool.size() << std::endl;
 
-
-	if (projectile_pool.size() <= 0)
+	if( SERVER )
 	{
-		if( SERVER )
+		if (projectile_pool.size() < 1)
 		{
 			ServerNetworkController * cont;
 
@@ -60,12 +64,12 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 		else
 		{
 			std::cout << "Deck Attack" << std::endl;
-			temp = *projectile_pool.begin();
-			temp->setSprite(_sprite);
-			temp->setCurrentPos(e->left, e->top);
+			Marx::Projectile* temp = *projectile_pool.begin();
+			//temp->setSprite(_sprite);
 			temp->setAct(action);
 			temp->setTarget(v);
 			projectile_pool.erase(*projectile_pool.begin());
+			temp->getController()->addEvent(new MoveEvent(e->left, e->top, 1, 1, true));
 			return temp;
 		}
 	}

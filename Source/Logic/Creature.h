@@ -19,6 +19,8 @@ using Marx::Entity;
 class Creature
 {
     public:
+        Creature();
+        ~Creature();
         virtual int getHealth();
         virtual void setHealth(int _health);
         virtual int getSpeed();

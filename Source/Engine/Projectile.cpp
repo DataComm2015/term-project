@@ -1,6 +1,9 @@
- #include "Projectile.h"
+#include "Projectile.h"
+#include "Event.h"
 #include <iostream>
 #include <cmath>
+#include <map>
+#include <SFML/System/Vector2.hpp>
 
 using namespace Marx;
 
@@ -42,7 +45,7 @@ void Projectile::onCreate()
 
 void Projectile::onDestroy()
 {
-	setCurrentPos(-1, -1);
+    getController()->addEvent(new MoveEvent(-1, -1, 1, 1, true));
 	drawable = false;
 
 	Manager::ProjectileManager::enqueue(this);
@@ -51,17 +54,32 @@ void Projectile::onDestroy()
 
 void Projectile::onUpdate(float t)
 {
-    std::cout << "X: " << left << "Y: " << top << std::endl;
-	if(TimeToLive > 0.0f)
-	{
-		//act->onUpdate(this, t);
-        std::cout << "X: " << left << "Y: " << top << std::endl;
-		TimeToLive -= t;
-	}
-	else
-	{
+    if(TimeToLive > 0.0f)
+    {
+        act->onUpdate(this, t);
+        //std::cout << "X: " << left << "Y: " << top << "TimeToLive: " << TimeToLive << " Time Removed: " << t << std::endl;
+        TimeToLive -= t;
+    }
+    else
+    {
         onDestroy();
-	}
+    }
+
+    // Process events.
+    std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+    for(std::vector<Marx::Event*>::iterator it = eventQueue->begin(); it != eventQueue->end(); ++it )
+    {
+            switch((*it)->type)
+            {
+                case ::Marx::MOVE:
+                    MoveEvent * ev = static_cast<MoveEvent*>(*it);
+                    sf::Vector2f vec(ev->getX(), ev->getY());
+                    rMove( vec, t, true );
+
+            }
+    }
+
+
 }
 
 void Projectile::setTarget(sf::Vector2f t)
