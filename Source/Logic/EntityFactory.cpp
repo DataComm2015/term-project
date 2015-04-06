@@ -125,8 +125,10 @@ Entity* EntityFactory::makeEntity(
     switch(type)
     {
         case ENTITY_TYPES::BASIC_TYPE:
+        {
             entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
             break;
+        }
         case ENTITY_TYPES::VESSEL:
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;

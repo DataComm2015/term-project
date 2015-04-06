@@ -308,6 +308,14 @@ sf::Transform Map::getLocalTransform() const
 	return trans;
 }
 
+void Map::drawChildren(Renderer& renderer, sf::RenderStates states) const
+{
+	for (const Entity* e : getEntities())
+	{
+		renderer.draw(e, states);
+	}
+}
+
 void Map::draw(Renderer& renderer, sf::RenderStates states) const
 {
 	renderer.draw(*this, states);

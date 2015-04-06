@@ -98,6 +98,8 @@ class GameScene : public Scene
 		Renderer renderer;
 		sf::View viewMain;
 		sf::View viewUI;
+		sf::View viewMinimap;
+		sf::RectangleShape minimapBorder;
 
 		// Resources
 

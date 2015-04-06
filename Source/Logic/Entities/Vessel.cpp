@@ -7,9 +7,6 @@
 
 using namespace Manager;
 
-sf::Sound footstep;
-sf::Sound voice;
-
 //TO DO:
 //1) GIVE IT A SPRITE
 //2) MAKE THE SPRITE ANIMATE
@@ -53,8 +50,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 	direction = 1; //start facing right
 
 	resetEXP();
-	xSpeed = 0.1;
-	ySpeed = 0.1;
+	xSpeed = 0.08;
+	ySpeed = 0.08;
 	movingLeft = false;
 	movingRight = false;
 	movingUp = false;
@@ -74,6 +71,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 
 	grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
 	stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
+	hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
+	attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
 	//abilities = abilityList;
 /*
@@ -122,7 +121,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 /*-------------------------------------------
 --
 -- PROGRAMMER:  ???
---				Sanders Lee (Debugged synchronization problem across clients)
+--				Sanders Lee (Debugged synchronization problem across clients,
+--							 Added sound for walking)
 --
 -- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
@@ -148,7 +148,7 @@ void Vessel::onUpdate(float deltaTime)
 
 				// set position to last known position on server to avoid
 				// sync problems across the clients
-	      		Entity::aMove(ev->getX(), ev->getY(), false);
+	      Entity::aMove(ev->getX(), ev->getY(), false);
 				printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
 				if (yDir == -1)
@@ -217,7 +217,10 @@ void Vessel::onUpdate(float deltaTime)
 	// Sounds for walking:
 	// first get the tile type we're walking on
 	Cell* footstepTile = *getCell().begin();
-	sf::Vector2f soundPos;
+	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's player character's
+	 															 // footsteps from fading & being off-center
+
 	if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
 	{
 		// we need the extra soundActive boolean to make sure we're not playing a new
@@ -561,6 +564,12 @@ void Vessel::increaseHP( int hp )
 ----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::decreaseHP( int hp )
 {
+	sf::Vector2f soundPos(left, top);
+	voice.stop();
+	voice = SoundManager::play(hurtSound, soundPos);
+	voice.setLoop(true);
+	voice.play();
+
 	currentHealth -= hp;
 	if( currentHealth < 0 )
 	{

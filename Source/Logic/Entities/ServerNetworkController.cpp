@@ -120,6 +120,9 @@ void ServerNetworkController::addEvent(Event *event)
 ------------------------------------------------------------------------------*/
 void ServerNetworkController::sendEventMessage(Event *event)
 {
+    if(getEntity() == NULL)
+        return;
+
     // create network message from event
     switch(event->type)
     {

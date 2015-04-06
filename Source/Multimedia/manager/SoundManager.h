@@ -12,16 +12,16 @@ namespace Manager
 {
 	/**
 	 * Sound Buffer Manager.
-	 * 
+	 *
 	 * Loads and stores sound buffer resources.
-	 * 
+	 *
 	 * @author Lewis Scott
 	 */
 	class SoundManager
 	{
 		public:
 			static ResourceManager<sf::SoundBuffer*> rm;
-			
+
 			/**
 			* Loads sound from the specified file.
 			*
@@ -29,7 +29,7 @@ namespace Manager
 			* @return - sf::SoundBuffer* - The sound buffer that was loaded
 			*/
 			static sf::SoundBuffer* load(const std::string);
-			
+
 			/**
 			* Wrapper functions
 			*/
@@ -39,7 +39,7 @@ namespace Manager
 			static sf::SoundBuffer* remove(id_resource id){ return rm.remove(id); }
 			static unsigned int clear(){ return rm.clear(true); }
 			static sf::Sound play(id_resource id, sf::Vector2f position);
-		
+
 			/**
 			* Destructor.
 			*/

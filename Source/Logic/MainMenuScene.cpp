@@ -410,7 +410,7 @@ void MainMenuScene::onClick()
       }
       else
       {
-         printf("connected\n");
+          printf("connected\n");
       }
     }
 
