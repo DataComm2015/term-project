@@ -299,8 +299,8 @@ void GameScene::update(sf::Time t)
 	}
 	*/
 
-	sf::Listener::setPosition(viewMain.getCenter().x, viewMain.getCenter().y, 0);
-
+	sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+	printf("ear center: %f %f\n", myVessel->left, myVessel->top);
 	//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
 	/*
 	championSGO.sprite().setPosition(v->getXPosition(), v->getYPosition());
