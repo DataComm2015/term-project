@@ -3,18 +3,18 @@
 --
 -- PROGRAM: Sojourn
 --
--- FUNCTIONS:       
+-- FUNCTIONS:
 --
--- DATE: 
+-- DATE:
 --
 -- REVISIONS: N/A
 --
--- DESIGNER: 
+-- DESIGNER:
 --
 -- PROGRAMMER:  Chris Klassen
 --
 -- NOTES:
---        
+--
 ----------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -51,11 +51,11 @@ EntityFactory* EntityFactory::instance = 0;
 /******************************************************************************
 *   FUNCTION: EntityFactory
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
 *   PROGRAMMER: Chris Klassen
 *
@@ -118,17 +118,17 @@ EntityFactory::EntityFactory()
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -143,17 +143,17 @@ EntityFactory::~EntityFactory()
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -172,17 +172,17 @@ EntityFactory* EntityFactory::getInstance()
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -224,17 +224,17 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -262,17 +262,17 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *
@@ -294,7 +294,8 @@ Entity* EntityFactory::makeEntity(
     {
         case ENTITY_TYPES::BASIC_TYPE:
         {
-            entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            entity = gk;
             break;
         }
         case ENTITY_TYPES::VESSEL:
@@ -320,17 +321,17 @@ Entity* EntityFactory::makeEntity(
 
 
 /******************************************************************************
-*   FUNCTION: 
+*   FUNCTION:
 *
-*   DATE: 
+*   DATE:
 *
 *   REVISIONS: (Date and Description)
 *
-*   DESIGNER: 
+*   DESIGNER:
 *
-*   PROGRAMMER: 
+*   PROGRAMMER:
 *
-*   INTERFACE: 
+*   INTERFACE:
 *
 *   PARAMETERS:
 *

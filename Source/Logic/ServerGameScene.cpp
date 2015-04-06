@@ -184,7 +184,7 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     GateKeeper *entity = static_cast<GateKeeper*>(EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
 
     enemies.push_back((Creature*)entity);
-    enemyController->setEntity((GateKeeper*)entity);
+    enemyController->setEntity(static_cast<GateKeeper*>(entity));
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
