@@ -60,7 +60,8 @@ GateKeeper::~GateKeeper()
 
 /***
 -- PROGRAMMER:  Filip Gutica
---				Sanders Lee (Debugged synchronization problem across clients)
+--				Sanders Lee (Debugged synchronization problem across clients,
+--                           Added sound for GateKeeper travel)
 ***/
 void GateKeeper::onUpdate(float deltaTime)
 {

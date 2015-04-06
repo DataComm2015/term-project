@@ -32,6 +32,7 @@ int ClientLobbyScene::currScrollHeight;
 -- DESIGNER: Calvin Rempel, Alex Lam and Michael Chimick
 --
 -- PROGRAMMER: Calvin Rempel, Alex Lam and Michael Chimick
+--             Sanders Lee (Added title call)
 --
 -- INTERFACE: ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 --
@@ -169,6 +170,7 @@ ClientLobbyScene::~ClientLobbyScene()
 -- DESIGNER: Alex Lam and Michael Chimick
 --
 -- PROGRAMMER: Alex Lam and Michael Chimick
+--             Sanders Lee (Added title call)
 --
 -- INTERFACE: void ClientLobbyScene::onLoad()
 --

@@ -121,7 +121,8 @@ Vessel::Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
 /*-------------------------------------------
 --
 -- PROGRAMMER:  ???
---				Sanders Lee (Debugged synchronization problem across clients)
+--				Sanders Lee (Debugged synchronization problem across clients,
+--							 Added sound for walking)
 --
 -- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
