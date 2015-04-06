@@ -409,23 +409,24 @@ void GameScene::processEvents(sf::Event& e)
 		viewMinimap = AppWindow::getInstance().getCurrentView();
 		positionUI();
 	}
-/*	else if (e.type == sf::Event::MouseButtonPressed)
+	else if (e.type == sf::Event::MouseButtonPressed)
 	{
-		sf::Vector2i mouse = sf::Mouse::getPosition();
-		sf::Vector2f viewVector = viewMain.getCenter();
-		std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
-		std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
-
-		for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
+		if(characterType == PLAYER_MODE::VESSEL)
 		{
-			(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
-								ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
-			//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
-			//current.play();
+			sf::Vector2i mouse = sf::Mouse::getPosition();
+			sf::Vector2f viewVector = viewMain.getCenter();
+			std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
+			std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
+
+			for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
+			{
+				(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
+									ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
+				//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
+				//current.play();
+			}
 		}
 	}
-*/
-
 
 	tb->process(e);
 }
