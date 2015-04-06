@@ -2,9 +2,6 @@
 #include "../Engine/AttackAction.h"
 #include <iostream>
 
-int Creature::getHealth()
-{
-}
     
 void Creature::setHealth(int health)
 {

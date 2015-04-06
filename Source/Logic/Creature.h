@@ -26,7 +26,6 @@ class Creature
         
         
         virtual void setAttack(int attack);
-		virtual int getHealth();
 		virtual int getAttack();
 		virtual Marx::Projectile* createAttack(AttackEvent&, SGO &sprite, float x, float y);
 		virtual Marx::Projectile* createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y);
