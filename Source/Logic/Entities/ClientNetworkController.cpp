@@ -8,6 +8,7 @@
 #include "../NetworkEntityPairs.h"
 
 #include "../Event.h"
+#include "../Skills.h"
 
 #include <stdio.h>
 
@@ -96,24 +97,76 @@ void ClientNetworkController::parseEventMessage( Message& message )
 {
     switch(message.type)
     {
-    case ::Marx::MOVE:
-    {
-        // case message payload
-        MoveMessage* mm = (MoveMessage*) message.data;
+		case ::Marx::MOVE:
+		{
+		    // case message payload
+		    MoveMessage* mm = (MoveMessage*) message.data;
 
-        // create event from message data
-        MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->xDir, mm->yDir, mm->forced);
+		    // create event from message data
+		    MoveEvent *ev = new MoveEvent(mm->x, mm->y, mm->xDir, mm->yDir, mm->forced);
 
-        // add event to event queue
-        addEvent(ev);
-        break;
-    }
-    default:
-    {
-        printf("WARNING: ClientNetworkController::parseEventMessage received an "
-            "unknown event type. please add new case to switch statement");
-        fflush(stdout);
-        break;
-    }
+		    // add event to event queue
+		    addEvent(ev);
+		    break;
+		}
+		case ::Marx::ATTACK:
+		{
+			// case message payload
+			AttackMessage* mm = (AttackMessage*) message.data;
+
+			// create event from message data
+			AttackEvent *ev = new AttackEvent(mm->srcid, mm->action, mm->cellx, mm->celly);
+
+			// add event to event queue
+			addEvent(ev);
+			break;
+		}
+		case ::Marx::SK_ATTACK:
+		{
+			// case message payload
+			SkillAttackMessage* mm = (SkillAttackMessage*) message.data;
+
+			// create event from message data
+			SkillAttackEvent *ev = new SkillAttackEvent(mm->srcid, mm->action, mm->destx, mm->desty);
+
+			// add event to event queue
+			addEvent(ev);
+			break;
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			// case message payload
+			SetHealthMessage* mm = (SetHealthMessage*) message.data;
+
+			// create event from message data
+			SetHealthEvent *ev = new SetHealthEvent(mm->change);
+
+			// add event to event queue
+			addEvent(ev);
+			break;
+		}
+        case ::Marx::UPDATE:
+        {
+            UpdateMessage *um = (UpdateMessage*) message.data;
+            UpdateEvent *ev = new UpdateEvent(um->x, um->y);
+            addEvent(ev);
+        }
+        case ::Marx::SKILL:
+        {
+            // turn network message back into skill event, and call addEvent()
+            skill* sk = ((skill*)message.data);
+            
+            SkillEvent *ev = new SkillEvent(sk->curX, sk->curY, sk->radius, sk->val, sk->st);
+            
+            addEvent(ev);
+            break;
+        }
+        default:
+        {
+            printf("WARNING: ClientNetworkController::parseEventMessage received an "
+                "unknown event type. please add new case to switch statement");
+            fflush(stdout);
+            break;
+        }
     }
 }

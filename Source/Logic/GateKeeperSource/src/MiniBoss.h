@@ -1,7 +1,7 @@
-#ifndef MINIBOSS_H
-#define MINIBOSS_H
+#ifndef MINI_H
+#define MINI_H
 /********************************************************************************
-**	SOURCE FILE:	MiniBoss.h -  		Header file for The Mini boss npc class.
+**	SOURCE FILE:	Minion.h -  		Header file for The Minion npc class.
 **										Contains function prototypes
 **
 **	PROGRAM:	Term_Project
@@ -19,37 +19,67 @@
 class MiniBoss : public GateKeeper
 {
 	public:
-		MiniBoss(SGO &sprite,
+		MiniBoss(SGO& sprite,
 			Marx::Map* map,
 			float x,
 			float y,
 			Marx::Controller* ctrl,
 			float h,
-			float w) : GateKeeper(sprite, map, x, y, ctrl, h, w);
-
+			float w
+		);
 		~MiniBoss();
-
-		void updateNPC();
-		void detectPlayers();
-		void enterCombat();
-		void leaveCombat();
-		bool inCombatRange();
 		void setRange(int r);
 		void setHealth(int h);
 		void setAttack(int a);
 		void setAttackSpeed(int as);
-		void setMovementSPed(int ms);
-		void setTarget(/*Player*/);
-		void setCooldown(/*Timer*/);
-		void getRange();
-		void getHealth();
-		void getAttack();
-		void getAttackSpeed();
-		void getMovementSpeed();
-		void getTarget();
-		void getCooldown();
+		void setXSpeed(float x);
+		void setYSpeed(float y);
+    void setSpeed(int _speed);
+		int getRange();
+		int getHealth();
+		int getAttack();
+		int getAttackSpeed();
+		int getMovementSpeed();
+    int getSpeed();
+		void turn();
+		void onCreate();
+		void onDestroy();
+		void onUpdate(float);
+		bool operator==(const VEntity&);
+  	void stopAllSounds();
+    Entity* getEntity();
+	  bool isMoving();
+		void playSound(float, float);
+		void animate();
 
-
+	protected:
+		bool movingLeft;
+    bool movingRight;
+		bool movingUp;
+    bool movingDown;
+		int _range;
+		int _type;
+		int _health;
+		int _attack;
+		int _attackSpeed;
+		int _movementSpeed;
+		float _xSpeed;
+		float _ySpeed;
+		float newXSpeed = 0;
+		float newYSpeed = 0;
+		int _direction;
+		float _xPos;
+		float _yPos;
+		bool _incombat;
+		bool _moving;
+		Marx::Controller* _ctrl;
+		time_t _cooldown;
+		sf::Sound footstep;
+		sf::Sound voice;
+		BlockZone steppedTile;
+		bool soundActive;
+		Animation *gkAnimation;
 
 };
-#ENDIF
+
+#endif

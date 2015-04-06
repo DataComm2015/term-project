@@ -25,7 +25,7 @@ public:
 	bool hasChildren() const;
 	void ignoreChildren(bool arg);
 
-	virtual const sf::Transform& getLocalTransform() const;
+	virtual sf::Transform getLocalTransform() const;
 	const sf::Transform& getGlobalTransform() const;
 
 	void updateSG(const sf::Time& t);
@@ -34,7 +34,8 @@ public:
 protected:
 	friend class Renderer;
 
-	void drawSG(Renderer& renderer, sf::RenderStates states) const;
+	void drawSceneGraph(Renderer& renderer, sf::RenderStates states) const;
+	virtual void drawChildren(Renderer& renderer, sf::RenderStates states) const;
 	virtual void draw(Renderer& renderer, sf::RenderStates states) const;
 
 private:
@@ -45,7 +46,7 @@ private:
 	id_go m_id;
 	bool m_ignoringChildren;
 
-	mutable sf::Transform m_sgtrans;
+	mutable sf::Transform m_globaltrans;
 };
 
 #endif // BGO_H

@@ -2,6 +2,7 @@
 
 #include "../NetworkEntityPairs.h"
 #include "../GameScene.h"
+#include "../MainMenuScene.h"
 
 #include "../../Network/NetworkEntityMultiplexer.h"
 
@@ -29,9 +30,7 @@
 --
 -- PROGRAMMER:      Calvin Rempel, Eric Tsang
 --
--- INTERFACE:       ClientMux::ClientMux(GameScene* gameScene,
---                      ClientLobbyScene* lobbyScene)
---                  gameScene  - pointer to the singleton {GameScene}.
+-- INTERFACE:       ClientMux::ClientMux(ClientLobbyScene* lobbyScene)
 --                  lobbyScene - pointer to the singleton {ClientLobbyScene}.
 --
 -- RETURNS:         void
@@ -40,9 +39,8 @@
 --                  {NetworkEntityMultiplexer} used to handle onRegister
 --                  messages from the server.
 ------------------------------------------------------------------------------*/
-ClientMux::ClientMux(GameScene* gameScene, ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
-    :_gameScene(gameScene)
-    ,_lobbyScene(lobbyScene)
+ClientMux::ClientMux(ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene)
+    :_lobbyScene(lobbyScene)
     ,_scoreScene(scoreScene)
 {
 }
@@ -101,12 +99,13 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
 {
     NetworkEntity* ret;
     this->session = session;
+    GameScene *_gameScene = MainMenuScene::getGameScene();
 
     switch((NetworkEntityPair)entityType)
     {
         case NetworkEntityPair::PLAYER_COMMAND:
         {
-            command = new CommandEntity(id,_gameScene, this);
+            command = new CommandEntity(id, this);
             ret = command;
             fprintf(stdout, "MUX NICKNAME: %s\n", message.data);
             fflush(stdout);
@@ -123,15 +122,21 @@ NetworkEntity* ClientMux::onRegister(int id, int entityType, Session* session,
             {
                  _gameScene->setPlayerVessel(static_cast<Vessel*>(entity));
             }
+
             break;
         }
 
         case NetworkEntityPair::SERVERGAMESTATE_CLIENTGAMESTATE:
         {
-            gameState = new ClientGameState(id, command, _gameScene, _lobbyScene, _scoreScene);
+            gameState = new ClientGameState(id, command, _lobbyScene, _scoreScene);
             ret = gameState;
             break;
         }
+
+        case NetworkEntityPair::STRUCTURE_MIRROR:
+            Marx::Map* cMap = ((GameScene*)_gameScene)->getcMap();
+            EntityFactory::getInstance()->makeEntityFromNetworkMessage(id, cMap,&msg,NULL);
+            break;
     }
 
     return ret;
@@ -163,4 +168,9 @@ void ClientMux::shutdown()
 
     // unregister our {Session} from the server
     command->unregisterSession(session, msg);
+}
+
+CommandEntity* ClientMux::getCommandEntity()
+{
+  return command;
 }

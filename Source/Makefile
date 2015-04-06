@@ -16,7 +16,8 @@ FILES_ENGINE=	AppWindow.o \
 				Engine/ProjectileManager.o \
 				Engine/Projectile.o \
 				Engine/VEntity.o \
-				Engine/EGTheSpinner.o
+				Engine/EGTheSpinner.o \
+				Engine/AttackAction.o
 
 FILES_MULTIMEDIA=	Multimedia/graphics/object/BGO.o \
 					Multimedia/graphics/object/SGO.o \
@@ -53,6 +54,8 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/MainMenuScene.o \
 				Logic/Entities/ClientGameState.o \
 				Logic/GateKeeperSource/src/GateKeeper.o \
+				Logic/GateKeeperSource/src/Minion.o \
+				Logic/GateKeeperSource/src/MiniBoss.o \
 				Logic/Entities/Structure.o \
 				Logic/Entities/ServerGameState.o \
 				Logic/CreditScene.o \
