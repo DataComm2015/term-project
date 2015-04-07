@@ -71,7 +71,18 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     int randDirection = (rand() % 3) - 1;
     getSprite().sprite().setScale(randDirection, 1);
 
+	travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/bee/bee_attack_02.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/bee/bee_hurt_03.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/bee/bee_death_02.ogg"));
 
+    travel_Snd.setBuffer(*Manager::SoundManager::get(travel_SndB));
+    attack_Snd.setBuffer(*Manager::SoundManager::get(attack_SndB));
+    hurt_Snd.setBuffer(*Manager::SoundManager::get(hurt_SndB));
+    death_Snd.setBuffer(*Manager::SoundManager::get(death_SndB));
+    travel_Snd.setLoop(true);
+    travel_Snd.play();
+	
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
