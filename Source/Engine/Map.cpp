@@ -167,7 +167,7 @@ Cell* Map::getCell(const int x, const int y) const
    	unsigned int index = (x * width_) + y;
     if(y < 0 || x < 0 ||x >= width_ || y >= height_ )
     {
-    	return *cells_.end();
+    	return *(--cells_.end());
     }
 	/**/
 	try
