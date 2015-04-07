@@ -39,7 +39,7 @@ id_resource minShadow;
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
+*   INTERFACE: Minion(SGO&, Map*, float, float, Controller, float, float)
 *
 *   PARAMETERS: sprite  - Sprite for this enemy
 *               map     - Pointer to the map this enemy resides on
@@ -51,7 +51,7 @@ id_resource minShadow;
 *
 *   RETURNS: void
 *
-*   NOTES: Constructor for gatekeepers. Initializes the gate keeper sets attributes
+*   NOTES: Constructor for Minions. Initializes the gate keeper sets attributes
 *          Sets animation.
 ******************************************************************************/
 Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
@@ -116,148 +116,169 @@ Minion::~Minion()
 ******************************************************************************/
 void Minion::onUpdate(float deltaTime)
 {
-  //Perform the generic gatekeeper animation
+  //Perform the generic Minion animation
   animate();
 
-  //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
+  //  std::cout << "Minion.cpp ON UPDATE." << std::endl;
   std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
   for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
       ; it != eventQueue->end()
       ; ++it )
   {
-    int xDir;
-    int yDir;
-    MoveEvent* ev;
+
+	std::cout << "Minion::Event " << (*it)->type << std::endl;
+
     // switch on type
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
-		{
-    		ev = (MoveEvent*) (*it);
-			xDir = ev->getXDir();
-			yDir = ev->getYDir();
+  		{
+    		MoveEvent* ev = (MoveEvent*) (*it);
 
-			Entity::aMove(ev->getX(), ev->getY(), false);
+        processMoveEvent(ev);
 
-			if (yDir < 0)
-			{
-			  newYSpeed = -_ySpeed;
-			  int randDirection = (rand() % 3) - 1;
-			  getSprite().sprite().setScale(randDirection, 1);
-			  movingUp = true;
-			  movingDown = false;
-			}
-			else
-			{
-			  newYSpeed = _ySpeed;
-			  int randDirection = (rand() % 3) - 1;
-			  getSprite().sprite().setScale(randDirection, 1);
-			  movingDown = true;
-			  movingUp = false;
-			}
+    		break;
+  		}
+  		case ::Marx::SET_HEALTH:
+  		{
+  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-			if (xDir > 0)
-			{
-			  newXSpeed = _xSpeed;
-			  getSprite().sprite().setScale(1, 1);
-			  movingRight = true;
-			  movingLeft = false;
-			}
-			else
-			{
-			  newXSpeed = -_xSpeed;
-			  getSprite().sprite().setScale(-1, 1);
-			  movingLeft = true;
-			  movingRight = false;
-			}
+        processSetHealthEvent(event);
 
-			if (xDir == 0)
-			{
-			  newXSpeed = 0;
-			  movingLeft = false;
-			  movingRight = false;
-			}
+        break;
+  		}
+      case ::Marx::ATTACK:
+      {
+        AttackEvent* aev = (AttackEvent*) (*it);
 
-			if (yDir == 0)
-			{
-			  newYSpeed = 0;
-			  movingUp = false;
-			  movingDown = false;
-			}
+        processAttackEvent(aev);
 
-			//playSound(newXSpeed, newYSpeed);
-
-    	break;
-		}
-		case ::Marx::SET_HEALTH:
-		{
-			SetHealthEvent * event = (SetHealthEvent*)(*it);
-			_health = getHealth()-event->getChange();
-
-			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
-			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
-			cont->addEvent(pointsEvent);
-
-			if(_health <= 0)
-			{
-				std::cout << "Minion Dead" << std::endl;
-				onDestroy();
-			}
-
-            break;
-		}
-		case ::Marx::ATTACK:
-		{
-			_attackSpeed -= deltaTime;
-			if (_attackSpeed <= 0)
-			{
-				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-				std::cout << "ATTACK" << std::endl;
-				createSkAttack(*saev, getSprite(), left, top);
-				_attackSpeed = 1;
-			}
-			break;
-		}
-    case ::Marx::SKILL:
-    {
+        break;
+      }
+      case ::Marx::SKILL:
+      {
         // process the skill event, and increase/decrease hp and stuff
         SkillEvent *ev = (SkillEvent*)(*it);
-        printf("GateKeeper BEFORE Health: %d\n", _health);
-        switch(ev->getSkillType())
-        {
-            case SKILLTYPE::HEAL:
-                _health += ev->getValue();
-            break;
-            case SKILLTYPE::DMG:
-                _health -= ev->getValue();
-            break;
-            case SKILLTYPE::BUFF:
-                _xSpeed += ev->getValue();
-                _ySpeed += ev->getValue();
-            break;
-            case SKILLTYPE::DEBUFF:
-                _xSpeed -= ev->getValue();
-                _ySpeed -= ev->getValue();
-            break;
-        }
 
-        printf("GateKeeper AFTER Health: %d\n", _health);
+        processSkillEvent(ev);
 
-        if(_health <= 0)
-        {
-          std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-          onDestroy();
-        }
         break;
-    }
+      }
     }
 
 
   }
   getController()->clearEvents();
 
+
   Entity::rMove(newXSpeed, newYSpeed,false);
 
+}
+
+
+void Minion::processMoveEvent(MoveEvent* ev)
+{
+  int xDir = ev->getXDir();
+  int yDir = ev->getYDir();
+
+  Entity::aMove(ev->getX(), ev->getY(), false);
+
+  if (yDir < 0)
+  {
+    newYSpeed = -_ySpeed;
+    int randDirection = (rand() % 3) - 1;
+    getSprite().sprite().setScale(randDirection, 1);
+    movingUp = true;
+    movingDown = false;
+  }
+  else
+  {
+    newYSpeed = _ySpeed;
+    int randDirection = (rand() % 3) - 1;
+    getSprite().sprite().setScale(randDirection, 1);
+    movingDown = true;
+    movingUp = false;
+  }
+
+  if (xDir > 0)
+  {
+    newXSpeed = _xSpeed;
+    getSprite().sprite().setScale(1, 1);
+    movingRight = true;
+    movingLeft = false;
+  }
+  else
+  {
+    newXSpeed = -_xSpeed;
+    getSprite().sprite().setScale(-1, 1);
+    movingLeft = true;
+    movingRight = false;
+  }
+
+  if (xDir == 0)
+  {
+    newXSpeed = 0;
+    movingLeft = false;
+    movingRight = false;
+  }
+
+  if (yDir == 0)
+  {
+    newYSpeed = 0;
+    movingUp = false;
+    movingDown = false;
+  }
+
+  playSound(newXSpeed, newYSpeed);
+}
+
+void Minion::processSkillEvent(SkillEvent* ev)
+{
+  printf("Minion BEFORE Health: %d\n", _health);
+  switch(ev->getSkillType())
+  {
+      case SKILLTYPE::HEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::DMG:
+          _health -= ev->getValue();
+      break;
+      case SKILLTYPE::BUFF:
+          _xSpeed += ev->getValue();
+          _ySpeed += ev->getValue();
+      break;
+      case SKILLTYPE::DEBUFF:
+          _xSpeed -= ev->getValue();
+          _ySpeed -= ev->getValue();
+      break;
+  }
+
+  printf("Minion AFTER Health: %d\n", _health);
+
+  if(_health <= 0)
+  {
+    std::cout << "Moving Minion to ambiguous destination!!" << std::endl;
+    onDestroy();
+  }
+}
+void Minion::processSetHealthEvent(SetHealthEvent* ev)
+{
+  _health = getHealth()-ev->getChange();
+
+  Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
+  AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
+  cont->addEvent(pointsEvent);
+
+  if(_health <= 0)
+  {
+    std::cout << "Minion Dead" << std::endl;
+    onDestroy();
+  }
+}
+void Minion::processAttackEvent(AttackEvent* aev)
+{
+  std::cout << "ATTACK" << std::endl;
+  createAttack(*aev, getSprite(), left, top);
 }
 
 /******************************************************************************
@@ -289,7 +310,7 @@ void Minion::playSound(float xSpeed, float ySpeed)
   // first get the tile type we're walking on
   Cell* footstepTile = *getCell().begin();
   sf::Vector2f soundPos(left, top);
-    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's GateKeeper's
+    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's Minion's
                                   // footsteps from fading & being off-center
     footstep.setMinDistance(3.0);
 
@@ -744,7 +765,7 @@ void Minion::onCreate()
 *
 *   RETURNS: void
 *
-*   NOTES: Stops gatekeeper sounds
+*   NOTES: Stops Minion sounds
 ******************************************************************************/
 void Minion::stopAllSounds()
 {

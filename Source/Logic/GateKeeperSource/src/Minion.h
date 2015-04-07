@@ -52,6 +52,10 @@ class Minion : public GateKeeper
 	  bool isMoving();
 		void playSound(float, float);
 		void animate();
+		void processMoveEvent(MoveEvent* ev);
+		void processSkillEvent(SkillEvent* ev);
+		void processSetHealthEvent(SetHealthEvent* ev);
+		void processAttackEvent(AttackEvent* aev);
 
 	protected:
 		bool movingLeft;

@@ -129,7 +129,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         {
           attackEvent = new AttackEvent(getId(), ActionType::normalAttack, vessel_X, vessel_Y);
 
-          //addEvent(attackEvent);
+          addEvent(attackEvent);
           attackTimer = 1;
         }
 

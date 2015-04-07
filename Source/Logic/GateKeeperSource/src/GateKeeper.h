@@ -67,7 +67,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void processSkillEvent(SkillEvent* ev);
 		virtual void processSetHealthEvent(SetHealthEvent* ev);
 		virtual void processAttackEvent(AttackEvent* aev);
-        ENTITY_TYPES getType();
+  	ENTITY_TYPES getType();
 
 	protected:
 		bool movingLeft;
