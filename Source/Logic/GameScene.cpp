@@ -686,9 +686,12 @@ void GameScene::processEvents(sf::Event& e)
 	{
 		if(characterType == PLAYER_MODE::VESSEL)
 		{
-			sf::Vector2i mouse = sf::Mouse::getPosition();
-			sf::Vector2f viewVector = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
-			std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
+			sf::Vector2f mouse = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
+			sf::Vector2f viewVector = viewMain.getCenter();
+			
+			/*viewVector.x = convertX(viewVector.x);
+			viewVector.y = convertY(viewVector.y);
+			*/std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
 			std::cout << "ViewMain centre: " << viewVector.x << " " << viewVector.y << std::endl;
 
 			for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
