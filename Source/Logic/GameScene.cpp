@@ -86,6 +86,40 @@ void onclick()
 
 
 /******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
+void onclickLevelup()
+{
+	static int level = 1;
+	std::string slevel;
+
+	// level should be double digits
+	if(level < 10)
+		slevel = "0" + std::to_string(level++);
+	else
+		slevel = std::to_string(level++);
+    //pubLevelInd->setText(slevel);
+}
+
+
+>>>>>>> 8b5949b3d29f1d977e5d9d15967981f11fd19211
+/******************************************************************************
 *	FUNCTION: GameScene
 *
 *	DATE: March 10, 2015
@@ -899,7 +933,7 @@ void GameScene::generateWater()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Jeff Bayntun
 *
 *	INTERFACE:
 *
@@ -924,12 +958,6 @@ void GameScene::generateUI()
 	sf::Vector2f healthSize = sf::Vector2f(width, height);
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
-
-	// Create level indicator
-
-	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Assets/Fonts/arial.ttf");
-
 
 	createClassUI();
 }

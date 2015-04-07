@@ -85,6 +85,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-11, -28);
+	
+	travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_attack_02.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_hurt_03.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_death.ogg"));
+
+    travel_Snd.setBuffer(*Manager::SoundManager::get(travel_SndB));
+    attack_Snd.setBuffer(*Manager::SoundManager::get(attack_SndB));
+    hurt_Snd.setBuffer(*Manager::SoundManager::get(hurt_SndB));
+    death_Snd.setBuffer(*Manager::SoundManager::get(death_SndB));
+    travel_Snd.setLoop(true);
+    travel_Snd.play();
 }
 
 Minion::~Minion()
