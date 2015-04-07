@@ -231,6 +231,7 @@ void ServerGameScene::createPlayers()
     PlayerEntity* currPlayer;
     Session* currSession;
     PLAYER_MODE mode;
+    PLAYER_TYPE type;
     int vesselNo = 0;
     int vesselX = 0;
     int vesselY = 0;
@@ -241,7 +242,7 @@ void ServerGameScene::createPlayers()
         currPlayer = it->second;
         currSession = it->first;
         mode = currPlayer->getMode();
-
+        type = currPlayer->getType(); //sanderschange
         switch(mode)
         {
             case PLAYER_MODE::VESSEL:
@@ -253,7 +254,18 @@ void ServerGameScene::createPlayers()
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
-                initData.type = ENTITY_TYPES::VESSEL;
+                //sanderschangestart
+                //initData.type = ENTITY_TYPES::VESSEL;
+                switch(type)
+                {
+                  case PLAYER_TYPE::WARRIOR:
+                      initData.type = ENTITY_TYPES::VESSEL_WARRIOR;
+                      break;
+                  case PLAYER_TYPE::SHAMAN:
+                      initData.type = ENTITY_TYPES::VESSEL_SHAMAN;
+                      break;
+                }
+                //sanderschangeend
 		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;

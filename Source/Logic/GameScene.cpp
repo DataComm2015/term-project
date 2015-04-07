@@ -3,7 +3,7 @@
 --
 -- PROGRAM: Sojourn
 --
--- FUNCTIONS:	
+-- FUNCTIONS:
 --
 -- DATE: March 10, 2015
 --
@@ -53,17 +53,17 @@ id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::Textu
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -85,17 +85,17 @@ GUI::HealthBar *pubHB;
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -117,17 +117,17 @@ GUI::TextBox *pubLevelInd;
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -150,17 +150,17 @@ void onclickLevelup()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
 *	PROGRAMMER: Chris Klassen
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -245,17 +245,17 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -271,8 +271,10 @@ void GameScene::onLoad()
 	{
 		case PLAYER_MODE::VESSEL:
 			classType = cm->getCommandEntity()->getLobbyOption()->vesselChoice;
+			break;
 		case PLAYER_MODE::DEITY:
 			classType = cm->getCommandEntity()->getLobbyOption()->deityChoice;
+			break;
 	}
 
 	printf("characterType: %d, classType: %d\n",characterType,classType);
@@ -302,17 +304,17 @@ void GameScene::onLoad()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -355,17 +357,17 @@ void GameScene::positionUI()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -380,17 +382,17 @@ void GameScene::setPlayerVessel(Vessel *vessel)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -411,17 +413,17 @@ void GameScene::stopAllSounds()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -485,17 +487,17 @@ GameScene::~GameScene()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
 *	PROGRAMMER: Sanders Lee
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -597,17 +599,17 @@ void GameScene::update(sf::Time t)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -800,17 +802,17 @@ void GameScene::draw()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -825,17 +827,17 @@ void GameScene::addKeyListener(KeyListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -850,17 +852,17 @@ void GameScene::rmKeyListener(KeyListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -875,17 +877,17 @@ void GameScene::addClickListener(ClickListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -900,17 +902,17 @@ void GameScene::rmClickListener(ClickListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1010,17 +1012,17 @@ void GameScene::generateWater()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1084,17 +1086,17 @@ void GameScene::generateUI()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1153,17 +1155,17 @@ void GameScene::setUI()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1215,17 +1217,17 @@ void onClickVitalityOne() //healskillbtn
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1244,17 +1246,17 @@ void onClickVitalityTwo()//buffskillbtn
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1273,17 +1275,17 @@ void onClickVitalityThree() //healingcircleskillbtn
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1302,17 +1304,17 @@ void onClickDemiseOne() //hurtskillbtn
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1331,17 +1333,17 @@ void onClickDemiseTwo() //debuffskillbtn
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *

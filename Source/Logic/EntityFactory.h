@@ -59,8 +59,8 @@ class EntityFactory
         ~EntityFactory();
     private:
         static EntityFactory* instance;
-        id_resource gkSprite, minionSprite, projSprite, vesselSprite, maskSprite, spearSprite, structImage;
-        SGO gkSGO, minionSGO, projSGO, vesselSGO, maskSGO, spearSGO, structSprite;
+        id_resource gkSprite, minionSprite, projSprite, vesselSprite, maskSprite, spearSprite, staffSprite, structImage;
+        SGO gkSGO, minionSGO, projSGO, vesselSGO, maskSGO, spearSGO, staffSGO, structSprite;
 };
 
 #endif

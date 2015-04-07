@@ -25,6 +25,7 @@
 #include "EntityFactory.h"
 #include "EntityTypes.h"
 #include "Creature.h"
+#include "Entities/CommandEntity.h"
 
 #include "../Engine/AttackAction.h"
 
@@ -95,6 +96,10 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/spear-run-sheet.png")
     );
 
+    staffSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/staff-run-sheet.png")
+    );
+
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
@@ -122,6 +127,9 @@ EntityFactory::EntityFactory()
 
     spearSGO.sprite().setTexture(*Manager::TextureManager::get(spearSprite));
     spearSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    staffSGO.sprite().setTexture(*Manager::TextureManager::get(staffSprite));
+    staffSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 }
 
 
@@ -296,40 +304,90 @@ Entity* EntityFactory::makeEntity(
     float y)
 {
     Entity* entity;
+    int classType;
 
+    //sanderschangestart
+    /*std::cout << "WHAT IS HAPPENING??" << std::endl;
 
-    switch(type)
+    //check the PLC for the value of the class type
+    ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+        std::cout << "got a cm" << std::endl;
+    if ( cm->getCommandEntity() != NULL)
     {
-        case ENTITY_TYPES::BASIC_TYPE:
-        {
-            GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
-            entity = gk;
-            break;
-        }
-        case ENTITY_TYPES::VESSEL:
-            entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
-            break;
-        case STRUCTURES:
-            //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
-            break;
-        case ENTITY_TYPES::I_DONT_KNOW:
-        case ENTITY_TYPES::BAWS:
-        case ENTITY_TYPES::MINION:
-        {
-          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
-          entity = minion;
-          break;
-        }
-        case ENTITY_TYPES::MINI_BOSS:
-			break;
-        case PROJECTILE:
-            //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
-            break;
-        default:
-            break;
+          std::cout << "cm not null" << std::endl;
+          PLAYER_MODE characterType = cm->getCommandEntity()->getPlayerMode();
+          std::cout << "got the character type" << std::endl;
+          switch (characterType)
+          {
+              case PLAYER_MODE::VESSEL:
+                classType = (int) cm->getCommandEntity()->getLobbyOption()->vesselChoice;
+                break;
+              case PLAYER_MODE::DEITY:
+                classType = (int) cm->getCommandEntity()->getLobbyOption()->deityChoice;
+                break;
+          }
+    //sanderschangeend*/
+          switch(type)
+          {
+              case ENTITY_TYPES::BASIC_TYPE:
+              {
+                  GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+                  entity = gk;
+                  break;
+              }
+              //sanderschangestart
+              /*
+              case ENTITY_TYPES::VESSEL:
+                  std::cout << "making a vessel" << std::endl;
+                  if ( classType == 1 )
+                  {
+                    std::cout << "class type 1" << std::endl;
+                    entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
+                  }
+                  if ( classType == 2 )
+                  {
+                    std::cout << "class type 2" << std::endl;
+                    entity = new Vessel(vesselSGO, maskSGO, staffSGO,map,x,y,cont,1,1);
+                  }
+                  break;
+                  //sanderschangeend*/
+              case ENTITY_TYPES::VESSEL_WARRIOR:
+                  entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
+                  printf("warrior selected whooooooooo\n");
+                  break;
+              case ENTITY_TYPES::VESSEL_SHAMAN:
+                  entity = new Vessel(vesselSGO, maskSGO, staffSGO,map,x,y,cont,1,1);
+                  printf("shaman selected whooooooooo\n");
+                  break;
+              case STRUCTURES:
+                  //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
+                  break;
+              case ENTITY_TYPES::I_DONT_KNOW:
+              case ENTITY_TYPES::BAWS:
+              case ENTITY_TYPES::MINION:
+              {
+                GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+                entity = minion;
+                break;
+              }
+              case ENTITY_TYPES::MINI_BOSS:
+      			       break;
+              case PROJECTILE:
+                  //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
+                  break;
+              default:
+                  break;
+          }
+          return entity;
+    //sanderschangestart
+    /*
     }
-
-    return entity;
+    else
+    {
+      std::cout << "null null null" << std::endl;
+      return NULL;
+    }
+    //sanderschangeend*/
 }
 
 
@@ -362,6 +420,7 @@ Entity* EntityFactory::makeEntity(
 {
     Entity* entity;
 
+    std::cout << "SDAGDRHDARH" << std::endl;
 
     switch(type)
     {
@@ -372,6 +431,7 @@ Entity* EntityFactory::makeEntity(
             break;
         }
         case ENTITY_TYPES::VESSEL:
+            //
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
         case STRUCTURES:

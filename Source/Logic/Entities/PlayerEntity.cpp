@@ -14,7 +14,7 @@
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
  *   class over the network, which is on the client side.
- * 
+ *
  * the client sends command using {Command::update} such as move commands or
  *   others like choosing their character to the Server. such commands are
  *   handled in the {Player::onUpdate} method. and sent using the.
@@ -45,9 +45,21 @@ void PlayerEntity::setMode(PLAYER_MODE mode)
     update(msg);
 }
 
+//sanderschange
+void PlayerEntity::setType(PLAYER_TYPE type)
+{
+    this->type = type;
+}
+
 PLAYER_MODE PlayerEntity::getMode()
 {
     return mode;
+}
+
+//sanderschange
+PLAYER_TYPE PlayerEntity::getType()
+{
+    return type;
 }
 
 void PlayerEntity::onUnregister(Session* session, Message msg)
@@ -83,6 +95,15 @@ void PlayerEntity::onUpdate(Message msg)
         case PlayerCommandMsgType::SELECT_LOBBY_OPTIONS:
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
+            switch( lobbyChoices.vesselChoice )
+            {
+              case 1:
+                this->setType(PLAYER_TYPE::WARRIOR);
+                break;
+              case 2:
+                this->setType(PLAYER_TYPE::SHAMAN);
+                break;
+            }
             server->getGameState()->notifyReadyForGame();
 
             break;
@@ -90,17 +111,17 @@ void PlayerEntity::onUpdate(Message msg)
 
         case PlayerCommandMsgType::SERVER_SELECTED_NICKNAME:
         {
-            
+
             char* username = new char[16];
             memcpy(username, msg.data, strlen((char*)msg.data));
             nickname = username;
             fprintf(stdout, "PLAYER USERNAME: %s\n", username);
             fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
-            fflush(stdout); 
+            fflush(stdout);
 
             break;
         }
-        
+
         //struct skill{
         //  float curX;
         //  float curY;
@@ -112,7 +133,7 @@ void PlayerEntity::onUpdate(Message msg)
         {
             Vessel *vessel = NULL;
             skill *sk = ((skill*) msg.data);
-            
+
             //for(int i = 0; i < 5; i++)
             //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
 
@@ -129,12 +150,12 @@ void PlayerEntity::onUpdate(Message msg)
                 {
                     vessel = static_cast<Vessel*>(serverRef->getPlayerList()->at(i));
 
-                    
+
                     if(vessel == NULL)
-                        continue;                    
-                    
+                        continue;
+
                     SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
-                    
+
                     switch(sk->st)
                     {
                         case SKILLTYPE::HEAL:
@@ -154,13 +175,13 @@ void PlayerEntity::onUpdate(Message msg)
                             vessel->getController()->addEvent(ev);
                         break;
                     }
-                    
+
                     vessel = NULL;
                 }
             }
-            
-            
-            
+
+
+
             break;
         }
 
