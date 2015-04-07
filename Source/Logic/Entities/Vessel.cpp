@@ -269,7 +269,7 @@ break;
 				if(currentHealth <= 0)
 				{
 					std::cout << "Moving vessel to ambiguous destination!!" << std::endl;
-					Entity::aMove(-1, -1, true);
+					onDestroy();
 				}
 				
 				printf("Vessel AFTER Health: %d\n", currentHealth);
