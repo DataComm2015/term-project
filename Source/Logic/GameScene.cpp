@@ -85,7 +85,6 @@ void onclick()
 }
 
 
-
 /******************************************************************************
 *	FUNCTION:
 *
@@ -288,7 +287,6 @@ void GameScene::positionUI()
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-
 	//the border for the minimap
 	minimapBorder.setSize(
 		sf::Vector2f(viewMinimap.getViewport().width*windowSize.x,
@@ -321,6 +319,7 @@ void GameScene::positionUI()
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
 	myVessel = vessel;
+	myVessel->setHealthBar(hb);
 }
 
 
@@ -959,7 +958,6 @@ void GameScene::generateUI()
 	sf::Vector2f healthSize = sf::Vector2f(width, height);
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
-
 
 	createClassUI();
 }
