@@ -20,6 +20,8 @@ id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Ass
 //static id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
 //static id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
+id_resource vesselShadow;
+
 //TO DO:
 //1) GIVE IT A SPRITE
 //2) MAKE THE SPRITE ANIMATE
@@ -84,12 +86,23 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	myX = 0;
 	myY = 0;
 
-	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 7);
-	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 7);
-	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 7);
+	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 3);
+	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 3);
+	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 3);
 
 	this->add(mask_sprite);
   this->add(weapon_sprite);
+
+	// Add the drop shadow
+	vesselShadow = Manager::TextureManager::store(
+			Manager::TextureManager::load("Assets/Art/Shadows/vessel_shadow.png")
+	);
+
+	shadow.sprite().setTexture(*Manager::TextureManager::get(vesselShadow));
+	shadow.sprite().setTextureRect(sf::IntRect(0, 0, 15, 6));
+
+	this->add(shadow);
+	shadow.sprite().setOrigin(-6, -28);
 
 	std::cout << "Vessel constructed successfully!" << std::endl;
 }
@@ -220,7 +233,7 @@ break;
 					{
 						SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
 						createSkAttack(*saev, satk_sprite, left, top);
-						attCool = 0;					
+						attCool = 0;
 					}
 				}
                 break;
@@ -1270,5 +1283,3 @@ float Vessel::getXPosition()
 {
 	return yPos;
 }
-
-

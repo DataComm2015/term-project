@@ -26,6 +26,8 @@ using namespace Manager;
 //static id_resource hurtSoundMinion 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
 //static id_resource attackSoundMinion		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
+id_resource minShadow;
+
 // bug fix by Sanders Lee
 Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
@@ -46,8 +48,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 8, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 8, 5);
 
+    // Add shadows
+    minShadow = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Shadows/wisp_shadow.png")
+    );
+
+    shadow.sprite().setTexture(*Manager::TextureManager::get(minShadow));
+    shadow.sprite().setTextureRect(sf::IntRect(0, 0, 9, 4));
+
+    this->add(shadow);
+    shadow.sprite().setOrigin(-11, -28);
 }
 
 Minion::~Minion()
@@ -139,7 +151,7 @@ void Minion::onUpdate(float deltaTime)
 		{
 			SetHealthEvent * event = (SetHealthEvent*)(*it);
 			_health = getHealth()-event->getChange();
-			
+
 			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
 			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
 			cont->addEvent(pointsEvent);
@@ -186,9 +198,9 @@ void Minion::onUpdate(float deltaTime)
                     _ySpeed -= ev->getValue();
                 break;
             }
-            
+
             printf("GateKeeper AFTER Health: %d\n", _health);
-            
+
             if(_health <= 0)
             {
               std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
