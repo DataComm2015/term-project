@@ -220,7 +220,7 @@ break;
 					{
 						SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
 						createSkAttack(*saev, satk_sprite, left, top);
-						attCool = 0;					
+						attCool = 0;
 					}
 				}
                 break;
@@ -1270,5 +1270,3 @@ float Vessel::getXPosition()
 {
 	return yPos;
 }
-
-
