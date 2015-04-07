@@ -79,7 +79,8 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 void ProjectileManager::
 enqueue(Marx::Projectile * projectile)
 {
-	projectile_pool.insert(projectile);
+	delete projectile;
+	//projectile_pool.insert(projectile);
 }
 
 void ProjectileManager::
