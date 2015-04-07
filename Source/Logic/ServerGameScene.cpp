@@ -78,6 +78,13 @@ void ServerGameScene::update(sf::Time time)
 
     if (timer > 0)
     {
+        // Check if the game round should end
+        if (!ALLOW_SINGLE_PLAYER && gameShouldEnd())
+        {
+            timer = 0;
+        }
+
+        /*
         if (syncTimer > 0)
         {
           syncTimer -= time.asSeconds();
@@ -94,6 +101,7 @@ void ServerGameScene::update(sf::Time time)
 
           syncTimer = SYNC_INTERVAL;
         }
+        */
 
         auto entities = cMap->getEntities();
         for ( auto it = entities.begin(); it != entities.end(); ++it)
@@ -135,8 +143,6 @@ void ServerGameScene::draw()
 
 void ServerGameScene::enterScene()
 {
-    printf("HELLO DARKNESS\n");
-
     worldSeed = rand();
     timer = GAME_ROUND_LENGTH_SECONDS;
     lobtimer = SCOREBOARD_LENGTH_SECONDS;
@@ -328,3 +334,20 @@ std::vector<Vessel*> *ServerGameScene::getPlayerList()
 {
   return &playerList;
 }
+
+bool ServerGameScene::gameShouldEnd()
+{
+    int alive = 0;    
+
+    for (int i = 0; i < playerList.size(); i++)
+    {
+        if (!playerList[i]->checkDeath())
+        {
+            alive++;
+        }
+    }
+
+    return (alive <= 1);
+}
+
+

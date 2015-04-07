@@ -19,14 +19,14 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
     currentTime = SCORE_COUNTDOWN;
 
     /* Get texture assets */
-    
+
     SCORE_ELEMENTS[0] = (char *)"NAME\0";
     SCORE_ELEMENTS[1] = (char *)"ROLE\0";
     SCORE_ELEMENTS[2] = (char *)"SCORE\0";
 
     data_received = (Player*) malloc(sizeof(Player) * 12);
 
-    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/scoreboard-background.png"));
+    backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/scoreboard.png"));
 
     /*Init artwork*/
 
@@ -41,7 +41,7 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
         scoreboard[0][i].text().move(SCORE_X + (i * OFFSET_X), SCORE_Y);
         scoreboard[0][i].toggleSelected(false);
         scoreboard[0][i].text().setFont(*arial);
-        
+
         scoreboard[0][i].setText(SCORE_ELEMENTS[i]);
     }
 
@@ -55,7 +55,7 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
             scoreboard[rows][cols].text().setFont(*arial);
         }
     }
-    
+
     countdownBox = new GUI::TextBox();
     countdownBox->text().setScale(SCALE * 2, SCALE * 2);
     countdownBox->text().move(C_BOX_X, C_BOX_Y);
@@ -75,7 +75,7 @@ void ClientScoreboardScene::onLoad()
 {
     currentTime = SCORE_COUNTDOWN;
 
-    background->sprite().setPosition(0,0);
+    background->sprite().setPosition(SCREEN_WIDTH/3,SCREEN_HEIGHT/3);
     setScoreboard(data_received);
 
     /* Set the active view */
@@ -107,7 +107,7 @@ void ClientScoreboardScene::processEvents(sf::Event& e)
 	    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->shutdown();
 		AppWindow::getInstance().close();
 	}
-	
+
 	countdownBox->process(e);
 }
 
@@ -123,7 +123,7 @@ void ClientScoreboardScene::draw()
 
     // draw the objects
     renderer.draw(*background);
-    
+
     for (int rows = 0; rows < SCORE_ROWS; rows++)
     {
         for (int cols = 0; cols < SCORE_COLS; cols++)
@@ -131,7 +131,7 @@ void ClientScoreboardScene::draw()
             renderer.draw(scoreboard[rows][cols]);
         }
     }
-    
+
     countdownBox->setText(std::to_string((int)currentTime) + "s" );
     renderer.draw(*countdownBox);
 
@@ -145,7 +145,7 @@ void ClientScoreboardScene::updateMainView(sf::View& v)
     v = AppWindow::getInstance().getCurrentView();
 
 	//needs to be 3X scale eventually
-	v.zoom(SCALE);
+	v.zoom(0.33);
 }
 
 ClientScoreboardScene * ClientScoreboardScene::getInstance()
@@ -175,8 +175,9 @@ void ClientScoreboardScene::setScoreboard(Player* players)
                 case 2:
                     scoreboard[rows][1].setText("Deity");
                     break;
-            }                     
+            }
             scoreboard[rows][2].setText(std::to_string(players[rows - 1].score));
         }
     }
 }
+
