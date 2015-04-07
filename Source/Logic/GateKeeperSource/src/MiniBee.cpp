@@ -1,5 +1,5 @@
 /********************************************************************************
-**	SOURCE FILE:	Minion.cpp -
+**	SOURCE FILE:	MiniBee.cpp -
 **
 **	PROGRAM:	Term_Project
 **
@@ -11,7 +11,7 @@
 **	PROGRAMMER: Filip Gutica A00781910
 **
 ***********************************************************************************/
-#include "Minion.h"
+#include "MiniBee.h"
 #include "../../Event.h"
 #include "../../Entities/ServerEnemyController.h"
 #include <typeinfo>
@@ -21,13 +21,13 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource stoneWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource hurtSoundMinion 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-static id_resource attackSoundMinion		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+static id_resource grassWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+static id_resource stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+static id_resource hurtSoundMiniBee 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+static id_resource attackSoundMiniBee		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 // bug fix by Sanders Lee
-Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
+MiniBee::MiniBee(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
     _range = 10;
@@ -46,11 +46,11 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 8, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 16, 7);
 
 }
 
-Minion::~Minion()
+MiniBee::~MiniBee()
 {
     footstep.stop();
 }
@@ -60,7 +60,7 @@ Minion::~Minion()
 --				Sanders Lee (Debugged synchronization problem across clients,
 --                           Added sound for GateKeeper travel)
 ***/
-void Minion::onUpdate(float deltaTime)
+void MiniBee::onUpdate(float deltaTime)
 {
   //Perform the generic gatekeeper animation
   animate();
@@ -145,7 +145,7 @@ void Minion::onUpdate(float deltaTime)
 
 }
 
-void Minion::playSound(float xSpeed, float ySpeed)
+void MiniBee::playSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;
@@ -166,7 +166,7 @@ void Minion::playSound(float xSpeed, float ySpeed)
       (soundActive && steppedTile != GRASS))
     {
       footstep.stop();
-      footstep = SoundManager::play(grassWalkSoundMinion, soundPos);
+      footstep = SoundManager::play(grassWalkSoundMiniBee, soundPos);
       footstep.setLoop(true);
       footstep.play();
       soundActive = true;
@@ -179,7 +179,7 @@ void Minion::playSound(float xSpeed, float ySpeed)
       (soundActive && steppedTile != STONE))
     {
       footstep.stop();
-      footstep = SoundManager::play(stoneWalkSoundMinion, soundPos);
+      footstep = SoundManager::play(stoneWalkSoundMiniBee, soundPos);
       footstep.setLoop(true);
       footstep.play();
       soundActive = true;
@@ -194,7 +194,7 @@ void Minion::playSound(float xSpeed, float ySpeed)
   }//*/
 }
 
-void Minion::animate()
+void MiniBee::animate()
 {
   if (isMoving())
     gkAnimation->step(1);
@@ -202,99 +202,99 @@ void Minion::animate()
     gkAnimation->step(5);
 }
 
-bool Minion::isMoving()
+bool MiniBee::isMoving()
 {
   return (movingLeft || movingRight || movingUp || movingDown);
 }
 
-void Minion::setRange(int r)
+void MiniBee::setRange(int r)
 {
   _range = r;
 }
 
-void Minion::setHealth(int h)
+void MiniBee::setHealth(int h)
 {
   _health = h;
 }
 
-void Minion::setAttack(int a)
+void MiniBee::setAttack(int a)
 {
   _attack = a;
 }
 
-void Minion::setAttackSpeed(int as)
+void MiniBee::setAttackSpeed(int as)
 {
   _attackSpeed == as;
 }
 
 
-void Minion::setXSpeed(float x)
+void MiniBee::setXSpeed(float x)
 {
   _xSpeed = x;
 }
 
-void Minion::setYSpeed(float y)
+void MiniBee::setYSpeed(float y)
 {
   _ySpeed = y;
 }
 
-void Minion::setSpeed(int _speed)
+void MiniBee::setSpeed(int _speed)
 {
     _xSpeed = _speed;
     _ySpeed = _speed;
 }
 
-int Minion::getSpeed()
+int MiniBee::getSpeed()
 {
 	return _xSpeed;
 }
 
-int Minion::getRange()
+int MiniBee::getRange()
 {
   return _range;
 }
 
-int Minion::getHealth()
+int MiniBee::getHealth()
 {
   return _health;
 }
 
-int Minion::getAttack()
+int MiniBee::getAttack()
 {
   return _attack;
 }
 
-int Minion::getAttackSpeed()
+int MiniBee::getAttackSpeed()
 {
   return _attackSpeed;
 }
 
-int Minion::getMovementSpeed()
+int MiniBee::getMovementSpeed()
 {
   return _movementSpeed;
 }
 
-void Minion::turn()
+void MiniBee::turn()
 {
 
 }
 
-void Minion::onCreate()
+void MiniBee::onCreate()
 {
 
 }
 
-void Minion::onDestroy()
+void MiniBee::onDestroy()
 {
 
 }
 
-void Minion::stopAllSounds()
+void MiniBee::stopAllSounds()
 {
     footstep.stop();
 }
 
-bool Minion::operator==(const VEntity&)
+bool MiniBee::operator==(const VEntity&)
 {
   return true;
 }
@@ -317,7 +317,7 @@ bool Minion::operator==(const VEntity&)
 -- NOTES:
 -- This function provides a method for retrieving the Entity from the Creature.
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity *Minion::getEntity()
+Entity *MiniBee::getEntity()
 {
     return this;
 }

@@ -56,6 +56,7 @@ FILES_LOGIC=	Logic/Environment/Block.o \
 				Logic/GateKeeperSource/src/GateKeeper.o \
 				Logic/GateKeeperSource/src/Minion.o \
 				Logic/GateKeeperSource/src/MiniBoss.o \
+				Logic/GateKeeperSource/src/MiniBee.o \
 				Logic/Entities/Structure.o \
 				Logic/Entities/ServerGameState.o \
 				Logic/CreditScene.o \
