@@ -3,7 +3,7 @@
 --
 -- PROGRAM: Sojourn
 --
--- FUNCTIONS:	
+-- FUNCTIONS:
 --
 -- DATE: March 10, 2015
 --
@@ -48,17 +48,17 @@ id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::Te
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -80,17 +80,17 @@ GUI::HealthBar *pubHB;
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -112,17 +112,17 @@ GUI::TextBox *pubLevelInd;
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -145,17 +145,17 @@ void onclickLevelup()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
 *	PROGRAMMER: Chris Klassen
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -196,6 +196,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	// Create the maps
 	std::cout << "creating map " << std::endl;
 	cMap = new Map(90, 90);
+	myMap = cMap;
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
@@ -239,17 +240,17 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -295,17 +296,17 @@ void GameScene::onLoad()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -348,17 +349,17 @@ void GameScene::positionUI()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -373,17 +374,17 @@ void GameScene::setPlayerVessel(Vessel *vessel)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -404,17 +405,17 @@ void GameScene::stopAllSounds()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -478,17 +479,17 @@ GameScene::~GameScene()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
 *	PROGRAMMER: Melvin Loho, Sanders Lee
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -586,17 +587,17 @@ void GameScene::update(sf::Time t)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -634,21 +635,25 @@ void GameScene::processEvents(sf::Event& e)
 				case sf::Keyboard::Left:
 				{
 					viewMain.setCenter(viewMain.getCenter().x - camSpeed, viewMain.getCenter().y);
+					vm = viewMain;
 					break;
 				}
 				case sf::Keyboard::Right:
 				{
 					viewMain.setCenter(viewMain.getCenter().x + camSpeed, viewMain.getCenter().y);
+					vm = viewMain;
 					break;
 				}
 				case sf::Keyboard::Up:
 				{
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y - camSpeed);
+					vm = viewMain;
 					break;
 				}
 				case sf::Keyboard::Down:
 				{
 					viewMain.setCenter(viewMain.getCenter().x, viewMain.getCenter().y + camSpeed);
+					vm = viewMain;
 					break;
 				}
 				case sf::Keyboard::Return:
@@ -790,17 +795,17 @@ void GameScene::draw()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -815,17 +820,17 @@ void GameScene::addKeyListener(KeyListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -840,17 +845,17 @@ void GameScene::rmKeyListener(KeyListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -865,17 +870,17 @@ void GameScene::addClickListener(ClickListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -890,17 +895,17 @@ void GameScene::rmClickListener(ClickListener* listener)
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1000,17 +1005,17 @@ void GameScene::generateWater()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1052,17 +1057,17 @@ void GameScene::generateUI()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1126,17 +1131,17 @@ void GameScene::createClassUI()
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1179,26 +1184,24 @@ SKILLTYPE
 */
 void onClickVitalityOne() //healskillbtn
 {
-	sf::View vm;
-	vm = AppWindow::getInstance().getCurrentView();
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::HEAL);
 }
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1208,26 +1211,24 @@ void onClickVitalityOne() //healskillbtn
 ******************************************************************************/
 void onClickVitalityTwo()//buffskillbtn
 {
-	sf::View vm;
-	vm = AppWindow::getInstance().getCurrentView();
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 100, 100, SKILLTYPE::BUFF);
 }
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1237,26 +1238,24 @@ void onClickVitalityTwo()//buffskillbtn
 ******************************************************************************/
 void onClickVitalityThree() //healingcircleskillbtn
 {
-	sf::View vm;
-	vm = AppWindow::getInstance().getCurrentView();
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 50, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 500, 100, SKILLTYPE::HEAL);
 }
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1266,26 +1265,24 @@ void onClickVitalityThree() //healingcircleskillbtn
 ******************************************************************************/
 void onClickDemiseOne() //hurtskillbtn
 {
-	sf::View vm;
-	vm = AppWindow::getInstance().getCurrentView();
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DMG);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 100, 100, SKILLTYPE::DMG);
 }
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1295,26 +1292,24 @@ void onClickDemiseOne() //hurtskillbtn
 ******************************************************************************/
 void onClickDemiseTwo() //debuffskillbtn
 {
-	sf::View vm;
-	vm = AppWindow::getInstance().getCurrentView();
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DEBUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 100, 100, SKILLTYPE::DEBUFF);
 }
 
 
 /******************************************************************************
-*	FUNCTION: 
+*	FUNCTION:
 *
-*	DATE: 
+*	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: 
+*	DESIGNER:
 *
-*	PROGRAMMER: 
+*	PROGRAMMER:
 *
-*	INTERFACE: 
+*	INTERFACE:
 *
 *	PARAMETERS:
 *
@@ -1325,4 +1320,18 @@ void onClickDemiseTwo() //debuffskillbtn
 void onClickDemiseThree() //summonskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
+}
+
+float convertX(float x)
+{
+	float newCoord;
+	newCoord = (x - myMap->getGlobalTransform().transformPoint(0,0).x)/32;
+	return newCoord;
+}
+
+float convertY(float y)
+{
+	float newCoord;
+	newCoord = (y - myMap->getGlobalTransform().transformPoint(0,0).y)/32;
+	return newCoord;
 }

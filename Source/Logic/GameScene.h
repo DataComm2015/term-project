@@ -55,8 +55,12 @@ void onClickVitalityThree();
 void onClickVitalityTwo();
 void onClickVitalityOne();
 
-static btnStatus bs[3];
+float convertX(float);
+float convertY(float);
 
+static btnStatus bs[3];
+static Marx::Map *myMap;
+static sf::View vm;
 
 class GameScene : public Scene
 {
@@ -89,6 +93,8 @@ class GameScene : public Scene
 		friend void onClickDemiseOne();
 		friend void onClickDemiseTwo();
 		friend void onClickDemiseThree();
+		friend float convertX(float x);
+		friend float convertY(float y);
 
 	private:
 		/**
