@@ -63,7 +63,7 @@ EntityFactory* EntityFactory::instance = 0;
 *
 *   PROGRAMMER: Chris Klassen
 *
-*   REVISIONS: Filip Gutica     -Added resources and SGO for different enemy types.
+*   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
 *
 *   INTERFACE: EntityFactory();
 *
@@ -251,7 +251,7 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
         std::cout << action << std::endl;
         Entity * e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ms->srcid))->getEntity();
-	
+
 	std::cout << "EnittyFactory::after dynamic_cast" << std::endl;
 
         return makeProjectile(cMap, e, action, v, 1.0f, 1.0f, cont);
@@ -323,6 +323,8 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *
 *   PROGRAMMER:
 *
+*                 Filip Gutica     - Added cases for Basic types, Minions, mini bees and
+*                                    mini bosses.
 *   INTERFACE:
 *
 *   PARAMETERS:
@@ -399,6 +401,9 @@ Entity* EntityFactory::makeEntity(
 *
 *   PROGRAMMER:
 *
+*                 Filip Gutica     -  Added cases for Basic types, Minions, mini bees and
+*                                     mini bosses.
+*
 *   INTERFACE:
 *
 *   PARAMETERS:
@@ -472,4 +477,3 @@ Projectile* EntityFactory::makeProjectile(
     std::cout << "MakeProjectile" << std::endl;
     return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }
-
