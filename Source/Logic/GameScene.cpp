@@ -465,6 +465,8 @@ void GameScene::update(sf::Time t)
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
         sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
 	}
+	
+	updateSkillGraphics(t);
 
 	/*
 	sf::Vector2f mousePos = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
@@ -1249,6 +1251,27 @@ float convertY(float y)
 	return newCoord;
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: addSkillNotification
+--
+-- DATE: April 5, 2015
+--
+-- DESIGNER: Julian Brandrick
+--
+-- PROGRAMMER: Julian Brandrick
+--
+-- INTERFACE: void addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
+--
+-- PARAMETERS:
+--		_x 			-> The x coordinate of the cast event
+--		_y 			-> The y coordinate of the cast event
+--		timer 		-> The duration of the cast event
+--		_skillType 	-> The skill type of the event
+--
+-- NOTES:
+--  Creates a skill_notify struct and initializes its timer and VEntity. This is then pushed onto the skill 
+--	 notification queue.
+----------------------------------------------------------------------------------------------------------------------*/
 void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
 {
 	skill_notify sn;
@@ -1271,13 +1294,32 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
 		break;
 	}
-	snSGO->sprite().setPosition(viewMain.getCenter());
 	
 	sn.entity = new VEntity(*snSGO, cMap, _x, _y, NULL, 1, 1);
+	
+	snSGO->middleAnchorPoint(true);
 	
 	snQueue.push_back(sn);
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: updateSkillGraphics
+--
+-- DATE: April 5, 2015
+--
+-- DESIGNER: Julian Brandrick
+--
+-- PROGRAMMER: Julian Brandrick
+--
+-- INTERFACE: void updateSkillGraphics(sf::timer t)
+--
+-- PARAMETERS:
+--		t -> A timer used to measure the duration of the cast event
+--
+-- NOTES:
+--  Interates through the skill notification queue and checks to see if a duration has finished.
+--	 If one has then the event's VEntity is deleted and it is popped off of the queue..
+----------------------------------------------------------------------------------------------------------------------*/
 void GameScene::updateSkillGraphics(sf::Time t)
 {
 	for(auto it = snQueue.begin(); it != snQueue.end(); it++)
@@ -1287,8 +1329,8 @@ void GameScene::updateSkillGraphics(sf::Time t)
 		
 		if(it->timer <= 0)
 		{
-			delete it->entity;
-			
+			//delete it->entity;
+			it->entity->onDestroy();
 			snQueue.pop_front();
 		}
 	}

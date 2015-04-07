@@ -146,21 +146,16 @@ void PlayerEntity::onUpdate(Message msg)
 
             std::cout << "SKILL RECEIVED" << std::endl;
             auto entities = serverRef->getcMap()->getEntities();
-            int i = 0;
             
             for(Entity *entity : entities)
             {
-                i++;
-                std::cout << "BEFOREIndex: " << i << std::endl;
-                    
                 if(entity->getType() == ENTITY_TYPES::VESSEL)
                 {
                     vessel = dynamic_cast<Vessel*>((entity));
-                    std::cout << "AFTERIndex: " << i << std::endl;
                     x2 = vessel->left;
                     y2 = vessel->top;
 
-                    std::cout << "CHECKING " << std::endl;
+                    std::cout << "CHECKING VESSEL" << std::endl;
 
                     std::cout << "x1 " << x1 << std::endl;
 
@@ -176,11 +171,10 @@ void PlayerEntity::onUpdate(Message msg)
                     {
                         SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
                         std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
-                        std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
+                        std::cout << "Entity Health: " << vessel->getHealth() << std::endl;
                         std::cout << "Entity VALUE: " << sk->val << std::endl;
                         
                         vessel->getController()->addEvent(ev);
-                        std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
 
                         vessel = NULL;
                     }
@@ -188,11 +182,10 @@ void PlayerEntity::onUpdate(Message msg)
                 else if(entity->getType() == ENTITY_TYPES::BASIC_TYPE)
                 {
                     keeper = dynamic_cast<GateKeeper*>((entity));
-                    std::cout << "AFTERIndex: " << i << std::endl;
                     x2 = keeper->left;
                     y2 = keeper->top;
 
-                    std::cout << "CHECKING " << std::endl;
+                    std::cout << "CHECKING GATEKEEPER" << std::endl;
 
                     std::cout << "x1 " << x1 << std::endl;
 
@@ -208,10 +201,9 @@ void PlayerEntity::onUpdate(Message msg)
                     {
                         SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
                         std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
-                        std::cout << "Entity Health BEFORE: " << keeper->getHealth() << std::endl;
+                        std::cout << "Entity Health: " << keeper->getHealth() << std::endl;
                         std::cout << "Entity VALUE: " << sk->val << std::endl;
                         
-                        std::cout << "Entity Health After: " << keeper->getHealth() << std::endl;
                         keeper->getController()->addEvent(ev);
                         
 
@@ -230,8 +222,7 @@ void PlayerEntity::onUpdate(Message msg)
                 
                 message.type = (int)PlayerCommandMsgType::SKILL_NOTIFY;
                 message.data = (void*)sk;
-                message.len  = sizeof(sk);
-                
+                message.len  = sizeof(skill);
                 playerEntity->update(message);
             }
 
