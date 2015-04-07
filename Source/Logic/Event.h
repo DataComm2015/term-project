@@ -154,7 +154,7 @@ class SkillNotification: public ::Marx::Event
         void setY(float _y);
         SKILLTYPE getSkillType();
         void setSkillType(SKILLTYPE _skillType);
-    
+
     private:
         float x;
         float y;
