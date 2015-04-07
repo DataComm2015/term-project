@@ -49,8 +49,6 @@ private:
 struct AttackMessage
 {
 	int srcid; // Entity id source
-    float srcx;
-    float srcy;
 	enum ActionType action; // Type of attack to take
 	int cellx; // Coordinates of the cell you're attacking.
 	int celly;
@@ -111,9 +109,11 @@ struct SetHealthMessage
 class SetHealthEvent : public ::Marx::Event
 {
 public:
-	SetHealthEvent(float _change);
+	SetHealthEvent(int id, float _change);
+	int getEntId();
 	float getChange();
 private:
+	int entid;
 	float change;
 };
 
@@ -132,7 +132,7 @@ class SkillEvent: public ::Marx::Event
         void setValue(int _value);
         SKILLTYPE getSkillType();
         void setSkillType(SKILLTYPE _skillType);
-        
+
     private:
         float x;
         float y;
@@ -140,5 +140,21 @@ class SkillEvent: public ::Marx::Event
         int value;
         SKILLTYPE skillType;
 };
+
+struct AddPointsMessage
+{
+	int entid; // Entity id source
+	float change;
+};
+
+class AddPointsEvent : public ::Marx::Event
+{
+public:
+	AddPointsEvent(float);
+	float getPoints();
+private:
+	float points;
+};
+
 
 #endif
