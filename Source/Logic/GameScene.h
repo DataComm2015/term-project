@@ -166,7 +166,6 @@ class GameScene : public Scene
 		GUI::Button *b2;
 		GUI::Button *b3;
 		GUI::HealthBar *hb;
-		GUI::TextBox *levelInd;
 		SGO *crossHairSGO;
 
 		// Misc
