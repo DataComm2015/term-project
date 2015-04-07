@@ -15,7 +15,8 @@ using Marx::Entity;
  * including the player. This allows them to be buffed/debuffed identically.
  *
  * PROGRAMMER: Calvin Rempel
-*				Thomas Tallentire
+ *			Thomas Tallentire
+ *      Marc Vouve
  */
 class Creature
 {
@@ -32,7 +33,7 @@ class Creature
 		virtual Marx::Projectile* createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y);
         virtual void stopAllSounds() = 0;
         virtual Entity * getEntity();
-	private:
+	protected:
 		std::map<enum ActionType, Marx::Action*> actionList;
 };
 

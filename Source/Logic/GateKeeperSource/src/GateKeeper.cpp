@@ -18,6 +18,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 using namespace Manager;
 
@@ -71,7 +72,19 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     int randDirection = (rand() % 3) - 1;
     getSprite().sprite().setScale(randDirection, 1);
 
+	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_02.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_03.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_death_02.ogg"));
+	
+	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
+	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
+	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
+	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
 
+	travel_Snd.setLoop(true);
+    travel_Snd.play();*/
+	
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
@@ -123,7 +136,7 @@ void GateKeeper::onUpdate(float deltaTime)
   		{
     		MoveEvent* ev = (MoveEvent*) (*it);
 
-        processMoveEvent(ev);
+       		processMoveEvent(ev);
 
     		break;
   		}

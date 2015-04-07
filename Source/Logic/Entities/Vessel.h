@@ -67,12 +67,16 @@
 #include "../../Multimedia/graphics/Animation.h"
 #include "../Creature.h"
 #include "../EntityTypes.h"
+#include "../../Multimedia/gui/HealthBar.h"
 #include <SFML/Audio.hpp>
+
 
 #define MAX_LEVEL 10;
 
 typedef char Weapon;
 typedef char Ability;
+
+class PlayerEntity;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
@@ -82,6 +86,12 @@ class Vessel : public Marx::VEntity, public Creature
 	private:
 		sf::Sound footstep;
 		sf::Sound voice;
+		//Animation *runAnim;
+		//Animation *runAnim_mask;
+		//Animation *runAnim_wep;
+		SGO shadow;
+		PlayerEntity *player;
+		GUI::HealthBar* myHealthBar;
 
 	protected:
 		job_class jobClass;
@@ -114,11 +124,6 @@ class Vessel : public Marx::VEntity, public Creature
 		SGO weapon_sprite;
 		static id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
-	private:
-		//Animation *runAnim;
-		//Animation *runAnim_mask;
-		//Animation *runAnim_wep;
-		SGO shadow;
 
 	public:
         float newXSpeed;
@@ -135,6 +140,8 @@ class Vessel : public Marx::VEntity, public Creature
 		virtual ~Vessel();
 		virtual void onUpdate(float);
 		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
+
+		void setPlayerEntity(PlayerEntity *entity);
 
 		void setPosition( float x, float y );
 		float getXPosition();
@@ -178,6 +185,8 @@ class Vessel : public Marx::VEntity, public Creature
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
+
+		void setHealthBar(GUI::HealthBar* hb);
 
         virtual int getHealth();
         virtual void setHealth(int _health);

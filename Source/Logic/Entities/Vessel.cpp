@@ -5,6 +5,7 @@
 #include "../Event.h"
 #include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
+#include "PlayerEntity.h"
 
 #define ATTACK_COOLDOWN 0.5F
 
@@ -55,7 +56,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		float height,
 		float width
 		/*, job_class jobClass, Ability* abilityList*/ )
-		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0, ENTITY_TYPES::VESSEL),
 		mask_sprite(_mask),
 		weapon_sprite(_weapon)
 		//,_controller(controller)
@@ -85,6 +86,9 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
+	
+	currentHealth = 500;
+	maxHealth = 500;
 
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 3);
@@ -120,6 +124,8 @@ void Vessel::onUpdate(float deltaTime)
 {
 	static bool soundActive = false;
 	static BlockZone steppedTile = GRASS;
+
+	float val;
 
 	attCool += deltaTime;
 	sf::Time elapsedTime;
@@ -272,22 +278,34 @@ break;
 				{
 					case SKILLTYPE::HEAL:
 						currentHealth += ev->getValue();
+						myHealthBar->update((float)currentHealth/(float)maxHealth);
 					break;
 					case SKILLTYPE::DMG:
 						currentHealth -= ev->getValue();
+						myHealthBar->update((float)currentHealth/(float)maxHealth);
 					break;
 					case SKILLTYPE::BUFF:
-						xSpeed += ev->getValue();
-						ySpeed += ev->getValue();
+						val = ((float)ev->getValue()) / 100.0;
+					
+						xSpeed += val;
+						ySpeed += val;
 					break;
 					case SKILLTYPE::DEBUFF:
-						xSpeed -= ev->getValue();
-						ySpeed -= ev->getValue();
+						val = ((float)ev->getValue()) / 100.0;
+						
+						xSpeed -= val;
+						ySpeed -= val;
 					break;
 				}
 
 				break;
 			}
+			/*case ::Marx::ADD_POINTS:
+			{
+				AddPointsEvent *pointsEvent = (AddPointsEvent*) (*it);
+				player->givePoints(pointsEvent->getPoints());
+				break;
+			}*/
 		}
 	}
 
@@ -304,6 +322,12 @@ break;
 		runAnim->pause(true);
 		runAnim_mask->pause(true);
 		runAnim_wep->pause(true);
+	}
+
+	if(currentHealth <= 0)
+	{
+		std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+		onDestroy();
 	}
 
 	getController()->clearEvents();
@@ -372,6 +396,11 @@ break;
 
 	Entity::rMove(newXSpeed, newYSpeed,false);
 
+}
+
+void Vessel::setPlayerEntity(PlayerEntity *entity)
+{
+	player = entity;
 }
 
 /*---------
@@ -1168,6 +1197,8 @@ void Vessel::setHealth(int health)
         currentHealth = 0;
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
+
+    myHealthBar->update((float)currentHealth/(float)maxHealth);
 }
 
 void Vessel::setSpeed(int _speed)
@@ -1282,4 +1313,9 @@ float Vessel::getYPosition()
 float Vessel::getXPosition()
 {
 	return yPos;
+}
+
+void Vessel::setHealthBar(GUI::HealthBar* hb)
+{
+	myHealthBar = hb;
 }

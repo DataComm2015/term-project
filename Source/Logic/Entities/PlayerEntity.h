@@ -12,6 +12,7 @@
 #include "ServerNetworkController.h"
 
 class ServerCommand;
+class Vessel;
 
 using Networking::NetworkEntity;
 using Networking::Session;
@@ -41,6 +42,10 @@ class PlayerEntity : public NetworkEntity
         char* getNickname();
         float getDistance(float, float, float, float);
         void setSGameScene(ServerGameScene *ref);
+		void setVessel(Vessel *vessel);
+		Vessel *getVessel();
+		void givePoints(float points);
+		float getPoints();
 
     protected:
         virtual void onUnregister(Session* session, Message msg);
@@ -55,6 +60,8 @@ class PlayerEntity : public NetworkEntity
         PLAYER_MODE mode;
         PLAYER_TYPE type;
         PlayerLobbyChoices lobbyChoices;
+		Vessel *vessel;
+		float points;
 };
 
 #endif
