@@ -353,9 +353,11 @@ void ServerNetworkController::onUpdate(Message msg)
 			break;
 		}
         default:
+		{
         	printf("\r\nWARNING: NetworkController::sendEventMessage received an "
             	"unknown event type. please add new case to switch statement\r\n");
         	fflush(stdout);
         	break;
+		}
     }
 }

@@ -4,6 +4,7 @@
 #include "../Multimedia/manager/ResourceManager.h"
 #include "TextureManager.h"
 #include "../Multimedia/graphics/object/SGO.h"
+#include "AttackAction.h"
 #include <iostream>
 
 std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
@@ -34,7 +35,7 @@ Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0, Marx::Controller * _cont = NULL)
 {
 	std::cout << "ProjectileManager:: x " << v.x << " y " << v.y << std::endl;
-	if (projectile_pool.size() < 1)
+	if (projectile_pool.size() <= 1)
 	{
 		if(SERVER)
 		{
@@ -51,6 +52,7 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 
 			ServerNetworkController * cont = new ServerNetworkController();
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
+			std::cout << "ProjectileManager:: Created at " << e->left << " " << e->top << " Damage: " << ((Marx::AttackAction*)action)->getDamage() << std::endl;
 			return new Marx::Projectile(_sprite, map, e, e->left, e->top, action, v, cont, h, w);			
 		}
 		else
@@ -60,19 +62,20 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 	}
 	else
 	{
+		std::cout << "ProjectileManager:: Found in projectile pool" << " Damage: " << ((Marx::AttackAction*)action)->getDamage()<< std::endl;
 		Marx::Projectile* temp = *projectile_pool.begin();
-		//temp->setSprite(_sprite);
+		temp->setSprite(_sprite);
 		temp->setAct(action);
 		temp->setTarget(v);
 		projectile_pool.erase(*projectile_pool.begin());
-
-		temp->left = e->left;
-		temp->top  = e->top;
+		std::cout << "ProjectileM:: to " << e->left << " " << e->top << std::endl;
+		MoveEvent *event = new MoveEvent(e->left, e->top, e->left, e->top, true);
+		temp->getController()->addEvent(event);
 		temp->onCreate();
-		//temp->getController()->addEvent(new MoveEvent(e->left, e->top, e->left, e->top, true));
 		return temp;
 	}
 
+	return nullptr;
 }
 
 void ProjectileManager::

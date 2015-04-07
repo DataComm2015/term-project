@@ -73,14 +73,14 @@ void MiniBoss::onUpdate(float deltaTime)
     int yDir;
     MoveEvent* ev;
 	
-	std::cout << "MiniBoss::Controller " << getController() << std::endl;
-	std::cout << "MiniBoss::Event " << (*it)->type << std::endl;
+	//std::cout << "MiniBoss::Controller " << getController() << std::endl;
+	//std::cout << "MiniBoss::Event " << (*it)->type << std::endl;
     // switch on type
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
 		{
-			std::cout << "Move Event " << (*it)->type << std::endl;
+			//std::cout << "Move Event " << (*it)->type << std::endl;
     		ev = (MoveEvent*) (*it);
 		    xDir = ev->getXDir();
 		    yDir = ev->getYDir();
@@ -143,57 +143,67 @@ void MiniBoss::onUpdate(float deltaTime)
 			SetHealthEvent * event = (SetHealthEvent*)(*it);
 			std::cout << "Set Health " << event->getChange() << std::endl;
 			setHealth(getHealth()+event->getChange());
+			std::cout << "Current Health: " << getHealth() << std::endl;
 			if (event->getChange() < 0)
 			{
 				Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
 				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
 				cont->addEvent(pointsEvent);
 			}
+			if(_health <= 0)
+			{
+				std::cout << "MiniBoss Dead" << std::endl;
+				onDestroy();
+			}
 
             break;
 		}
-            case ::Marx::SKILL:
+        case ::Marx::SKILL:
+        {
+			std::cout << "Skill Event " << (*it)->type << std::endl;
+            // process the skill event, and increase/decrease hp and stuff
+            SkillEvent *ev = (SkillEvent*)(*it);
+            
+            printf("GateKeeper BEFORE Health: %d\n", _health);
+            switch(ev->getSkillType())
             {
-				std::cout << "Skill Event " << (*it)->type << std::endl;
-                // process the skill event, and increase/decrease hp and stuff
-                SkillEvent *ev = (SkillEvent*)(*it);
-                
-                printf("GateKeeper BEFORE Health: %d\n", _health);
-                switch(ev->getSkillType())
-                {
-                    case SKILLTYPE::HEAL:
-                        _health += ev->getValue();
-                    break;
-                    case SKILLTYPE::DMG:
-                        _health -= ev->getValue();
-                    break;
-                    case SKILLTYPE::BUFF:
-                        _xSpeed += ev->getValue();
-                        _ySpeed += ev->getValue();
-                    break;
-                    case SKILLTYPE::DEBUFF:
-                        _xSpeed -= ev->getValue();
-                        _ySpeed -= ev->getValue();
-                    break;
-                }
-                
-                printf("GateKeeper AFTER Health: %d\n", _health);
-                
-                if(_health <= 0)
-                {
-                  std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-                  onDestroy();
-                }
-        
+                case SKILLTYPE::HEAL:
+                    _health += ev->getValue();
+                break;
+                case SKILLTYPE::DMG:
+                    _health -= ev->getValue();
+                break;
+                case SKILLTYPE::BUFF:
+                    _xSpeed += ev->getValue();
+                    _ySpeed += ev->getValue();
+                break;
+                case SKILLTYPE::DEBUFF:
+                    _xSpeed -= ev->getValue();
+                    _ySpeed -= ev->getValue();
                 break;
             }
+            
+            printf("GateKeeper AFTER Health: %d\n", _health);
+            
+            if(_health <= 0)
+            {
+              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+              onDestroy();
+            }
+    
+            break;
+        }
+		default:
+		{
+			//std::cout << "Default MiniBoss::onUpdate " << (*it)->type << std::endl;
+			return;
+		}
     }
 
 
   }
+
   getController()->clearEvents();
-
-
 
 
   Entity::rMove(newXSpeed, newYSpeed,false);
