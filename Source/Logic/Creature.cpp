@@ -7,7 +7,7 @@
 
 Creature::Creature()
 {
-	actionList[normalAttack] = new Marx::AttackAction(10, 10);
+	actionList[normalAttack] = new Marx::AttackAction(10, 10, 5);
 }
 
 Creature::~Creature()

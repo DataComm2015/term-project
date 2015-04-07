@@ -31,7 +31,7 @@ using Networking::Client;
 --
 -- DESIGNER:        Eric Tsang, Calvin Rempel
 --
--- PROGRAMMER:      Eric Tsang
+-- PROGRAMMER:      Eric Tsang, Jeff Bayntun
 --
 -- INTERFACE:       ClientGameState::ClientGameState(int id,
 --                      CommandEntity *command, GameScene* gameScene,

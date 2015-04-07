@@ -11,7 +11,8 @@
 #include "../EntityTypes.h"
 
 #include <cstdio>
-
+#include <iostream>
+#include <stdlib.h>
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -27,6 +28,8 @@ PlayerEntity::PlayerEntity(ServerCommand *server)
 {
     this->controller = 0;
     nickname = 0;
+	vessel = NULL;
+	points = 0.0F;
 }
 
 PlayerEntity::~PlayerEntity()
@@ -136,6 +139,29 @@ void PlayerEntity::onUpdate(Message msg)
             Vessel *vessel = NULL;
             GateKeeper *keeper = NULL;
             skill *sk = ((skill*) msg.data);
+            
+            if (sk->st == SKILLTYPE::SPAWN)
+            {
+                int enemyType = rand() % 4;
+                ENTITY_TYPES type;
+                switch (enemyType)
+                {
+                    case 0:
+                        type = BASIC_TYPE;
+                        break;
+                    case 1:
+                        type = MINION;
+                        break;
+                    case 2:
+                        type = MINI_BOSS;
+                        break;
+                    default:
+                        type = MINI_BEE;
+                        break;
+                }
+                serverRef->createEnemy(type, NULL, sk->curX, sk->curY);
+                return;
+            }
 
             //for(int i = 0; i < 5; i++)
             //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
@@ -146,21 +172,16 @@ void PlayerEntity::onUpdate(Message msg)
 
             std::cout << "SKILL RECEIVED" << std::endl;
             auto entities = serverRef->getcMap()->getEntities();
-            int i = 0;
             
             for(Entity *entity : entities)
             {
-                i++;
-                std::cout << "BEFOREIndex: " << i << std::endl;
-                    
                 if(entity->getType() == ENTITY_TYPES::VESSEL)
                 {
                     vessel = dynamic_cast<Vessel*>((entity));
-                    std::cout << "AFTERIndex: " << i << std::endl;
                     x2 = vessel->left;
                     y2 = vessel->top;
 
-                    std::cout << "CHECKING " << std::endl;
+                    std::cout << "CHECKING VESSEL" << std::endl;
 
                     std::cout << "x1 " << x1 << std::endl;
 
@@ -176,11 +197,10 @@ void PlayerEntity::onUpdate(Message msg)
                     {
                         SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
                         std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
-                        std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
+                        std::cout << "Entity Health: " << vessel->getHealth() << std::endl;
                         std::cout << "Entity VALUE: " << sk->val << std::endl;
                         
                         vessel->getController()->addEvent(ev);
-                        std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
 
                         vessel = NULL;
                     }
@@ -188,11 +208,10 @@ void PlayerEntity::onUpdate(Message msg)
                 else if(entity->getType() == ENTITY_TYPES::BASIC_TYPE)
                 {
                     keeper = dynamic_cast<GateKeeper*>((entity));
-                    std::cout << "AFTERIndex: " << i << std::endl;
                     x2 = keeper->left;
                     y2 = keeper->top;
 
-                    std::cout << "CHECKING " << std::endl;
+                    std::cout << "CHECKING GATEKEEPER" << std::endl;
 
                     std::cout << "x1 " << x1 << std::endl;
 
@@ -208,10 +227,9 @@ void PlayerEntity::onUpdate(Message msg)
                     {
                         SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
                         std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
-                        std::cout << "Entity Health BEFORE: " << keeper->getHealth() << std::endl;
+                        std::cout << "Entity Health: " << keeper->getHealth() << std::endl;
                         std::cout << "Entity VALUE: " << sk->val << std::endl;
                         
-                        std::cout << "Entity Health After: " << keeper->getHealth() << std::endl;
                         keeper->getController()->addEvent(ev);
                         
 
@@ -230,8 +248,7 @@ void PlayerEntity::onUpdate(Message msg)
                 
                 message.type = (int)PlayerCommandMsgType::SKILL_NOTIFY;
                 message.data = (void*)sk;
-                message.len  = sizeof(sk);
-                
+                message.len  = sizeof(skill);
                 playerEntity->update(message);
             }
 
@@ -270,4 +287,26 @@ float PlayerEntity::getDistance(float x1, float y1, float x2, float y2 )
 void PlayerEntity::setSGameScene(ServerGameScene *ref)
 {
     serverRef = ref;
+}
+
+void PlayerEntity::setVessel(Vessel *vessel)
+{
+	this->vessel = vessel;
+}
+
+Vessel *PlayerEntity::getVessel()
+{
+	return vessel;
+}
+
+void PlayerEntity::givePoints(float _points)
+{
+	std::cout << "Points:: got: " << _points << std::endl;
+	points += _points;
+	std::cout << "MOAR POINTS!! " << points << std::endl;
+}
+
+float PlayerEntity::getPoints()
+{
+	return points;
 }

@@ -35,6 +35,23 @@ ServerCommand::ServerCommand()
  *
  * @author Calvin Rempel, Jeff Bayntun
  */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        onConnect
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:      Calvin Rempel, Jeff Bayntun
+--
+-- INTERFACE:       void ServerCommand::onConnect(Session* session)
+
+-- RETURNS:         void
+--
+-- NOTES:          handles a newly connected client, directing them to the proper scene
+-----------------------------------------------------------------------------------------------*/
 void ServerCommand::onConnect(Session* session)
 {
     // create an entity that the new connection can use to communicate
@@ -61,7 +78,7 @@ void ServerCommand::onConnect(Session* session)
     {
         gameState->goToLobby();
     }
-    // If game is in progress -> go to game scene as ghost
+    // If game is in progress -> go to a fake lobby to wait for end of match
     else
     {
         player->setMode(PLAYER_MODE::GHOST);

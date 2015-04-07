@@ -26,6 +26,5 @@ sf::Sound Manager::SoundManager::play(id_resource id, sf::Vector2f position)
 	s.setPosition(sf::Vector3f(position.x, position.y, 0));
 	s.setAttenuation(ATTENUATION);
 
-	s.play();
 	return s;
 }

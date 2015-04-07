@@ -251,6 +251,7 @@ void ServerGameScene::createPlayers()
         mode = currPlayer->getMode();
         type = currPlayer->getType(); //sanderschange
         currPlayer->setSGameScene(this);
+		currPlayer->setVessel(NULL);
 
         switch(mode)
         {
@@ -284,6 +285,8 @@ void ServerGameScene::createPlayers()
 
                 // create vessel, pass it server vessel controller too
                 Vessel* e = static_cast<Vessel*>(EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont));
+				currPlayer->setVessel(e);
+				e->setPlayerEntity(currPlayer);
 
                 //Add player entities to the list of players
                 playerList.push_back(e);

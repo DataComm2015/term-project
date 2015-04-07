@@ -44,13 +44,16 @@ id_resource GameScene::hurtskillbtn = Manager::TextureManager::store(Manager::Te
 id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/summon-skill-btn.png"));
 id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
-id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/crosshair.png"));
+id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/crosshair.png"));
 
 id_resource GameScene::deityRNGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deity-ring.png"));
 id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-buff.png"));
 id_resource GameScene::deityDMGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-debuff.png"));
 id_resource GameScene::deityDBFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-damage.png"));
 id_resource GameScene::deityHLGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healing.png"));
+
+id_resource GameScene::game_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_gameplay.ogg"));
+id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/Environment/ambient_01.ogg"));
 
 /******************************************************************************
 *	FUNCTION:
@@ -80,40 +83,6 @@ void onclick()
 
 	i++;
 }
-
-GUI::HealthBar *pubHB;
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void onclickHealthTest()
-{
-	static float health = 1.0;
-
-	health = health - .10;
-
-	if(health >= 0)
-		pubHB->update(health);
-}
-
-GUI::TextBox *pubLevelInd;
 
 
 /******************************************************************************
@@ -145,33 +114,7 @@ void onclickLevelup()
 		slevel = "0" + std::to_string(level++);
 	else
 		slevel = std::to_string(level++);
-	pubLevelInd->setText(slevel);
-}
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER: Chris Klassen
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void updateMainView(sf::View& v)
-{
-	v = AppWindow::getInstance().getCurrentView();
-	v.zoom(0.33);
+    //pubLevelInd->setText(slevel);
 }
 
 
@@ -221,15 +164,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	cMap->setTexture(tilemap);
 
-	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Assets/Fonts/arial.ttf");
-
-	tb = new GUI::TextBox(NULL, NULL);
-	tb->text().setScale(0.5, 0.5);
-	tb->text().move(0, -5);
-	tb->toggleSelected(true);
-	tb->text().setFont(*arial);
-
 	// Generate stuff
 
 	if (!gMap->generateMap(0))
@@ -239,8 +173,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "before generate water" << std::endl;
 	generateWater();
 	std::cout << "after generate water" << std::endl;
-	generateUI();
-	std::cout << "after generate ui" << std::endl;
+
+	music = Manager::MusicManager::get(GameScene::game_msc);
+	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
 }
 
 
@@ -280,13 +215,14 @@ void GameScene::onLoad()
 	printf("characterType: %d, classType: %d\n",characterType,classType);
 
 	// update views
-	updateMainView(viewMain);
-	viewUI = AppWindow::getInstance().getCurrentView();
+	viewMain = viewUI = viewMinimap = AppWindow::getInstance().getCurrentView();
+	viewMain.zoom(0.33);
 
 	// minimap view
-	viewMinimap = viewMain;
 	viewMinimap.setViewport(sf::FloatRect(0.76f,0.01f,0.23f,0.23f));
 	viewMinimap.zoom(2.f);
+	minimapBorder.setFillColor(sf::Color::Black);
+	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
 
 	// position buttons
 	generateUI();
@@ -297,8 +233,10 @@ void GameScene::onLoad()
 	b2->toggleEnabled(true);
 	b3->toggleEnabled(true);
 
-//	Manager::MusicManager::get(scat_music)->setVolume(60);
-//	Manager::MusicManager::get(scat_music)->play();
+	music->setVolume(60);
+	music->play();
+	ambience->setVolume(40);
+	ambience->play();
 }
 
 
@@ -349,9 +287,13 @@ void GameScene::positionUI()
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-	// position and scale level indicator
-	levelInd->text().setPosition(15, 10);
-	levelInd->text().setScale(1.5, 1.5);
+	//the border for the minimap
+	minimapBorder.setSize(
+		sf::Vector2f(viewMinimap.getViewport().width*windowSize.x,
+			     viewMinimap.getViewport().height*windowSize.y));
+	minimapBorder.setPosition(
+		sf::Vector2f(viewMinimap.getViewport().left*windowSize.x,
+		  	     viewMinimap.getViewport().top*windowSize.y));
 }
 
 
@@ -377,6 +319,7 @@ void GameScene::positionUI()
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
 	myVessel = vessel;
+	myVessel->setHealthBar(hb);
 }
 
 
@@ -436,7 +379,8 @@ void GameScene::unLoad()
 	b2->toggleEnabled(false);
 	b3->toggleEnabled(false);
 
-	//Manager::MusicManager::get(scat_music)->stop();
+	music->stop();
+	ambience->stop();
 }
 
 
@@ -516,12 +460,15 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != NULL)
 	{
-		//to test:
 		//myVessel->getSprite().sprite().rotate(1);
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
         sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+	}
+	else
+	{
+		crossHairSGO->sprite().rotate(1);
 	}
 
 	/*
@@ -581,6 +528,7 @@ void GameScene::update(sf::Time t)
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
 	*/
+	updateSkillGraphics(t);
 
 	// Update buttons
 	b1->update(t);
@@ -681,21 +629,13 @@ void GameScene::processEvents(sf::Event& e)
 
 		// v->stop(e.key.code);
 	}
-	else if (e.type == sf::Event::Resized)
-	{
-		// update views
-		updateMainView(viewMain);
-		viewUI = AppWindow::getInstance().getCurrentView();
-		viewMinimap = AppWindow::getInstance().getCurrentView();
-		positionUI();
-	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
 		if(characterType == PLAYER_MODE::VESSEL)
 		{
 			sf::Vector2f mouse = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
 			sf::Vector2f viewVector = viewMain.getCenter();
-			
+
 			/*viewVector.x = convertX(viewVector.x);
 			viewVector.y = convertY(viewVector.y);
 			*/std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
@@ -704,14 +644,12 @@ void GameScene::processEvents(sf::Event& e)
 			for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
 			{
 				(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
-									ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
+									ActionType::normalAttack,   (float)mouse.x - viewVector.x,  (float)mouse.y - viewVector.y );
 				//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
 				//current.play();
 			}
 		}
 	}
-
-	tb->process(e);
 }
 
 
@@ -765,29 +703,14 @@ void GameScene::draw()
 		renderer.draw(b3);
 		renderer.draw(crossHairSGO);
 	}
-
-	if(characterType == PLAYER_MODE::VESSEL)
+	else if(characterType == PLAYER_MODE::VESSEL)
 	{
 		renderer.draw(hb);
-		renderer.draw(levelInd);
 	}
-	
+
 	renderer.end();
 
-	//the border for the minimap
-	minimapBorder.setSize(
-		sf::Vector2f(viewMinimap.getViewport().width*window.getSize().x,
-			     viewMinimap.getViewport().height*window.getSize().y));
-
-	minimapBorder.setPosition(
-		sf::Vector2f(viewMinimap.getViewport().left*window.getSize().x,
-		  	     viewMinimap.getViewport().top*window.getSize().y));
-
-	minimapBorder.setFillColor(sf::Color::Black);
-	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
-
 	window.draw(minimapBorder);
-
 
 	//draw the minimap
 	window.setView(viewMinimap);
@@ -1010,7 +933,7 @@ void GameScene::generateWater()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Jeff Bayntun
 *
 *	INTERFACE:
 *
@@ -1022,8 +945,6 @@ void GameScene::generateWater()
 ******************************************************************************/
 void GameScene::generateUI()
 {
-	createClassUI();
-
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
@@ -1038,18 +959,7 @@ void GameScene::generateUI()
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
 
-	pubHB = hb;
-
-	// Create level indicator
-
-	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Assets/Fonts/arial.ttf");
-
-	levelInd = new GUI::TextBox(nullptr, nullptr);
-	levelInd->toggleSelected(true);
-	levelInd->text().setFont(*arial);
-	levelInd->setText("01");
-	pubLevelInd = levelInd;
+	createClassUI();
 }
 
 
@@ -1210,7 +1120,7 @@ void onClickVitalityTwo()//buffskillbtn
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 1, SKILLTYPE::BUFF);
 }
 
 
@@ -1291,7 +1201,7 @@ void onClickDemiseTwo() //debuffskillbtn
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DEBUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 1, SKILLTYPE::DEBUFF);
 }
 
 
@@ -1317,6 +1227,8 @@ void onClickDemiseTwo() //debuffskillbtn
 void onClickDemiseThree() //summonskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 0, 0, SKILLTYPE::SPAWN);
 }
 
 float convertX(float x)
@@ -1333,13 +1245,34 @@ float convertY(float y)
 	return newCoord;
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: addSkillNotification
+--
+-- DATE: April 5, 2015
+--
+-- DESIGNER: Julian Brandrick
+--
+-- PROGRAMMER: Julian Brandrick
+--
+-- INTERFACE: void addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
+--
+-- PARAMETERS:
+--		_x 			-> The x coordinate of the cast event
+--		_y 			-> The y coordinate of the cast event
+--		timer 		-> The duration of the cast event
+--		_skillType 	-> The skill type of the event
+--
+-- NOTES:
+--  Creates a skill_notify struct and initializes its timer and VEntity. This is then pushed onto the skill 
+--	 notification queue.
+----------------------------------------------------------------------------------------------------------------------*/
 void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
 {
 	skill_notify sn;
 	SGO *snSGO;
-	
+
 	sn.timer = timer;
-	
+
 	switch(_skillType)
 	{
 		case SKILLTYPE::HEAL:
@@ -1355,23 +1288,43 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
 		break;
 	}
-	snSGO->sprite().setPosition(viewMain.getCenter());
 	
 	sn.entity = new VEntity(*snSGO, cMap, _x, _y, NULL, 1, 1);
+	
+	snSGO->middleAnchorPoint(true);
 	
 	snQueue.push_back(sn);
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: updateSkillGraphics
+--
+-- DATE: April 5, 2015
+--
+-- DESIGNER: Julian Brandrick
+--
+-- PROGRAMMER: Julian Brandrick
+--
+-- INTERFACE: void updateSkillGraphics(sf::timer t)
+--
+-- PARAMETERS:
+--		t -> A timer used to measure the duration of the cast event
+--
+-- NOTES:
+--  Interates through the skill notification queue and checks to see if a duration has finished.
+--	 If one has then the event's VEntity is deleted and it is popped off of the queue..
+----------------------------------------------------------------------------------------------------------------------*/
 void GameScene::updateSkillGraphics(sf::Time t)
 {
 	for(auto it = snQueue.begin(); it != snQueue.end(); it++)
 	{
-		
+
 		it->timer -= t.asMilliseconds();
-		
+
 		if(it->timer <= 0)
 		{
-			delete it->entity;
+			//delete it->entity;
+			it->entity->onDestroy();
 			
 			snQueue.pop_front();
 		}
