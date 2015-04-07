@@ -34,7 +34,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 1;
+    _attackSpeed = 3;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.03;
@@ -135,11 +135,15 @@ void Minion::onUpdate(float deltaTime)
     		break;
 				case ::Marx::ATTACK:
 				{
-
-					SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-					std::cout << "ATTACK" << std::endl;
-					createSkAttack(*saev, getSprite(), left, top);
-									break;
+					_attackSpeed -= deltaTime;
+					if (_attackSpeed <= 0)
+					{
+						SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+						std::cout << "ATTACK" << std::endl;
+						createSkAttack(*saev, getSprite(), left, top);
+						_attackSpeed = 3;
+					}
+					break;
 				}
         case ::Marx::SKILL:
         {
@@ -266,7 +270,7 @@ void Minion::setAttack(int a)
   _attack = a;
 }
 
-void Minion::setAttackSpeed(int as)
+void Minion::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
@@ -308,7 +312,7 @@ int Minion::getAttack()
   return _attack;
 }
 
-int Minion::getAttackSpeed()
+float Minion::getAttackSpeed()
 {
   return _attackSpeed;
 }

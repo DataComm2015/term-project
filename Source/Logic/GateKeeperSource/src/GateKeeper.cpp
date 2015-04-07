@@ -62,7 +62,7 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 1;
+    _attackSpeed = 3;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.06;
@@ -192,10 +192,15 @@ void GateKeeper::onUpdate(float deltaTime)
 		}
     case ::Marx::ATTACK:
     {
-      AttackEvent* aev = (AttackEvent*) (*it);
-      std::cout << "ATTACK" << std::endl;
-      createAttack(*aev, getSprite(), left, top);
-              break;
+      _attackSpeed -= deltaTime;
+      if (_attackSpeed <= 0)
+      {
+        SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+        std::cout << "ATTACK" << std::endl;
+        createSkAttack(*saev, getSprite(), left, top);
+        _attackSpeed = 3;
+      }
+      break;
     }
     case ::Marx::SKILL:
     {
@@ -375,7 +380,7 @@ void GateKeeper::setAttack(int a)
   _attack = a;
 }
 
-void GateKeeper::setAttackSpeed(int as)
+void GateKeeper::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
@@ -417,7 +422,7 @@ int GateKeeper::getAttack()
   return _attack;
 }
 
-int GateKeeper::getAttackSpeed()
+float GateKeeper::getAttackSpeed()
 {
   return _attackSpeed;
 }
