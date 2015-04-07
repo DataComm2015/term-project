@@ -41,12 +41,11 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _ySpeed = 0.09;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
-
     int randDirection = (rand() % 3) - 1;
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 1);
 
 }
 
@@ -198,8 +197,6 @@ void MiniBoss::animate()
 {
   if (isMoving())
     gkAnimation->step(1);
-  else
-    gkAnimation->step(5);
 }
 
 bool MiniBoss::isMoving()

@@ -22,6 +22,7 @@
 #include "GateKeeperSource/src/GateKeeper.h"
 #include "GateKeeperSource/src/Minion.h"
 #include "GateKeeperSource/src/MiniBoss.h"
+#include "GateKeeperSource/src/MiniBee.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
 #include "EntityTypes.h"
@@ -121,7 +122,7 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
     miniBeeSGO.sprite().setTexture(*Manager::TextureManager::get(miniBeeSprite));
-    miniBeeSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    miniBeeSGO.sprite().setTextureRect(sf::IntRect(0, 0, 16, 16));
 
     minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
     minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -374,7 +375,7 @@ Entity* EntityFactory::makeEntity(
         }
         case ENTITY_TYPES::MINI_BEE:
         {
-          GateKeeper *minibee = new MiniBoss(miniBeeSGO, map, x, y, cont, 1, 1);
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
           entity = minibee;
           break;
         }
@@ -454,7 +455,7 @@ Entity* EntityFactory::makeEntity(
         }
         case ENTITY_TYPES::MINI_BEE:
         {
-          GateKeeper *minibee = new MiniBoss(miniBeeSGO, map, x, y, cont, 1, 1);
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
           entity = minibee;
           break;
         }

@@ -77,7 +77,7 @@ void Animation::run(bool l)
 void Animation::pause(bool stop)
 {
 	running = false;
-	
+
 	if(stop)
 		position = 0;
 }
@@ -129,7 +129,7 @@ short Animation::step(short by)
 	}
 	else
 		steps++;
-	
+
 	return position;
 }
 
