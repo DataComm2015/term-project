@@ -9,7 +9,7 @@ namespace GUI
 	*
 	* @date         2015-03-29
 	*
-	* @revisions	
+	* @revisions
 	*
 	* @designer		Marc Rafanan
 	*
@@ -22,13 +22,13 @@ namespace GUI
 		bgSize = si;
 		sprite().setTextureRect(sf::IntRect(0, 0, bgSize.x, bgSize.y));
 
-		// Create the bar		
+		// Create the bar
 		bar = SGO(bartexture);
 		barSize = bartexture.getSize();
-		
+
 		bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x, barSize.y));
         bar.sprite().setPosition(5, 0);
-		
+
 		this->add(bar);
 	}
 

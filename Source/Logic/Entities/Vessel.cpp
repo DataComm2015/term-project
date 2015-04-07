@@ -300,12 +300,17 @@ break;
 
 				break;
 			}
-			/*case ::Marx::ADD_POINTS:
+			case ::Marx::ADD_POINTS:
 			{
-				AddPointsEvent *pointsEvent = (AddPointsEvent*) (*it);
-				player->givePoints(pointsEvent->getPoints());
-				break;
-			}*/
+				if (Manager::ProjectileManager::getServer())
+				{
+					std::cout << "Add points " << std::endl;
+					AddPointsEvent *pointsEvent = (AddPointsEvent*) (*it);
+					if (player != NULL)
+						player->givePoints(pointsEvent->getPoints());
+					break;
+				}
+			}
 		}
 	}
 
