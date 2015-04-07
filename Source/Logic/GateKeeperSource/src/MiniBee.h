@@ -79,7 +79,8 @@ class MiniBee : public GateKeeper
 		bool soundActive;
 		Animation *gkAnimation;
 
-
+	private:
+		SGO shadow;
 };
 
 #endif
