@@ -164,24 +164,16 @@ void Map::setCell(const int x, const int y, Cell* cell)
 ----------------------------------------------------------------------------------------------------------------------*/
 Cell* Map::getCell(const int x, const int y) const
 {
-   	unsigned int index = (x * width_) + y;
+
     if(y < 0 || x < 0 ||x >= width_ || y >= height_ )
     {
     	return *(--cells_.end());
     }
-	/**/
-	try
-	{
-		return cells_.at(index);
-	} catch(const std::out_of_range& e)
-	{
-		std::cerr << "Cell out of range" << std::endl;
-		fflush(stderr);
-		throw e;
-	} catch(...)
-	{
-		std::cerr << "Cell out of range" << std::endl;
-	}
+
+	unsigned int index = (x * width_) + y;
+
+	return cells_.at(index);
+
 	return nullptr;
 }
 
