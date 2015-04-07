@@ -49,47 +49,6 @@ Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Act
 	shooter = e;
 }
 
-/*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: move
---
--- DATE: March 15, 2015
---
--- REVISIONS: April 6, 2015
---
--- DESIGNER: Marc Vouve
---			Thomas Tallentire
---
--- PROGRAMMER: Marc Vouve
---				Thomas Tallentire
---
--- INTERFACE: Entity * Projectile::move(float x, float y, bool force = false)
---
--- PARAMETERS: x - X location to move the projectile to
---				y - Y location to move the projectile to
---				force - Whether or not to force the movement
---
--- RETURNS: Enity * - The Entity the projectile hits.
---
--- NOTES:
---        This function moves the projecile, if the projectile hits something, call onHit.
---
-----------------------------------------------------------------------------------------------------------------------*/
-/*Entity * Projectile::move(float x, float y, bool force = false)
-{
-    Entity *entity;
-
-	entity = Entity::move(x, y, force);
-
-	if (entity != nullptr)
-	{
-		if (onHit != NULL)
-			onHit(shooter, entity);
-	}
-
-
-	return entity;
-}*/
-
 void Projectile::onCreate()
 {
 	drawable = true;
@@ -99,8 +58,6 @@ void Projectile::onCreate()
 void Projectile::onDestroy()
 {
 	VEntity::onDestroy();
-    //getController()->addEvent(new MoveEvent(-1, -1, 1, 1, true));
-	//drawable = false;
 
 	Manager::ProjectileManager::enqueue(this);
 }
@@ -115,7 +72,6 @@ void Projectile::onUpdate(float t)
 		if(top == -100)
 			return;
         act->onUpdate(this, t);
-        //std::cout << "X: " << left << "Y: " << top << "TimeToLive: " << TimeToLive << " Time Removed: " << t << std::endl;
         TimeToLive -= t;
     }
     else

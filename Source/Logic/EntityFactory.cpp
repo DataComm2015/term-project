@@ -219,7 +219,7 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
         AttackMessage * ms = (AttackMessage *) msg->data;
 
         sf::Vector2f v(ms->cellx, ms->celly);
-        Marx::AttackAction * action = new Marx::AttackAction(100.0f, 10.0f);
+        Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
 
         std::cout << action << std::endl;
         Entity * e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ms->srcid))->getEntity();
