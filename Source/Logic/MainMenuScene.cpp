@@ -103,12 +103,16 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBackgroundBoxImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/text-box-outline.png"));
     bannerImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/logo.png"));
 
+    menuMsc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_intro_or_lobby.ogg"));
+
+
+    music = Manager::MusicManager::get(menuMsc);
+
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
     banner = new SGO(*Manager::TextureManager::get(bannerImg));
 
     //background = new SGO(*Manager::TextureManager::get(backgroundImg));
     background->sprite().setScale(1, 1);
-
 
     sf::Font *font = new sf::Font();
     font->loadFromFile("Assets/Fonts/hud.ttf");
@@ -118,8 +122,6 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBoxes[ PORT_TXT ]     = new GUI::TextBox( nextTextBox, this, 4 );
     textBoxes[ PORT_TXT ]     ->setText("7000");
     textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this, 16 );
-
-
 
     curTextBox = 0;
     textBoxes[ SERVER_TXT ]  ->toggleSelected(true);
@@ -254,6 +256,8 @@ void MainMenuScene::onLoad()
     textBoxes[ SERVER_TXT ]->toggleSelected(true);
     textBoxes[ PORT_TXT ]->toggleSelected(false);
     textBoxes[ NICKNAME_TXT ]->toggleSelected(false);
+
+    music->play();
 
     /* Set the active view */
     updateMainView(viewMain);

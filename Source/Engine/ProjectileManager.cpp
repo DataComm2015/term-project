@@ -34,8 +34,7 @@ using namespace Manager;
 Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0, Marx::Controller * _cont = NULL)
 {
-	std::cout << "ProjectileManager:: x " << v.x << " y " << v.y << std::endl;
-	if (projectile_pool.size() <= 1)
+	/*if (projectile_pool.size() <= 1)*/
 	{
 		if(SERVER)
 		{
@@ -52,28 +51,27 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 
 			ServerNetworkController * cont = new ServerNetworkController();
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
-			std::cout << "ProjectileManager:: Created at " << e->left << " " << e->top << " Damage: " << ((Marx::AttackAction*)action)->getDamage() << std::endl;
-			return new Marx::Projectile(_sprite, map, e, e->left, e->top, action, v, cont, h, w);			
+			return new Marx::Projectile(_sprite, map, e, e->left, e->top, action, v, cont, h, w);
 		}
 		else
 		{
 			return new Marx::Projectile(_sprite, map, e, e->left, e->top, action, v, _cont, h, w);
 		}
 	}
-	else
+	/*else
 	{
 		std::cout << "ProjectileManager:: Found in projectile pool" << " Damage: " << ((Marx::AttackAction*)action)->getDamage()<< std::endl;
-		Marx::Projectile* temp = *projectile_pool.begin();
+		Marx::Projectile* temp = * projectile_pool.begin();
 		temp->setSprite(_sprite);
 		temp->setAct(action);
 		temp->setTarget(v);
 		projectile_pool.erase(*projectile_pool.begin());
 		std::cout << "ProjectileM:: to " << e->left << " " << e->top << std::endl;
-		MoveEvent *event = new MoveEvent(e->left, e->top, e->left, e->top, true);
+		MoveEvent *event = new MoveEvent(e->left, e->top, v.x, v.y, true);
 		temp->getController()->addEvent(event);
 		temp->onCreate();
 		return temp;
-	}
+	}*/
 
 	return nullptr;
 }
