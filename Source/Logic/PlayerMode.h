@@ -8,4 +8,18 @@ enum class PLAYER_MODE
     DEITY
 };
 
+enum class PLAYER_TYPE
+{
+    WARRIOR,
+    SHAMAN,
+    LIFE,
+    DEATH
+};
+
+struct PLAYER_INFO
+{
+  PLAYER_MODE mode;
+  PLAYER_TYPE type;
+};
+
 #endif
