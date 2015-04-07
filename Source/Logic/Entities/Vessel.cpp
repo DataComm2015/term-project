@@ -5,6 +5,7 @@
 #include "../Event.h"
 #include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
+#include "../../Engine/AttackAction.h"
 
 #define ATTACK_COOLDOWN 0.5F
 
@@ -85,6 +86,19 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
+
+	// TODO: Set the new attack based on the class
+	// delete actionList[normalAttack];
+	//
+	// if (true)
+	// {
+	// 	actionList[normalAttack] = new Marx::AttackAction(5, 20);
+	// }
+	// else
+	// {
+	// 	actionList[normalAttack] = new Marx::AttackAction(10, 5);
+	// }
+
 
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 3);
