@@ -86,7 +86,7 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Enemies/Stone/Guardians/wanderer-sheet.png")
     );
 
-	projSprite = Manager::TextureManager::store(
+	  projSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
     );
 
