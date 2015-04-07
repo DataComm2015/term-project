@@ -29,7 +29,6 @@ using namespace Manager;
 //static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 
-
 /******************************************************************************
 *   FUNCTION: GateKeeper() Constructor
 *
@@ -63,7 +62,7 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 3;
+    _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.06;
@@ -74,8 +73,7 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     getSprite().sprite().setScale(randDirection, 1);
 
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
-
+    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
 GateKeeper::~GateKeeper()
@@ -207,13 +205,11 @@ void GateKeeper::onUpdate(float deltaTime)
     case ::Marx::ATTACK:
     {
       _attackSpeed -= deltaTime;
-      if (_attackSpeed <= 0)
-      {
+
         SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
         std::cout << "ATTACK" << std::endl;
         createSkAttack(*saev, getSprite(), left, top);
-        _attackSpeed = 3;
-      }
+
       break;
     }
     case ::Marx::SKILL:
@@ -379,88 +375,376 @@ bool GateKeeper::isMoving()
   return (movingLeft || movingRight || movingUp || movingDown);
 }
 
+/******************************************************************************
+*   FUNCTION: setRange(int)
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setRange(int)
+*
+*   PARAMETERS: r   - New range for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets a new range for this enemy
+******************************************************************************/
 void GateKeeper::setRange(int r)
 {
   _range = r;
 }
 
+/******************************************************************************
+*   FUNCTION: setHealth
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setHealth(int h)
+*
+*   PARAMETERS: h   - new Health for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets a new health for this enemy
+******************************************************************************/
 void GateKeeper::setHealth(int h)
 {
   _health = h;
 }
 
+/******************************************************************************
+*   FUNCTION: setAttack
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setAttack(int a)
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::setAttack(int a)
 {
   _attack = a;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
 
-
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::setXSpeed(float x)
 {
   _xSpeed = x;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::setYSpeed(float y)
 {
   _ySpeed = y;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::setSpeed(int _speed)
 {
     _xSpeed = _speed;
     _ySpeed = _speed;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 int GateKeeper::getSpeed()
 {
 	return _xSpeed;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 int GateKeeper::getRange()
 {
   return _range;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 int GateKeeper::getHealth()
 {
   return _health;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 int GateKeeper::getAttack()
 {
   return _attack;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 float GateKeeper::getAttackSpeed()
 {
   return _attackSpeed;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 int GateKeeper::getMovementSpeed()
 {
   return _movementSpeed;
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::turn()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::onCreate()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 void GateKeeper::stopAllSounds()
 {
     footstep.stop();
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 bool GateKeeper::operator==(const VEntity&)
 {
   return true;

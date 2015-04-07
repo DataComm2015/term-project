@@ -11,13 +11,13 @@
 **	PROGRAMMER: Filip Gutica A00781910
 **
 ***********************************************************************************/
-#include "MiniBee.h"
 #include "../../Event.h"
 #include "../../Entities/ServerEnemyController.h"
 #include <typeinfo>
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include "MiniBee.h"
 
 using namespace Manager;
 
@@ -27,6 +27,9 @@ using namespace Manager;
 //static id_resource hurtSoundMiniBee 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
 //static id_resource attackSoundMiniBee		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
+id_resource beeShadow;
+
+
 // bug fix by Sanders Lee
 MiniBee::MiniBee(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
@@ -35,7 +38,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 3;
+    _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.03;
@@ -47,8 +50,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(16, 16), 16, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(16, 16), 16, 3);
 
+    // Load shadow texture
+    beeShadow = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Shadows/bug_shadow.png")
+    );
+
+    shadow.sprite().setTexture(*Manager::TextureManager::get(beeShadow));
+    shadow.sprite().setTextureRect(sf::IntRect(0, 0, 8, 3));
+
+    this->add(shadow);
+    shadow.sprite().setOrigin(-4, -17);
 }
 
 MiniBee::~MiniBee()
@@ -169,7 +182,7 @@ void MiniBee::onUpdate(float deltaTime)
             SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
             std::cout << "ATTACK" << std::endl;
             createSkAttack(*saev, getSprite(), left, top);
-            _attackSpeed = 3;
+            _attackSpeed = 1;
           }
           break;
         }

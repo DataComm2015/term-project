@@ -130,6 +130,9 @@ class GameScene : public Scene
 
 		static id_resource crosshairImg;
 
+		static id_resource game_msc;
+		static id_resource ambience_msc;
+
 		//VITALITY
 		static id_resource buffskillbtn;
 		static id_resource healskillbtn;
@@ -162,7 +165,6 @@ class GameScene : public Scene
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
-		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
 		GUI::TextBox *levelInd;
 		SGO *crossHairSGO;
@@ -175,6 +177,9 @@ class GameScene : public Scene
 		int classType;
 
 		sf::Sound current;
+
+		sf::Music *music;
+		sf::Music *ambience;
 
 		// tech demos:
 		sf::Vector2f butSize;

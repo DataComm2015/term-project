@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdexcept>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace Networking;
 
@@ -499,4 +499,3 @@ void NetworkEntityMultiplexer::onUnregister(int id, Session* session, Message ms
 {
     entities[id]->onUnregister(session,msg);
 }
-

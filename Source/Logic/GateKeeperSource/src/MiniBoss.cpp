@@ -34,18 +34,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 3;
+    _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.08;
-    _ySpeed = 0.08;
+    _xSpeed = 0.06;
+    _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
     int randDirection = (rand() % 3) - 1;
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 1);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 8);
 
 }
 
@@ -73,7 +73,7 @@ void MiniBoss::onUpdate(float deltaTime)
     int xDir;
     int yDir;
     MoveEvent* ev;
-	
+
 	//std::cout << "MiniBoss::Controller " << getController() << std::endl;
 	//std::cout << "MiniBoss::Event " << (*it)->type << std::endl;
     // switch on type
@@ -172,7 +172,7 @@ void MiniBoss::onUpdate(float deltaTime)
             SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
             std::cout << "ATTACK" << std::endl;
             createSkAttack(*saev, getSprite(), left, top);
-            _attackSpeed = 3;
+            _attackSpeed = 1;
           }
           break;
         }
@@ -199,15 +199,15 @@ void MiniBoss::onUpdate(float deltaTime)
                     _ySpeed -= ev->getValue();
                 break;
             }
-            
+
             printf("GateKeeper AFTER Health: %d\n", _health);
-            
+
             if(_health <= 0)
             {
               std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
               onDestroy();
             }
-    
+
             break;
         }
 		default:

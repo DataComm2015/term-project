@@ -11,6 +11,7 @@
 #include "../EntityTypes.h"
 
 #include <cstdio>
+#include <iostream>
 
 
 /**
@@ -27,6 +28,8 @@ PlayerEntity::PlayerEntity(ServerCommand *server)
 {
     this->controller = 0;
     nickname = 0;
+	vessel = NULL;
+	points = 0;
 }
 
 PlayerEntity::~PlayerEntity()
@@ -270,4 +273,25 @@ float PlayerEntity::getDistance(float x1, float y1, float x2, float y2 )
 void PlayerEntity::setSGameScene(ServerGameScene *ref)
 {
     serverRef = ref;
+}
+
+void PlayerEntity::setVessel(Vessel *vessel)
+{
+	this->vessel = vessel;
+}
+
+Vessel *PlayerEntity::getVessel()
+{
+	return vessel;
+}
+
+void PlayerEntity::givePoints(float points)
+{
+	this->points += points;
+	std::cout << "MOAR POINTS!! " << this->points << std::endl;
+}
+
+float PlayerEntity::getPoints()
+{
+	return points;
 }
