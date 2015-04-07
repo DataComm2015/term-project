@@ -11,10 +11,10 @@
 #define NUM_PLAYERS 4
 
 /* The percent of enemy grass zone blocks */
-#define MAX_GRASS_ENEMIES 45
+#define MAX_GRASS_ENEMIES 60
 
 /* The percent of of enemy stone zone blocks */
-#define MAX_STONE_ENEMIES 30
+#define MAX_STONE_ENEMIES 70
 
 /* The percent of structure grass zone blocks */
 #define MAX_GRASS_STRUCTURES 5
@@ -26,7 +26,7 @@
 #define MIN_ENEMY_GROUP 2
 
 /* The maximum size of an enemy group */
-#define MAX_ENEMY_GROUP 5
+#define MAX_ENEMY_GROUP 12
 
 /* The minimum number of structures in a block */
 #define MIN_STRUCTURE_GROUP 1
