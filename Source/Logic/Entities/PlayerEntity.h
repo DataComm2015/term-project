@@ -32,7 +32,9 @@ class PlayerEntity : public NetworkEntity
         virtual ~PlayerEntity();
 
         void setMode(PLAYER_MODE mode);
+        void setType(PLAYER_TYPE type); //sanderschange
         PLAYER_MODE getMode();
+        PLAYER_TYPE getType();
 
         void setController(ServerNetworkController* controller);
         void unsetController();
@@ -51,6 +53,7 @@ class PlayerEntity : public NetworkEntity
         ServerNetworkController* controller;
         ServerCommand *server;
         PLAYER_MODE mode;
+        PLAYER_TYPE type;
         PlayerLobbyChoices lobbyChoices;
 };
 

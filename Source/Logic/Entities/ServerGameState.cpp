@@ -268,7 +268,7 @@ void ServerGameState::goToScoreboard()
         player_stats[i].score = 0;
     }
 
-    i = 0;  
+    i = 0;
 
     for(auto entry = players.begin(); entry != players.end(); ++entry)
     {
@@ -445,6 +445,7 @@ void ServerGameState::assignPlayerModes()
     std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
     while (itr != players.end())
     {
+        PLAYER_INFO info;
         // If there are still vessels left to place, check if player should be
         // vessel
         if (vesselsRemaining > 0)
@@ -567,9 +568,3 @@ void ServerGameState::update( Message message )
     NetworkEntity::update(message);
 
 }
-
-
-
-
-
-

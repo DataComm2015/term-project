@@ -60,8 +60,9 @@ class EntityFactory
         ~EntityFactory();
     private:
         static EntityFactory* instance;
-        id_resource gkSprite, minionSprite, minion2Sprite, minion3Sprite, miniBossSprite, miniBeeSprite, projSprite, vesselSprite, maskSprite, spearSprite, structImage;
-        SGO gkSGO, minionSGO, projSGO, miniBossSGO, vesselSGO, maskSGO, spearSGO, structSprite;
+
+        id_resource gkSprite, minionSprite, minion2Sprite, minion3Sprite, miniBossSprite, miniBeeSprite, projSprite, vesselSprite, maskSprite, spearSprite, staffSprite,structImage;
+        SGO gkSGO, minionSGO, projSGO, miniBossSGO, vesselSGO, maskSGO, spearSGO, staffSGO, structSprite;
         SGO minion2SGO, minion3SGO, miniBeeSGO;
         std::vector<SGO> whispSGOs;
 };

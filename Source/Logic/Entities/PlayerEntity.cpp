@@ -47,9 +47,21 @@ void PlayerEntity::setMode(PLAYER_MODE mode)
     update(msg);
 }
 
+//sanderschange
+void PlayerEntity::setType(PLAYER_TYPE type)
+{
+    this->type = type;
+}
+
 PLAYER_MODE PlayerEntity::getMode()
 {
     return mode;
+}
+
+//sanderschange
+PLAYER_TYPE PlayerEntity::getType()
+{
+    return type;
 }
 
 void PlayerEntity::onUnregister(Session* session, Message msg)
@@ -85,6 +97,15 @@ void PlayerEntity::onUpdate(Message msg)
         case PlayerCommandMsgType::SELECT_LOBBY_OPTIONS:
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
+            switch( lobbyChoices.vesselChoice )
+            {
+              case 1:
+                this->setType(PLAYER_TYPE::WARRIOR);
+                break;
+              case 2:
+                this->setType(PLAYER_TYPE::SHAMAN);
+                break;
+            }
             server->getGameState()->notifyReadyForGame();
 
             break;

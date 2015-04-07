@@ -266,8 +266,10 @@ void GameScene::onLoad()
 	{
 		case PLAYER_MODE::VESSEL:
 			classType = cm->getCommandEntity()->getLobbyOption()->vesselChoice;
+			break;
 		case PLAYER_MODE::DEITY:
 			classType = cm->getCommandEntity()->getLobbyOption()->deityChoice;
+			break;
 	}
 
 	printf("characterType: %d, classType: %d\n",characterType,classType);
