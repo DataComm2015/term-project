@@ -23,9 +23,17 @@ void AttackAction::onUpdate(Entity * me, float time)
 	sf::Vector2f vector = (static_cast<Projectile*>(me))->getVector();
 	vector.x *= 1;
 	vector.y *= 1;
+	int tempx = me->left;
+	int tempy = me->top;
 
 	if ((hit = me->rMove(vector, time * speed, true)) != nullptr)
 	{
+		// If the projectile didn't move this update it's probably stuck, delete.
+		if(tempx == me->left && tempy == me->top)
+		{
+			me->onDestroy();
+		}
+
 		if (hit != (static_cast<Projectile*>(me))->getShooter())
 		{
 			if (Manager::ProjectileManager::getServer())
