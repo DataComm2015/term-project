@@ -36,15 +36,15 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.08;
-    _ySpeed = 0.08;
+    _xSpeed = 0.06;
+    _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
     int randDirection = (rand() % 3) - 1;
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 1);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 8);
 
 }
 

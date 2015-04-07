@@ -118,6 +118,7 @@ class Vessel : public Marx::VEntity, public Creature
 		//Animation *runAnim;
 		//Animation *runAnim_mask;
 		//Animation *runAnim_wep;
+		SGO shadow;
 
 	public:
         float newXSpeed;

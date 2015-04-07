@@ -63,7 +63,6 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void animate();
         ENTITY_TYPES getType();
 
-
 	protected:
 		bool movingLeft;
     bool movingRight;

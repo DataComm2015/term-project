@@ -1,3 +1,18 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: ClientScoreboardScene.h
+--
+-- PROGRAM: Sojourn
+--
+-- DATE: April 7, 2015
+--
+-- DESIGNER: Michael Chimick
+--
+-- PROGRAMMER: Michael Chimick
+--
+-- NOTES:
+--     This file contains the class implementation of the scoreboard scene for the client.
+----------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef CLIENT_SCOREBOARD_SCENE_H_
 #define CLIENT_SCOREBOARD_SCENE_H_
 
@@ -21,15 +36,15 @@
 #define SCORE_ROWS 13 // max players + 1
 #define SCORE_COLS  3 // name, (deity or vessel), score
 
-#define SCORE_X  380 // starting position for the scoreboard
-#define SCORE_Y  200 // starting position for the scoreboard
-#define OFFSET_X 80  // offset for each col in the scoreboard
-#define OFFSET_Y 10  // offset for each row in the scoreboard
+#define SCORE_X  340 // starting position for the scoreboard
+#define SCORE_Y  160 // starting position for the scoreboard
+#define OFFSET_X 70  // offset for each col in the scoreboard
+#define OFFSET_Y 11.4  // offset for each row in the scoreboard
 
-#define C_BOX_X 240
-#define C_BOX_Y 140
+#define C_BOX_X 205
+#define C_BOX_Y 110
 
-#define SCALE 0.5
+#define SCALE 0.66
 #define SCREEN_SCALE 0.33
 
 #define SCORE_COUNTDOWN 10

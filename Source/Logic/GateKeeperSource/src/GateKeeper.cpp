@@ -28,7 +28,6 @@ using namespace Manager;
 //static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 
-
 /******************************************************************************
 *   FUNCTION: GateKeeper() Constructor
 *
@@ -73,8 +72,7 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     getSprite().sprite().setScale(randDirection, 1);
 
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
-
+    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
 GateKeeper::~GateKeeper()
