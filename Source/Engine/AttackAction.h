@@ -12,6 +12,7 @@
 -- DESIGNER: Marc Vouve
 --
 -- PROGRAMMER:  Thomas Tallentire
+--              Marc Vouve
 --
 -- NOTES:
 -- This class will be held by a projectile. It will define the action
@@ -28,15 +29,19 @@
 
 namespace Marx
 {
+	class Projectile;
+	
 	class AttackAction : public Action
 	{
 		public:
 			AttackAction(float, float);
-			virtual void onUpdate(Entity * me, float);
-			virtual void onHit(Entity * me, Entity * e );
+			AttackAction(float, float, float);
+			virtual void onUpdate(Projectile*, float);
+			virtual void onHit(Projectile*, Entity*);
 			float getDamage() { return damage; };
 		private:
 			float damage;
+			float speed;
 	};
 };
 

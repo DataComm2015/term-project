@@ -635,7 +635,7 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			sf::Vector2f mouse = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
 			sf::Vector2f viewVector = viewMain.getCenter();
-			
+
 			/*viewVector.x = convertX(viewVector.x);
 			viewVector.y = convertY(viewVector.y);
 			*/std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
@@ -644,7 +644,7 @@ void GameScene::processEvents(sf::Event& e)
 			for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
 			{
 				(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
-									ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
+									ActionType::normalAttack,   (float)mouse.x - viewVector.x,  (float)mouse.y - viewVector.y );
 				//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
 				//current.play();
 			}
@@ -1270,9 +1270,9 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 {
 	skill_notify sn;
 	SGO *snSGO;
-	
+
 	sn.timer = timer;
-	
+
 	switch(_skillType)
 	{
 		case SKILLTYPE::HEAL:
@@ -1318,13 +1318,14 @@ void GameScene::updateSkillGraphics(sf::Time t)
 {
 	for(auto it = snQueue.begin(); it != snQueue.end(); it++)
 	{
-		
+
 		it->timer -= t.asMilliseconds();
-		
+
 		if(it->timer <= 0)
 		{
 			//delete it->entity;
 			it->entity->onDestroy();
+			
 			snQueue.pop_front();
 		}
 	}
