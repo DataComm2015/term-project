@@ -138,10 +138,7 @@ void MiniBee::onUpdate(float deltaTime)
   getController()->clearEvents();
 
 
-
-
   Entity::rMove(newXSpeed, newYSpeed, true);
-
 
 }
 
