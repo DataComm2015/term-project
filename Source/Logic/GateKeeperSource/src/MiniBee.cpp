@@ -30,11 +30,11 @@ using namespace Manager;
 MiniBee::MiniBee(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
-    _range = 10;
+    _range = 20;
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 1;
+    _attackSpeed = 3;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.03;
@@ -133,40 +133,52 @@ void MiniBee::onUpdate(float deltaTime)
         //playSound(newXSpeed, newYSpeed);
 
     		break;
-            case ::Marx::SKILL:
+        case ::Marx::ATTACK:
+        {
+          _attackSpeed -= deltaTime;
+          if (_attackSpeed <= 0)
+          {
+            SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+            std::cout << "ATTACK" << std::endl;
+            createSkAttack(*saev, getSprite(), left, top);
+            _attackSpeed = 3;
+          }
+          break;
+        }
+        case ::Marx::SKILL:
+        {
+            // process the skill event, and increase/decrease hp and stuff
+            SkillEvent *ev = (SkillEvent*)(*it);
+
+            printf("GateKeeper BEFORE Health: %d\n", _health);
+            switch(ev->getSkillType())
             {
-                // process the skill event, and increase/decrease hp and stuff
-                SkillEvent *ev = (SkillEvent*)(*it);
-                
-                printf("GateKeeper BEFORE Health: %d\n", _health);
-                switch(ev->getSkillType())
-                {
-                    case SKILLTYPE::HEAL:
-                        _health += ev->getValue();
-                    break;
-                    case SKILLTYPE::DMG:
-                        _health -= ev->getValue();
-                    break;
-                    case SKILLTYPE::BUFF:
-                        _xSpeed += ev->getValue();
-                        _ySpeed += ev->getValue();
-                    break;
-                    case SKILLTYPE::DEBUFF:
-                        _xSpeed -= ev->getValue();
-                        _ySpeed -= ev->getValue();
-                    break;
-                }
-                
-                printf("GateKeeper AFTER Health: %d\n", _health);
-                
-                if(_health <= 0)
-                {
-                  std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-                  onDestroy();
-                }
-        
+                case SKILLTYPE::HEAL:
+                    _health += ev->getValue();
+                break;
+                case SKILLTYPE::DMG:
+                    _health -= ev->getValue();
+                break;
+                case SKILLTYPE::BUFF:
+                    _xSpeed += ev->getValue();
+                    _ySpeed += ev->getValue();
+                break;
+                case SKILLTYPE::DEBUFF:
+                    _xSpeed -= ev->getValue();
+                    _ySpeed -= ev->getValue();
                 break;
             }
+
+            printf("GateKeeper AFTER Health: %d\n", _health);
+
+            if(_health <= 0)
+            {
+              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+              onDestroy();
+            }
+
+            break;
+        }
     }
 
 
@@ -174,10 +186,7 @@ void MiniBee::onUpdate(float deltaTime)
   getController()->clearEvents();
 
 
-
-
   Entity::rMove(newXSpeed, newYSpeed, true);
-
 
 }
 
@@ -258,7 +267,7 @@ void MiniBee::setAttack(int a)
   _attack = a;
 }
 
-void MiniBee::setAttackSpeed(int as)
+void MiniBee::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
@@ -300,7 +309,7 @@ int MiniBee::getAttack()
   return _attack;
 }
 
-int MiniBee::getAttackSpeed()
+float MiniBee::getAttackSpeed()
 {
   return _attackSpeed;
 }

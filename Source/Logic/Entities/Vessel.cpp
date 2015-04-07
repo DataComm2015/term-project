@@ -15,8 +15,8 @@ sf::Clock vesselClock;
 
 id_resource Vessel::grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
 id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
-id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
-id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
+//static id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
+//static id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
 //TO DO:
 //1) GIVE IT A SPRITE
@@ -51,16 +51,13 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		float height,
 		float width
 		/*, job_class jobClass, Ability* abilityList*/ )
-		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0, ENTITY_TYPES::VESSEL ),
+		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
 		mask_sprite(_mask),
 		weapon_sprite(_weapon)
 		//,_controller(controller)
 {
 
 	direction = 1; //start facing right
-
-	atk_sprite = *(new SGO());
-	satk_sprite = *(new SGO());
 
 	resetEXP();
 	xSpeed = 0.08;
@@ -85,9 +82,6 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	myX = 0;
 	myY = 0;
 
-	currentHealth = 500;
-	maxHealth = 1000;
-
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 7);
@@ -95,7 +89,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	this->add(mask_sprite);
   this->add(weapon_sprite);
 
-	//std::cout << "Vessel constructed successfully!" << std::endl;
+	std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
 /*-------------------------------------------
@@ -113,7 +107,7 @@ void Vessel::onUpdate(float deltaTime)
 	static BlockZone steppedTile = GRASS;
 
 	sf::Time elapsedTime;
-	sf::Time frameTime = sf::seconds(1.0/60);
+	sf::Time frameTime = sf::seconds(1.0/120);
 
 	// TIME UPDATES
 	elapsedTime = vesselClock.restart();
@@ -203,24 +197,17 @@ break;
 
 			case ::Marx::ATTACK:
 			{
-				if (Manager::ProjectileManager::getServer())
-				{
-					std::cout << "Vessel:: ATTACK" << std::endl;
-					AttackEvent* aev = (AttackEvent*) (*it);
-					std::cout << "ATTACK" << std::endl;
-					createAttack(*aev, atk_sprite, left, top);
-				}
+				AttackEvent* aev = (AttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createAttack(*aev, getSprite(), left, top);
                 break;
 			}
 			case ::Marx::SK_ATTACK:
 			{
-				if (Manager::ProjectileManager::getServer())
-				{
-					std::cout << "Vessel:: SK_ATTACK" << std::endl;
-					SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-					std::cout << "ATTACK" << std::endl;
-					createSkAttack(*saev, satk_sprite, left, top);
-				}
+
+				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createSkAttack(*saev, getSprite(), left, top);
                 break;
 			}
             case ::Marx::SET_HEALTH:
@@ -246,8 +233,7 @@ break;
 			{
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
-				
-				printf("Vessel BEFORE Health: %d\n", currentHealth);
+
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -265,28 +251,14 @@ break;
 						ySpeed -= ev->getValue();
 					break;
 				}
-				
-				if(currentHealth <= 0)
-				{
-					std::cout << "Moving vessel to ambiguous destination!!" << std::endl;
-					onDestroy();
-				}
-				
-				printf("Vessel AFTER Health: %d\n", currentHealth);
-		
+
 				break;
-			}
-			case ::Marx::ADD_POINTS:
-			{
-				AddPointsEvent *pointsEvent = (AddPointsEvent*)(*it);
-				pointsEvent->getPoints();
 			}
 		}
 	}
 
 	if ( elapsedTime > frameTime )
 	{
-			//std::cout << "updating animation" << std::endl;
 			runAnim->update(frameTime);
 			runAnim_mask->update(frameTime);
 			runAnim_wep->update(frameTime);
@@ -676,9 +648,9 @@ void Vessel::decreaseHP( int hp )
 {
 	sf::Vector2f soundPos(left, top);
 	voice.stop();
-	voice = SoundManager::play(hurtSound, soundPos);
-	voice.setLoop(true);
-	voice.play();
+	//voice = SoundManager::play(hurtSound, soundPos);
+	//voice.setLoop(true);
+	//voice.play();
 
 	currentHealth -= hp;
 	if( currentHealth < 0 )
@@ -1276,9 +1248,4 @@ float Vessel::getYPosition()
 float Vessel::getXPosition()
 {
 	return yPos;
-}
-
-ENTITY_TYPES Vessel::getType()
-{
-	return ENTITY_TYPES::VESSEL;
 }
