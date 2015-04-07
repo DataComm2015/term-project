@@ -80,6 +80,7 @@ class MiniBee : public GateKeeper
 		bool soundActive;
 		Animation *gkAnimation;
 
+
 };
 
 #endif
