@@ -589,7 +589,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 	{
 		case GRASS:
 		{
-			int grassChoices = 1;
+			int grassChoices = 2;
 			int selection = rand() % grassChoices;
 
 			switch(selection)
@@ -600,35 +600,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "grass", true, 5);
-						gameScene->createEnemy(getEnemyType(enemy), NULL,
-							cell->getX(), cell->getY());
-
-						int xPos = block->getRandomCell()->getX();
-						int yPos = block->getRandomCell()->getY();
-					}
-
-					break;
-				}
-			}
-
-			break;
-		}
-
-		case STONE:
-		{
-			int stoneChoices = 2;
-			int selection = rand() % stoneChoices;
-
-			switch(selection)
-			{
-				case 0:
-				{
-					for (int i = 0; i < num; i++)
-					{
-						cell = block->getRandomCell();
-
-						eh->getEnemy(&enemy, "grass");
+						eh->getEnemy(&enemy, "grass/lost_grass");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
@@ -642,7 +614,60 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "stone");
+						eh->getEnemy(&enemy, "grass/lost_grass", true, 5);
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
+							cell->getX(), cell->getY());
+					}
+
+					break;
+				}
+			}
+
+			break;
+		}
+
+		case STONE:
+		{
+			int stoneChoices = 3;
+			int selection = rand() % stoneChoices;
+
+			switch(selection)
+			{
+				case 0:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						cell = block->getRandomCell();
+
+						eh->getEnemy(&enemy, "stone/lost_stone");
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
+							cell->getX(), cell->getY());
+					}
+
+					break;
+				}
+
+				case 1:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						cell = block->getRandomCell();
+
+						eh->getEnemy(&enemy, "grass/lost_grass");
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
+							cell->getX(), cell->getY());
+					}
+
+					break;
+				}
+
+				case 2:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						cell = block->getRandomCell();
+
+						eh->getEnemy(&enemy, "stone/lost_stone", true, 10);
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
@@ -805,6 +830,14 @@ ENTITY_TYPES GameMap::getEnemyType(string enemy)
 	{
 		return BASIC_TYPE;
 	}
+	else if (enemy.compare("bee") == 0)
+	{
+		return MINI_BEE;
+	}
+	else if (enemy.compare("wanderer") == 0)
+	{
+		return MINI_BOSS;
+	}
 }
 
 
@@ -894,6 +927,41 @@ void GameMap::generateMiniBosses()
     blockMap[bHeight - 1][bWidth / 2].setType(MINIBOSS);
     blockMap[bHeight / 2][0].setType(MINIBOSS);
     blockMap[bHeight / 2][bWidth - 1].setType(MINIBOSS);
+
+
+	// Loop through all blocks and place mini-bosses
+    Cell *cell;
+	EnemyHierarchy *eh = EnemyHierarchy::getInstance();
+	string enemy;
+
+    for (int i = 0; i < bHeight; i++)
+    {
+    	for (int j = 0; j < bWidth; j++)
+    	{
+    		if (blockMap[j][i].getType() == MINIBOSS)
+    		{
+    			// Place miniboss
+    			cell = blockMap[j][i].getRandomCell();
+
+				eh->getEnemy(&enemy, "grass/guardian_grass");
+				gameScene->createEnemy(getEnemyType(enemy), NULL,
+					cell->getX(), cell->getY());
+
+				// Place miniboss enemies
+				int num = (rand() % MAX_ENEMY_GROUP) + MIN_ENEMY_GROUP;
+
+				for (int k = 0; k < num; k++)
+				{
+					cell = blockMap[j][i].getRandomCell();
+
+					eh->getEnemy(&enemy, "grass/lost_grass/air_grass");
+					gameScene->createEnemy(getEnemyType(enemy), NULL,
+						cell->getX(), cell->getY());
+				}
+    		}
+    	}
+    }
+    
 }
 
 
