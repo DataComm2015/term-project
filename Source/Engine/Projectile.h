@@ -54,6 +54,7 @@ namespace Marx
 			float getTTL();
 			void setTTL(float t);
 			Entity* getShooter();
+
 			sf::Vector2f getVector();
 	};
 }
