@@ -6,6 +6,7 @@
 #include "../Engine/Controller.h"
 #include "../Engine/Action.h"
 #include "../Engine/ProjectileManager.h"
+#include "EntityTypes.h"
 
 using Marx::Entity;
 
@@ -25,8 +26,6 @@ class Creature
         virtual void setHealth(int _health);
         virtual int getSpeed();
         virtual void setSpeed(int _speed);
-        
-        
         virtual void setAttack(int attack);
 		virtual int getAttack();
 		virtual Marx::Projectile* createAttack(AttackEvent&, SGO &sprite, float x, float y);

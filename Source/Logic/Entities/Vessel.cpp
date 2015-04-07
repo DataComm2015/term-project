@@ -6,6 +6,8 @@
 #include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
 
+#define ATTACK_COOLDOWN 0.5F
+
 using namespace Manager;
 
 Animation *runAnim;
@@ -15,8 +17,8 @@ sf::Clock vesselClock;
 
 id_resource Vessel::grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
 id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
-id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
-id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
+//static id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
+//static id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
 //TO DO:
 //1) GIVE IT A SPRITE
@@ -56,11 +58,8 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		weapon_sprite(_weapon)
 		//,_controller(controller)
 {
-
+	attCool = 2;
 	direction = 1; //start facing right
-
-	atk_sprite = *(new SGO());
-	satk_sprite = *(new SGO());
 
 	resetEXP();
 	xSpeed = 0.08;
@@ -92,7 +91,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	this->add(mask_sprite);
   this->add(weapon_sprite);
 
-	//std::cout << "Vessel constructed successfully!" << std::endl;
+	std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
 /*-------------------------------------------
@@ -109,8 +108,9 @@ void Vessel::onUpdate(float deltaTime)
 	static bool soundActive = false;
 	static BlockZone steppedTile = GRASS;
 
+	attCool += deltaTime;
 	sf::Time elapsedTime;
-	sf::Time frameTime = sf::seconds(1.0/60);
+	sf::Time frameTime = sf::seconds(1.0/120);
 
 	// TIME UPDATES
 	elapsedTime = vesselClock.restart();
@@ -200,24 +200,42 @@ break;
 
 			case ::Marx::ATTACK:
 			{
-				AttackEvent* aev = (AttackEvent*) (*it);
-				std::cout << "ATTACK" << std::endl;
-				createAttack(*aev, atk_sprite, left, top);
+				if (Manager::ProjectileManager::getServer())
+				{
+					if (attCool >= ATTACK_COOLDOWN)
+					{
+						AttackEvent* aev = (AttackEvent*) (*it);
+						createAttack(*aev, atk_sprite, left, top);
+						attCool = 0;
+					}
+				}
+
                 break;
 			}
 			case ::Marx::SK_ATTACK:
 			{
-
-				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-				std::cout << "ATTACK" << std::endl;
-				createSkAttack(*saev, satk_sprite, left, top);
+				if (Manager::ProjectileManager::getServer())
+				{
+					if (attCool >= ATTACK_COOLDOWN)
+					{
+						SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+						createSkAttack(*saev, satk_sprite, left, top);
+						attCool = 0;					
+					}
+				}
                 break;
 			}
             case ::Marx::SET_HEALTH:
             {
                 SetHealthEvent* ev = (SetHealthEvent*) (*it);
-
-                setHealth(ev->getChange());
+				std::cout << "Vessel:: set health" << std::endl;
+                setHealth(getHealth()-ev->getChange());
+				std::cout << "Vessel:: Health = " << currentHealth << std::endl;
+				if(currentHealth <= 0)
+				{
+					std::cout << "Vessel Dead:" << std::endl;
+					onDestroy();
+				}
                 break;
             }
 			case ::Marx::UPDATE:
@@ -262,7 +280,6 @@ break;
 
 	if ( elapsedTime > frameTime )
 	{
-			//std::cout << "updating animation" << std::endl;
 			runAnim->update(frameTime);
 			runAnim_mask->update(frameTime);
 			runAnim_wep->update(frameTime);
@@ -652,9 +669,9 @@ void Vessel::decreaseHP( int hp )
 {
 	sf::Vector2f soundPos(left, top);
 	voice.stop();
-	voice = SoundManager::play(hurtSound, soundPos);
-	voice.setLoop(true);
-	voice.play();
+	//voice = SoundManager::play(hurtSound, soundPos);
+	//voice.setLoop(true);
+	//voice.play();
 
 	currentHealth -= hp;
 	if( currentHealth < 0 )
@@ -1253,3 +1270,5 @@ float Vessel::getXPosition()
 {
 	return yPos;
 }
+
+

@@ -11,10 +11,10 @@
 #define NUM_PLAYERS 4
 
 /* The percent of enemy grass zone blocks */
-#define MAX_GRASS_ENEMIES 45
+#define MAX_GRASS_ENEMIES 30
 
 /* The percent of of enemy stone zone blocks */
-#define MAX_STONE_ENEMIES 30
+#define MAX_STONE_ENEMIES 40
 
 /* The percent of structure grass zone blocks */
 #define MAX_GRASS_STRUCTURES 5

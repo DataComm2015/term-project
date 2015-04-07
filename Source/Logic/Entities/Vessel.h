@@ -66,6 +66,7 @@
 #include "../../Engine/TileManager.h"
 #include "../../Multimedia/graphics/Animation.h"
 #include "../Creature.h"
+#include "../EntityTypes.h"
 #include <SFML/Audio.hpp>
 
 #define MAX_LEVEL 10;
@@ -100,6 +101,7 @@ class Vessel : public Marx::VEntity, public Creature
 		float myY;
 		float servX;
 		float servY;
+		float attCool;
 		int direction;	//0 = right, 1 = left //why not a bool?
 		bool movingLeft;
 	  bool movingRight;
@@ -183,6 +185,7 @@ class Vessel : public Marx::VEntity, public Creature
 		virtual void setAttack(int attack);
         virtual void stopAllSounds();
 		virtual Entity *getEntity();
+		ENTITY_TYPES getType();
 };
 
 #endif

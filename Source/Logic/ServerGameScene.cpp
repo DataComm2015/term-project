@@ -78,6 +78,13 @@ void ServerGameScene::update(sf::Time time)
 
     if (timer > 0)
     {
+        // Check if the game round should end
+        if (!ALLOW_SINGLE_PLAYER && gameShouldEnd())
+        {
+            timer = 0;
+        }
+
+        /*
         if (syncTimer > 0)
         {
           syncTimer -= time.asSeconds();
@@ -94,6 +101,7 @@ void ServerGameScene::update(sf::Time time)
 
           syncTimer = SYNC_INTERVAL;
         }
+        */
 
         auto entities = cMap->getEntities();
         for ( auto it = entities.begin(); it != entities.end(); ++it)
@@ -135,8 +143,6 @@ void ServerGameScene::draw()
 
 void ServerGameScene::enterScene()
 {
-    printf("HELLO DARKNESS\n");
-
     worldSeed = rand();
     timer = GAME_ROUND_LENGTH_SECONDS;
     lobtimer = SCOREBOARD_LENGTH_SECONDS;
@@ -232,6 +238,7 @@ void ServerGameScene::createPlayers()
     PlayerEntity* currPlayer;
     Session* currSession;
     PLAYER_MODE mode;
+    PLAYER_TYPE type;
     int vesselNo = 0;
     int vesselX = 0;
     int vesselY = 0;
@@ -242,6 +249,8 @@ void ServerGameScene::createPlayers()
         currPlayer = it->second;
         currSession = it->first;
         mode = currPlayer->getMode();
+        type = currPlayer->getType(); //sanderschange
+        currPlayer->setSGameScene(this);
 
         switch(mode)
         {
@@ -250,11 +259,21 @@ void ServerGameScene::createPlayers()
                 // create the controller, and bind it with the player
                 ServerNetworkController* cont = new ServerNetworkController();
                 currPlayer->setController(cont);
-                currPlayer->setSGameScene(this);
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
-                initData.type = ENTITY_TYPES::VESSEL;
+                //sanderschangestart
+                //initData.type = ENTITY_TYPES::VESSEL;
+                switch(type)
+                {
+                  case PLAYER_TYPE::WARRIOR:
+                      initData.type = ENTITY_TYPES::VESSEL_WARRIOR;
+                      break;
+                  case PLAYER_TYPE::SHAMAN:
+                      initData.type = ENTITY_TYPES::VESSEL_SHAMAN;
+                      break;
+                }
+                //sanderschangeend
 		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;
@@ -315,3 +334,20 @@ std::vector<Vessel*> *ServerGameScene::getPlayerList()
 {
   return &playerList;
 }
+
+bool ServerGameScene::gameShouldEnd()
+{
+    int alive = 0;    
+
+    for (int i = 0; i < playerList.size(); i++)
+    {
+        if (!playerList[i]->checkDeath())
+        {
+            alive++;
+        }
+    }
+
+    return (alive <= 1);
+}
+
+

@@ -7,8 +7,8 @@
 
 
 
-Marx::VEntity::VEntity(SGO & _sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w) :
-Entity(_map, x, y, ctrl, h, w)
+Marx::VEntity::VEntity(SGO & _sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w, ENTITY_TYPES eType) :
+Entity(_map, eType, x, y, ctrl, h, w)
 {
 	setSprite(_sprite);
 

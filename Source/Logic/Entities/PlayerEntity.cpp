@@ -1,5 +1,6 @@
 #include "PlayerEntity.h"
 
+#include "../GateKeeperSource/src/GateKeeper.h"
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 #include "../Skills.h"
@@ -7,6 +8,7 @@
 #include "../Creature.h"
 #include "ServerNetworkController.h"
 #include "ServerGameState.h"
+#include "../EntityTypes.h"
 
 #include <cstdio>
 
@@ -14,7 +16,7 @@
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
  *   class over the network, which is on the client side.
- * 
+ *
  * the client sends command using {Command::update} such as move commands or
  *   others like choosing their character to the Server. such commands are
  *   handled in the {Player::onUpdate} method. and sent using the.
@@ -45,9 +47,21 @@ void PlayerEntity::setMode(PLAYER_MODE mode)
     update(msg);
 }
 
+//sanderschange
+void PlayerEntity::setType(PLAYER_TYPE type)
+{
+    this->type = type;
+}
+
 PLAYER_MODE PlayerEntity::getMode()
 {
     return mode;
+}
+
+//sanderschange
+PLAYER_TYPE PlayerEntity::getType()
+{
+    return type;
 }
 
 void PlayerEntity::onUnregister(Session* session, Message msg)
@@ -83,6 +97,15 @@ void PlayerEntity::onUpdate(Message msg)
         case PlayerCommandMsgType::SELECT_LOBBY_OPTIONS:
         {
             lobbyChoices = *((PlayerLobbyChoices*) msg.data);
+            switch( lobbyChoices.vesselChoice )
+            {
+              case 1:
+                this->setType(PLAYER_TYPE::WARRIOR);
+                break;
+              case 2:
+                this->setType(PLAYER_TYPE::SHAMAN);
+                break;
+            }
             server->getGameState()->notifyReadyForGame();
 
             break;
@@ -90,17 +113,17 @@ void PlayerEntity::onUpdate(Message msg)
 
         case PlayerCommandMsgType::SERVER_SELECTED_NICKNAME:
         {
-            
+
             char* username = new char[16];
             memcpy(username, msg.data, strlen((char*)msg.data));
             nickname = username;
             fprintf(stdout, "PLAYER USERNAME: %s\n", username);
             fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
-            fflush(stdout); 
+            fflush(stdout);
 
             break;
         }
-        
+
         //struct skill{
         //  float curX;
         //  float curY;
@@ -111,8 +134,9 @@ void PlayerEntity::onUpdate(Message msg)
         case PlayerCommandMsgType::SKILL:
         {
             Vessel *vessel = NULL;
+            GateKeeper *keeper = NULL;
             skill *sk = ((skill*) msg.data);
-            
+
             //for(int i = 0; i < 5; i++)
             //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
 
@@ -120,47 +144,97 @@ void PlayerEntity::onUpdate(Message msg)
             float y1 = sk->curY;
             float x2, y2;
 
-            for(int i = 0; i < serverRef->getPlayerList()->size(); i++)
+            std::cout << "SKILL RECEIVED" << std::endl;
+            auto entities = serverRef->getcMap()->getEntities();
+            int i = 0;
+            
+            for(Entity *entity : entities)
             {
-                x2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->left;
-                y2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->top;
-
-                if (getDistance(x1, y1, x2, y2) <= sk->radius)
+                i++;
+                std::cout << "BEFOREIndex: " << i << std::endl;
+                    
+                if(entity->getType() == ENTITY_TYPES::VESSEL)
                 {
-                    vessel = static_cast<Vessel*>(serverRef->getPlayerList()->at(i));
+                    vessel = dynamic_cast<Vessel*>((entity));
+                    std::cout << "AFTERIndex: " << i << std::endl;
+                    x2 = vessel->left;
+                    y2 = vessel->top;
 
-                    
-                    if(vessel == NULL)
-                        continue;                    
-                    
-                    SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
-                    
-                    switch(sk->st)
+                    std::cout << "CHECKING " << std::endl;
+
+                    std::cout << "x1 " << x1 << std::endl;
+
+                    std::cout << "y1 " << y1 << std::endl;
+                    std::cout << "x2 " << x2 << std::endl;
+
+                    std::cout << "y2 " << y2 << std::endl;
+
+
+                    std::cout << "Radius " << sk->radius << std::endl;
+
+                    if (getDistance(x1, y1, x2, y2) <= sk->radius )
                     {
-                        case SKILLTYPE::HEAL:
-                            vessel->setHealth(vessel->getHealth() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DMG:
-                            vessel->setHealth(vessel->getHealth() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::BUFF:
-                            vessel->setSpeed(vessel->getSpeed() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DEBUFF:
-                            vessel->setSpeed(vessel->getSpeed() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
+                        SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
+                        std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
+                        std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
+                        std::cout << "Entity VALUE: " << sk->val << std::endl;
+                        
+                        vessel->getController()->addEvent(ev);
+                        std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
+
+                        vessel = NULL;
                     }
-                    
-                    vessel = NULL;
+                }
+                else if(entity->getType() == ENTITY_TYPES::BASIC_TYPE)
+                {
+                    keeper = dynamic_cast<GateKeeper*>((entity));
+                    std::cout << "AFTERIndex: " << i << std::endl;
+                    x2 = keeper->left;
+                    y2 = keeper->top;
+
+                    std::cout << "CHECKING " << std::endl;
+
+                    std::cout << "x1 " << x1 << std::endl;
+
+                    std::cout << "y1 " << y1 << std::endl;
+                    std::cout << "x2 " << x2 << std::endl;
+
+                    std::cout << "y2 " << y2 << std::endl;
+
+
+                    std::cout << "Radius " << sk->radius << std::endl;
+
+                    if (getDistance(x1, y1, x2, y2) <= sk->radius )
+                    {
+                        SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
+                        std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
+                        std::cout << "Entity Health BEFORE: " << keeper->getHealth() << std::endl;
+                        std::cout << "Entity VALUE: " << sk->val << std::endl;
+                        
+                        std::cout << "Entity Health After: " << keeper->getHealth() << std::endl;
+                        keeper->getController()->addEvent(ev);
+                        
+
+                        keeper = NULL;
+                    }
                 }
             }
+
+            auto players = server->getGameState()->getPlayers();
             
-            
-            
+            for(auto entry = players.begin(); entry != players.end(); entry++)
+            {
+                PlayerEntity* playerEntity = entry->second;
+                
+                Message message;
+                
+                message.type = (int)PlayerCommandMsgType::SKILL_NOTIFY;
+                message.data = (void*)sk;
+                message.len  = sizeof(sk);
+                
+                playerEntity->update(message);
+            }
+
             break;
         }
 

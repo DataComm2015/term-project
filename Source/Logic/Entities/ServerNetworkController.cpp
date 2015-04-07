@@ -186,12 +186,12 @@ void ServerNetworkController::sendEventMessage(Event *event)
             a.val = sv->getValue();
             a.st = sv->getSkillType();
             
-            Message msg;
-            msg.type = ::Marx::SKILL;
-            msg.data = &a;
-            msg.len  = sizeof(a);
+            Message message;
+            message.type = ::Marx::SKILL;
+            message.data = &a;
+            message.len  = sizeof(a);
             
-            
+            update(message);
             break;
         }
 		case ::Marx::SK_ATTACK:
@@ -223,7 +223,8 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
 			// parse attack event into move message
 			SetHealthMessage sm;
-			//sm.entid 	= sh->getEntity();
+			sm.entid 	= sh->getEntId();
+			sm.typeHeal		= sh->getTypeHeal();
 			sm.change	= sh->getChange();
 
 			// message to be sent over the network
@@ -353,9 +354,11 @@ void ServerNetworkController::onUpdate(Message msg)
 			break;
 		}
         default:
+		{
         	printf("\r\nWARNING: NetworkController::sendEventMessage received an "
             	"unknown event type. please add new case to switch statement\r\n");
         	fflush(stdout);
         	break;
+		}
     }
 }

@@ -21,33 +21,30 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource stoneWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource hurtSoundMBoss 		  = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-static id_resource attackSoundMBoss		 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+//static id_resource stoneWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+//static id_resource hurtSoundMBoss 		  = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+//static id_resource attackSoundMBoss		 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 // bug fix by Sanders Lee
 MiniBoss::MiniBoss(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
-    _range = 10;
+    _range = 15;
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 1;
+    _attackSpeed = 3;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.09;
-    _ySpeed = 0.09;
+    _xSpeed = 0.08;
+    _ySpeed = 0.08;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
-
-    srand (time(NULL));
 
     int randDirection = (rand() % 3) - 1;
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 1);
 
 }
 
@@ -72,73 +69,147 @@ void MiniBoss::onUpdate(float deltaTime)
       ; it != eventQueue->end()
       ; ++it )
   {
-
+    int xDir;
+    int yDir;
+    MoveEvent* ev;
+	
+	//std::cout << "MiniBoss::Controller " << getController() << std::endl;
+	//std::cout << "MiniBoss::Event " << (*it)->type << std::endl;
     // switch on type
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
-    		MoveEvent* ev = (MoveEvent*) (*it);
-        int xDir = ev->getXDir();
-        int yDir = ev->getYDir();
+		{
+			//std::cout << "Move Event " << (*it)->type << std::endl;
+    		ev = (MoveEvent*) (*it);
+		    xDir = ev->getXDir();
+		    yDir = ev->getYDir();
 
-        Entity::aMove(ev->getX(), ev->getY(), false);
+		    Entity::aMove(ev->getX(), ev->getY(), false);
 
-        if (yDir < 0)
-        {
-          newYSpeed = -_ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingUp = true;
-          movingDown = false;
-        }
-        else
-        {
-          newYSpeed = _ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingDown = true;
-          movingUp = false;
-        }
+		    if (yDir < 0)
+		    {
+		      newYSpeed = -_ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		      movingUp = true;
+		      movingDown = false;
+		    }
+		    else
+		    {
+		      newYSpeed = _ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		      movingDown = true;
+		      movingUp = false;
+		    }
 
-        if (xDir > 0)
-        {
-          newXSpeed = _xSpeed;
-          getSprite().sprite().setScale(1, 1);
-          movingRight = true;
-          movingLeft = false;
-        }
-        else
-        {
-          newXSpeed = -_xSpeed;
-          getSprite().sprite().setScale(-1, 1);
-          movingLeft = true;
-          movingRight = false;
-        }
+		    if (xDir > 0)
+		    {
+		      newXSpeed = _xSpeed;
+		      getSprite().sprite().setScale(1, 1);
+		      movingRight = true;
+		      movingLeft = false;
+		    }
+		    else
+		    {
+		      newXSpeed = -_xSpeed;
+		      getSprite().sprite().setScale(-1, 1);
+		      movingLeft = true;
+		      movingRight = false;
+		    }
 
-        if (xDir == 0)
-        {
-          newXSpeed = 0;
-          movingLeft = false;
-          movingRight = false;
-        }
+		    if (xDir == 0)
+		    {
+		      newXSpeed = 0;
+		      movingLeft = false;
+		      movingRight = false;
+		    }
 
-        if (yDir == 0)
-        {
-          newYSpeed = 0;
-          movingUp = false;
-          movingDown = false;
-        }
+		    if (yDir == 0)
+		    {
+		      newYSpeed = 0;
+		      movingUp = false;
+		      movingDown = false;
+		    }
 
-        //playSound(newXSpeed, newYSpeed);
+		    //playSound(newXSpeed, newYSpeed);
 
     		break;
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			std::cout << "Health Event " << (*it)->type << std::endl;
+			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			_health = getHealth()-event->getChange();
+
+			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+			cont->addEvent(pointsEvent);
+			if(_health <= 0)
+			{
+				std::cout << "MiniBoss Dead" << std::endl;
+				onDestroy();
+			}
+
+            break;
+		}
+        case ::Marx::ATTACK:
+        {
+          _attackSpeed -= deltaTime;
+          if (_attackSpeed <= 0)
+          {
+            SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+            std::cout << "ATTACK" << std::endl;
+            createSkAttack(*saev, getSprite(), left, top);
+            _attackSpeed = 3;
+          }
+          break;
+        }
+        case ::Marx::SKILL:
+        {
+            // process the skill event, and increase/decrease hp and stuff
+            SkillEvent *ev = (SkillEvent*)(*it);
+
+            printf("GateKeeper BEFORE Health: %d\n", _health);
+            switch(ev->getSkillType())
+            {
+                case SKILLTYPE::HEAL:
+                    _health += ev->getValue();
+                break;
+                case SKILLTYPE::DMG:
+                    _health -= ev->getValue();
+                break;
+                case SKILLTYPE::BUFF:
+                    _xSpeed += ev->getValue();
+                    _ySpeed += ev->getValue();
+                break;
+                case SKILLTYPE::DEBUFF:
+                    _xSpeed -= ev->getValue();
+                    _ySpeed -= ev->getValue();
+                break;
+            }
+            
+            printf("GateKeeper AFTER Health: %d\n", _health);
+            
+            if(_health <= 0)
+            {
+              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+              onDestroy();
+            }
+    
+            break;
+        }
+		default:
+		{
+			//std::cout << "Default MiniBoss::onUpdate " << (*it)->type << std::endl;
+			return;
+		}
     }
 
-
   }
+
   getController()->clearEvents();
-
-
 
 
   Entity::rMove(newXSpeed, newYSpeed,false);
@@ -148,7 +219,7 @@ void MiniBoss::onUpdate(float deltaTime)
 
 void MiniBoss::playSound(float xSpeed, float ySpeed)
 {
-  soundActive = false;
+  /*soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
@@ -199,8 +270,6 @@ void MiniBoss::animate()
 {
   if (isMoving())
     gkAnimation->step(1);
-  else
-    gkAnimation->step(5);
 }
 
 bool MiniBoss::isMoving()
@@ -223,7 +292,7 @@ void MiniBoss::setAttack(int a)
   _attack = a;
 }
 
-void MiniBoss::setAttackSpeed(int as)
+void MiniBoss::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
@@ -265,7 +334,7 @@ int MiniBoss::getAttack()
   return _attack;
 }
 
-int MiniBoss::getAttackSpeed()
+float MiniBoss::getAttackSpeed()
 {
   return _attackSpeed;
 }
@@ -281,11 +350,6 @@ void MiniBoss::turn()
 }
 
 void MiniBoss::onCreate()
-{
-
-}
-
-void MiniBoss::onDestroy()
 {
 
 }

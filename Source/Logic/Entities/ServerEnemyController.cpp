@@ -18,6 +18,7 @@
 #include "../NetworkEntityPairs.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
+#include "../Creature.h"
 
 #include <cmath>
 
@@ -55,6 +56,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
     float gk_Y;
 
     MoveEvent *event;
+    AttackEvent *attackEvent;
 
     if (_servGameScene && _currEntity)
     {
@@ -118,6 +120,11 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
           event = new MoveEvent(gk_X, gk_Y, xDirection, yDirection, 0);
           addEvent(event);
+
+          attackEvent = new AttackEvent(getId(), ActionType::normalAttack, vessel_X, vessel_Y);
+
+          addEvent(attackEvent);
+
         }
 
     }
@@ -142,7 +149,7 @@ Vessel* ServerEnemyController::detectVessels()
     x2 = (_servGameScene->getPlayerList()->at(i))->left;
     y2 = (_servGameScene->getPlayerList()->at(i))->top;
 
-    if (getDistance(x1, y1, x2, y2) <= AGGRO_RADIUS)
+    if (getDistance(x1, y1, x2, y2) <= _currEntity->getRange())
       return (_servGameScene->getPlayerList()->at(i));
   }
 
