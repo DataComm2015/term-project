@@ -64,6 +64,7 @@
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
 #include "../../Engine/TileManager.h"
+#include "../../Multimedia/graphics/Animation.h"
 #include "../Creature.h"
 #include <SFML/Audio.hpp>
 
@@ -111,6 +112,10 @@ class Vessel : public Marx::VEntity, public Creature
 		SGO weapon_sprite;
 		static id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
+	private:
+		//Animation *runAnim;
+		//Animation *runAnim_mask;
+		//Animation *runAnim_wep;
 
 	public:
         float newXSpeed;

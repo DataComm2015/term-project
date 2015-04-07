@@ -8,6 +8,11 @@
 
 using namespace Manager;
 
+Animation *runAnim;
+Animation *runAnim_mask;
+Animation *runAnim_wep;
+sf::Clock vesselClock;
+
 id_resource Vessel::grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
 id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
 id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
@@ -80,48 +85,14 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	myX = 0;
 	myY = 0;
 
-	//abilities = abilityList;
-/*
-	//class-specific instantiation
-	if ( jobClass == WARRIOR )			//warrior
-	{
-		currentHealth = 150;
-		maxHealth = 150;
-		travelSpeed = 2;
-		//Weapon = Spear;
-	}
-	else if ( jobClass == SHAMAN )		//shaman
-	{
-		currentHealth = 75;
-		maxHealth = 75;
-		travelSpeed = 6;
-		//weapon = Fireball;
-	}
-	else if ( jobClass == HUNTER )		//Hunter
-	{
-		currentHealth = 100;
-		maxHealth = 100;
-		travelSpeed = 6;
-		//weapon = Javelin;
-	}
-	else if ( jobClass == SCOUT ) 		//Scout
-	{
-		currentHealth = 125;
-		maxHealth = 125;
-		travelSpeed = 7;
-		//weapon = Sword;
-	}
-	else if (jobClass == TEGUH) 		//TEGUH
-	{
-		currentHealth = 4242;
-		maxHealth = 424242;
-		travelSpeed = 42;
-		//weapon = BOWL_OF_LAKSA;
-	}*/
-	this->add(mask_sprite);
-	this->add(weapon_sprite);
+	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 7);
+	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 7);
+	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 7);
 
-	std::cout << "Vessel constructed successfully!" << std::endl;
+	this->add(mask_sprite);
+  this->add(weapon_sprite);
+
+	//std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
 /*-------------------------------------------
@@ -138,6 +109,24 @@ void Vessel::onUpdate(float deltaTime)
 	static bool soundActive = false;
 	static BlockZone steppedTile = GRASS;
 
+	sf::Time elapsedTime;
+	sf::Time frameTime = sf::seconds(1.0/60);
+
+	// TIME UPDATES
+	elapsedTime = vesselClock.restart();
+
+	//update left and right orientation
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		sprite->sprite().setScale(-1,1);
+		direction = 0;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		sprite->sprite().setScale(1,1);
+		direction = 1;
+	}
+
 	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
 	for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
 		; it != eventQueue->end()
@@ -149,6 +138,7 @@ void Vessel::onUpdate(float deltaTime)
 		{
 			case ::Marx::MOVE:
 			{
+				//std::cout << "Processing move message" << std::endl;
 				MoveEvent* ev = (MoveEvent*) (*it);
 				int xDir = ev->getXDir();
 				int yDir = ev->getYDir();
@@ -158,30 +148,56 @@ void Vessel::onUpdate(float deltaTime)
 	      Entity::aMove(ev->getX(), ev->getY(), false);
 			//	printf("vessel x, y: expected: %f %f actual: %f %f\n", ev->getX(), ev->getY(), getEntity()->left, getEntity()->top);
 
-				if (yDir == -1)
-				{
-					newYSpeed -= ySpeed;
-				//	printf("Vessel.cpp: moving up\n");
-				}
-				else if (yDir == 1)
-				{
-					newYSpeed += ySpeed;
-				//	printf("Vessel.cpp: moving down\n");
-				}
-				else if (xDir == 1)
-				{
-					newXSpeed += xSpeed;
-				//	printf("Vessel.cpp: moving right\n");
-				}
-				else if (xDir == -1)
-				{
-					newXSpeed -= xSpeed;
-				//	printf("Vessel.cpp: moving left\n");
-				}
+			if (yDir == -1)
+			{
+				newYSpeed -= ySpeed;
 
-
-				break;
+				if ( !runAnim->isRunning() )
+				{
+					runAnim->run(true);
+					runAnim_mask->run(true);
+					runAnim_wep->run(true);
+				}
 			}
+			else if (yDir == 1)
+			{
+				newYSpeed += ySpeed;
+
+				if ( !runAnim->isRunning() )
+				{
+					//runAnim->run(true);
+					runAnim->run(true);
+					runAnim_mask->run(true);
+					runAnim_wep->run(true);
+				}
+			}
+			else if (xDir == 1)
+			{
+				newXSpeed += xSpeed;
+
+				if ( !runAnim->isRunning() )
+				{
+					//runAnim->run(true);
+					runAnim->run(true);
+					runAnim_mask->run(true);
+					runAnim_wep->run(true);
+				}
+			}
+			else if (xDir == -1)
+			{
+				newXSpeed -= xSpeed;
+
+				if ( !runAnim->isRunning() )
+				{
+					//runAnim->run(true);
+					runAnim->run(true);
+					runAnim_mask->run(true);
+					runAnim_wep->run(true);
+				}
+			}
+break;
+}
+
 			case ::Marx::ATTACK:
 			{
 				if (Manager::ProjectileManager::getServer())
@@ -227,7 +243,7 @@ void Vessel::onUpdate(float deltaTime)
 			{
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
-				
+
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -245,7 +261,7 @@ void Vessel::onUpdate(float deltaTime)
 						ySpeed -= ev->getValue();
 					break;
 				}
-				
+
 				break;
 			}
 			case ::Marx::ADD_POINTS:
@@ -255,6 +271,23 @@ void Vessel::onUpdate(float deltaTime)
 			}
 		}
 	}
+
+	if ( elapsedTime > frameTime )
+	{
+			//std::cout << "updating animation" << std::endl;
+			runAnim->update(frameTime);
+			runAnim_mask->update(frameTime);
+			runAnim_wep->update(frameTime);
+	}
+
+	//if x speed and y speed are 0, stop animation
+	if ( ( newXSpeed == 0 ) && ( newYSpeed == 0) )
+	{
+		runAnim->pause(true);
+		runAnim_mask->pause(true);
+		runAnim_wep->pause(true);
+	}
+
 	getController()->clearEvents();
 
 

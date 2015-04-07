@@ -1,3 +1,24 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: GameScene.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:	
+--
+-- DATE: March 10, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: Chris Klassen
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--        This file contains the implementation of the client game scene.
+--		  This scene handles all in-game client logic.
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "GameScene.h"
 #include "Entities/CommandEntity.h"
 #include "PlayerLobbyChoices.h"
@@ -30,6 +51,26 @@ id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::
 id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onclick()
 {
 	static int i = 0;
@@ -41,6 +82,27 @@ void onclick()
 }
 
 GUI::HealthBar *pubHB;
+
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onclickHealthTest()
 {
 	static float health = 1.0;
@@ -52,6 +114,27 @@ void onclickHealthTest()
 }
 
 GUI::TextBox *pubLevelInd;
+
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onclickLevelup()
 {
 	static int level = 1;
@@ -65,6 +148,26 @@ void onclickLevelup()
 	pubLevelInd->setText(slevel);
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void updateMainView(sf::View& v)
 {
 	v = AppWindow::getInstance().getCurrentView();
@@ -72,6 +175,27 @@ void updateMainView(sf::View& v)
 }
 
 
+/******************************************************************************
+*	FUNCTION: GameScene
+*
+*	DATE: March 10, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: GameScene()
+*
+*	PARAMETERS:
+*
+*	RETURNS: nothing
+*
+*	NOTES:
+*		This is the constructor for the game scene. It creates all maps and
+*		sets up needed resources.
+******************************************************************************/
 GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 {
 	// Create the maps
@@ -119,6 +243,26 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "after generate ui" << std::endl;
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::onLoad()
 {
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
@@ -157,6 +301,25 @@ void GameScene::onLoad()
 }
 
 
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::positionUI()
 {
 	// Get Window size
@@ -190,11 +353,51 @@ void GameScene::positionUI()
 	levelInd->text().setScale(1.5, 1.5);
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
 	myVessel = vessel;
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::stopAllSounds()
 {
     auto entities = cMap->getEntities();
@@ -206,6 +409,26 @@ void GameScene::stopAllSounds()
 	}
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::unLoad()
 {
 	b1->toggleEnabled(false);
@@ -216,6 +439,26 @@ void GameScene::unLoad()
 }
 
 
+/******************************************************************************
+*	FUNCTION: ~GameScene
+*
+*	DATE: March 10, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: ~GameScene();
+*
+*	PARAMETERS:
+*
+*	RETURNS: nothing
+*
+*	NOTES:
+*		This destructor cleans up the maps used in the game scene.
+******************************************************************************/
 GameScene::~GameScene()
 {
 	delete gMap;
@@ -241,12 +484,25 @@ GameScene::~GameScene()
 }
 
 
-/**
---
---	PROGRAMMER: ???
---				Sanders Lee (Fixed hearing center for sounds)
---
-**/
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: Sanders Lee
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::update(sf::Time t)
 {
 	checkBtns(t);
@@ -339,6 +595,26 @@ void GameScene::update(sf::Time t)
 	waveShader.setParameter("wave_phase", phase);
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::processEvents(sf::Event& e)
 {
 	static std::set<int> depressedKeys;
@@ -434,6 +710,27 @@ void GameScene::processEvents(sf::Event& e)
 	tb->process(e);
 }
 
+
+/******************************************************************************
+*	FUNCTION: draw
+*
+*	DATE: March 10, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Chris Klassen
+*
+*	PROGRAMMER: Chris Klassen
+*
+*	INTERFACE: draw();
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+*		This function draws the elements of the game to the window.
+******************************************************************************/
 void GameScene::draw()
 {
 	AppWindow& window = AppWindow::getInstance();
@@ -501,26 +798,126 @@ void GameScene::draw()
 	window.display();
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::addKeyListener(KeyListener* listener)
 {
 	keyListeners.insert(listener);
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::rmKeyListener(KeyListener* listener)
 {
 	keyListeners.erase(listener);
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::addClickListener(ClickListener* listener)
 {
 	clickListeners.insert(listener);
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::rmClickListener(ClickListener* listener)
 {
 	clickListeners.erase(listener);
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::generateMap(int seed)
 {
     gMap->generateMap(seed);
@@ -612,6 +1009,25 @@ void GameScene::generateWater()
 }
 
 
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::generateUI()
 {
 	// Create buttons
@@ -666,6 +1082,26 @@ void GameScene::generateUI()
 	pubLevelInd = levelInd;
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::setUI()
 {
 	switch (characterType)
@@ -715,6 +1151,26 @@ void GameScene::setUI()
 
 }
 
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void GameScene::checkBtns(sf::Time t)
 {
 		for(int i = 0; i<3; i++)
@@ -756,6 +1212,27 @@ void onClickVitalityOne() //healskillbtn
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::HEAL);
 }
+
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onClickVitalityTwo()//buffskillbtn
 {
 	sf::View vm;
@@ -764,6 +1241,27 @@ void onClickVitalityTwo()//buffskillbtn
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::BUFF);
 }
+
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onClickVitalityThree() //healingcircleskillbtn
 {
 	sf::View vm;
@@ -772,6 +1270,27 @@ void onClickVitalityThree() //healingcircleskillbtn
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 50, 100, SKILLTYPE::HEAL);
 }
+
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onClickDemiseOne() //hurtskillbtn
 {
 	sf::View vm;
@@ -780,6 +1299,27 @@ void onClickDemiseOne() //hurtskillbtn
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DMG);
 }
+
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onClickDemiseTwo() //debuffskillbtn
 {
 	sf::View vm;
@@ -788,6 +1328,27 @@ void onClickDemiseTwo() //debuffskillbtn
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(vm.getCenter().x, vm.getCenter().y, 10, 100, SKILLTYPE::DEBUFF);
 }
+
+
+/******************************************************************************
+*	FUNCTION: 
+*
+*	DATE: 
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: 
+*
+*	PROGRAMMER: 
+*
+*	INTERFACE: 
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void onClickDemiseThree() //summonskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
