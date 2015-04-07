@@ -166,7 +166,7 @@ void AttackAction::onUpdate(Projectile * me, float time)
 ------------------------------------------------------------------------------*/
 void AttackAction::onHit(Projectile * me, Entity *e)
 {
-    ServerNetworkController *cont = ((ServerNetworkController*)me)->getShooter()->getController();
+    ServerNetworkController *cont = (ServerNetworkController*)me->getShooter()->getController();
     Controller *contEnemy = static_cast<ServerNetworkController*>(e->getController());
     /*           Set Health            */
     SetHealthEvent *event = new SetHealthEvent(cont->getId(), false,damage);

@@ -29,13 +29,15 @@
 
 namespace Marx
 {
+	class Projectile;
+	
 	class AttackAction : public Action
 	{
 		public:
 			AttackAction(float, float);
 			AttackAction(float, float, float);
-			virtual void onUpdate(Entity * me, float);
-			virtual void onHit(Entity * me, Entity * e );
+			virtual void onUpdate(Projectile*, float);
+			virtual void onHit(Projectile*, Entity*);
 			float getDamage() { return damage; };
 		private:
 			float damage;
