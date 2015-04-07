@@ -64,7 +64,6 @@ void MiniBee::onUpdate(float deltaTime)
 {
   //Perform the generic gatekeeper animation
   animate();
-		std::cout << "MiniBee::onUpdate " << std::endl;
 
   //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
   std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
@@ -75,7 +74,6 @@ void MiniBee::onUpdate(float deltaTime)
         int xDir;
         int yDir;
         MoveEvent* ev;
-	std::cout << "MiniBee::Event " << (*it)->type << std::endl;
     // switch on type
     switch((*it)->type)
     {
