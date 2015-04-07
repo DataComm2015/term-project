@@ -1,6 +1,5 @@
 /********************************************************************************
-**	SOURCE FILE:	GateKeeper.cpp -  	GateKeeper class implementation. Parent class
-**                                    for the enemies.
+**	SOURCE FILE:	MiniBee.cpp -
 **
 **	PROGRAM:	Term_Project
 **
@@ -12,7 +11,7 @@
 **	PROGRAMMER: Filip Gutica A00781910
 **
 ***********************************************************************************/
-#include "GateKeeper.h"
+#include "MiniBee.h"
 #include "../../Event.h"
 #include "../../Entities/ServerEnemyController.h"
 #include <typeinfo>
@@ -22,16 +21,14 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
-
-
+static id_resource grassWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+static id_resource stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+static id_resource hurtSoundMiniBee 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+static id_resource attackSoundMiniBee		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 // bug fix by Sanders Lee
-GateKeeper::GateKeeper(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
-VEntity(sprite, map, x, y, ctrl, h, w)
+MiniBee::MiniBee(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
+GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
     _range = 10;
     _health = 100;
@@ -40,20 +37,20 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.06;
-    _ySpeed = 0.06;
+    _xSpeed = 0.03;
+    _ySpeed = 0.03;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
+
 
     int randDirection = (rand() % 3) - 1;
 
-
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 16, 7);
 
 }
 
-GateKeeper::~GateKeeper()
+MiniBee::~MiniBee()
 {
     footstep.stop();
 }
@@ -63,7 +60,7 @@ GateKeeper::~GateKeeper()
 --				Sanders Lee (Debugged synchronization problem across clients,
 --                           Added sound for GateKeeper travel)
 ***/
-void GateKeeper::onUpdate(float deltaTime)
+void MiniBee::onUpdate(float deltaTime)
 {
   //Perform the generic gatekeeper animation
   animate();
@@ -131,7 +128,7 @@ void GateKeeper::onUpdate(float deltaTime)
           movingDown = false;
         }
 
-        playSound(newXSpeed, newYSpeed);
+        //playSound(newXSpeed, newYSpeed);
 
     		break;
     }
@@ -141,11 +138,14 @@ void GateKeeper::onUpdate(float deltaTime)
   getController()->clearEvents();
 
 
+
+
   Entity::rMove(newXSpeed, newYSpeed,false);
+
 
 }
 
-void GateKeeper::playSound(float xSpeed, float ySpeed)
+void MiniBee::playSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;
@@ -166,7 +166,7 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
       (soundActive && steppedTile != GRASS))
     {
       footstep.stop();
-      footstep = SoundManager::play(grassWalkSoundGK, soundPos);
+      footstep = SoundManager::play(grassWalkSoundMiniBee, soundPos);
       footstep.setLoop(true);
       footstep.play();
       soundActive = true;
@@ -179,7 +179,7 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
       (soundActive && steppedTile != STONE))
     {
       footstep.stop();
-      footstep = SoundManager::play(stoneWalkSoundGK, soundPos);
+      footstep = SoundManager::play(stoneWalkSoundMiniBee, soundPos);
       footstep.setLoop(true);
       footstep.play();
       soundActive = true;
@@ -194,7 +194,7 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
   }//*/
 }
 
-void GateKeeper::animate()
+void MiniBee::animate()
 {
   if (isMoving())
     gkAnimation->step(1);
@@ -202,99 +202,99 @@ void GateKeeper::animate()
     gkAnimation->step(5);
 }
 
-bool GateKeeper::isMoving()
+bool MiniBee::isMoving()
 {
   return (movingLeft || movingRight || movingUp || movingDown);
 }
 
-void GateKeeper::setRange(int r)
+void MiniBee::setRange(int r)
 {
   _range = r;
 }
 
-void GateKeeper::setHealth(int h)
+void MiniBee::setHealth(int h)
 {
   _health = h;
 }
 
-void GateKeeper::setAttack(int a)
+void MiniBee::setAttack(int a)
 {
   _attack = a;
 }
 
-void GateKeeper::setAttackSpeed(int as)
+void MiniBee::setAttackSpeed(int as)
 {
   _attackSpeed == as;
 }
 
 
-void GateKeeper::setXSpeed(float x)
+void MiniBee::setXSpeed(float x)
 {
   _xSpeed = x;
 }
 
-void GateKeeper::setYSpeed(float y)
+void MiniBee::setYSpeed(float y)
 {
   _ySpeed = y;
 }
 
-void GateKeeper::setSpeed(int _speed)
+void MiniBee::setSpeed(int _speed)
 {
     _xSpeed = _speed;
     _ySpeed = _speed;
 }
 
-int GateKeeper::getSpeed()
+int MiniBee::getSpeed()
 {
 	return _xSpeed;
 }
 
-int GateKeeper::getRange()
+int MiniBee::getRange()
 {
   return _range;
 }
 
-int GateKeeper::getHealth()
+int MiniBee::getHealth()
 {
   return _health;
 }
 
-int GateKeeper::getAttack()
+int MiniBee::getAttack()
 {
   return _attack;
 }
 
-int GateKeeper::getAttackSpeed()
+int MiniBee::getAttackSpeed()
 {
   return _attackSpeed;
 }
 
-int GateKeeper::getMovementSpeed()
+int MiniBee::getMovementSpeed()
 {
   return _movementSpeed;
 }
 
-void GateKeeper::turn()
+void MiniBee::turn()
 {
 
 }
 
-void GateKeeper::onCreate()
+void MiniBee::onCreate()
 {
 
 }
 
-void GateKeeper::onDestroy()
+void MiniBee::onDestroy()
 {
 
 }
 
-void GateKeeper::stopAllSounds()
+void MiniBee::stopAllSounds()
 {
     footstep.stop();
 }
 
-bool GateKeeper::operator==(const VEntity&)
+bool MiniBee::operator==(const VEntity&)
 {
   return true;
 }
@@ -317,7 +317,7 @@ bool GateKeeper::operator==(const VEntity&)
 -- NOTES:
 -- This function provides a method for retrieving the Entity from the Creature.
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity *GateKeeper::getEntity()
+Entity *MiniBee::getEntity()
 {
     return this;
 }
