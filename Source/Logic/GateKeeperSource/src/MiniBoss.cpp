@@ -46,6 +46,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 8);
 
+	travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/ghost/ghost_travel_01.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/ghost/ghost_attack_02.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/ghost/ghost_attack_03.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/ghost/ghost_death.ogg"));
+
+    travel_Snd.setBuffer(*Manager::SoundManager::get(travel_SndB));
+    attack_Snd.setBuffer(*Manager::SoundManager::get(attack_SndB));
+    hurt_Snd.setBuffer(*Manager::SoundManager::get(hurt_SndB));
+    death_Snd.setBuffer(*Manager::SoundManager::get(death_SndB));
+    travel_Snd.setLoop(true);
+    travel_Snd.play();
+	
 }
 
 MiniBoss::~MiniBoss()
