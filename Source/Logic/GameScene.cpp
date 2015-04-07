@@ -52,6 +52,9 @@ id_resource GameScene::deityDMGImg = Manager::TextureManager::store(Manager::Tex
 id_resource GameScene::deityDBFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-damage.png"));
 id_resource GameScene::deityHLGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healing.png"));
 
+id_resource GameScene::game_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_gameplay.ogg"));
+id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/Environment/ambient_01.ogg"));
+
 /******************************************************************************
 *	FUNCTION:
 *
@@ -173,6 +176,9 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "before generate water" << std::endl;
 	generateWater();
 	std::cout << "after generate water" << std::endl;
+
+	music = Manager::MusicManager::get(GameScene::game_msc);
+	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
 }
 
 
@@ -230,8 +236,10 @@ void GameScene::onLoad()
 	b2->toggleEnabled(true);
 	b3->toggleEnabled(true);
 
-//	Manager::MusicManager::get(scat_music)->setVolume(60);
-//	Manager::MusicManager::get(scat_music)->play();
+	music->setVolume(60);
+	music->play();
+	ambience->setVolume(40);
+	ambience->play();
 }
 
 
@@ -377,7 +385,8 @@ void GameScene::unLoad()
 	b2->toggleEnabled(false);
 	b3->toggleEnabled(false);
 
-	//Manager::MusicManager::get(scat_music)->stop();
+	music->stop();
+	ambience->stop();
 }
 
 

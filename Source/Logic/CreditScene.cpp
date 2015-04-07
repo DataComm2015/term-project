@@ -39,6 +39,8 @@ CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstan
     backImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/connect_btn.png"));
    	backBtn = new GUI::Button(*Manager::TextureManager::get(backImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
 
+    credits_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.wav"));
+    music = Manager::MusicManager::get(credits_msc);
 }
 
 
@@ -63,6 +65,8 @@ void CreditScene::onLoad()
 
     /* Set the active view */
     updateMainView(viewMain);
+
+    music->play();
 }
 
 void CreditScene::update(sf::Time t)

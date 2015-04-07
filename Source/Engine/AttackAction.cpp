@@ -22,7 +22,7 @@ void AttackAction::onUpdate(Entity * me, float time)
 													 (static_cast<Projectile*>(me))->getVector().y, 0, 0, true);
 */
 	//me->getController()->addEvent(m);
-	if ((hit = me->rMove(vector, time*2, true)) != nullptr)
+	if ((hit = me->rMove(vector, time*5, true)) != nullptr)
 	{
 		if (hit != (static_cast<Projectile*>(me))->getShooter())
 		{
@@ -31,11 +31,11 @@ void AttackAction::onUpdate(Entity * me, float time)
 			{
 				std::cout << "AttackAction:: hit server " << std::endl;
 				onHit(me, hit);
-			}	
+			}
 			me->onDestroy();
 		}
 	}
-	
+
 }
 
 void AttackAction::onHit(Entity * me, Entity *e)
