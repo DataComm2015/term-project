@@ -55,6 +55,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
     float gk_Y;
 
     MoveEvent *event;
+    AttackEvent *attackEvent;
 
     if (_servGameScene && _currEntity)
     {
@@ -118,6 +119,10 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
           event = new MoveEvent(gk_X, gk_Y, xDirection, yDirection, 0);
           addEvent(event);
+
+          attackEvent = new AttackEvent(getId(), ActionType::normalAttack, vessel_X, vessel_Y);
+          sendEventMessage(attackEvent);
+
         }
 
     }
