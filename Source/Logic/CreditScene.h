@@ -52,6 +52,9 @@ class CreditScene : public Scene
         GUI::Button * backBtn;
         id_resource backImg;
 
+	sf::Music *music;
+	id_resource credits_msc;
+
 };
 void nextTextBox( void * data );
 
