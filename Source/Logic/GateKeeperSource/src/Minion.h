@@ -35,6 +35,8 @@ class Minion : public GateKeeper
 		void setXSpeed(float x);
 		void setYSpeed(float y);
     void setSpeed(int _speed);
+		float getXSpeed();
+		float getYSpeed();
 		int getRange();
 		int getHealth();
 		int getAttack();
@@ -50,6 +52,10 @@ class Minion : public GateKeeper
 	  bool isMoving();
 		void playSound(float, float);
 		void animate();
+		void processMoveEvent(MoveEvent* ev);
+		void processSkillEvent(SkillEvent* ev);
+		void processSetHealthEvent(SetHealthEvent* ev);
+		void processAttackEvent(AttackEvent* aev);
 
 	protected:
 		bool movingLeft;

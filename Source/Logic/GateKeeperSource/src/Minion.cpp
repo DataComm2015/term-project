@@ -28,7 +28,32 @@ using namespace Manager;
 
 id_resource minShadow;
 
-// bug fix by Sanders Lee
+/******************************************************************************
+*   FUNCTION: Minion() Constructor
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: Minion(SGO&, Map*, float, float, Controller, float, float)
+*
+*   PARAMETERS: sprite  - Sprite for this enemy
+*               map     - Pointer to the map this enemy resides on
+*               x       - x coordinate
+*               y       - y coordinate
+*               ctrl    - pointer to the controller controlling this enemy
+*               h       - height
+*               w       - width
+*
+*   RETURNS: void
+*
+*   NOTES: Constructor for Minions. Initializes the gate keeper sets attributes
+*          Sets animation.
+******************************************************************************/
 Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
@@ -67,147 +92,78 @@ Minion::~Minion()
     footstep.stop();
 }
 
-/***
--- PROGRAMMER:  Filip Gutica
---				Sanders Lee (Debugged synchronization problem across clients,
---                           Added sound for GateKeeper travel)
-***/
+/******************************************************************************
+*   FUNCTION: onUpdate()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Thomas Tallentire - Added handling for Marx::SET_HEALTH Events
+*              Alex Lam - Added handling for Marx::SKILL Events
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: onUpdate(float)
+*
+*   PARAMETERS: deltaTime   - Time this onUpdate was called
+*
+*   RETURNS: void
+*
+*   NOTES: update function for enemies. Gets called every frame of the game.
+*          moves the gate keeper, deals with gettack attack, performing attacks
+*          performing animations and playing sounds
+******************************************************************************/
 void Minion::onUpdate(float deltaTime)
 {
-  //Perform the generic gatekeeper animation
+  //Perform the generic Minion animation
   animate();
 
-  //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
+  //  std::cout << "Minion.cpp ON UPDATE." << std::endl;
   std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
   for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
       ; it != eventQueue->end()
       ; ++it )
   {
-        int xDir;
-        int yDir;
-        MoveEvent* ev;
+
+	std::cout << "Minion::Event " << (*it)->type << std::endl;
+
     // switch on type
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
-		{
-    		ev = (MoveEvent*) (*it);
-			xDir = ev->getXDir();
-			yDir = ev->getYDir();
+  		{
+    		MoveEvent* ev = (MoveEvent*) (*it);
 
-			Entity::aMove(ev->getX(), ev->getY(), false);
-
-			if (yDir < 0)
-			{
-			  newYSpeed = -_ySpeed;
-			  int randDirection = (rand() % 3) - 1;
-			  getSprite().sprite().setScale(randDirection, 1);
-			  movingUp = true;
-			  movingDown = false;
-			}
-			else
-			{
-			  newYSpeed = _ySpeed;
-			  int randDirection = (rand() % 3) - 1;
-			  getSprite().sprite().setScale(randDirection, 1);
-			  movingDown = true;
-			  movingUp = false;
-			}
-
-			if (xDir > 0)
-			{
-			  newXSpeed = _xSpeed;
-			  getSprite().sprite().setScale(1, 1);
-			  movingRight = true;
-			  movingLeft = false;
-			}
-			else
-			{
-			  newXSpeed = -_xSpeed;
-			  getSprite().sprite().setScale(-1, 1);
-			  movingLeft = true;
-			  movingRight = false;
-			}
-
-			if (xDir == 0)
-			{
-			  newXSpeed = 0;
-			  movingLeft = false;
-			  movingRight = false;
-			}
-
-			if (yDir == 0)
-			{
-			  newYSpeed = 0;
-			  movingUp = false;
-			  movingDown = false;
-			}
-
-			//playSound(newXSpeed, newYSpeed);
+        processMoveEvent(ev);
 
     		break;
-		}
-		case ::Marx::SET_HEALTH:
-		{
-			SetHealthEvent * event = (SetHealthEvent*)(*it);
-			_health = getHealth()-event->getChange();
+  		}
+  		case ::Marx::SET_HEALTH:
+  		{
+  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
-			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
-			cont->addEvent(pointsEvent);
+        processSetHealthEvent(event);
 
-			if(_health <= 0)
-			{
-				std::cout << "Minion Dead" << std::endl;
-				onDestroy();
-			}
+        break;
+  		}
+      case ::Marx::ATTACK:
+      {
+        AttackEvent* aev = (AttackEvent*) (*it);
 
-            break;
-		}
-		case ::Marx::ATTACK:
-		{
-			_attackSpeed -= deltaTime;
-			if (_attackSpeed <= 0)
-			{
-				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-				std::cout << "ATTACK" << std::endl;
-				createSkAttack(*saev, getSprite(), left, top);
-				_attackSpeed = 1;
-			}
-			break;
-		}
-        case ::Marx::SKILL:
-        {
-            // process the skill event, and increase/decrease hp and stuff
-            SkillEvent *ev = (SkillEvent*)(*it);
-            printf("GateKeeper BEFORE Health: %d\n", _health);
-            switch(ev->getSkillType())
-            {
-                case SKILLTYPE::HEAL:
-                    _health += ev->getValue();
-                break;
-                case SKILLTYPE::DMG:
-                    _health -= ev->getValue();
-                break;
-                case SKILLTYPE::BUFF:
-                    _xSpeed += ev->getValue();
-                    _ySpeed += ev->getValue();
-                break;
-                case SKILLTYPE::DEBUFF:
-                    _xSpeed -= ev->getValue();
-                    _ySpeed -= ev->getValue();
-                break;
-            }
+        processAttackEvent(aev);
 
-            printf("GateKeeper AFTER Health: %d\n", _health);
+        break;
+      }
+      case ::Marx::SKILL:
+      {
+        // process the skill event, and increase/decrease hp and stuff
+        SkillEvent *ev = (SkillEvent*)(*it);
 
-            if(_health <= 0)
-            {
-              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-              onDestroy();
-            }
-            break;
-        }
+        processSkillEvent(ev);
+
+        break;
+      }
     }
 
 
@@ -215,13 +171,136 @@ void Minion::onUpdate(float deltaTime)
   getController()->clearEvents();
 
 
-
-
   Entity::rMove(newXSpeed, newYSpeed,false);
-
 
 }
 
+
+void Minion::processMoveEvent(MoveEvent* ev)
+{
+  int xDir = ev->getXDir();
+  int yDir = ev->getYDir();
+
+  Entity::aMove(ev->getX(), ev->getY(), false);
+
+  if (yDir < 0)
+  {
+    newYSpeed = -_ySpeed;
+    int randDirection = (rand() % 3) - 1;
+    getSprite().sprite().setScale(randDirection, 1);
+    movingUp = true;
+    movingDown = false;
+  }
+  else
+  {
+    newYSpeed = _ySpeed;
+    int randDirection = (rand() % 3) - 1;
+    getSprite().sprite().setScale(randDirection, 1);
+    movingDown = true;
+    movingUp = false;
+  }
+
+  if (xDir > 0)
+  {
+    newXSpeed = _xSpeed;
+    getSprite().sprite().setScale(1, 1);
+    movingRight = true;
+    movingLeft = false;
+  }
+  else
+  {
+    newXSpeed = -_xSpeed;
+    getSprite().sprite().setScale(-1, 1);
+    movingLeft = true;
+    movingRight = false;
+  }
+
+  if (xDir == 0)
+  {
+    newXSpeed = 0;
+    movingLeft = false;
+    movingRight = false;
+  }
+
+  if (yDir == 0)
+  {
+    newYSpeed = 0;
+    movingUp = false;
+    movingDown = false;
+  }
+
+  playSound(newXSpeed, newYSpeed);
+}
+
+void Minion::processSkillEvent(SkillEvent* ev)
+{
+  printf("Minion BEFORE Health: %d\n", _health);
+  switch(ev->getSkillType())
+  {
+      case SKILLTYPE::HEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::DMG:
+          _health -= ev->getValue();
+      break;
+      case SKILLTYPE::BUFF:
+          _xSpeed += ev->getValue();
+          _ySpeed += ev->getValue();
+      break;
+      case SKILLTYPE::DEBUFF:
+          _xSpeed -= ev->getValue();
+          _ySpeed -= ev->getValue();
+      break;
+  }
+
+  printf("Minion AFTER Health: %d\n", _health);
+
+  if(_health <= 0)
+  {
+    std::cout << "Moving Minion to ambiguous destination!!" << std::endl;
+    onDestroy();
+  }
+}
+void Minion::processSetHealthEvent(SetHealthEvent* ev)
+{
+  _health = getHealth()-ev->getChange();
+
+  Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
+  AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
+  cont->addEvent(pointsEvent);
+
+  if(_health <= 0)
+  {
+    std::cout << "Minion Dead" << std::endl;
+    onDestroy();
+  }
+}
+void Minion::processAttackEvent(AttackEvent* aev)
+{
+  std::cout << "ATTACK" << std::endl;
+  createAttack(*aev, getSprite(), left, top);
+}
+
+/******************************************************************************
+*   FUNCTION: playSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playSound(float, float)
+*
+*   PARAMETERS: xSpeed   - Horizontal speed
+*               ySpeed   - Vertical speed
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
 void Minion::playSound(float xSpeed, float ySpeed)
 {
 /*  soundActive = false;
@@ -231,7 +310,7 @@ void Minion::playSound(float xSpeed, float ySpeed)
   // first get the tile type we're walking on
   Cell* footstepTile = *getCell().begin();
   sf::Vector2f soundPos(left, top);
-    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's GateKeeper's
+    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's Minion's
                                   // footsteps from fading & being off-center
     footstep.setMinDistance(3.0);
 
@@ -271,6 +350,23 @@ void Minion::playSound(float xSpeed, float ySpeed)
   }//*/
 }
 
+/******************************************************************************
+*   FUNCTION: animate()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: animate(float)
+*
+*   PARAMETERS: deltaTime   - Time this onUpdate was called
+*
+*   RETURNS: void
+*
+*   NOTES: Performs the apprpriate animation for this enemy.
+******************************************************************************/
 void Minion::animate()
 {
   if (isMoving())
@@ -279,93 +375,420 @@ void Minion::animate()
     gkAnimation->step(5);
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 bool Minion::isMoving()
 {
   return (movingLeft || movingRight || movingUp || movingDown);
 }
 
+/******************************************************************************
+*   FUNCTION: setRange(int)
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setRange(int)
+*
+*   PARAMETERS: r   - New range for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets a new range for this enemy
+******************************************************************************/
 void Minion::setRange(int r)
 {
   _range = r;
 }
 
+/******************************************************************************
+*   FUNCTION: setHealth
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setHealth(int h)
+*
+*   PARAMETERS: h   - new Health for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets a new health for this enemy
+******************************************************************************/
 void Minion::setHealth(int h)
 {
   _health = h;
 }
 
+/******************************************************************************
+*   FUNCTION: setAttack
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setAttack(int a)
+*
+*   PARAMETERS: a   - new attack for enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets new attack for the enemy
+******************************************************************************/
 void Minion::setAttack(int a)
 {
   _attack = a;
 }
 
+/******************************************************************************
+*   FUNCTION: setAttackSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setAttackSpeed(float as)
+*
+*   PARAMETERS: as    - New attack speed for the enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets new attack speed for the enemy
+******************************************************************************/
 void Minion::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
 
-
+/******************************************************************************
+*   FUNCTION: setXSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setXSpeed(float x)
+*
+*   PARAMETERS: x   - new horizonatl speed for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets new horizontal speed for this enemy
+******************************************************************************/
 void Minion::setXSpeed(float x)
 {
   _xSpeed = x;
 }
 
+/******************************************************************************
+*   FUNCTION: setYSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setYSpeed(float y)
+*
+*   PARAMETERS: y   - new Vertical speeed for the enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Set new vertical speed for the enemy
+******************************************************************************/
 void Minion::setYSpeed(float y)
 {
   _ySpeed = y;
 }
 
+/******************************************************************************
+*   FUNCTION: setSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setSpeed(int speed)
+*
+*   PARAMETERS: speed   new horizontal and vertical speed for enemy
+*
+*   RETURNS:  void
+*
+*   NOTES: set new horizontal and vertical speed for the enemy
+******************************************************************************/
 void Minion::setSpeed(int _speed)
 {
     _xSpeed = _speed;
     _ySpeed = _speed;
 }
 
+/******************************************************************************
+*   FUNCTION: getXSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getXSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - x speed
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
+float Minion::getXSpeed()
+{
+	return _xSpeed;
+}
+
+/******************************************************************************
+*   FUNCTION: getYSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getYSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - y speed
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
+float Minion::getYSpeed()
+{
+	return _ySpeed;
+}
+
+/******************************************************************************
+*   FUNCTION: getSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Avarage speed of the enemy
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
 int Minion::getSpeed()
 {
 	return _xSpeed;
 }
 
+/******************************************************************************
+*   FUNCTION: getRange()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getRange()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Range (attack and aggro) of this enemy
+*
+*   NOTES: Returns the range of this enemy
+******************************************************************************/
 int Minion::getRange()
 {
   return _range;
 }
 
+/******************************************************************************
+*   FUNCTION: getHealth()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getHealth()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - current health of the enemy
+*
+*   NOTES: Returns current health of the enemy
+******************************************************************************/
 int Minion::getHealth()
 {
   return _health;
 }
 
+/******************************************************************************
+*   FUNCTION: getAttack()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getAttack()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Attack of this enemy
+*
+*   NOTES: Returns attack of the enemy (attack power)
+******************************************************************************/
 int Minion::getAttack()
 {
   return _attack;
 }
 
+/******************************************************************************
+*   FUNCTION: getAttackSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getAttackSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - Attack speed of this enemy
+*
+*   NOTES: returns enemy's attack speed
+******************************************************************************/
 float Minion::getAttackSpeed()
 {
   return _attackSpeed;
 }
 
-int Minion::getMovementSpeed()
-{
-  return _movementSpeed;
-}
-
+/******************************************************************************
+*   FUNCTION: turn()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: turn()
+*
+*   PARAMETERS: void
+*
+*   RETURNS:
+*
+*   NOTES:
+******************************************************************************/
 void Minion::turn()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: onCreate()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: onCreate()
+*
+*   PARAMETERS: void
+*
+*   RETURNS:
+*
+*   NOTES:
+******************************************************************************/
 void Minion::onCreate()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: stopAllSounds()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: stopAllSounds()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Stops Minion sounds
+******************************************************************************/
 void Minion::stopAllSounds()
 {
     footstep.stop();
 }
 
+/******************************************************************************
+*   FUNCTION: operator==
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: operator==(const VEntity&)
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - true
+*
+*   NOTES: Overloaded compare operator
+******************************************************************************/
 bool Minion::operator==(const VEntity&)
 {
   return true;
