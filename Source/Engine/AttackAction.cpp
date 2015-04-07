@@ -13,19 +13,11 @@ Action(_TTL), damage(_damage)
 
 void AttackAction::onUpdate(Entity * me, float time)
 {
-	std::cout << "AttackAction onUpdate start" << std::endl;
 	(static_cast<Projectile*>(me))->setTTL((static_cast<Projectile*>(me))->getTTL() - time);
-	std::cout << "AttackAction onUpdate TTL set" << std::endl;
 	MoveEvent * m = new MoveEvent(me->left, me->top, (static_cast<Projectile*>(me))->getVector().x,
 													 (static_cast<Projectile*>(me))->getVector().y, true);
 
-	std::cout << "AttackAction onUpdate after MoveEvent" << std::endl;
-	if (me->getController() != NULL)
-		me->getController()->addEvent(m);
-	else		
-		std::cout << "AttackAction Controller null" << std::endl;
-
-	std::cout << "AttackAction onUpdate end" << std::endl;
+	me->getController()->addEvent(m);
 }
 
 void AttackAction::onHit(Entity * me, Entity *e)

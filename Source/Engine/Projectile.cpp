@@ -7,23 +7,74 @@
 
 using namespace Marx;
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Projectile
+--
+-- DATE: March 15, 2015
+--
+-- REVISIONS: April 6, 2015
+--
+-- DESIGNER: Marc Vouve
+--			Thomas Tallentire
+--
+-- PROGRAMMER: Marc Vouve
+--				Thomas Tallentire
+--
+-- INTERFACE: Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Action * _act, 
+--				sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0)
+--
+-- PARAMETERS: sprite - The sprite for the projectile
+--				map	- The cell map to place the projectile in
+--				e	- The entity that created the projectile
+--				x	- X location on the cell map to place the projectile
+--				y	- Y location on the cell map to place the projectile
+--				act - Action to take when a collision occurs
+--				vector	- The vector the projectile is moving in
+--				ctrl - The controller for the projectile
+--				h - Height
+--				w - Width
+--
+-- RETURNS: void
+--
+-- NOTES:
+--        Constructor for a Projectile
+--
+----------------------------------------------------------------------------------------------------------------------*/
 Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Action * _act, sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0) :
 	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
     std::cout << act << std::endl;
     float hy = hypot( vector.x , vector.y );
     heading = sf::Vector2f(vector.x / hy, vector.y / hy);
-	_speed = 0;
 	shooter = e;
 }
 
-void Projectile::
-setSpeed(float speed)
-{
-	_speed = speed;
-}
-
-Entity * Projectile::move(float x, float y, bool force = false)
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: move
+--
+-- DATE: March 15, 2015
+--
+-- REVISIONS: April 6, 2015
+--
+-- DESIGNER: Marc Vouve
+--			Thomas Tallentire
+--
+-- PROGRAMMER: Marc Vouve
+--				Thomas Tallentire
+--
+-- INTERFACE: Entity * Projectile::move(float x, float y, bool force = false)
+--
+-- PARAMETERS: x - X location to move the projectile to
+--				y - Y location to move the projectile to
+--				force - Whether or not to force the movement
+--
+-- RETURNS: Enity * - The Entity the projectile hits.
+--
+-- NOTES:
+--        This function moves the projecile, if the projectile hits something, call onHit.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+/*Entity * Projectile::move(float x, float y, bool force = false)
 {
     Entity *entity;
 
@@ -32,12 +83,12 @@ Entity * Projectile::move(float x, float y, bool force = false)
 	if (entity != nullptr)
 	{
 		if (onHit != NULL)
-			onHit(entity);
+			onHit(shooter, entity);
 	}
 
 
 	return entity;
-}
+}*/
 
 void Projectile::onCreate()
 {
@@ -57,6 +108,7 @@ void Projectile::onDestroy()
 
 void Projectile::onUpdate(float t)
 {
+	Entity *hit;
 	std::cout << "Projectile onUpdate time: " << TimeToLive << std::endl;
     if(TimeToLive > 0.0f)
     {
@@ -93,7 +145,13 @@ void Projectile::onUpdate(float t)
 				if (vec.x == -1 && vec.y == -1)
 					onDestroy();
 				else
-                	rMove( vec, t, true );
+                	if ((hit = rMove( vec, t, true )) != nullptr)
+					{
+						if (Manager::ProjectileManager::getServer())
+						{
+							act->onHit(shooter, hit);
+						}					
+					}
 			}
         }
     }

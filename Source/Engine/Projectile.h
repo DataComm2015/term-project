@@ -36,8 +36,7 @@ namespace Marx
 	class Projectile : public VEntity
 	{
 		private:
-			float _speed;
-			std::function<void(Entity*)> onHit;
+			std::function<void(Entity*, Entity*)> onHit;
 			sf::Vector2f heading;
 			float TimeToLive;
 			Action * act;
@@ -45,7 +44,6 @@ namespace Marx
 		public:
 			Projectile(SGO&, Map*, Entity *, float, float, Action *, sf::Vector2f, Controller *, float, float);
 			Entity * move(float, float, bool);
-			virtual void setSpeed(float);
 			virtual void onCreate();
 			virtual void onDestroy();
 			virtual void onUpdate(float);
