@@ -139,7 +139,7 @@ void ClientNetworkController::parseEventMessage( Message& message )
 			SetHealthMessage* mm = (SetHealthMessage*) message.data;
 
 			// create event from message data
-			SetHealthEvent *ev = new SetHealthEvent(mm->change);
+			SetHealthEvent *ev = new SetHealthEvent(mm->entid, mm->change);
 
 			// add event to event queue
 			addEvent(ev);

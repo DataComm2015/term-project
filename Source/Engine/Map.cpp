@@ -56,7 +56,7 @@ using namespace Marx;
 ----------------------------------------------------------------------------------------------------------------------*/
 Map::Map(const int height, const int width) : width_(width), height_(height), cells_(std::vector<Cell*>(width * height + 1))
 {
-	cells_[width * height] = new Cell( -1, -1, 0, true );
+	cells_[width * height] = new Cell( -1, -1, 0, false );
 }
 
 
@@ -165,9 +165,9 @@ void Map::setCell(const int x, const int y, Cell* cell)
 Cell* Map::getCell(const int x, const int y) const
 {
    	unsigned int index = (x * width_) + y;
-    if(y < 0 || x < 0 ||x > width_ || y > height_)
+    if(y < 0 || x < 0 ||x >= width_ || y >= height_ )
     {
-    	return *cells_.end();
+    	return *(--cells_.end());
     }
 	/**/
 	try
