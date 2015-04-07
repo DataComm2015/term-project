@@ -100,7 +100,8 @@ void Projectile::onCreate()
 
 void Projectile::onDestroy()
 {
-    getController()->addEvent(new MoveEvent(-1, -1, 1, 1, true));
+	VEntity::onDestroy();
+    //getController()->addEvent(new MoveEvent(-1, -1, 1, 1, true));
 	//drawable = false;
 
 	Manager::ProjectileManager::enqueue(this);
@@ -144,7 +145,7 @@ void Projectile::onUpdate(float t)
 				std::cout << "Projectile move from " << left << " " << top << std::endl;
 				std::cout << "Projectile move to " << vec.x << " " << vec.y << std::endl;
 				if (vec.x == -1 && vec.y == -1)
-					aMove( vec.x, vec.y, true);
+					onDestroy();
 				else
                 	if (hit = rMove( vec, t, true ) != nullptr)
 					{
