@@ -12,7 +12,7 @@
 
 #include <cstdio>
 #include <iostream>
-
+#include <stdlib.h>
 
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
@@ -142,7 +142,25 @@ void PlayerEntity::onUpdate(Message msg)
             
             if (sk->st == SKILLTYPE::SPAWN)
             {
-                serverRef->createEnemy(MINION, NULL, sk->curX, sk->curY);
+                int enemyType = rand() % 4;
+                ENTITY_TYPES type;
+                switch (enemyType)
+                {
+                    case 0:
+                        type = BASIC_TYPE;
+                        break;
+                    case 1:
+                        type = MINION;
+                        break;
+                    case 2:
+                        type = MINI_BOSS;
+                        break;
+                    default:
+                        type = MINI_BEE;
+                        break;
+                }
+                serverRef->createEnemy(type, NULL, sk->curX, sk->curY);
+                return;
             }
 
             //for(int i = 0; i < 5; i++)
