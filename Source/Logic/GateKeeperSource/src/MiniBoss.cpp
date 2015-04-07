@@ -21,10 +21,9 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource stoneWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource hurtSoundMBoss 		  = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-static id_resource attackSoundMBoss		 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+//static id_resource stoneWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+//static id_resource hurtSoundMBoss 		  = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+//static id_resource attackSoundMBoss		 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 // bug fix by Sanders Lee
 MiniBoss::MiniBoss(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
@@ -41,12 +40,11 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _ySpeed = 0.09;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
-
     int randDirection = (rand() % 3) - 1;
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 1);
 
 }
 
@@ -184,7 +182,7 @@ void MiniBoss::onUpdate(float deltaTime)
 
 void MiniBoss::playSound(float xSpeed, float ySpeed)
 {
-  soundActive = false;
+  /*soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
@@ -235,8 +233,6 @@ void MiniBoss::animate()
 {
   if (isMoving())
     gkAnimation->step(1);
-  else
-    gkAnimation->step(5);
 }
 
 bool MiniBoss::isMoving()
