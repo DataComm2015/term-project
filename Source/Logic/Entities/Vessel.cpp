@@ -86,7 +86,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
-	
+
 	currentHealth = 500;
 	maxHealth = 500;
 
@@ -286,13 +286,13 @@ break;
 					break;
 					case SKILLTYPE::BUFF:
 						val = ((float)ev->getValue()) / 100.0;
-					
+
 						xSpeed += val;
 						ySpeed += val;
 					break;
 					case SKILLTYPE::DEBUFF:
 						val = ((float)ev->getValue()) / 100.0;
-						
+
 						xSpeed -= val;
 						ySpeed -= val;
 					break;
