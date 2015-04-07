@@ -21,10 +21,10 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource hurtSoundMiniBee 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-static id_resource attackSoundMiniBee		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+//static id_resource grassWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+//static id_resource stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+//static id_resource hurtSoundMiniBee 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+//static id_resource attackSoundMiniBee		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 // bug fix by Sanders Lee
 MiniBee::MiniBee(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
@@ -147,7 +147,7 @@ void MiniBee::onUpdate(float deltaTime)
 
 void MiniBee::playSound(float xSpeed, float ySpeed)
 {
-  soundActive = false;
+  /*soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
