@@ -8,7 +8,6 @@
 
 std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
 ServerCommand * Manager::ProjectileManager::SERVER = nullptr;
-Marx::Map * Manager::ProjectileManager::cMap = nullptr;
 
 using namespace Manager;
 
@@ -25,6 +24,7 @@ using namespace Manager;
 --
 -- Revision: April 1st - Changed controller creation logic to be handled here.
 --	Added Action to projectile.
+--			April 6th - Made projectiles work properly.
 --
 -- Notes:
 -- This manager returns instances of projectiles. The controller setup is
@@ -33,7 +33,7 @@ using namespace Manager;
 Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0, Marx::Controller * _cont = NULL)
 {
-	ProjectileManager::cMap = map;
+	std::cout << "ProjectileManager:: x " << v.x << " y " << v.y << std::endl;
 	if (projectile_pool.size() < 1)
 	{
 		if(SERVER)
@@ -51,8 +51,6 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 			msgAttk.cellx = v.x;
 			msgAttk.celly = v.y;
 
-			std::cout << "Made Attack" << std::endl;
-
 			cont = new ServerNetworkController();
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
 		}
@@ -63,14 +61,16 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 	}
 	else
 	{
-		std::cout << "Deck Attack" << std::endl;
 		Marx::Projectile* temp = *projectile_pool.begin();
 		//temp->setSprite(_sprite);
 		temp->setAct(action);
 		temp->setTarget(v);
 		projectile_pool.erase(*projectile_pool.begin());
 
-		temp->getController()->addEvent(new MoveEvent(e->left, e->top, e->left, e->top, true));
+		temp->left = e->left;
+		temp->top  = e->top;
+		temp->onCreate();
+		//temp->getController()->addEvent(new MoveEvent(e->left, e->top, e->left, e->top, true));
 		return temp;
 	}
 
@@ -80,14 +80,12 @@ void ProjectileManager::
 enqueue(Marx::Projectile * projectile)
 {
 	projectile_pool.insert(projectile);
-	ProjectileManager::cMap->rem(*projectile);
 }
 
 void ProjectileManager::
 dequeue(Marx::Projectile* projectile)
 {
 	projectile_pool.erase(projectile);
-	ProjectileManager::cMap->add(*projectile);
 }
 
 void ProjectileManager::

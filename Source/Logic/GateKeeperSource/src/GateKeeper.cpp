@@ -120,74 +120,75 @@ void GateKeeper::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
-        {
+		{
     		MoveEvent* ev = (MoveEvent*) (*it);
-        int xDir = ev->getXDir();
-        int yDir = ev->getYDir();
+		    int xDir = ev->getXDir();
+		    int yDir = ev->getYDir();
 
-        Entity::aMove(ev->getX(), ev->getY(), false);
+		    Entity::aMove(ev->getX(), ev->getY(), false);
 
-        if (yDir < 0)
-        {
-          newYSpeed = -_ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingUp = true;
-          movingDown = false;
-        }
-        else
-        {
-          newYSpeed = _ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingDown = true;
-          movingUp = false;
-        }
+		    if (yDir < 0)
+		    {
+		      newYSpeed = -_ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		      movingUp = true;
+		      movingDown = false;
+		    }
+		    else
+		    {
+		      newYSpeed = _ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		      movingDown = true;
+		      movingUp = false;
+		    }
 
-        if (xDir > 0)
-        {
-          newXSpeed = _xSpeed;
-          getSprite().sprite().setScale(1, 1);
-          movingRight = true;
-          movingLeft = false;
-        }
-        else
-        {
-          newXSpeed = -_xSpeed;
-          getSprite().sprite().setScale(-1, 1);
-          movingLeft = true;
-          movingRight = false;
-        }
+		    if (xDir > 0)
+		    {
+		      newXSpeed = _xSpeed;
+		      getSprite().sprite().setScale(1, 1);
+		      movingRight = true;
+		      movingLeft = false;
+		    }
+		    else
+		    {
+		      newXSpeed = -_xSpeed;
+		      getSprite().sprite().setScale(-1, 1);
+		      movingLeft = true;
+		      movingRight = false;
+		    }
 
-        if (xDir == 0)
-        {
-          newXSpeed = 0;
-          movingLeft = false;
-          movingRight = false;
-        }
+		    if (xDir == 0)
+		    {
+		      newXSpeed = 0;
+		      movingLeft = false;
+		      movingRight = false;
+		    }
 
-        if (yDir == 0)
-        {
-          newYSpeed = 0;
-          movingUp = false;
-          movingDown = false;
-        }
+		    if (yDir == 0)
+		    {
+		      newYSpeed = 0;
+		      movingUp = false;
+		      movingDown = false;
+		    }
 
-        playSound(newXSpeed, newYSpeed);
+		    playSound(newXSpeed, newYSpeed);
 
     		break;
 		}
 		case ::Marx::SET_HEALTH:
 		{
-			SetHealthEvent* ev = (SetHealthEvent*) (*it);
-
-            setHealth(ev->getChange());
-			Controller *attackerCont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
-			if (ev->getChange() > 0)
+			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			std::cout << "Set Health " << event->getChange() << std::endl;
+			setHealth(getHealth()+event->getChange());
+			if (event->getChange() < 0)
 			{
-				AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
-				attackerCont->addEvent(pointsEvent);
+				Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+				cont->addEvent(pointsEvent);
 			}
+
             break;
 		}
         case ::Marx::SKILL:
