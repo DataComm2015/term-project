@@ -555,6 +555,25 @@ void ServerGameState::unregisterFromAllPlayers(Networking::NetworkEntity *entity
  * @author  Jeff Bayntun
  * @designer Jeff Bayntun
  */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        onConnect
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Jeff Bayntun
+--
+-- PROGRAMMER:      Jeff Bayntun
+--
+-- INTERFACE:       void ServerGameState::update( Message message )
+
+-- RETURNS:         void
+--
+-- NOTES:          sends a message to a specific session that they should go to the
+                    fake lobby if a game is already in progress.  A pointer to the
+                    sesssion MUST be passed as the message.data
+-----------------------------------------------------------------------------------------------*/
 void ServerGameState::update( Message message )
 {
     if(message.type == (int)ServerGameStateClientGameStateMsgType::FAKE_LOBBY)
