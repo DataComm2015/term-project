@@ -159,6 +159,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	waterMap = new Map(cMap->getWidth() + WATER_BUFFER, cMap->getHeight() + WATER_BUFFER);
 
 	myVessel = NULL;
+	hb = NULL;
 
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
 
@@ -281,12 +282,6 @@ void GameScene::positionUI()
 	b2->sprite().setPosition((windowSize.x / 2.0), windowSize.y - 3*buttonHeight);
 	b3->sprite().setPosition((windowSize.x / 2.0) + (buttonWidth), windowSize.y - 3*buttonHeight);
 
-	// Scale healthbar
-	hb->sprite().setScale(3, 3);
-
-	// position healthbar
-	hb->sprite().setPosition(20, 20);
-
 	//the border for the minimap
 	minimapBorder.setSize(
 		sf::Vector2f(viewMinimap.getViewport().width*windowSize.x,
@@ -318,7 +313,20 @@ void GameScene::positionUI()
 ******************************************************************************/
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
-	myVessel = vessel;
+	sf::Vector2u imageSize = Manager::TextureManager::get(hbgSprite)->getSize();
+	unsigned int width = imageSize.x;
+	unsigned int height = imageSize.y;
+	sf::Vector2f healthSize = sf::Vector2f(width, height);
+	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
+	// Scale healthbar
+	hb->sprite().setScale(3, 3);
+	// position healthbar
+	hb->sprite().setPosition(20, 20);
+
+	std::cout << ">>>>>>>>>>> HB: " << std::endl;
+	printf("%p\n", hb);
+
+	myVessel = vessel;	
 	myVessel->setHealthBar(hb);
 }
 
@@ -951,14 +959,6 @@ void GameScene::generateUI()
 
 	butSize = sf::Vector2f(width, height);
 
-	imageSize = Manager::TextureManager::get(hbgSprite)->getSize();
-	width = imageSize.x;
-	height = imageSize.y;
-
-	sf::Vector2f healthSize = sf::Vector2f(width, height);
-
-	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
-
 	createClassUI();
 }
 
@@ -987,6 +987,7 @@ void GameScene::createClassUI()
 	switch (characterType)
 	{
 		case PLAYER_MODE::VESSEL: // VESSEL
+		{
 			switch(classType)
 			{
 				case 1: //SHAMAN
@@ -1000,11 +1001,13 @@ void GameScene::createClassUI()
 					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
 				break;
 			}
-			break;
+		}
+		break;
 		case PLAYER_MODE::DEITY: // DEITY
 			crossHairSGO = new SGO(*Manager::TextureManager::get(crosshairImg));
 			crossHairSGO->middleAnchorPoint(true);
 			crossHairSGO->sprite().setPosition(viewMain.getCenter());
+
 			switch(classType)
 			{
 				case 1: //VITALITY

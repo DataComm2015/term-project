@@ -108,6 +108,8 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	this->add(shadow);
 	shadow.sprite().setOrigin(-6, -28);
 
+	myHealthBar = NULL;
+
 	std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
@@ -274,15 +276,17 @@ break;
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
 
+				printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN SKILL\n");
+
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
 						currentHealth += ev->getValue();
-						myHealthBar->update((float)currentHealth/(float)maxHealth);
+						if (myHealthBar) myHealthBar->update((float)currentHealth/(float)maxHealth);
 					break;
 					case SKILLTYPE::DMG:
 						currentHealth -= ev->getValue();
-						myHealthBar->update((float)currentHealth/(float)maxHealth);
+						if (myHealthBar) myHealthBar->update((float)currentHealth/(float)maxHealth);
 					break;
 					case SKILLTYPE::BUFF:
 						val = ((float)ev->getValue()) / 100.0;
@@ -1198,7 +1202,9 @@ void Vessel::setHealth(int health)
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
 
-    myHealthBar->update((float)currentHealth/(float)maxHealth);
+    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. %p\n", myHealthBar);
+
+    if (myHealthBar) myHealthBar->update((float)currentHealth/(float)maxHealth);
 }
 
 void Vessel::setSpeed(int _speed)
@@ -1317,5 +1323,7 @@ float Vessel::getXPosition()
 
 void Vessel::setHealthBar(GUI::HealthBar* hb)
 {
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SETTING HEALTH BAR\n");
+
 	myHealthBar = hb;
 }
