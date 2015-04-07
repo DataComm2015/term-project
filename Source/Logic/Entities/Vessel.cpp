@@ -246,11 +246,9 @@ break;
 			{
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
-<<<<<<< HEAD
-				printf("Vessel BEFORE Health: %d\n", currentHealth);
-=======
 
->>>>>>> 3f4aa815c97ba23814d1667d88a815331367f6f4
+				printf("Vessel BEFORE Health: %d\n", currentHealth);
+
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -268,7 +266,6 @@ break;
 						ySpeed -= ev->getValue();
 					break;
 				}
-<<<<<<< HEAD
 				
 				if(currentHealth <= 0)
 				{
@@ -278,9 +275,6 @@ break;
 				
 				printf("Vessel AFTER Health: %d\n", currentHealth);
 				
-=======
-
->>>>>>> 3f4aa815c97ba23814d1667d88a815331367f6f4
 				break;
 			}
 			case ::Marx::ADD_POINTS:
