@@ -40,6 +40,7 @@
 namespace Marx
 {
 	class Projectile;
+	class Action;
 }
 
 namespace Manager

@@ -85,7 +85,6 @@ void onclick()
 }
 
 
-
 /******************************************************************************
 *	FUNCTION:
 *
@@ -288,7 +287,6 @@ void GameScene::positionUI()
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-
 	//the border for the minimap
 	minimapBorder.setSize(
 		sf::Vector2f(viewMinimap.getViewport().width*windowSize.x,
@@ -321,6 +319,7 @@ void GameScene::positionUI()
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
 	myVessel = vessel;
+	myVessel->setHealthBar(hb);
 }
 
 
@@ -529,6 +528,7 @@ void GameScene::update(sf::Time t)
 	runAnim_mask->update(t);
 	runAnim_wep->update(t);
 	*/
+	updateSkillGraphics(t);
 
 	// Update buttons
 	b1->update(t);
@@ -635,7 +635,7 @@ void GameScene::processEvents(sf::Event& e)
 		{
 			sf::Vector2f mouse = AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain);
 			sf::Vector2f viewVector = viewMain.getCenter();
-			
+
 			/*viewVector.x = convertX(viewVector.x);
 			viewVector.y = convertY(viewVector.y);
 			*/std::cout << "Mouse clicked: " << mouse.x << " " << mouse.y << std::endl;
@@ -644,7 +644,7 @@ void GameScene::processEvents(sf::Event& e)
 			for (auto l = clickListeners.begin(); l != clickListeners.end(); ++l)
 			{
 				(*l)->onMouseClick(e.mouseButton.button, ((NetworkEntity*)myVessel->getController())->getId(),
-									ActionType::normalAttack, viewVector.x - (float)mouse.x, viewVector.y - (float)mouse.y);
+									ActionType::normalAttack,   (float)mouse.x - viewVector.x,  (float)mouse.y - viewVector.y );
 				//current = Manager::SoundManager::play(chick_sound, AppWindow::getInstance().getMousePositionRelativeToWindowAndView(viewMain));
 				//current.play();
 			}
@@ -959,7 +959,6 @@ void GameScene::generateUI()
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
 
-
 	createClassUI();
 }
 
@@ -1121,7 +1120,7 @@ void onClickVitalityTwo()//buffskillbtn
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 1, SKILLTYPE::BUFF);
 }
 
 
@@ -1202,7 +1201,7 @@ void onClickDemiseTwo() //debuffskillbtn
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DEBUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 1, SKILLTYPE::DEBUFF);
 }
 
 
@@ -1228,6 +1227,8 @@ void onClickDemiseTwo() //debuffskillbtn
 void onClickDemiseThree() //summonskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 0, 0, SKILLTYPE::SPAWN);
 }
 
 float convertX(float x)
@@ -1244,13 +1245,34 @@ float convertY(float y)
 	return newCoord;
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: addSkillNotification
+--
+-- DATE: April 5, 2015
+--
+-- DESIGNER: Julian Brandrick
+--
+-- PROGRAMMER: Julian Brandrick
+--
+-- INTERFACE: void addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
+--
+-- PARAMETERS:
+--		_x 			-> The x coordinate of the cast event
+--		_y 			-> The y coordinate of the cast event
+--		timer 		-> The duration of the cast event
+--		_skillType 	-> The skill type of the event
+--
+-- NOTES:
+--  Creates a skill_notify struct and initializes its timer and VEntity. This is then pushed onto the skill 
+--	 notification queue.
+----------------------------------------------------------------------------------------------------------------------*/
 void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
 {
 	skill_notify sn;
 	SGO *snSGO;
-	
+
 	sn.timer = timer;
-	
+
 	switch(_skillType)
 	{
 		case SKILLTYPE::HEAL:
@@ -1266,23 +1288,43 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
 		break;
 	}
-	snSGO->sprite().setPosition(viewMain.getCenter());
 	
 	sn.entity = new VEntity(*snSGO, cMap, _x, _y, NULL, 1, 1);
+	
+	snSGO->middleAnchorPoint(true);
 	
 	snQueue.push_back(sn);
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: updateSkillGraphics
+--
+-- DATE: April 5, 2015
+--
+-- DESIGNER: Julian Brandrick
+--
+-- PROGRAMMER: Julian Brandrick
+--
+-- INTERFACE: void updateSkillGraphics(sf::timer t)
+--
+-- PARAMETERS:
+--		t -> A timer used to measure the duration of the cast event
+--
+-- NOTES:
+--  Interates through the skill notification queue and checks to see if a duration has finished.
+--	 If one has then the event's VEntity is deleted and it is popped off of the queue..
+----------------------------------------------------------------------------------------------------------------------*/
 void GameScene::updateSkillGraphics(sf::Time t)
 {
 	for(auto it = snQueue.begin(); it != snQueue.end(); it++)
 	{
-		
+
 		it->timer -= t.asMilliseconds();
-		
+
 		if(it->timer <= 0)
 		{
-			delete it->entity;
+			//delete it->entity;
+			it->entity->onDestroy();
 			
 			snQueue.pop_front();
 		}
