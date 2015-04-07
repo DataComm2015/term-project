@@ -18,6 +18,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 using namespace Manager;
 
@@ -182,10 +183,18 @@ void GateKeeper::onUpdate(float deltaTime)
 		{
 			SetHealthEvent * event = (SetHealthEvent*)(*it);
 			_health = getHealth()-event->getChange();
+			
+			/*Entity *e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()))->getEntity();
+			float enemyHy = sqrt(e->left*e->left + e->top*e->top); 
+			float myHy = sqrt(left*left + top*top); 
+			rMove(enemyHy - myHy, enemyHy - myHy, false);*/
 
-			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
-			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
-			cont->addEvent(pointsEvent);
+			if (Manager::ProjectileManager::getServer())
+			{
+				ServerNetworkController * cont = dynamic_cast<ServerNetworkController*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+				cont->addEvent(pointsEvent);
+			}
 
 			if(_health <= 0)
 			{
