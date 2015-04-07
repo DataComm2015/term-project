@@ -63,7 +63,11 @@
 #include "../../Engine/VEntity.h"
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
+#include "../../Engine/TileManager.h"
+#include "../../Multimedia/graphics/Animation.h"
 #include "../Creature.h"
+#include "../EntityTypes.h"
+#include <SFML/Audio.hpp>
 
 #define MAX_LEVEL 10;
 
@@ -72,8 +76,13 @@ typedef char Ability;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
+
 class Vessel : public Marx::VEntity, public Creature
 {
+	private:
+		sf::Sound footstep;
+		sf::Sound voice;
+
 	protected:
 		job_class jobClass;
 		int currentHealth;
@@ -84,36 +93,47 @@ class Vessel : public Marx::VEntity, public Creature
 		int defaultSpeed;
 		int travelSpeed;
 		int attackPower;
-		float xPosition;
-		float yPosition;
-		int xSpeed;
-		int ySpeed;
+		float xSpeed;
+		float ySpeed;
+		float xPos;
+		float yPos;
+		float myX;
+		float myY;
+		float servX;
+		float servY;
+		float attCool;
 		int direction;	//0 = right, 1 = left //why not a bool?
-		bool moving;
-		Weapon* weapon;
+		bool movingLeft;
+	  bool movingRight;
+		bool movingUp;
+	  bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
+		SGO mask_sprite;
+		SGO atk_sprite;
+		SGO satk_sprite;
+		SGO weapon_sprite;
+		static id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
+	private:
+		//Animation *runAnim;
+		//Animation *runAnim_mask;
+		//Animation *runAnim_wep;
 
 	public:
-		Vessel( SGO &_sprite,
-			Marx::Map * gmap,
-			float x,
-			float y,
-			Marx::Controller* controller,
-			float height,
-			float width
-			/*, job_class jobClass, Ability* abilityList*/ );
-
+        float newXSpeed;
+        float newYSpeed;
+		Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
+						Marx::Map * gmap,
+						float x,
+						float y,
+						Marx::Controller* controller,
+						float height,
+						float width
+						/*, job_class jobClass, Ability* abilityList*/ );
 		//inherited methods
 		virtual ~Vessel();
-		virtual void onUpdate();
-		virtual void turn();
-		//virtual Marx::Entity* move(float, float, bool);
-		virtual std::set<Marx::Cell*> getCell();
-		virtual void onCreate();
-		virtual void onDestroy();
-
-		Marx::Controller* _controller;
+		virtual void onUpdate(float);
+		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
 
 		void setPosition( float x, float y );
 		float getXPosition();
@@ -127,7 +147,7 @@ class Vessel : public Marx::VEntity, public Creature
 		void resetEXP();
 		void increaseEXP( int exp );
 		int  getEXP();
-    int  getNextLevelEXP();
+    	int  getNextLevelEXP();
 		int  getLevel();
 		void increaseLevel();
 
@@ -136,7 +156,6 @@ class Vessel : public Marx::VEntity, public Creature
 		void resetHP();
 		void increaseHP( int hp );
 		void decreaseHP( int hp );
-		int  getHP();
 		int  getMaxHP();
 
 		void resetAttackPower();
@@ -148,7 +167,6 @@ class Vessel : public Marx::VEntity, public Creature
 		void resetSpeed();
 		void speedUp( int speed );
 		void speedDown( int speed );
-		int  getSpeed();
 		int  getDefaultSpeed();
 
 		bool checkDeath();
@@ -159,10 +177,15 @@ class Vessel : public Marx::VEntity, public Creature
 
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
-		
-		virtual void setHealth(int health);
+
+        virtual int getHealth();
+        virtual void setHealth(int _health);
+        virtual int getSpeed();
+        virtual void setSpeed(int _speed);
 		virtual void setAttack(int attack);
+        virtual void stopAllSounds();
 		virtual Entity *getEntity();
+		ENTITY_TYPES getType();
 };
 
 #endif

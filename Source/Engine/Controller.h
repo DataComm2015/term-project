@@ -3,23 +3,28 @@
 
 #include <vector>
 #include "Event.h"
+#include "Entity.h"
 
 namespace Marx
 {
+    class Entity;
     /*
     * Controller class. Holds controller event queue
     */
     class Controller
     {
-    protected:
-        std::vector<Event> eventQueue;
     public:
-        std::vector<Event> getEvents();
-        virtual void addEvent(Event ev);
-        void clearEvents()
-        {
-          eventQueue.clear();
-        }
+        virtual ~Controller();
+        virtual std::vector<Event*>* getEvents();
+        virtual void addEvent(Event *ev);
+        virtual void clearEvents();
+        void setEntity(Entity* e);
+        Entity* getEntity();
+    private:
+        Entity* entity;
+        std::vector<Event*> eventQueue;
+    protected:
+        Entity * my_entity;
     };
 }
 
