@@ -137,7 +137,7 @@ void MiniBee::onUpdate(float deltaTime)
             {
                 // process the skill event, and increase/decrease hp and stuff
                 SkillEvent *ev = (SkillEvent*)(*it);
-                
+
                 printf("GateKeeper BEFORE Health: %d\n", _health);
                 switch(ev->getSkillType())
                 {
@@ -156,15 +156,15 @@ void MiniBee::onUpdate(float deltaTime)
                         _ySpeed -= ev->getValue();
                     break;
                 }
-                
+
                 printf("GateKeeper AFTER Health: %d\n", _health);
-                
+
                 if(_health <= 0)
                 {
                   std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
                   onDestroy();
                 }
-        
+
                 break;
             }
     }

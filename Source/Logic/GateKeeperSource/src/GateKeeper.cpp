@@ -189,42 +189,42 @@ void GateKeeper::onUpdate(float deltaTime)
 				cont->addEvent(pointsEvent);
 			}
 
-            break;
+      break;
 		}
-        case ::Marx::SKILL:
+    case ::Marx::SKILL:
+    {
+        // process the skill event, and increase/decrease hp and stuff
+        SkillEvent *ev = (SkillEvent*)(*it);
+
+        printf("GateKeeper BEFORE Health: %d\n", _health);
+        switch(ev->getSkillType())
         {
-            // process the skill event, and increase/decrease hp and stuff
-            SkillEvent *ev = (SkillEvent*)(*it);
-            
-            printf("GateKeeper BEFORE Health: %d\n", _health);
-            switch(ev->getSkillType())
-            {
-                case SKILLTYPE::HEAL:
-                    _health += ev->getValue();
-                break;
-                case SKILLTYPE::DMG:
-                    _health -= ev->getValue();
-                break;
-                case SKILLTYPE::BUFF:
-                    _xSpeed += ev->getValue();
-                    _ySpeed += ev->getValue();
-                break;
-                case SKILLTYPE::DEBUFF:
-                    _xSpeed -= ev->getValue();
-                    _ySpeed -= ev->getValue();
-                break;
-            }
-            
-            printf("GateKeeper AFTER Health: %d\n", _health);
-            
-            if(_health <= 0)
-            {
-              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-              onDestroy();
-            }
-    
+            case SKILLTYPE::HEAL:
+                _health += ev->getValue();
+            break;
+            case SKILLTYPE::DMG:
+                _health -= ev->getValue();
+            break;
+            case SKILLTYPE::BUFF:
+                _xSpeed += ev->getValue();
+                _ySpeed += ev->getValue();
+            break;
+            case SKILLTYPE::DEBUFF:
+                _xSpeed -= ev->getValue();
+                _ySpeed -= ev->getValue();
             break;
         }
+
+        printf("GateKeeper AFTER Health: %d\n", _health);
+
+        if(_health <= 0)
+        {
+          std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+          onDestroy();
+        }
+
+        break;
+    }
     }
 
 
