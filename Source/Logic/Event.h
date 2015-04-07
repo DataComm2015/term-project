@@ -103,17 +103,20 @@ private:
 struct SetHealthMessage
 {
 	int entid; // Entity id source
+	bool typeHeal;
 	float change;
 };
 
 class SetHealthEvent : public ::Marx::Event
 {
 public:
-	SetHealthEvent(int id, float _change);
+	SetHealthEvent(int id, bool _type, float _change);
 	int getEntId();
+	bool getTypeHeal();
 	float getChange();
 private:
 	int entid;
+	bool typeHeal;
 	float change;
 };
 

@@ -33,18 +33,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 3;
+    _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.08;
-    _ySpeed = 0.08;
+    _xSpeed = 0.06;
+    _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
     int randDirection = (rand() % 3) - 1;
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 1);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 8);
 
 }
 
@@ -69,68 +69,91 @@ void MiniBoss::onUpdate(float deltaTime)
       ; it != eventQueue->end()
       ; ++it )
   {
-        int xDir;
-        int yDir;
-        MoveEvent* ev;
+    int xDir;
+    int yDir;
+    MoveEvent* ev;
+
+	//std::cout << "MiniBoss::Controller " << getController() << std::endl;
+	//std::cout << "MiniBoss::Event " << (*it)->type << std::endl;
     // switch on type
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
+		{
+			//std::cout << "Move Event " << (*it)->type << std::endl;
     		ev = (MoveEvent*) (*it);
-        xDir = ev->getXDir();
-        yDir = ev->getYDir();
+		    xDir = ev->getXDir();
+		    yDir = ev->getYDir();
 
-        Entity::aMove(ev->getX(), ev->getY(), false);
+		    Entity::aMove(ev->getX(), ev->getY(), false);
 
-        if (yDir < 0)
-        {
-          newYSpeed = -_ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingUp = true;
-          movingDown = false;
-        }
-        else
-        {
-          newYSpeed = _ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingDown = true;
-          movingUp = false;
-        }
+		    if (yDir < 0)
+		    {
+		      newYSpeed = -_ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		      movingUp = true;
+		      movingDown = false;
+		    }
+		    else
+		    {
+		      newYSpeed = _ySpeed;
+		      int randDirection = (rand() % 3) - 1;
+		      getSprite().sprite().setScale(randDirection, 1);
+		      movingDown = true;
+		      movingUp = false;
+		    }
 
-        if (xDir > 0)
-        {
-          newXSpeed = _xSpeed;
-          getSprite().sprite().setScale(1, 1);
-          movingRight = true;
-          movingLeft = false;
-        }
-        else
-        {
-          newXSpeed = -_xSpeed;
-          getSprite().sprite().setScale(-1, 1);
-          movingLeft = true;
-          movingRight = false;
-        }
+		    if (xDir > 0)
+		    {
+		      newXSpeed = _xSpeed;
+		      getSprite().sprite().setScale(1, 1);
+		      movingRight = true;
+		      movingLeft = false;
+		    }
+		    else
+		    {
+		      newXSpeed = -_xSpeed;
+		      getSprite().sprite().setScale(-1, 1);
+		      movingLeft = true;
+		      movingRight = false;
+		    }
 
-        if (xDir == 0)
-        {
-          newXSpeed = 0;
-          movingLeft = false;
-          movingRight = false;
-        }
+		    if (xDir == 0)
+		    {
+		      newXSpeed = 0;
+		      movingLeft = false;
+		      movingRight = false;
+		    }
 
-        if (yDir == 0)
-        {
-          newYSpeed = 0;
-          movingUp = false;
-          movingDown = false;
-        }
+		    if (yDir == 0)
+		    {
+		      newYSpeed = 0;
+		      movingUp = false;
+		      movingDown = false;
+		    }
 
-        //playSound(newXSpeed, newYSpeed);
+		    //playSound(newXSpeed, newYSpeed);
 
     		break;
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			std::cout << "Health Event " << (*it)->type << std::endl;
+			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			_health = getHealth()-event->getChange();
+
+			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+			cont->addEvent(pointsEvent);
+			if(_health <= 0)
+			{
+				std::cout << "MiniBoss Dead" << std::endl;
+				onDestroy();
+			}
+
+            break;
+		}
         case ::Marx::ATTACK:
         {
           _attackSpeed -= deltaTime;
@@ -139,7 +162,7 @@ void MiniBoss::onUpdate(float deltaTime)
             SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
             std::cout << "ATTACK" << std::endl;
             createSkAttack(*saev, getSprite(), left, top);
-            _attackSpeed = 3;
+            _attackSpeed = 1;
           }
           break;
         }
@@ -177,13 +200,16 @@ void MiniBoss::onUpdate(float deltaTime)
 
             break;
         }
+		default:
+		{
+			//std::cout << "Default MiniBoss::onUpdate " << (*it)->type << std::endl;
+			return;
+		}
     }
 
-
   }
+
   getController()->clearEvents();
-
-
 
 
   Entity::rMove(newXSpeed, newYSpeed,false);

@@ -26,6 +26,8 @@ using namespace Manager;
 //static id_resource hurtSoundMinion 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
 //static id_resource attackSoundMinion		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
+id_resource minShadow;
+
 // bug fix by Sanders Lee
 Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
@@ -34,7 +36,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 3;
+    _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.03;
@@ -46,8 +48,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     getSprite().sprite().setScale(randDirection, 1);
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 8, 7);
+    gkAnimation = new Animation(&sprite, sf::Vector2i(32, 32), 8, 5);
 
+    // Add shadows
+    minShadow = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Shadows/wisp_shadow.png")
+    );
+
+    shadow.sprite().setTexture(*Manager::TextureManager::get(minShadow));
+    shadow.sprite().setTextureRect(sf::IntRect(0, 0, 9, 4));
+
+    this->add(shadow);
+    shadow.sprite().setOrigin(-11, -28);
 }
 
 Minion::~Minion()
@@ -78,78 +90,96 @@ void Minion::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
+		{
     		ev = (MoveEvent*) (*it);
-        xDir = ev->getXDir();
-        yDir = ev->getYDir();
+			xDir = ev->getXDir();
+			yDir = ev->getYDir();
 
-        Entity::aMove(ev->getX(), ev->getY(), false);
+			Entity::aMove(ev->getX(), ev->getY(), false);
 
-        if (yDir < 0)
-        {
-          newYSpeed = -_ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingUp = true;
-          movingDown = false;
-        }
-        else
-        {
-          newYSpeed = _ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingDown = true;
-          movingUp = false;
-        }
+			if (yDir < 0)
+			{
+			  newYSpeed = -_ySpeed;
+			  int randDirection = (rand() % 3) - 1;
+			  getSprite().sprite().setScale(randDirection, 1);
+			  movingUp = true;
+			  movingDown = false;
+			}
+			else
+			{
+			  newYSpeed = _ySpeed;
+			  int randDirection = (rand() % 3) - 1;
+			  getSprite().sprite().setScale(randDirection, 1);
+			  movingDown = true;
+			  movingUp = false;
+			}
 
-        if (xDir > 0)
-        {
-          newXSpeed = _xSpeed;
-          getSprite().sprite().setScale(1, 1);
-          movingRight = true;
-          movingLeft = false;
-        }
-        else
-        {
-          newXSpeed = -_xSpeed;
-          getSprite().sprite().setScale(-1, 1);
-          movingLeft = true;
-          movingRight = false;
-        }
+			if (xDir > 0)
+			{
+			  newXSpeed = _xSpeed;
+			  getSprite().sprite().setScale(1, 1);
+			  movingRight = true;
+			  movingLeft = false;
+			}
+			else
+			{
+			  newXSpeed = -_xSpeed;
+			  getSprite().sprite().setScale(-1, 1);
+			  movingLeft = true;
+			  movingRight = false;
+			}
 
-        if (xDir == 0)
-        {
-          newXSpeed = 0;
-          movingLeft = false;
-          movingRight = false;
-        }
+			if (xDir == 0)
+			{
+			  newXSpeed = 0;
+			  movingLeft = false;
+			  movingRight = false;
+			}
 
-        if (yDir == 0)
-        {
-          newYSpeed = 0;
-          movingUp = false;
-          movingDown = false;
-        }
+			if (yDir == 0)
+			{
+			  newYSpeed = 0;
+			  movingUp = false;
+			  movingDown = false;
+			}
 
-        //playSound(newXSpeed, newYSpeed);
+			//playSound(newXSpeed, newYSpeed);
 
     		break;
-				case ::Marx::ATTACK:
-				{
-					_attackSpeed -= deltaTime;
-					if (_attackSpeed <= 0)
-					{
-						SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-						std::cout << "ATTACK" << std::endl;
-						createSkAttack(*saev, getSprite(), left, top);
-						_attackSpeed = 3;
-					}
-					break;
-				}
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			_health = getHealth()-event->getChange();
+
+			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+			cont->addEvent(pointsEvent);
+
+			if(_health <= 0)
+			{
+				std::cout << "Minion Dead" << std::endl;
+				onDestroy();
+			}
+
+            break;
+		}
+		case ::Marx::ATTACK:
+		{
+			_attackSpeed -= deltaTime;
+			if (_attackSpeed <= 0)
+			{
+				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createSkAttack(*saev, getSprite(), left, top);
+				_attackSpeed = 1;
+			}
+			break;
+		}
         case ::Marx::SKILL:
         {
             // process the skill event, and increase/decrease hp and stuff
             SkillEvent *ev = (SkillEvent*)(*it);
-
             printf("GateKeeper BEFORE Health: %d\n", _health);
             switch(ev->getSkillType())
             {
@@ -176,7 +206,6 @@ void Minion::onUpdate(float deltaTime)
               std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
               onDestroy();
             }
-
             break;
         }
     }

@@ -61,6 +61,8 @@ class ServerGameScene : public Scene
         std::vector<Creature*> enemies;
         std::vector<ServerEnemyController*> enemyControllers;
         std::vector<Vessel*> playerList;
+
+        bool gameShouldEnd();
 };
 
 #endif
