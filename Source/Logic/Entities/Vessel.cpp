@@ -124,6 +124,8 @@ void Vessel::onUpdate(float deltaTime)
 	static bool soundActive = false;
 	static BlockZone steppedTile = GRASS;
 
+	float val;
+
 	attCool += deltaTime;
 	sf::Time elapsedTime;
 	sf::Time frameTime = sf::seconds(1.0/120);
@@ -280,12 +282,16 @@ break;
 						currentHealth -= ev->getValue();
 					break;
 					case SKILLTYPE::BUFF:
-						xSpeed += ev->getValue();
-						ySpeed += ev->getValue();
+						val = ((float)ev->getValue()) / 100.0;
+					
+						xSpeed += val;
+						ySpeed += val;
 					break;
 					case SKILLTYPE::DEBUFF:
-						xSpeed -= ev->getValue();
-						ySpeed -= ev->getValue();
+						val = ((float)ev->getValue()) / 100.0;
+						
+						xSpeed -= val;
+						ySpeed -= val;
 					break;
 				}
 
