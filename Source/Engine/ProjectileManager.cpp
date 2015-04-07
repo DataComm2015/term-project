@@ -26,6 +26,7 @@ using namespace Manager;
 -- Revision: April 1st - Changed controller creation logic to be handled here.
 --	Added Action to projectile.
 --			April 6th - Made projectiles work properly.
+--			April 7th - REMOVED FANCY FEATURES TOTS WORKS! (Marc)
 --
 -- Notes:
 -- This manager returns instances of projectiles. The controller setup is
