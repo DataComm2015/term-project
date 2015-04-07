@@ -15,7 +15,7 @@ public:
 	sf::Text& text();
 	const sf::Text& text() const;
 
-	sf::Transform getLocalTransform() const override;
+	const sf::Transform& getLocalTransform() const override;
 
 	void middleAnchorPoint(bool arg);
 

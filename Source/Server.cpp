@@ -4,16 +4,16 @@
 
 #include "Engine/Scene.h"
 #include "Logic/ServerCommand.h"
-#include "Logic/Entities/ServerNetworkController.h"
+#include "Logic/Entities/ServerCommandEntity.h"
+#include "Network/NetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
-#include "Engine/ProjectileManager.h"
-#include "Multimedia/manager/SoundManager.h"
 
 #include <string.h>
 #include <stdio.h>
 
 // namespace
 using Networking::NetworkEntityMultiplexer;
+using Networking::NetworkController;
 using Networking::NetworkEntity;
 using Networking::Message;
 using Networking::Session;
@@ -28,16 +28,11 @@ void run(ServerCommand *server);
 
 int main( int argc, char ** argv )
 {
-    if( argc < 2 )
-    {
-        printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
-        fflush(stdout);
-    }
-
+    printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
+    fflush(stdout);
+    
     ServerCommand server;
-    Manager::ProjectileManager::setServer(&server);
-    Manager::SoundManager::disabled = true;
-
+    
     server.startServer(atoi(argv[1]));
     run(&server);
 
@@ -55,7 +50,7 @@ void run(ServerCommand *server)
     sf::Time m_timeSinceLastUpdate;
     sf::Time m_sleepTime;
 
-    m_sleepTime = sf::seconds(1.0/120);
+    m_sleepTime = sf::seconds(1.0/75);
     m_timePerFrame = sf::seconds(1.0/60);
 
     if (!isRunning)
@@ -68,9 +63,6 @@ void run(ServerCommand *server)
         // LOOP
         while (isRunning)
         {
-            // process network messages
-            Networking::handleSessionMessages();
-
             // TIME UPDATES
             m_elapsedTime = clock.restart();
             m_timeSinceLastUpdate += m_elapsedTime;
@@ -85,7 +77,7 @@ void run(ServerCommand *server)
             }
         }
 
-
+        
         isRunning = false;
     }
 }

@@ -19,7 +19,7 @@ using namespace Marx;
 --
 -- NOTES: this function returns a signleton for the VOID scene, however, it
 -- doesn't have to be a signleton for every scene
---
+-- 
 -----------------------------------------------------------------------------*/
 void Scene::onLoad()
 {
@@ -45,10 +45,14 @@ void Scene::onLoad()
 
           calls handleSessionMessages which deals with all the queued messages
           for all sessions this scene has.
---
+-- 
 ------------------------------------------------------------------------------*/
 void Scene::processEvents(sf::Event & e)
 {
+    //printf("Update NULL Scene\n");
+    //printf("before handling\n");
+    Networking::handleSessionMessages();
+   // printf("after handling\n");
 	return;
 }
 
@@ -68,7 +72,7 @@ void Scene::processEvents(sf::Event & e)
 --
 -- NOTES: This function is called when a scene needs to be unLoaded. The default
 --		  Scene does not get deleted this must be done when the scene is extended.
---
+-- 
 ------------------------------------------------------------------------------*/
 void Scene::update(sf::Time)
 {
@@ -92,7 +96,7 @@ void Scene::update(sf::Time)
 --
 -- NOTES: This function is called when a scene needs to be unLoaded. The default
 --		  Scene does not get deleted this must be done when the scene is extended.
---
+-- 
 ------------------------------------------------------------------------------*/
 void Scene::draw()
 {

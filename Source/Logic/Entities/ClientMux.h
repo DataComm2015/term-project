@@ -12,7 +12,6 @@ using Networking::NetworkEntityMultiplexer;
 
 class GameScene;
 class ClientLobbyScene;
-class ClientScoreboardScene;
 class ClientGameState;
 class CommandEntity;
 
@@ -27,33 +26,17 @@ class CommandEntity;
 class ClientMux : public Networking::NetworkEntityMultiplexer
 {
     public:
-        Message message;
-        ClientMux(ClientLobbyScene* lobbyScene, ClientScoreboardScene* scoreScene);
+        ClientMux(GameScene* scene, ClientLobbyScene* lobbyScene);
         virtual ~ClientMux();
         virtual NetworkEntity* onRegister(int id, int entityType,
             Session* session, Message msg);
-        CommandEntity* getCommandEntity();
+            
         void shutdown();
     private:
-        /**
-         * pointer to the {Session} instance.
-         */
         Session *session;
-        /**
-         * pointer to the singleton {ClientLobbyScene} instance.
-         */
+        GameScene* _gameScene;
         ClientLobbyScene* _lobbyScene;
-        /**
-         * pointer to the singleton {CommandEntity} instance.
-         */
-        ClientScoreboardScene* _scoreScene;
-        /**
-         * pointer to the singleton {CommandEntity} instance.
-         */
         CommandEntity *command;
-        /**
-         * pointer to the singleton {ClientGameState} instance.
-         */
         ClientGameState *gameState;
 };
 

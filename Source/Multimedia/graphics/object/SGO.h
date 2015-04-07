@@ -17,7 +17,7 @@ public:
 	sf::Sprite& sprite();
 	const sf::Sprite& sprite() const;
 
-	sf::Transform getLocalTransform() const override;
+	const sf::Transform& getLocalTransform() const override;
 
 	void middleAnchorPoint(bool arg);
 

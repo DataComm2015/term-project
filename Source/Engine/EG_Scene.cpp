@@ -4,13 +4,15 @@ using namespace Marx;
 
 void EG_Scene::update(sf::Time)
 {
+	//printf("Update Run Scene\n");
+	
 	return;
 }
 
 void EG_Scene::processEvents(sf::Event& e)
 {
 	shape = sf::CircleShape(100.f);
-
+	
 	if( e.type == sf::Event::KeyPressed )
 	{
 		shape.setFillColor(sf::Color::Green);
@@ -28,7 +30,7 @@ void EG_Scene::processEvents(sf::Event& e)
 void EG_Scene::draw()
 {
 	AppWindow * window = AppWindow::getInstance();
-
+	
 	window->clear();
     window->draw(shape);
 	window->display();

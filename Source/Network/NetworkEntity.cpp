@@ -10,7 +10,7 @@
 using namespace std;
 
 int Networking::NetworkEntity::nextId = 0;
-
+int getType();
 Networking::NetworkEntity::NetworkEntity( int type )
     :NetworkEntity(nextId++,type)
 {
@@ -35,10 +35,10 @@ Networking::NetworkEntity::NetworkEntity( int type )
 --
 -- NOTES:           Creates a NetworkEntity object
 -----------------------------------------------------------------------------------------------*/
-Networking::NetworkEntity::NetworkEntity( int id_, int type_ )
-    : id(id_)
-    , type(type_)
+Networking::NetworkEntity::NetworkEntity( int id, int type )
 {
+    this->id = id;
+    this->type = type;
     this->mux = NetworkEntityMultiplexer::getInstance();
 
     // add this entity to the multiplexer
@@ -159,10 +159,8 @@ void Networking::NetworkEntity::registerSession( Session * session, Message mess
     printf("\")\n");
     #endif
 
-    if(silentRegister(session))
-    {
-        mux->registerSession(id, type, session, message);
-    }
+    silentRegister(session);
+    mux->registerSession(id, type, session, message);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -195,10 +193,8 @@ void Networking::NetworkEntity::unregisterSession( Session * session, Message me
     printf("\")\n");
     #endif
 
-    if(silentUnregister(session))
-    {
-        mux->unregisterSession(id, session, message);
-    }
+    silentUnregister(session);
+    mux->unregisterSession(id, session, message);
 }
 
 int Networking::NetworkEntity::getType()
@@ -272,15 +268,10 @@ void Networking::NetworkEntity::onUnregister( Session * session, Message message
 --
 -- NOTES:           registers this session from this entity
 -----------------------------------------------------------------------------------------------*/
-int Networking::NetworkEntity::silentRegister( Session* session )
+void Networking::NetworkEntity::silentRegister( Session* session )
 {
-    int hasSession = (registeredSessions.find(session) == registeredSessions.end());
-    if(hasSession)
-    {
-        registeredSessions.insert(session);
-        session->registeredEntities.insert(this);
-    }
-    return hasSession;
+    registeredSessions.insert(session);
+    session->registeredEntities.insert(this);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -301,38 +292,9 @@ int Networking::NetworkEntity::silentRegister( Session* session )
 --
 -- NOTES:           unregisters this session from this entity
 -----------------------------------------------------------------------------------------------*/
-int Networking::NetworkEntity::silentUnregister( Session* session )
+void Networking::NetworkEntity::silentUnregister( Session* session )
 {
-    int hasSession = (registeredSessions.find(session) != registeredSessions.end());
-    if(hasSession)
-    {
-        registeredSessions.erase(session);
-        session->registeredEntities.erase(this);
-    }
-    return hasSession;
-}
-
-/*----------------------------------------------------------------------------------------------
--- FUNCTION:        NetworkEntity::getID
---
--- DATE:            March 30, 2015
---
--- REVISIONS:       (Date and Description)
---
--- DESIGNER:        Thomas Tallentire
---
--- PROGRAMMER:      Thomas Tallentire
---
--- INTERFACE:       int NetworkEntity::getId()
---
--- PARAMETER:		
---
--- RETURNS:         id - The id of this networkentity
---
--- NOTES:           Function returns the id of the networkEntity
------------------------------------------------------------------------------------------------*/
-int Networking::NetworkEntity::getId()
-{
-	return id;
+    registeredSessions.erase(session);
+    session->registeredEntities.erase(this);
 }
 

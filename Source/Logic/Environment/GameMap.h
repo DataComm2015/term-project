@@ -3,18 +3,16 @@
 
 #include "../../Engine/Map.h"
 #include "Block.h"
-#include "../EntityTypes.h"
-#include "../../Multimedia/graphics/object/SGO.h"
-#include "../../Multimedia/manager/ResourceManager.h"
+#include "../EnemyTypes.h"
 
 /* The number of human players in a round */
 #define NUM_PLAYERS 4
 
 /* The percent of enemy grass zone blocks */
-#define MAX_GRASS_ENEMIES 30
+#define MAX_GRASS_ENEMIES 45
 
 /* The percent of of enemy stone zone blocks */
-#define MAX_STONE_ENEMIES 40
+#define MAX_STONE_ENEMIES 30
 
 /* The percent of structure grass zone blocks */
 #define MAX_GRASS_STRUCTURES 5
@@ -26,18 +24,12 @@
 #define MIN_ENEMY_GROUP 2
 
 /* The maximum size of an enemy group */
-#define MAX_ENEMY_GROUP 5
-
-/* The minimum number of structures in a block */
-#define MIN_STRUCTURE_GROUP 1
-
-/* The maximum number of structures in a block */
-#define MAX_STRUCTURE_GROUP 3
+#define MAX_ENEMY_GROUP 10
 
 
 class ServerGameScene;
 
-/*
+/* 
 *	The GameMap class contains a list of cells, blocks, and functions
 *	for generating a map and placing entities into the map.
 */
@@ -47,7 +39,7 @@ class GameMap
 		GameMap(Marx::Map *cMap);
 		~GameMap();
 		bool generateMap(int seed, ServerGameScene *scene = NULL);
-
+		
 		Marx::Map* getCellMap();
 		Block** getBlockMap();
 		int getWidth();
@@ -67,11 +59,8 @@ class GameMap
 		void createEnemyGroup(Block *block, BlockZone z, int num);
 		void generatePlaceholderBlocks();
 		void generateTiles();
-		void generateStructures();
-		void cleanMap();
-
 		BlockType makeBlockType(BlockZone z, int rRoll);
-		ENTITY_TYPES getEnemyType(std::string enemy);
+		ENEMY_TYPES getEnemyType(std::string enemy);
 
 		Marx::Map *cellMap;
 		Block** blockMap;
@@ -82,7 +71,6 @@ class GameMap
 		int bHeight;
 		int stoneWidth;
 		int stoneHeight;
-		bool generated;
 };
 
 #endif

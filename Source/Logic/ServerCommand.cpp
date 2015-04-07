@@ -6,7 +6,7 @@
 
 #include "../Network/Session.h"
 #include "NetworkEntityPairs.h"
-#include "Entities/ServerNetworkController.h"
+#include "Entities/ServerCommandEntity.h"
 #include "../Network/Message.h"
 #include "../Multimedia/manager/ResourceManager.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -22,24 +22,20 @@ using Networking::Session;
 
 ServerCommand::ServerCommand()
 {
-    gameScene = NULL;
+    gameScene = new ServerGameScene(this);
     lobbyScene = new ServerLobbyScene(this);
     gameState = new ServerGameState(this);
     goToLobby();
 }
-/**
- * @brief ServerCommand::onConnect
- * When a new client connects, this handles adding them to
- * the game
- * @param session   session that connected
- *
- * @author Calvin Rempel, Jeff Bayntun
- */
+
 void ServerCommand::onConnect(Session* session)
 {
+    printf("new connection\n");
+
     // create an entity that the new connection can use to communicate
     // commands to the server
-    PlayerEntity* player = new PlayerEntity(this);
+    ServerCommandEntity* ctrlr = new ServerCommandEntity();
+    PlayerEntity* player = new PlayerEntity(this, ctrlr);
 
     // create an empty message because we need one
     Message msg;
@@ -64,13 +60,8 @@ void ServerCommand::onConnect(Session* session)
     // If game is in progress -> go to game scene as ghost
     else
     {
-        player->setMode(PLAYER_MODE::GHOST);
-        Message fake_lobby;
-        fake_lobby.type = (int)ServerGameStateClientGameStateMsgType::FAKE_LOBBY;
-        fake_lobby.data = (void*) session;
-        fake_lobby.len = strlen((char*)fake_lobby.data);
-
-        gameState->update(fake_lobby);
+        player->setMode(GHOST);
+        gameState->goToGame(gameScene->getWorldSeed());
     }
 
 }
@@ -112,11 +103,6 @@ void ServerCommand::goToLobby()
     gameState->goToLobby();
 }
 
-void ServerCommand::goToScoreboard()
-{
-    gameState->goToScoreboard();
-}
-
 void ServerCommand::prepareForGameState()
 {
     gameState->prepareForGameState();
@@ -124,8 +110,6 @@ void ServerCommand::prepareForGameState()
 
 void ServerCommand::goToGame()
 {
-    if (!isGameInProgress())
-        gameScene = new ServerGameScene(this);
     activeScene = gameScene;
     gameScene->enterScene();
 }

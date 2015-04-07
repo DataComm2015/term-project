@@ -143,7 +143,7 @@ void Server::onDisconnect(int socket, int remote)
     #endif
     onDisconnect(sessions[socket],remote);
     sessions[socket]->onDisconnect(remote);
-    sessions[socket]->markForDeletion();
+    free(sessions[socket]);
     sessions.erase(socket);
 }
 

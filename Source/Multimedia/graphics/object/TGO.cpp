@@ -77,7 +77,7 @@ const sf::Text& TGO::text() const
  *
  * @return     The transformation matrix
  */
-sf::Transform TGO::getLocalTransform() const
+const sf::Transform& TGO::getLocalTransform() const
 {
 	return data.getTransform();
 }

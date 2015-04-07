@@ -13,10 +13,8 @@
 -- REVISIONS:
 --
 -- DESIGNER: Thomas Tallentire
---					 Sanders Lee
 --
 -- PROGRAMMER: Thomas Tallentire
---						 Sanders Lee
 --
 -- NOTES:
 --        This file defines the Entity class members
@@ -28,33 +26,25 @@
 #include <SFML/System/Time.hpp>
 #include "VEntity.h"
 #include "ProjectileManager.h"
-#include "Action.h"
 #include "Map.h"
-//#include "../AppWindow.h"
 
 namespace Marx
 {
 	class Projectile : public VEntity
 	{
 		private:
-			std::function<void(Entity*, Entity*)> onHit;
+			float _speed;
+			std::function<void(Entity*)> onHit;
 			sf::Vector2f heading;
-			float TimeToLive;
-			Action * act;
-			Entity *shooter;
+			sf::Time TimeToLive;
 		public:
-			Projectile(SGO&, Map*, Entity *, float, float, Action *, sf::Vector2f, Controller *, float, float);
+			Projectile(SGO&, Map*, float, float, Controller *, float, float);
+
 			Entity * move(float, float, bool);
-			virtual void onCreate();
-			virtual void onDestroy();
-			virtual void onUpdate(float);
-			void setTarget(sf::Vector2f t);
-			void setCurrentPos(float x, float y );
-			void setAct(Action * act);
-			float getTTL();
-			void setTTL(float t);
-			Entity* getShooter();
-			sf::Vector2f getVector();
+			void setSpeed(float);
+			void onCreate();
+			void onDestroy();
+			void onUpdate();
 	};
 }
 

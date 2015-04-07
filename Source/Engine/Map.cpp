@@ -25,7 +25,6 @@
 --      This file implements the Map class members
 ----------------------------------------------------------------------------------------------------------------------*/
 #include "Map.h"
-#include "TileManager.h"
 #include <iostream>
 using namespace Marx;
 
@@ -54,7 +53,7 @@ using namespace Marx;
 --     Map constructor
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Map::Map(const int height, const int width) : width_(width), height_(height), cells_(std::vector<Cell*>(width * height + 1))
+Map::Map(const uint height, const uint width) : width_(width), height_(height), cells_(std::vector<Cell*>(width * height + 1))
 {
 	cells_[width * height] = new Cell( -1, -1, 0, true );
 }
@@ -129,7 +128,7 @@ std::set<Entity*> Map::getEntities() const
 --     Sets cell(x, y) in map
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-void Map::setCell(const int x, const int y, Cell* cell)
+void Map::setCell(const uint x, const uint y, Cell* cell)
 {
     uint index = x * width_ + y;
     cells_[index] = cell;
@@ -162,18 +161,26 @@ void Map::setCell(const int x, const int y, Cell* cell)
 --     Gets the cell specified by the index (x * width + y) of the Map
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Cell* Map::getCell(const int x, const int y) const
+Cell* Map::getCell(const unsigned int x, const unsigned int y) const
 {
-
-    if(y < 0 || x < 0 ||x >= width_ || y >= height_ )
+   	unsigned int index = (x * width_) + y;
+    if(y < 0 || x < 0 ||x > width_ || y > height_)
     {
-    	return *(--cells_.end());
+    	return *(cells_.end());
     }
-
-	unsigned int index = (x * width_) + y;
-
-	return cells_.at(index);
-
+	/**/
+	try
+	{
+		return cells_.at(index);
+	} catch(const std::out_of_range& e)
+	{
+		std::cerr << "Cell out of range" << std::endl;
+		fflush(stderr);
+		throw e;
+	} catch(...)
+	{
+		std::cerr << "Cell out of range" << std::endl;
+	}
 	return nullptr;
 }
 
@@ -200,7 +207,7 @@ Cell* Map::getCell(const int x, const int y) const
 --     returns width of the map in cells.
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-int Map::getWidth() const
+unsigned int Map::getWidth() const
 {
     return width_;
 }
@@ -228,7 +235,7 @@ int Map::getWidth() const
 --     returns height of the map in cells.
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-int Map::getHeight() const
+unsigned int Map::getHeight() const
 {
     return height_;
 }
@@ -244,7 +251,6 @@ int Map::getHeight() const
 --           Marc Rafanan
 --
 -- PROGRAMMER: Marc Rafanan
---             Melvin Loho
 --
 -- INTERFACE: void setTexture(const uint& texture_id)
 --
@@ -255,15 +261,12 @@ int Map::getHeight() const
 --     void
 --
 -- NOTES:
+--     returns texture id of the map in cells.
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 void Map::setTexture(const uint texture_id)
 {
     texture_id_ = texture_id;
-
-	// centers the map using the new texture info
-	sf::FloatRect* tile = Manager::TileManager::get(getCell(0, 0)->getTileId());
-	trans.translate(width_ * tile->width * -0.5, height_ * tile->height * -0.5);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -295,17 +298,9 @@ uint Map::getTexture() const
     return texture_id_;
 }
 
-sf::Transform Map::getLocalTransform() const
+const sf::Transform& Map::getLocalTransform() const
 {
 	return trans;
-}
-
-void Map::drawChildren(Renderer& renderer, sf::RenderStates states) const
-{
-	for (const Entity* e : getEntities())
-	{
-		renderer.draw(e, states);
-	}
 }
 
 void Map::draw(Renderer& renderer, sf::RenderStates states) const

@@ -7,12 +7,6 @@ No layering at the moment.
 
 All enemies only have one set of animations at this point.
 
-----------
-PROJECTILE
-----------
-8x8 and 4 frames
-
-
 =========================
 	SIZING
 ==========================
