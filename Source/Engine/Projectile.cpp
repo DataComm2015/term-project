@@ -115,14 +115,11 @@ void Projectile::onUpdate(float t)
 			{
         MoveEvent * ev = static_cast<MoveEvent*>(*it);
         sf::Vector2f vec(ev->getXDir(), ev->getYDir());
-				std::cout << "Move from " << left << " " << top << " to " << vec.x << " " << vec.y << std::endl;
 				//aMove( (float)ev->getX(), (float)ev->getY(), true );
 				left = ev->getX();
 				top  = ev->getY();
 				onCreate();
 				setTarget(vec);
-				std::cout << "Moved to " << ev->getX() << " " << ev->getY() << std::endl;
-				std::cout << "Now at " << left << " " << top << std::endl;
 				TimeToLive = act->getTTL();
 			}
         }
