@@ -46,8 +46,6 @@ Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Act
     std::cout << act << std::endl;
     float hy = hypot( vector.x , vector.y );
     heading = sf::Vector2f(vector.x / hy, vector.y / hy);
-	onHit = 
-	_speed = 0;
 	shooter = e;
 }
 
@@ -147,7 +145,7 @@ void Projectile::onUpdate(float t)
 				if (vec.x == -1 && vec.y == -1)
 					onDestroy();
 				else
-                	if (hit = rMove( vec, t, true ) != nullptr)
+                	if ((hit = rMove( vec, t, true )) != nullptr)
 					{
 						act->onHit(shooter, hit);
 					}

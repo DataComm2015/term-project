@@ -32,12 +32,10 @@ using namespace Manager;
 Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0, Marx::Controller * _cont = NULL)
 {
-	std::cout << "Projectile Q: " << projectile_pool.size() << std::endl;
 	if (projectile_pool.size() < 1)
 	{
 		if(SERVER)
 		{
-			std::cout << "ProjectileManager:: server make proj" << std::endl;
 			ServerNetworkController * cont;
 
 			Message msg;
@@ -58,8 +56,6 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 		}
 		else
 		{
-			std::cout << "ProjectileManager:: not server make proj" << std::endl;
-			std::cout << "ProjectileManager:: sprite: " << sizeof(_sprite) << std::endl;
 			return new Marx::Projectile(_sprite, map, e, e->left, e->top, action, v, _cont, h, w);
 		}
 	}
@@ -71,7 +67,8 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 		temp->setAct(action);
 		temp->setTarget(v);
 		projectile_pool.erase(*projectile_pool.begin());
-		temp->getController()->addEvent(new MoveEvent(e->left, e->top, 1, 1, true));
+
+		temp->getController()->addEvent(new MoveEvent(e->left, e->top, e->left, e->top, true));
 		return temp;
 	}
 
