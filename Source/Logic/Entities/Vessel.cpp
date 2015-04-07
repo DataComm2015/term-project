@@ -289,12 +289,12 @@ break;
 
 				break;
 			}
-			case ::Marx::ADD_POINTS:
+			/*case ::Marx::ADD_POINTS:
 			{
 				AddPointsEvent *pointsEvent = (AddPointsEvent*) (*it);
 				player->givePoints(pointsEvent->getPoints());
 				break;
-			}
+			}*/
 		}
 	}
 

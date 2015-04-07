@@ -285,10 +285,10 @@ Vessel *PlayerEntity::getVessel()
 	return vessel;
 }
 
-void PlayerEntity::givePoints(float points)
+void PlayerEntity::givePoints(float _points)
 {
-	this->points += points;
-	std::cout << "MOAR POINTS!! " << this->points << std::endl;
+	points += _points;
+	std::cout << "MOAR POINTS!! " << points << std::endl;
 }
 
 float PlayerEntity::getPoints()

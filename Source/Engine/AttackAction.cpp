@@ -26,10 +26,8 @@ void AttackAction::onUpdate(Entity * me, float time)
 	{
 		if (hit != (static_cast<Projectile*>(me))->getShooter())
 		{
-			std::cout << "AttackAction::hit not me" << std::endl;
 			if (Manager::ProjectileManager::getServer())
 			{
-				std::cout << "AttackAction:: hit server " << std::endl;
 				onHit(me, hit);
 			}
 			me->onDestroy();
@@ -40,12 +38,10 @@ void AttackAction::onUpdate(Entity * me, float time)
 
 void AttackAction::onHit(Entity * me, Entity *e)
 {
-	std::cout << "On Hit " << e << std::endl;
     ServerNetworkController *cont = (ServerNetworkController*)((Projectile*)me)->getShooter()->getController();
     Controller *contEnemy = static_cast<ServerNetworkController*>(e->getController());
     /*           Set Health            */
     SetHealthEvent *event = new SetHealthEvent(cont->getId(), false,damage);
-	std::cout << "OnHit event type: " << event->type << std::endl;
     contEnemy->addEvent(event);
     /*           Set Points            */
 
