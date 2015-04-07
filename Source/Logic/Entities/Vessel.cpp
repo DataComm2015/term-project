@@ -85,6 +85,9 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	myX = 0;
 	myY = 0;
 
+	currentHealth = 500;
+	maxHealth = 1000;
+
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 7);
 	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 7);
@@ -244,6 +247,8 @@ break;
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
 
+				printf("Vessel BEFORE Health: %d\n", currentHealth);
+
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -261,7 +266,15 @@ break;
 						ySpeed -= ev->getValue();
 					break;
 				}
-
+				
+				if(currentHealth <= 0)
+				{
+					std::cout << "Moving vessel to ambiguous destination!!" << std::endl;
+					Entity::aMove(-1, -1, true);
+				}
+				
+				printf("Vessel AFTER Health: %d\n", currentHealth);
+				
 				break;
 			}
 			case ::Marx::ADD_POINTS:

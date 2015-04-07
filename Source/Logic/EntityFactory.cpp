@@ -22,6 +22,7 @@
 #include "GateKeeperSource/src/GateKeeper.h"
 #include "GateKeeperSource/src/Minion.h"
 #include "GateKeeperSource/src/MiniBoss.h"
+#include "GateKeeperSource/src/MiniBee.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
 #include "EntityTypes.h"
@@ -41,6 +42,8 @@
 #include "Entities/Structure.h"
 
 #include <iostream>
+#include <stdlib.h>
+ #include <time.h>
 
 using Networking::Message;
 using Marx::Controller;
@@ -61,7 +64,7 @@ EntityFactory* EntityFactory::instance = 0;
 *
 *   PROGRAMMER: Chris Klassen
 *
-*   REVISIONS: Filip Gutica     -Added resources and SGO for different enemy types.
+*   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
 *
 *   INTERFACE: EntityFactory();
 *
@@ -73,6 +76,7 @@ EntityFactory* EntityFactory::instance = 0;
 ******************************************************************************/
 EntityFactory::EntityFactory()
 {
+    srand ( time(NULL) );
     // initialize instance variables
     gkSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
@@ -82,11 +86,23 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-magma-sheet.png")
     );
 
+    minion2Sprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-blue-sheet.png")
+    );
+
+    minion3Sprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-purple-sheet.png")
+    );
+
+    miniBeeSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Grass/The Lost/bug-sheet.png")
+    );
+
     miniBossSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/Stone/Guardians/wanderer-sheet.png")
     );
 
-	projSprite = Manager::TextureManager::store(
+	  projSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
     );
 
@@ -105,8 +121,21 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
+    miniBeeSGO.sprite().setTexture(*Manager::TextureManager::get(miniBeeSprite));
+    miniBeeSGO.sprite().setTextureRect(sf::IntRect(0, 0, 16, 16));
+
     minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
     minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    minion2SGO.sprite().setTexture(*Manager::TextureManager::get(minion2Sprite));
+    minion2SGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    minion3SGO.sprite().setTexture(*Manager::TextureManager::get(minion3Sprite));
+    minion3SGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    whispSGOs.push_back(minionSGO);
+    whispSGOs.push_back(minion2SGO);
+    whispSGOs.push_back(minion3SGO);
 
     miniBossSGO.sprite().setTexture(*Manager::TextureManager::get(miniBossSprite));
     miniBossSGO.sprite().setTextureRect(sf::IntRect(0, 0, 30, 42));
@@ -219,11 +248,11 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
         AttackMessage * ms = (AttackMessage *) msg->data;
 
         sf::Vector2f v(ms->cellx, ms->celly);
-        Marx::AttackAction * action = new Marx::AttackAction(100.0f, 10.0f);
+        Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
 
         std::cout << action << std::endl;
         Entity * e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ms->srcid))->getEntity();
-	
+
 	std::cout << "EnittyFactory::after dynamic_cast" << std::endl;
 
         return makeProjectile(cMap, e, action, v, 1.0f, 1.0f, cont);
@@ -295,6 +324,8 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *
 *   PROGRAMMER:
 *
+*                 Filip Gutica     - Added cases for Basic types, Minions, mini bees and
+*                                    mini bosses.
 *   INTERFACE:
 *
 *   PARAMETERS:
@@ -331,7 +362,8 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         {
-          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          int random = rand() % 3;
+          GateKeeper *minion = new Minion(whispSGOs[random], map, x, y, cont, 1, 1);
           entity = minion;
           break;
         }
@@ -339,6 +371,12 @@ Entity* EntityFactory::makeEntity(
         {
           GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
           entity = miniboss;
+          break;
+        }
+        case ENTITY_TYPES::MINI_BEE:
+        {
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
+          entity = minibee;
           break;
         }
 			break;
@@ -363,6 +401,9 @@ Entity* EntityFactory::makeEntity(
 *   DESIGNER:
 *
 *   PROGRAMMER:
+*
+*                 Filip Gutica     -  Added cases for Basic types, Minions, mini bees and
+*                                     mini bosses.
 *
 *   INTERFACE:
 *
@@ -401,7 +442,8 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         {
-          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          int random = rand() % 3;
+          GateKeeper *minion = new Minion(whispSGOs[random], map, x, y, cont, 1, 1);
           entity = minion;
           break;
         }
@@ -409,6 +451,12 @@ Entity* EntityFactory::makeEntity(
         {
           GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
           entity = miniboss;
+          break;
+        }
+        case ENTITY_TYPES::MINI_BEE:
+        {
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
+          entity = minibee;
           break;
         }
         default:
@@ -430,4 +478,3 @@ Projectile* EntityFactory::makeProjectile(
     std::cout << "MakeProjectile" << std::endl;
     return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }
-

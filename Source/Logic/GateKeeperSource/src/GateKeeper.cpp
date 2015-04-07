@@ -29,7 +29,32 @@ static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Asset
 
 
 
-// bug fix by Sanders Lee
+/******************************************************************************
+*   FUNCTION: GateKeeper() Constructor
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
+*
+*   PARAMETERS: sprite  - Sprite for this enemy
+*               map     - Pointer to the map this enemy resides on
+*               x       - x coordinate
+*               y       - y coordinate
+*               ctrl    - pointer to the controller controlling this enemy
+*               h       - height
+*               w       - width
+*
+*   RETURNS: void
+*
+*   NOTES: Constructor for gatekeepers. Initializes the gate keeper sets attributes
+*          Sets animation.
+******************************************************************************/
 GateKeeper::GateKeeper(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 VEntity(sprite, map, x, y, ctrl, h, w)
 {
@@ -43,8 +68,6 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     _xSpeed = 0.06;
     _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
-
-    srand (time(NULL));
 
     int randDirection = (rand() % 3) - 1;
 
@@ -60,20 +83,31 @@ GateKeeper::~GateKeeper()
     footstep.stop();
 }
 
-/***
--- PROGRAMMER:  Filip Gutica
---				Sanders Lee (Debugged synchronization problem across clients,
---                           Added sound for GateKeeper travel)
-***/
+/******************************************************************************
+*   FUNCTION: onUpdate()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: onUpdate(float)
+*
+*   PARAMETERS: deltaTime   - Time this onUpdate was called
+*
+*   RETURNS: void
+*
+*   NOTES: update function for enemies. Gets called every frame of the game.
+*          moves the gate keeper, deals with gettack attack, performing attacks
+*          performing animations and playing sounds
+******************************************************************************/
 void GateKeeper::onUpdate(float deltaTime)
 {
   //Perform the generic gatekeeper animation
   animate();
-
-	if (_health <= 0)
-	{
-		// Die.
-	}
 
   //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
   std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
@@ -145,16 +179,15 @@ void GateKeeper::onUpdate(float deltaTime)
 		}
 		case ::Marx::SET_HEALTH:
 		{
-			SetHealthEvent* ev = (SetHealthEvent*) (*it);
-
-            setHealth(ev->getChange());
-			Controller *attackerCont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
-			if (ev->getChange() > 0)
+			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			std::cout << "Set Health " << event->getChange() << std::endl;
+			setHealth(getHealth()+event->getChange());
+			if (event->getChange() < 0)
 			{
-				AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
-				attackerCont->addEvent(pointsEvent);
+				Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+				cont->addEvent(pointsEvent);
 			}
-            break;
 		}
     }
 
@@ -162,11 +195,32 @@ void GateKeeper::onUpdate(float deltaTime)
   }
   getController()->clearEvents();
 
-  Entity::rMove(newXSpeed, newYSpeed,false);
 
+  Entity::rMove(newXSpeed, newYSpeed,false);
 
 }
 
+
+/******************************************************************************
+*   FUNCTION: playSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playSound(float, float)
+*
+*   PARAMETERS: xSpeed   - Horizontal speed
+*               ySpeed   - Vertical speed
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
 void GateKeeper::playSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
@@ -216,6 +270,24 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
   }//*/
 }
 
+
+/******************************************************************************
+*   FUNCTION: animate()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: animate(float)
+*
+*   PARAMETERS: deltaTime   - Time this onUpdate was called
+*
+*   RETURNS: void
+*
+*   NOTES: Performs the apprpriate animation for this enemy.
+******************************************************************************/
 void GateKeeper::animate()
 {
   if (isMoving())
@@ -224,6 +296,23 @@ void GateKeeper::animate()
     gkAnimation->step(5);
 }
 
+/******************************************************************************
+*   FUNCTION: isMoving()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: isMoving()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - If this enemy is moving
+*
+*   NOTES: Returns true if enemy is moving, false otherwise
+******************************************************************************/
 bool GateKeeper::isMoving()
 {
   return (movingLeft || movingRight || movingUp || movingDown);

@@ -186,12 +186,12 @@ void ServerNetworkController::sendEventMessage(Event *event)
             a.val = sv->getValue();
             a.st = sv->getSkillType();
             
-            Message msg;
-            msg.type = ::Marx::SKILL;
-            msg.data = &a;
-            msg.len  = sizeof(a);
+            Message message;
+            message.type = ::Marx::SKILL;
+            message.data = &a;
+            message.len  = sizeof(a);
             
-            
+            update(message);
             break;
         }
 		case ::Marx::SK_ATTACK:

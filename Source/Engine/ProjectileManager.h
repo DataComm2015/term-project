@@ -31,7 +31,6 @@
 #include "../Logic/Entities/ServerNetworkController.h"
 #include "../Logic/Entities/ClientNetworkController.h"
 #include <SFML/System/Vector2.hpp>
-
 #include "../Logic/ServerCommand.h"
 #include "../Network/Message.h"
 #include "../Logic/Event.h"

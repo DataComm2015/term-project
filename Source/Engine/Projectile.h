@@ -30,6 +30,7 @@
 #include "ProjectileManager.h"
 #include "Action.h"
 #include "Map.h"
+//#include "../AppWindow.h"
 
 namespace Marx
 {

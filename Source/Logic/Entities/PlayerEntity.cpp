@@ -14,7 +14,7 @@
 /**
  * the {Player} is resides the server, and is logically mapped to the {Command}
  *   class over the network, which is on the client side.
- * 
+ *
  * the client sends command using {Command::update} such as move commands or
  *   others like choosing their character to the Server. such commands are
  *   handled in the {Player::onUpdate} method. and sent using the.
@@ -90,17 +90,17 @@ void PlayerEntity::onUpdate(Message msg)
 
         case PlayerCommandMsgType::SERVER_SELECTED_NICKNAME:
         {
-            
+
             char* username = new char[16];
             memcpy(username, msg.data, strlen((char*)msg.data));
             nickname = username;
             fprintf(stdout, "PLAYER USERNAME: %s\n", username);
             fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
-            fflush(stdout); 
+            fflush(stdout);
 
             break;
         }
-        
+
         //struct skill{
         //  float curX;
         //  float curY;
@@ -112,7 +112,7 @@ void PlayerEntity::onUpdate(Message msg)
         {
             Vessel *vessel = NULL;
             skill *sk = ((skill*) msg.data);
-            
+
             //for(int i = 0; i < 5; i++)
             //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
 
@@ -120,47 +120,58 @@ void PlayerEntity::onUpdate(Message msg)
             float y1 = sk->curY;
             float x2, y2;
 
+            std::cout << "SKILL RECEIVED" << std::endl;
+
             for(int i = 0; i < serverRef->getPlayerList()->size(); i++)
             {
                 x2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->left;
                 y2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->top;
 
+                std::cout << "CHECKING " << std::endl;
+
+                std::cout << "x1 " << x1 << std::endl;
+
+                std::cout << "y1 " << y1 << std::endl;
+
+                std::cout << "Radius " << sk->radius << std::endl;
+
                 if (getDistance(x1, y1, x2, y2) <= sk->radius)
                 {
-                    vessel = static_cast<Vessel*>(serverRef->getPlayerList()->at(i));
+                    vessel = serverRef->getPlayerList()->at(i);
 
-                    
-                    if(vessel == NULL)
-                        continue;                    
-                    
                     SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
-                    
-                    switch(sk->st)
-                    {
-                        case SKILLTYPE::HEAL:
-                            vessel->setHealth(vessel->getHealth() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DMG:
-                            vessel->setHealth(vessel->getHealth() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::BUFF:
-                            vessel->setSpeed(vessel->getSpeed() + sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                        case SKILLTYPE::DEBUFF:
-                            vessel->setSpeed(vessel->getSpeed() - sk->val);
-                            vessel->getController()->addEvent(ev);
-                        break;
-                    }
-                    
+                    std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
+                    std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
+                    std::cout << "Entity VALUE: " << sk->val << std::endl;
+                    std::cout << "index: " << i << std::endl;
+                    //switch(sk->st)
+                    //{
+                    //    case SKILLTYPE::HEAL:
+                    //        vessel->setHealth(vessel->getHealth() + sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //    case SKILLTYPE::DMG:
+                    //        vessel->setHealth(vessel->getHealth() - sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //    case SKILLTYPE::BUFF:
+                    //        vessel->setSpeed(vessel->getSpeed() + sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //    case SKILLTYPE::DEBUFF:
+                    //        vessel->setSpeed(vessel->getSpeed() - sk->val);
+                    //        vessel->getController()->addEvent(ev);
+                    //    break;
+                    //}
+                    vessel->getController()->addEvent(ev);
+                    std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
+
                     vessel = NULL;
                 }
             }
-            
-            
-            
+
+
+
             break;
         }
 
