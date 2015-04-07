@@ -54,7 +54,7 @@ int ClientLobbyScene::currScrollHeight;
 -- DESIGNER: Calvin Rempel, Alex Lam, Chris Klassen and Michael Chimick
 --
 -- PROGRAMMER: Calvin Rempel, Alex Lam, Chris Klassen and Michael Chimick
---             Sanders Lee (Added title call)
+--             Sanders Lee (Added title call), Jeff Bayntun
 --
 -- INTERFACE: ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 --
@@ -66,7 +66,7 @@ int ClientLobbyScene::currScrollHeight;
 -- Creates background, buttons and textboxes
 -- Sets up lobby network logic
 ----------------------------------------------------------------------------------------------------------------------*/
-ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
+ClientLobbyScene::ClientLobbyScene(bool isfake) : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
     // as art assets are created for these, add them
@@ -76,6 +76,7 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     deityChoice = 1;
     timego = false;
     click = 0;
+    fake_lobby = isfake;
 
     circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/selected.png"));
 
@@ -252,7 +253,7 @@ void ClientLobbyScene::onLoad()
 --
 -- DESIGNER: Alex Lam, Chris Klassen and Michael Chimick
 --
--- PROGRAMMER: Alex Lam, Chris Klassen, Michael Chimick and Melvin Loho
+-- PROGRAMMER: Alex Lam, Chris Klassen, Michael Chimick and Melvin Loho, Jeff Bayntun
 --
 -- INTERFACE: void ClientLobbyScene::update(sf::Time t)
 --
@@ -264,6 +265,11 @@ void ClientLobbyScene::onLoad()
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::update(sf::Time t)
 {
+    if(fake_lobby)
+    {
+        countdownBox->setText("Match in Progress.  Please wait until current round finishes.");
+        return;
+    }
     vesselOneBtn->update(t);
     vesselTwoBtn->update(t);
     deityVitalityBtn->update(t);

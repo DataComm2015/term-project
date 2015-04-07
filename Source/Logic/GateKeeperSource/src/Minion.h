@@ -19,39 +19,66 @@
 class Minion : public GateKeeper
 {
 	public:
-		Minion(Marx::Map* map, float x, float y, Marx::Controller* ctrl = NULL, float h = 1.0, float w = 1.0) :
-			GateKeeper(map, x, y, ctrl, h, w);
-		void detectPlayers();
-		void enterCombat();
-		void leaveCombat();
-		bool inCombatRange();
+		Minion(SGO& sprite,
+			Marx::Map* map,
+			float x,
+			float y,
+			Marx::Controller* ctrl,
+			float h,
+			float w
+		);
+		~Minion();
 		void setRange(int r);
 		void setHealth(int h);
 		void setAttack(int a);
 		void setAttackSpeed(int as);
-		void setMovementSPed(int ms);
-		void setTarget(/*Player*/);
-		void setCooldown(/*Timer*/);
+		void setXSpeed(float x);
+		void setYSpeed(float y);
+    void setSpeed(int _speed);
 		int getRange();
 		int getHealth();
 		int getAttack();
 		int getAttackSpeed();
 		int getMovementSpeed();
-		Player getTarget();
-		time_t getCooldown();
+    int getSpeed();
+		void turn();
+		void onCreate();
+		void onDestroy();
+		void onUpdate(float);
+		bool operator==(const VEntity&);
+  	void stopAllSounds();
+    Entity* getEntity();
+	  bool isMoving();
+		void playSound(float, float);
+		void animate();
 
-	private:
+	protected:
+		bool movingLeft;
+    bool movingRight;
+		bool movingUp;
+    bool movingDown;
 		int _range;
 		int _type;
 		int _health;
 		int _attack;
 		int _attackSpeed;
 		int _movementSpeed;
+		float _xSpeed;
+		float _ySpeed;
+		float newXSpeed = 0;
+		float newYSpeed = 0;
+		int _direction;
+		float _xPos;
+		float _yPos;
 		bool _incombat;
-		//Player _target;
-		//PatrolRadius _radius;
-		//Timer _cooldownTimer;
-		//AI _ai;
+		bool _moving;
+		Marx::Controller* _ctrl;
+		time_t _cooldown;
+		sf::Sound footstep;
+		sf::Sound voice;
+		BlockZone steppedTile;
+		bool soundActive;
+		Animation *gkAnimation;
 
 };
 

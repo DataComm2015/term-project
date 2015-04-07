@@ -41,6 +41,7 @@ class ClientGameState : public NetworkEntity
          * pointer to the singleton {ClientLobbyScene} instance.
          */
         ClientLobbyScene* _lobbyScene;
+        ClientLobbyScene* _fakeLobby;
         /**
          * pointer to the singleton {CommandEntity} instance.
          */
