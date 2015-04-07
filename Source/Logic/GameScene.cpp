@@ -85,42 +85,6 @@ void onclick()
 }
 
 
-GUI::TextBox *pubLevelInd;
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void onclickLevelup()
-{
-	static int level = 1;
-	std::string slevel;
-
-	// level should be double digits
-	if(level < 10)
-		slevel = "0" + std::to_string(level++);
-	else
-		slevel = std::to_string(level++);
-	pubLevelInd->setText(slevel);
-}
-
-
 /******************************************************************************
 *	FUNCTION: GameScene
 *
@@ -290,10 +254,6 @@ void GameScene::positionUI()
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-	// position and scale level indicator
-	levelInd->text().setPosition(15, 10);
-	levelInd->text().setScale(1.5, 1.5);
-
 	//the border for the minimap
 	minimapBorder.setSize(
 		sf::Vector2f(viewMinimap.getViewport().width*windowSize.x,
@@ -326,6 +286,7 @@ void GameScene::positionUI()
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
 	myVessel = vessel;
+	myVessel->setHealthBar(hb);
 }
 
 
@@ -711,7 +672,6 @@ void GameScene::draw()
 	else if(characterType == PLAYER_MODE::VESSEL)
 	{
 		renderer.draw(hb);
-		renderer.draw(levelInd);
 	}
 
 	renderer.end();
@@ -970,11 +930,6 @@ void GameScene::generateUI()
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
-	levelInd = new GUI::TextBox(nullptr, nullptr);
-	levelInd->toggleSelected(true);
-	levelInd->text().setFont(*arial);
-	levelInd->setText("01");
-	pubLevelInd = levelInd;
 
 	createClassUI();
 }
