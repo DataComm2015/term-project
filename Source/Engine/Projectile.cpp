@@ -147,7 +147,10 @@ void Projectile::onUpdate(float t)
 				else
                 	if ((hit = rMove( vec, t, true )) != nullptr)
 					{
-						act->onHit(shooter, hit);
+						if (Manager::ProjectileManager::getServer())
+						{
+							act->onHit(shooter, hit);
+						}					
 					}
 			}
         }
