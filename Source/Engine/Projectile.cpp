@@ -107,7 +107,7 @@ void Projectile::onUpdate(float t)
 			}
         }
     }*/
-	getController()->clearEvents();
+	//getController()->clearEvents();
 
 }
 

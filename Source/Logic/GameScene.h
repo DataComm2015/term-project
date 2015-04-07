@@ -2,6 +2,7 @@
 #define GAME_SCENE_H_
 
 #include <set>
+#include <deque>
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
@@ -85,6 +86,8 @@ class GameScene : public Scene
 		void positionUI();
 		void setPlayerVessel(Vessel *vessel);
         void stopAllSounds();
+		
+		void addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType);
 
 
 		friend void onClickVitalityOne();
@@ -137,6 +140,13 @@ class GameScene : public Scene
 		static id_resource hurtskillbtn;
 		static id_resource summonskillbtn;
 
+		// Deity AOE's
+		static id_resource deityHLGImg;
+		static id_resource deityDBFImg;
+		static id_resource deityDMGImg;
+		static id_resource deityBUFImg;
+		static id_resource deityRNGImg;
+
 		sf::Shader waveShader;
 		float phase;
 
@@ -169,9 +179,13 @@ class GameScene : public Scene
 		// tech demos:
 		sf::Vector2f butSize;
 		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
+		
+		std::deque<skill_notify> snQueue;
 
 		void checkBtns(sf::Time);
 		void createClassUI();
+		
+		void updateSkillGraphics(sf::Time t);
 };
 
 #endif

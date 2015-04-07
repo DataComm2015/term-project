@@ -129,7 +129,8 @@ enum class PlayerCommandMsgType
      * Client sends that this will be a skill to tht eserver
      */
 
-    SKILL
+    SKILL,
+    SKILL_NOTIFY
 };
 
 /////////////////////////////////////////////////////////////////////

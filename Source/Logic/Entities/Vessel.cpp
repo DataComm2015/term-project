@@ -15,8 +15,8 @@ sf::Clock vesselClock;
 
 id_resource Vessel::grassWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_grass.ogg"));
 id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
-id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
-id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
+//static id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
+//static id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
 
 //TO DO:
 //1) GIVE IT A SPRITE
@@ -58,9 +58,6 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 {
 
 	direction = 1; //start facing right
-
-	atk_sprite = *(new SGO());
-	satk_sprite = *(new SGO());
 
 	resetEXP();
 	xSpeed = 0.08;
@@ -202,7 +199,7 @@ break;
 			{
 				AttackEvent* aev = (AttackEvent*) (*it);
 				std::cout << "ATTACK" << std::endl;
-				createAttack(*aev, atk_sprite, left, top);
+				createAttack(*aev, getSprite(), left, top);
                 break;
 			}
 			case ::Marx::SK_ATTACK:
@@ -210,7 +207,7 @@ break;
 
 				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
 				std::cout << "ATTACK" << std::endl;
-				createSkAttack(*saev, satk_sprite, left, top);
+				createSkAttack(*saev, getSprite(), left, top);
                 break;
 			}
             case ::Marx::SET_HEALTH:
@@ -651,9 +648,9 @@ void Vessel::decreaseHP( int hp )
 {
 	sf::Vector2f soundPos(left, top);
 	voice.stop();
-	voice = SoundManager::play(hurtSound, soundPos);
-	voice.setLoop(true);
-	voice.play();
+	//voice = SoundManager::play(hurtSound, soundPos);
+	//voice.setLoop(true);
+	//voice.play();
 
 	currentHealth -= hp;
 	if( currentHealth < 0 )
