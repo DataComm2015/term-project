@@ -22,10 +22,10 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+//static id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+//static id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+//static id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+//static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 
 
@@ -209,7 +209,7 @@ void GateKeeper::onUpdate(float deltaTime)
 ******************************************************************************/
 void GateKeeper::playSound(float xSpeed, float ySpeed)
 {
-  soundActive = false;
+  /*soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
