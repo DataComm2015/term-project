@@ -395,7 +395,7 @@ Entity* EntityFactory::makeEntity(
           break;
         }
         case PROJECTILE:
-            //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
+            //entity = new VEntity(maskSGO, map, x, y, NULL, 1, 1);
             break;
         default:
             break;
