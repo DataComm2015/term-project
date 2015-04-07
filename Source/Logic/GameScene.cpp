@@ -180,23 +180,23 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:void GameScene::onLoad()
 *
-*	DATE:
+*	DATE: April 3, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam
 *
-*	INTERFACE:
+*	INTERFACE:void GameScene::onLoad()
 *
-*	PARAMETERS:
+*	PARAMETERS:none
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Gets the vessel/deity choice from server, and setsup the game scene.
 ******************************************************************************/
 void GameScene::onLoad()
 {
@@ -542,23 +542,25 @@ void GameScene::update(sf::Time t)
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: void GameScene::processEvents(sf::Event& e)
 *
 *	DATE:
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam
 *
-*	INTERFACE:
+*	INTERFACE: void GameScene::processEvents(sf::Event& e)
 *
 *	PARAMETERS:
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Processes event inputs
+*				if deity, move camera around
+*				if vessel, send character movement + mouse clicks to server
 ******************************************************************************/
 void GameScene::processEvents(sf::Event& e)
 {
@@ -964,23 +966,23 @@ void GameScene::generateUI()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:void GameScene::createClassUI()
 *
-*	DATE:
+*	DATE: April 3. 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam
 *
-*	INTERFACE:
+*	INTERFACE: void GameScene::createClassUI()
 *
-*	PARAMETERS:
+*	PARAMETERS:none
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Assigns the proper buttons per class selected
 ******************************************************************************/
 void GameScene::createClassUI()
 {
@@ -1038,23 +1040,23 @@ void GameScene::createClassUI()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: void GameScene::checkBtns(sf::Time t)
 *
-*	DATE:
+*	DATE: April 3, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam
 *
-*	INTERFACE:
+*	INTERFACE:void GameScene::checkBtns(sf::Time t)
 *
-*	PARAMETERS:
+*	PARAMETERS: t from update to calculate time elapsed
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Checks button to set disable if under cooldown/ enable if not under cooldown
 ******************************************************************************/
 void GameScene::checkBtns(sf::Time t)
 {
@@ -1080,157 +1082,181 @@ void GameScene::checkBtns(sf::Time t)
 		}
 }
 
-
-/*
-
-void CommandEntity::SendSkill(float curX, float curY, int radius, int value, int skilltype)
-SKILLTYPE
-	0 = -DMG/+HEAL
-	1 = -DEBUFF/+BUFF
-
-*/
-void onClickVitalityOne() //healskillbtn
+/******************************************************************************
+*	FUNCTION:void onClickVitalityOne()
+*
+*	DATE: April 6, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Alex Lam, Julian Brandrick
+*
+*	PROGRAMMER: Alex Lam, Julian Brandrick
+*
+*	INTERFACE: void onClickVitalityOne()
+*
+*	PARAMETERS: none
+*
+*	RETURNS: void
+*
+*	NOTES:healskillbtn, sends message to server with the skill being casted
+******************************************************************************/
+void onClickVitalityOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::HEAL);
 }
 
-
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:void onClickVitalityTwo()
 *
-*	DATE:
+*	DATE: April 6, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam, Julian Brandrick
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam, Julian Brandrick
 *
-*	INTERFACE:
+*	INTERFACE: void onClickVitalityTwo()
 *
-*	PARAMETERS:
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES:buffskillbtn, sends message to server with the skill being casted
 ******************************************************************************/
-void onClickVitalityTwo()//buffskillbtn
+void onClickVitalityTwo()
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 1, SKILLTYPE::BUFF);
 }
 
-
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:void onClickVitalityThree()
 *
-*	DATE:
+*	DATE: April 6, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam, Julian Brandrick
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam, Julian Brandrick
 *
-*	INTERFACE:
+*	INTERFACE: void onClickVitalityThree()
 *
-*	PARAMETERS:
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES:healingcircleskillbtn, sends message to server with the skill being casted
 ******************************************************************************/
-void onClickVitalityThree() //healingcircleskillbtn
+void onClickVitalityThree()
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 100, SKILLTYPE::HEAL);
 }
 
-
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:void onClickDemiseOne()
 *
-*	DATE:
+*	DATE: April 6, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam, Julian Brandrick
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam, Julian Brandrick
 *
-*	INTERFACE:
+*	INTERFACE: void onClickDemiseOne()
 *
-*	PARAMETERS:
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES:hurtskillbtn, sends message to server with the skill being casted
 ******************************************************************************/
-void onClickDemiseOne() //hurtskillbtn
+void onClickDemiseOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DMG);
 }
 
-
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:void onClickDemiseTwo()
 *
-*	DATE:
+*	DATE: April 6, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam, Julian Brandrick
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam, Julian Brandrick
 *
-*	INTERFACE:
+*	INTERFACE: void onClickDemiseTwo()
 *
-*	PARAMETERS:
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES:debuffskillbtn, sends message to server with the skill being casted
 ******************************************************************************/
-void onClickDemiseTwo() //debuffskillbtn
+void onClickDemiseTwo()
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 1, SKILLTYPE::DEBUFF);
 }
 
-
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:void onClickDemiseThree()
 *
-*	DATE:
+*	DATE: April 6, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Alex Lam, Julian Brandrick
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Alex Lam, Julian Brandrick
 *
-*	INTERFACE:
+*	INTERFACE: void onClickDemiseThree()
 *
-*	PARAMETERS:
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES:summonskillbtn, sends message to server with the skill being casted
 ******************************************************************************/
-void onClickDemiseThree() //summonskillbtn
+void onClickDemiseThree()
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
 	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 0, 0, SKILLTYPE::SPAWN);
 }
 
+/******************************************************************************
+*	FUNCTION: float convertX(float x)
+*
+*	DATE: April 6, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Alex Lam, Julian Brandrick
+*
+*	PROGRAMMER: Alex Lam, Julian Brandrick
+*
+*	INTERFACE: float convertX(float x)
+*
+*	PARAMETERS: x being the x coordinate to convert
+*
+*	RETURNS: void
+*
+*	NOTES: converts sfml coordinates to the cell coordinates
+******************************************************************************/
 float convertX(float x)
 {
 	float newCoord;
@@ -1238,6 +1264,25 @@ float convertX(float x)
 	return newCoord;
 }
 
+/******************************************************************************
+*	FUNCTION: float convertY(float y)
+*
+*	DATE: April 6, 2015
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER: Alex Lam, Julian Brandrick
+*
+*	PROGRAMMER: Alex Lam, Julian Brandrick
+*
+*	INTERFACE: float convertY(float y)
+*
+*	PARAMETERS: y being the y coordinate to convert
+*
+*	RETURNS: void
+*
+*	NOTES: converts sfml coordinates to the cell coordinates
+******************************************************************************/
 float convertY(float y)
 {
 	float newCoord;
@@ -1250,9 +1295,9 @@ float convertY(float y)
 --
 -- DATE: April 5, 2015
 --
--- DESIGNER: Julian Brandrick
+-- DESIGNER: Julian Brandrick, Alex Lam
 --
--- PROGRAMMER: Julian Brandrick
+-- PROGRAMMER: Julian Brandrick, Alex Lam
 --
 -- INTERFACE: void addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
 --
@@ -1263,7 +1308,7 @@ float convertY(float y)
 --		_skillType 	-> The skill type of the event
 --
 -- NOTES:
---  Creates a skill_notify struct and initializes its timer and VEntity. This is then pushed onto the skill 
+--  Creates a skill_notify struct and initializes its timer and VEntity. This is then pushed onto the skill
 --	 notification queue.
 ----------------------------------------------------------------------------------------------------------------------*/
 void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
@@ -1288,11 +1333,11 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
 		break;
 	}
-	
+
 	sn.entity = new VEntity(*snSGO, cMap, _x, _y, NULL, 1, 1);
-	
+
 	snSGO->middleAnchorPoint(true);
-	
+
 	snQueue.push_back(sn);
 }
 
@@ -1301,9 +1346,9 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 --
 -- DATE: April 5, 2015
 --
--- DESIGNER: Julian Brandrick
+-- DESIGNER: Julian Brandrick, Alex Lam
 --
--- PROGRAMMER: Julian Brandrick
+-- PROGRAMMER: Julian Brandrick, Alex Lam
 --
 -- INTERFACE: void updateSkillGraphics(sf::timer t)
 --
@@ -1325,7 +1370,7 @@ void GameScene::updateSkillGraphics(sf::Time t)
 		{
 			//delete it->entity;
 			it->entity->onDestroy();
-			
+
 			snQueue.pop_front();
 		}
 	}
