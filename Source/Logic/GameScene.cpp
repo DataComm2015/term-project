@@ -173,8 +173,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "before generate water" << std::endl;
 	generateWater();
 	std::cout << "after generate water" << std::endl;
-	generateUI();
-	std::cout << "after generate ui" << std::endl;
 }
 
 
@@ -224,6 +222,7 @@ void GameScene::onLoad()
 	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
 
 	// position buttons
+	generateUI();
 	positionUI();
 
 	// Enable buttons
@@ -458,12 +457,15 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != NULL)
 	{
-		//to test:
 		//myVessel->getSprite().sprite().rotate(1);
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
         sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+	}
+	else
+	{
+		crossHairSGO->sprite().rotate(1);
 	}
 
 	/*
@@ -940,8 +942,6 @@ void GameScene::generateWater()
 ******************************************************************************/
 void GameScene::generateUI()
 {
-	createClassUI();
-
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
@@ -966,6 +966,8 @@ void GameScene::generateUI()
 	levelInd->text().setFont(*arial);
 	levelInd->setText("01");
 	pubLevelInd = levelInd;
+
+	createClassUI();
 }
 
 
