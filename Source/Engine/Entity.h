@@ -26,6 +26,7 @@
 #include "Cell.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "Map.h"
+#include "../Logic/EntityTypes.h"
 
 #include <set>
 #include <cmath>
@@ -38,7 +39,7 @@ namespace Marx
 	class Entity : public sf::FloatRect, public BGO
 	{
 	public:
-		Entity(Map * _map, float x, float y, Controller * ctrl, float h, float w);
+		Entity(Map * _map, ENTITY_TYPES eType, float x, float y, Controller * ctrl, float h, float w);
 		virtual ~Entity();
 		virtual void turn();
 		Entity * move(float, float, bool);
@@ -54,12 +55,15 @@ namespace Marx
 		void setBlocking(bool);
 		bool getBlocking();
 		Map * getMap();
+		ENTITY_TYPES getType();
+		
 	protected:
 		std::set<Cell*> occupiedCells;
 		Map * map;
 		bool blocking;
 	private:
 		Controller * controller;
+		ENTITY_TYPES type;
 	};
 };
 #endif

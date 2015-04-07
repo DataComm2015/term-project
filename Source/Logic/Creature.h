@@ -6,6 +6,7 @@
 #include "../Engine/Controller.h"
 #include "../Engine/Action.h"
 #include "../Engine/ProjectileManager.h"
+#include "EntityTypes.h"
 
 using Marx::Entity;
 

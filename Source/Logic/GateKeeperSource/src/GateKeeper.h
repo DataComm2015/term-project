@@ -62,6 +62,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual bool isMoving();
 		virtual void playSound(float, float);
 		virtual void animate();
+        ENTITY_TYPES getType();
 
 
 	protected:

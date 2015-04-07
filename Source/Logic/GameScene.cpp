@@ -323,7 +323,7 @@ void GameScene::positionUI()
 	unsigned int height = Manager::TextureManager::get(butSprite)->getSize().y;
 
 	// Scale button to 10 percent of the window height
-	float buttonScale = 0.10*windowSize.y/height;
+	float buttonScale = 0.50*windowSize.y/height;
 	b1->sprite().setScale(buttonScale, buttonScale);
 	b2->sprite().setScale(buttonScale, buttonScale);
 	b3->sprite().setScale(buttonScale, buttonScale);

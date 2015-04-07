@@ -51,7 +51,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		float height,
 		float width
 		/*, job_class jobClass, Ability* abilityList*/ )
-		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0, ENTITY_TYPES::VESSEL ),
 		mask_sprite(_mask),
 		weapon_sprite(_weapon)
 		//,_controller(controller)
@@ -1276,4 +1276,9 @@ float Vessel::getYPosition()
 float Vessel::getXPosition()
 {
 	return yPos;
+}
+
+ENTITY_TYPES Vessel::getType()
+{
+	return ENTITY_TYPES::VESSEL;
 }

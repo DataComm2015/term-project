@@ -1,5 +1,6 @@
 #include "PlayerEntity.h"
 
+#include "../GateKeeperSource/src/GateKeeper.h"
 #include "../NetworkEntityPairs.h"
 #include "../Event.h"
 #include "../Skills.h"
@@ -7,6 +8,7 @@
 #include "../Creature.h"
 #include "ServerNetworkController.h"
 #include "ServerGameState.h"
+#include "EntityTypes.h"
 
 #include <cstdio>
 
@@ -111,6 +113,7 @@ void PlayerEntity::onUpdate(Message msg)
         case PlayerCommandMsgType::SKILL:
         {
             Vessel *vessel = NULL;
+            GateKeeper *keeper = NULL;
             skill *sk = ((skill*) msg.data);
 
             //for(int i = 0; i < 5; i++)
@@ -121,52 +124,96 @@ void PlayerEntity::onUpdate(Message msg)
             float x2, y2;
 
             std::cout << "SKILL RECEIVED" << std::endl;
-
-            for(int i = 0; i < serverRef->getPlayerList()->size(); i++)
+            auto entities = serverRef->getcMap()->getEntities();
+            int i = 0;
+            
+            for(Entity *entity : entities)
             {
-                x2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->left;
-                y2 = static_cast<Vessel*>(serverRef->getPlayerList()->at(i))->top;
-
-                std::cout << "CHECKING " << std::endl;
-
-                std::cout << "x1 " << x1 << std::endl;
-
-                std::cout << "y1 " << y1 << std::endl;
-
-                std::cout << "Radius " << sk->radius << std::endl;
-
-                if (getDistance(x1, y1, x2, y2) <= sk->radius)
+                i++;
+                std::cout << "BEFOREIndex: " << i << std::endl;
+                    
+                if(entity->getType() == ENTITY_TYPES::VESSEL)
                 {
-                    vessel = serverRef->getPlayerList()->at(i);
+                    vessel = dynamic_cast<Vessel*>((entity));
+                    std::cout << "AFTERIndex: " << i << std::endl;
+                    x2 = vessel->left;
+                    y2 = vessel->top;
 
-                    SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
-                    std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
-                    std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
-                    std::cout << "Entity VALUE: " << sk->val << std::endl;
-                    std::cout << "index: " << i << std::endl;
-                    //switch(sk->st)
-                    //{
-                    //    case SKILLTYPE::HEAL:
-                    //        vessel->setHealth(vessel->getHealth() + sk->val);
-                    //        vessel->getController()->addEvent(ev);
-                    //    break;
-                    //    case SKILLTYPE::DMG:
-                    //        vessel->setHealth(vessel->getHealth() - sk->val);
-                    //        vessel->getController()->addEvent(ev);
-                    //    break;
-                    //    case SKILLTYPE::BUFF:
-                    //        vessel->setSpeed(vessel->getSpeed() + sk->val);
-                    //        vessel->getController()->addEvent(ev);
-                    //    break;
-                    //    case SKILLTYPE::DEBUFF:
-                    //        vessel->setSpeed(vessel->getSpeed() - sk->val);
-                    //        vessel->getController()->addEvent(ev);
-                    //    break;
-                    //}
-                    vessel->getController()->addEvent(ev);
-                    std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
+                    std::cout << "CHECKING " << std::endl;
 
-                    vessel = NULL;
+                    std::cout << "x1 " << x1 << std::endl;
+
+                    std::cout << "y1 " << y1 << std::endl;
+                    std::cout << "x2 " << x2 << std::endl;
+
+                    std::cout << "y2 " << y2 << std::endl;
+
+
+                    std::cout << "Radius " << sk->radius << std::endl;
+
+                    if (getDistance(x1, y1, x2, y2) <= sk->radius )
+                    {
+                        SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
+                        std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
+                        std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
+                        std::cout << "Entity VALUE: " << sk->val << std::endl;
+                        //switch(sk->st)
+                        //{
+                        //    case SKILLTYPE::HEAL:
+                        //        vessel->setHealth(vessel->getHealth() + sk->val);
+                        //        vessel->getController()->addEvent(ev);
+                        //    break;
+                        //    case SKILLTYPE::DMG:
+                        //        vessel->setHealth(vessel->getHealth() - sk->val);
+                        //        vessel->getController()->addEvent(ev);
+                        //    break;
+                        //    case SKILLTYPE::BUFF:
+                        //        vessel->setSpeed(vessel->getSpeed() + sk->val);
+                        //        vessel->getController()->addEvent(ev);
+                        //    break;
+                        //    case SKILLTYPE::DEBUFF:
+                        //        vessel->setSpeed(vessel->getSpeed() - sk->val);
+                        //        vessel->getController()->addEvent(ev);
+                        //    break;
+                        //}
+                        vessel->getController()->addEvent(ev);
+                        std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
+
+                        vessel = NULL;
+                    }
+                }
+                else if(entity->getType() == ENTITY_TYPES::BASIC_TYPE)
+                {
+                    keeper = dynamic_cast<GateKeeper*>((entity));
+                    std::cout << "AFTERIndex: " << i << std::endl;
+                    x2 = keeper->left;
+                    y2 = keeper->top;
+
+                    std::cout << "CHECKING " << std::endl;
+
+                    std::cout << "x1 " << x1 << std::endl;
+
+                    std::cout << "y1 " << y1 << std::endl;
+                    std::cout << "x2 " << x2 << std::endl;
+
+                    std::cout << "y2 " << y2 << std::endl;
+
+
+                    std::cout << "Radius " << sk->radius << std::endl;
+
+                    if (getDistance(x1, y1, x2, y2) <= sk->radius )
+                    {
+                        SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
+                        std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
+                        std::cout << "Entity Health BEFORE: " << keeper->getHealth() << std::endl;
+                        std::cout << "Entity VALUE: " << sk->val << std::endl;
+                        
+                        std::cout << "Entity Health After: " << keeper->getHealth() << std::endl;
+                        keeper->getController()->addEvent(ev);
+                        
+
+                        keeper = NULL;
+                    }
                 }
             }
 

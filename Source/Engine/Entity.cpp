@@ -54,8 +54,8 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
-    map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
+Entity::Entity(Map * _map, ENTITY_TYPES eType, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
+    map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl), type(eType)
 {
     onCreate();
 }
@@ -450,4 +450,9 @@ bool Entity::getBlocking()
 Map * Entity::getMap()
 {
     return map;
+}
+
+ENTITY_TYPES Entity::getType()
+{
+    return type;
 }
