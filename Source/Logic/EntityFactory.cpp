@@ -22,6 +22,7 @@
 #include "GateKeeperSource/src/GateKeeper.h"
 #include "GateKeeperSource/src/Minion.h"
 #include "GateKeeperSource/src/MiniBoss.h"
+#include "GateKeeperSource/src/MiniBee.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
 #include "EntityTypes.h"
@@ -63,7 +64,7 @@ EntityFactory* EntityFactory::instance = 0;
 *
 *   PROGRAMMER: Chris Klassen
 *
-*   REVISIONS: Filip Gutica     -Added resources and SGO for different enemy types.
+*   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
 *
 *   INTERFACE: EntityFactory();
 *
@@ -121,7 +122,7 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
     miniBeeSGO.sprite().setTexture(*Manager::TextureManager::get(miniBeeSprite));
-    miniBeeSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+    miniBeeSGO.sprite().setTextureRect(sf::IntRect(0, 0, 16, 16));
 
     minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
     minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
@@ -251,7 +252,7 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
         std::cout << action << std::endl;
         Entity * e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ms->srcid))->getEntity();
-	
+
 	std::cout << "EnittyFactory::after dynamic_cast" << std::endl;
 
         return makeProjectile(cMap, e, action, v, 1.0f, 1.0f, cont);
@@ -323,6 +324,8 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *
 *   PROGRAMMER:
 *
+*                 Filip Gutica     - Added cases for Basic types, Minions, mini bees and
+*                                    mini bosses.
 *   INTERFACE:
 *
 *   PARAMETERS:
@@ -372,7 +375,7 @@ Entity* EntityFactory::makeEntity(
         }
         case ENTITY_TYPES::MINI_BEE:
         {
-          GateKeeper *minibee = new MiniBoss(miniBeeSGO, map, x, y, cont, 1, 1);
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
           entity = minibee;
           break;
         }
@@ -398,6 +401,9 @@ Entity* EntityFactory::makeEntity(
 *   DESIGNER:
 *
 *   PROGRAMMER:
+*
+*                 Filip Gutica     -  Added cases for Basic types, Minions, mini bees and
+*                                     mini bosses.
 *
 *   INTERFACE:
 *
@@ -449,7 +455,7 @@ Entity* EntityFactory::makeEntity(
         }
         case ENTITY_TYPES::MINI_BEE:
         {
-          GateKeeper *minibee = new MiniBoss(miniBeeSGO, map, x, y, cont, 1, 1);
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
           entity = minibee;
           break;
         }
@@ -472,4 +478,3 @@ Projectile* EntityFactory::makeProjectile(
     std::cout << "MakeProjectile" << std::endl;
     return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }
-
