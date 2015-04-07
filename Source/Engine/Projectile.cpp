@@ -44,7 +44,8 @@ Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Act
 	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
     std::cout << act << std::endl;
-    float hy = hypot( vector.x , vector.y );
+    float hy = sqrt( vector.x*vector.x + vector.y*vector.y );
+	std::cout << "Hypotenuse " << hy << " x " << vector.x << " y " << vector.y << std::endl;
     heading = sf::Vector2f(vector.x / hy, vector.y / hy);
 	shooter = e;
 }
@@ -80,7 +81,7 @@ void Projectile::onUpdate(float t)
     }
 
     // Process events.
-    std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+    /*std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
     for(std::vector<Marx::Event*>::iterator it = eventQueue->begin(); it != eventQueue->end(); ++it )
     {
         switch((*it)->type)
@@ -88,29 +89,34 @@ void Projectile::onUpdate(float t)
             case ::Marx::MOVE:
 			{
                 MoveEvent * ev = static_cast<MoveEvent*>(*it);
-                sf::Vector2f vec(ev->getX(), ev->getY());
+                sf::Vector2f vec(ev->getXDir(), ev->getYDir());
+				std::cout << "Move from " << left << " " << top << " to " << vec.x << " " << vec.y << std::endl;
             	if ((hit = rMove( vec, t, true )) != nullptr)
 				{
+					std::cout << "Hit something" << std::endl;
 					if(hit != shooter)
 					{
 						if (Manager::ProjectileManager::getServer())
 						{
+							std::cout << "Hit" << std::endl;
 							act->onHit(shooter, hit);
-
 						}
 						onDestroy();
 					}
 				}
+				std::cout << "Now at " << left << " " << top << std::endl;
 			}
         }
-    }
+    }*/
 	getController()->clearEvents();
 
 }
 
 void Projectile::setTarget(sf::Vector2f t)
 {
-	heading = t;
+	float hy = sqrt( t.x*t.x + t.y*t.y );
+	std::cout << "SetTarget:Hypotenuse " << hy << " x " << t.x << " y " << t.y << std::endl;
+    heading = sf::Vector2f(t.x / hy, t.y / hy);
 }
 
 void Projectile::setCurrentPos(float x, float y )

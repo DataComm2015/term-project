@@ -13,19 +13,38 @@ Action(_TTL), damage(_damage)
 
 void AttackAction::onUpdate(Entity * me, float time)
 {
-	(static_cast<Projectile*>(me))->setTTL((static_cast<Projectile*>(me))->getTTL() - time);
-	MoveEvent * m = new MoveEvent(me->left, me->top, (static_cast<Projectile*>(me))->getVector().x,
-													 (static_cast<Projectile*>(me))->getVector().y, true);
-
-	me->getController()->addEvent(m);
+	Entity *hit;
+	sf::Vector2f vector = (static_cast<Projectile*>(me))->getVector();
+	vector.x *= -1;
+	vector.y *= -1;
+	/*(static_cast<Projectile*>(me))->setTTL((static_cast<Projectile*>(me))->getTTL() - time);
+	MoveEvent * m = new MoveEvent((static_cast<Projectile*>(me))->getVector().x,
+													 (static_cast<Projectile*>(me))->getVector().y, 0, 0, true);
+*/
+	
+	//me->getController()->addEvent(m);
+	if ((hit = me->rMove(vector, time*2, true)) != nullptr)
+	{
+		if (hit != (static_cast<Projectile*>(me))->getShooter())
+		{
+			if (Manager::ProjectileManager::getServer())
+			{
+				onHit(me, hit);
+			}	
+			me->onDestroy();	
+		}
+	}
+	
 }
 
 void AttackAction::onHit(Entity * me, Entity *e)
 {
     ServerNetworkController *cont = (ServerNetworkController*)((Projectile*)me)->getShooter()->getController();
+    ServerNetworkController *contEnemy = (ServerNetworkController*)((Projectile*)e)->getShooter()->getController();
     /*           Set Health            */
     SetHealthEvent event(cont->getId(), damage);
-    cont->addEvent(&event);
+	
+    contEnemy->addEvent(&event);
     /*           Set Points            */
 
 }
