@@ -161,6 +161,14 @@ void ClientNetworkController::parseEventMessage( Message& message )
             addEvent(ev);
             break;
         }
+		case ::Marx::ADD_POINTS:
+		{
+			AddPointsMessage *pm = (AddPointsMessage*) message.data;
+			AddPointsEvent *ev = new AddPointsEvent(pm->points);
+
+			addEvent(ev);
+			break;
+		}
         default:
         {
             printf("WARNING: ClientNetworkController::parseEventMessage received an "
