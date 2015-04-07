@@ -46,6 +46,11 @@ id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::Text
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
 id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/crosshair.png"));
 
+id_resource GameScene::deityRNGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deity-ring.png"));
+id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-buff.png"));
+id_resource GameScene::deityDMGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-debuff.png"));
+id_resource GameScene::deityDBFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-damage.png"));
+id_resource GameScene::deityHLGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healing.png"));
 
 /******************************************************************************
 *	FUNCTION:
@@ -763,6 +768,7 @@ void GameScene::draw()
 		renderer.draw(hb);
 		renderer.draw(levelInd);
 	}
+	
 	renderer.end();
 
 	//the border for the minimap
@@ -805,21 +811,7 @@ void GameScene::draw()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void GameScene::addKeyListener(KeyListener* listener)
-{
-	keyListeners.insert(listener);
-}
-
+  SKILLTYPE st;
 
 /******************************************************************************
 *	FUNCTION:
@@ -1336,4 +1328,54 @@ float convertY(float y)
 	float newCoord;
 	newCoord = (y - myMap->getGlobalTransform().transformPoint(0,0).y)/32;
 	return newCoord;
+}
+
+void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType)
+{
+	skill_notify sn;
+	SGO *snSGO;
+	
+	sn.timer = timer;
+	
+	switch(_skillType)
+	{
+		case SKILLTYPE::HEAL:
+			snSGO = new SGO(*Manager::TextureManager::get(deityHLGImg));
+		break;
+		case SKILLTYPE::DMG:
+			snSGO = new SGO(*Manager::TextureManager::get(deityDMGImg));
+		break;
+		case SKILLTYPE::BUFF:
+			snSGO = new SGO(*Manager::TextureManager::get(deityBUFImg));
+		break;
+		case SKILLTYPE::DEBUFF:
+			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
+		break;
+	}
+	snSGO->sprite().setPosition(viewMain.getCenter());
+	
+	sn.entity = new VEntity(*snSGO, cMap, _x, _y, NULL, 1, 1);
+	
+	snQueue.push_back(sn);
+}
+
+void GameScene::updateSkillGraphics(sf::Time t)
+{
+	for(auto it = snQueue.begin(); it != snQueue.end(); it++)
+	{
+		
+		it->timer -= t.asMilliseconds();
+		
+		if(it->timer <= 0)
+		{
+			delete it->entity;
+			
+			snQueue.pop_front();
+		}
+	}
+}
+
+void GameScene::addKeyListener(KeyListener* listener)
+{
+	keyListeners.insert(listener);
 }

@@ -244,3 +244,42 @@ float AddPointsEvent::getPoints()
 	return points;
 }
 
+
+// Ability notification start 
+SkillNotification::SkillNotification(float _x, float _y, SKILLTYPE _skillType) :Event(Marx::SKILL_NOTIFY)
+{
+    x = _x;
+    y = _y;
+    skillType = _skillType;
+}
+
+float SkillNotification::getX()
+{
+    return x;
+}
+
+void SkillNotification::setX(float _x)
+{
+    x = _x;
+}
+
+float SkillNotification::getY()
+{
+    return y;
+}
+
+void SkillNotification::setY(float _y)
+{
+    y = _y;
+}
+
+SKILLTYPE SkillNotification::getSkillType()
+{
+    return skillType;
+}
+
+void SkillNotification::setSkillType(SKILLTYPE _skillType)
+{
+    skillType = _skillType;
+}
+// Ability notification end 
