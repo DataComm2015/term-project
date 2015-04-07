@@ -68,7 +68,10 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 		temp->setTarget(v);
 		projectile_pool.erase(*projectile_pool.begin());
 
-		temp->getController()->addEvent(new MoveEvent(e->left, e->top, e->left, e->top, true));
+		temp->left = e->left;
+		temp->top  = e->top;
+		temp->onCreate();
+		//temp->getController()->addEvent(new MoveEvent(e->left, e->top, e->left, e->top, true));
 		return temp;
 	}
 
