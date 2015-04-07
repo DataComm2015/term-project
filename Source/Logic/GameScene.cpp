@@ -29,12 +29,6 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using namespace Marx;
-/*
-//Do not delete, we might use this later in vessel.cpp - Sebastian + Eric
-Animation *runAnim;
-Animation *runAnim_mask;
-Animation *runAnim_wep;
-*/
 
 id_resource GameScene::tilemap = Manager::TileManager::load("Assets/Tiles/map.tset");
 id_resource GameScene::butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/shaman-btn.png"));
@@ -50,6 +44,7 @@ id_resource GameScene::hurtskillbtn = Manager::TextureManager::store(Manager::Te
 id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/summon-skill-btn.png"));
 id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
+id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/crosshair.png"));
 
 
 /******************************************************************************
@@ -221,7 +216,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	cMap->setTexture(tilemap);
 
-
 	sf::Font *arial = new sf::Font();
 	arial->loadFromFile("Assets/Fonts/arial.ttf");
 
@@ -286,7 +280,6 @@ void GameScene::onLoad()
 	viewMinimap = viewMain;
 	viewMinimap.setViewport(sf::FloatRect(0.76f,0.01f,0.23f,0.23f));
 	viewMinimap.zoom(2.f);
-
 
 	// position buttons
 	generateUI();
@@ -494,7 +487,7 @@ GameScene::~GameScene()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER: Sanders Lee
+*	PROGRAMMER: Melvin Loho, Sanders Lee
 *
 *	INTERFACE:
 *
@@ -587,10 +580,6 @@ void GameScene::update(sf::Time t)
 	b2->update(t);
 	b3->update(t);
 
-
-	//cMap->setPosition(cMap->getWidth() * 0.5f * -32, cMap->getHeight() * 0.5f * -32);
-	//waterMap->setPosition(waterMap->getWidth() * 0.5f * -32, waterMap->getHeight() * 0.5f * -32);
-
 	// Increment the wave phase
 	phase += WAVE_PHASE_CHANGE;
 	waveShader.setParameter("wave_phase", phase);
@@ -667,10 +656,10 @@ void GameScene::processEvents(sf::Event& e)
 					vm = viewMain;
 					break;
 				}
-			    	case sf::Keyboard::Return:
-			    	{
-				    break;
-			    	}
+				case sf::Keyboard::Return:
+				{
+					break;
+				}
 			}
 			viewMinimap.setCenter(viewMain.getCenter().x, viewMain.getCenter().y);
 		}
@@ -764,6 +753,7 @@ void GameScene::draw()
 		renderer.draw(b1);
 		renderer.draw(b2);
 		renderer.draw(b3);
+		renderer.draw(crossHairSGO);
 	}
 
 	if(characterType == PLAYER_MODE::VESSEL)
@@ -1035,35 +1025,13 @@ void GameScene::generateWater()
 ******************************************************************************/
 void GameScene::generateUI()
 {
-	// Create buttons
-	butSprite = Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Menu/shaman-btn.png"));
-
-	demiseBtn = Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Menu/demise-btn.png"));
-	vitalityBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/vitality-btn.png"));
-	warriorBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/warrior-btn.png"));
-	shamanBtn = Manager::TextureManager::store(Manager::TextureManager::load(	"Assets/Art/GUI/Menu/shaman-btn.png"));
-
-
-
-	buffskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/buff-skill-btn.png"));
-	healskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/heal-skill-btn.png"));
-	healingcircleskillbtn	= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/healingcircle-skill-btn.png"));
-	debuffskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/debuff-skill-btn.png"));
-	hurtskillbtn						= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/hurt-skill-btn.png"));
-	summonskillbtn					= Manager::TextureManager::store(Manager::TextureManager::load(		"Assets/Art/GUI/Deity/summon-skill-btn.png"));
-
+	createClassUI();
 
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
 
 	butSize = sf::Vector2f(width, height);
-
-	setUI();
-
-	// Create health bar (If statement here if vessel or deity)
-	hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
-	hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
 
 	imageSize = Manager::TextureManager::get(hbgSprite)->getSize();
 	width = imageSize.x;
@@ -1107,7 +1075,7 @@ void GameScene::generateUI()
 *
 *	NOTES:
 ******************************************************************************/
-void GameScene::setUI()
+void GameScene::createClassUI()
 {
 	switch (characterType)
 	{
@@ -1124,8 +1092,12 @@ void GameScene::setUI()
 					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
 					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
 				break;
-		}break;
-		case PLAYER_MODE::DEITY: // DEMISE
+			}
+			break;
+		case PLAYER_MODE::DEITY: // DEITY
+			crossHairSGO = new SGO(*Manager::TextureManager::get(crosshairImg));
+			crossHairSGO->middleAnchorPoint(true);
+			crossHairSGO->sprite().setPosition(viewMain.getCenter());
 			switch(classType)
 			{
 				case 1: //VITALITY
@@ -1138,7 +1110,8 @@ void GameScene::setUI()
 					b2 = new GUI::Button(*Manager::TextureManager::get(debuffskillbtn), skillbtn, viewUI, onClickDemiseTwo);
 					b3 = new GUI::Button(*Manager::TextureManager::get(summonskillbtn), skillbtn, viewUI, onClickDemiseThree);
 				break;
-			}break;
+			}
+			break;
 		case PLAYER_MODE::GHOST: // GHOST
 			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);

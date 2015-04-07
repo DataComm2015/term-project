@@ -223,7 +223,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 
 			// parse attack event into move message
 			SetHealthMessage sm;
-			//sm.entid 	= sh->getEntity();
+			sm.entid 	= sh->getEntId();
 			sm.change	= sh->getChange();
 
 			// message to be sent over the network

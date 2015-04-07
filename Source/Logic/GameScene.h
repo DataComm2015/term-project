@@ -125,6 +125,8 @@ class GameScene : public Scene
 		static id_resource warriorBtn;
 		static id_resource shamanBtn;
 
+		static id_resource crosshairImg;
+
 		//VITALITY
 		static id_resource buffskillbtn;
 		static id_resource healskillbtn;
@@ -153,6 +155,7 @@ class GameScene : public Scene
 		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
 		GUI::TextBox *levelInd;
+		SGO *crossHairSGO;
 
 		// Misc
 
@@ -168,7 +171,7 @@ class GameScene : public Scene
 		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
 
 		void checkBtns(sf::Time);
-		void setUI();
+		void createClassUI();
 };
 
 #endif

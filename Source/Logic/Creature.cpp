@@ -47,7 +47,7 @@ Marx::Projectile* Creature::createAttack(AttackEvent & event, SGO &sprite, float
 	std::cout << "Creature Create Attack" << std::endl;
 	sf::Vector2f v(event.getCellX(), event.getCellY());
 
-	return EntityFactory::getInstance()->makeProjectile(getEntity()->getMap(),  getEntity(), actionList[normalAttack], v, 1.0, 1.0);
+	return EntityFactory::getInstance()->makeProjectile(getEntity()->getMap(),  getEntity(), actionList[normalAttack], v, 1.0, 1.0, NULL);
 }
 
 Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, SGO &sprite, float x, float y)
@@ -55,7 +55,7 @@ Marx::Projectile* Creature::createSkAttack(SkillAttackEvent& event, SGO &sprite,
 	sf::Vector2f v(event.getDestX(), event.getDestY());
 	//Marx::Action *action = actionList[event.getAction()];
 
-	return EntityFactory::getInstance()->makeProjectile(getEntity()->getMap(), getEntity(), actionList[normalAttack], v, 1.0, 1.0);
+	return EntityFactory::getInstance()->makeProjectile(getEntity()->getMap(), getEntity(), actionList[normalAttack], v, 1.0, 1.0, NULL);
 }
 
 Entity * Creature::getEntity()
