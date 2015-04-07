@@ -17,6 +17,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 using namespace Manager;
 
@@ -86,17 +87,18 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     this->add(shadow);
     shadow.sprite().setOrigin(-11, -28);
 	
-	travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
-    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_attack_02.ogg"));
-    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_hurt_03.ogg"));
-    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("/Assets/Sound/Enemies/wisp/wisp_death.ogg"));
+	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_attack_02.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_hurt_03.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_death.ogg"));
 
-    travel_Snd.setBuffer(*Manager::SoundManager::get(travel_SndB));
-    attack_Snd.setBuffer(*Manager::SoundManager::get(attack_SndB));
-    hurt_Snd.setBuffer(*Manager::SoundManager::get(hurt_SndB));
-    death_Snd.setBuffer(*Manager::SoundManager::get(death_SndB));
-    travel_Snd.setLoop(true);
-    travel_Snd.play();
+	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
+	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
+	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
+	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
+
+	travel_Snd.setLoop(true);
+    travel_Snd.play();*/
 }
 
 Minion::~Minion()
@@ -150,6 +152,78 @@ void Minion::onUpdate(float deltaTime)
         processMoveEvent(ev);
 
     		break;
+/*<<<<<<< HEAD
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			_health = getHealth()-event->getChange();
+			
+			/*Entity *e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()))->getEntity();
+			float enemyHy = sqrt(e->left*e->left + e->top*e->top); 
+			float myHy = sqrt(left*left + top*top); 
+			rMove(enemyHy - myHy, enemyHy - myHy, false);*/
+
+/*			if (Manager::ProjectileManager::getServer())
+			{
+				ServerNetworkController * cont = dynamic_cast<ServerNetworkController*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+				cont->addEvent(pointsEvent);
+			}
+
+			if(_health <= 0)
+			{
+				std::cout << "Minion Dead" << std::endl;
+				onDestroy();
+			}
+
+            break;
+		}
+		case ::Marx::ATTACK:
+		{
+			_attackSpeed -= deltaTime;
+			if (_attackSpeed <= 0)
+			{
+				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createSkAttack(*saev, getSprite(), left, top);
+				_attackSpeed = 1;
+			}
+			break;
+		}
+        case ::Marx::SKILL:
+        {
+            // process the skill event, and increase/decrease hp and stuff
+            SkillEvent *ev = (SkillEvent*)(*it);
+            printf("GateKeeper BEFORE Health: %d\n", _health);
+            switch(ev->getSkillType())
+            {
+                case SKILLTYPE::HEAL:
+                    _health += ev->getValue();
+                break;
+                case SKILLTYPE::DMG:
+                    _health -= ev->getValue();
+                break;
+                case SKILLTYPE::BUFF:
+                    _xSpeed += ev->getValue();
+                    _ySpeed += ev->getValue();
+                break;
+                case SKILLTYPE::DEBUFF:
+                    _xSpeed -= ev->getValue();
+                    _ySpeed -= ev->getValue();
+                break;
+            }
+
+            printf("GateKeeper AFTER Health: %d\n", _health);
+
+            if(_health <= 0)
+            {
+              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+              onDestroy();
+            }
+            break;
+        }
+=======*/
   		}
   		case ::Marx::SET_HEALTH:
   		{

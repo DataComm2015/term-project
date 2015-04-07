@@ -70,10 +70,13 @@
 #include "../../Multimedia/gui/HealthBar.h"
 #include <SFML/Audio.hpp>
 
+
 #define MAX_LEVEL 10;
 
 typedef char Weapon;
 typedef char Ability;
+
+class PlayerEntity;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
@@ -87,6 +90,7 @@ class Vessel : public Marx::VEntity, public Creature
 		//Animation *runAnim_mask;
 		//Animation *runAnim_wep;
 		SGO shadow;
+		PlayerEntity *player;
 		GUI::HealthBar* myHealthBar;
 
 	protected:
@@ -136,6 +140,8 @@ class Vessel : public Marx::VEntity, public Creature
 		virtual ~Vessel();
 		virtual void onUpdate(float);
 		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
+
+		void setPlayerEntity(PlayerEntity *entity);
 
 		void setPosition( float x, float y );
 		float getXPosition();
