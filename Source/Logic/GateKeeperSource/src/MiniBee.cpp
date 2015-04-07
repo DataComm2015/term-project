@@ -136,10 +136,10 @@ void MiniBee::onUpdate(float deltaTime)
         case ::Marx::ATTACK:
         {
 
-          SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-          std::cout << "ATTACK" << std::endl;
-          createSkAttack(*saev, getSprite(), left, top);
-                  break;
+        //  SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+        //  std::cout << "ATTACK" << std::endl;
+        //  createSkAttack(*saev, getSprite(), left, top);
+          break;
         }
         case ::Marx::SKILL:
         {
