@@ -3,7 +3,7 @@
 --
 -- PROGRAM: Sojourn
 --
--- FUNCTIONS:   
+-- FUNCTIONS:
 --
 -- DATE: March 30, 2015
 --
@@ -230,8 +230,6 @@ void ClientLobbyScene::onLoad()
 
     deityVitalityCircleSGO->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64);
     deityDemiseCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64  );
-
-    leaveBtn->sprite().setPosition(SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH - 8, SCN_HEIGHT / 3 + 8);
 
 
     //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));
