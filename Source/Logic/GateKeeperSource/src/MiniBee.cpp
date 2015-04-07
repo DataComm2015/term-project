@@ -140,7 +140,7 @@ void MiniBee::onUpdate(float deltaTime)
 
 
 
-  Entity::rMove(newXSpeed, newYSpeed, false);
+  Entity::rMove(newXSpeed, newYSpeed, true);
 
 
 }
