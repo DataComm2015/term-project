@@ -51,7 +51,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		float height,
 		float width
 		/*, job_class jobClass, Ability* abilityList*/ )
-		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0, ENTITY_TYPES::VESSEL ),
 		mask_sprite(_mask),
 		weapon_sprite(_weapon)
 		//,_controller(controller)
@@ -246,9 +246,8 @@ break;
 			{
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
-
+				
 				printf("Vessel BEFORE Health: %d\n", currentHealth);
-
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -270,11 +269,11 @@ break;
 				if(currentHealth <= 0)
 				{
 					std::cout << "Moving vessel to ambiguous destination!!" << std::endl;
-					Entity::aMove(-1, -1, true);
+					onDestroy();
 				}
 				
 				printf("Vessel AFTER Health: %d\n", currentHealth);
-				
+		
 				break;
 			}
 			case ::Marx::ADD_POINTS:
@@ -1277,4 +1276,9 @@ float Vessel::getYPosition()
 float Vessel::getXPosition()
 {
 	return yPos;
+}
+
+ENTITY_TYPES Vessel::getType()
+{
+	return ENTITY_TYPES::VESSEL;
 }
