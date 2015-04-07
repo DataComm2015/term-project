@@ -163,8 +163,7 @@ class SkillNotification: public ::Marx::Event
 
 struct AddPointsMessage
 {
-	int entid; // Entity id source
-	float change;
+	float points;
 };
 
 class AddPointsEvent : public ::Marx::Event

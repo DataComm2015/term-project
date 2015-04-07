@@ -16,6 +16,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 #include "MiniBee.h"
 
 using namespace Manager;
@@ -61,6 +62,19 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-4, -17);
+	
+	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_travel_02_baby.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_attack_01_baby.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_hurt_02_baby.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_death_01_baby.ogg"));
+
+    travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
+	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
+	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
+	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
+
+	travel_Snd.setLoop(true);
+    travel_Snd.play();*/
 }
 
 MiniBee::~MiniBee()
@@ -111,7 +125,7 @@ void MiniBee::onUpdate(float deltaTime)
   		{
     		MoveEvent* ev = (MoveEvent*) (*it);
 
-        processMoveEvent(ev);
+        	processMoveEvent(ev);
 
     		break;
   		}

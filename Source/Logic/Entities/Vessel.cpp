@@ -6,6 +6,7 @@
 #include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
 #include "../../Engine/AttackAction.h"
+#include "PlayerEntity.h"
 
 #define ATTACK_COOLDOWN 0.5F
 
@@ -302,6 +303,12 @@ break;
 
 				break;
 			}
+			/*case ::Marx::ADD_POINTS:
+			{
+				AddPointsEvent *pointsEvent = (AddPointsEvent*) (*it);
+				player->givePoints(pointsEvent->getPoints());
+				break;
+			}*/
 		}
 	}
 
@@ -386,6 +393,11 @@ break;
 
 	Entity::rMove(newXSpeed, newYSpeed,false);
 
+}
+
+void Vessel::setPlayerEntity(PlayerEntity *entity)
+{
+	player = entity;
 }
 
 /*---------

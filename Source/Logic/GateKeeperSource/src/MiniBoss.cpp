@@ -17,6 +17,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 using namespace Manager;
 
@@ -46,6 +47,19 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 8);
 
+	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_travel_01.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_02.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_03.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_death.ogg"));
+
+    travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
+	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
+	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
+	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
+
+	travel_Snd.setLoop(true);
+    travel_Snd.play();*/
+	
 }
 
 MiniBoss::~MiniBoss()
@@ -96,7 +110,7 @@ void MiniBoss::onUpdate(float deltaTime)
   		{
     		MoveEvent* ev = (MoveEvent*) (*it);
 
-        processMoveEvent(ev);
+        	processMoveEvent(ev);
 
     		break;
   		}
@@ -104,27 +118,27 @@ void MiniBoss::onUpdate(float deltaTime)
   		{
   			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-        processSetHealthEvent(event);
+        	processSetHealthEvent(event);
 
         break;
   		}
-      case ::Marx::ATTACK:
-      {
-        AttackEvent* aev = (AttackEvent*) (*it);
+		  case ::Marx::ATTACK:
+		  {
+		    AttackEvent* aev = (AttackEvent*) (*it);
 
-        processAttackEvent(aev);
+		    processAttackEvent(aev);
 
-        break;
-      }
-      case ::Marx::SKILL:
-      {
-        // process the skill event, and increase/decrease hp and stuff
-        SkillEvent *ev = (SkillEvent*)(*it);
+		    break;
+		  }
+		  case ::Marx::SKILL:
+		  {
+		    // process the skill event, and increase/decrease hp and stuff
+		    SkillEvent *ev = (SkillEvent*)(*it);
 
-        processSkillEvent(ev);
+		    processSkillEvent(ev);
 
-        break;
-      }
+		    break;
+		  }
     }
 
 
