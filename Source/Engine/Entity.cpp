@@ -246,6 +246,14 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 
 				return e;
 			}
+      if(!blocking)
+      {
+
+        if( intersects(*e) && e != this)
+  			{
+  				return e;
+  			}
+      }
 		}
 	}
 
