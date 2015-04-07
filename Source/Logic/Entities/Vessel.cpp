@@ -6,6 +6,8 @@
 #include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
 
+#define ATTACK_COOLDOWN 0.5F
+
 using namespace Manager;
 
 Animation *runAnim;
@@ -56,7 +58,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		weapon_sprite(_weapon)
 		//,_controller(controller)
 {
-
+	attCool = 2;
 	direction = 1; //start facing right
 
 	atk_sprite = *(new SGO());
@@ -112,6 +114,7 @@ void Vessel::onUpdate(float deltaTime)
 	static bool soundActive = false;
 	static BlockZone steppedTile = GRASS;
 
+	attCool += deltaTime;
 	sf::Time elapsedTime;
 	sf::Time frameTime = sf::seconds(1.0/60);
 
@@ -205,10 +208,12 @@ break;
 			{
 				if (Manager::ProjectileManager::getServer())
 				{
-					std::cout << "Vessel:: ATTACK" << std::endl;
-					AttackEvent* aev = (AttackEvent*) (*it);
-					std::cout << "ATTACK" << std::endl;
-					createAttack(*aev, atk_sprite, left, top);
+					if (attCool >= ATTACK_COOLDOWN)
+					{
+						AttackEvent* aev = (AttackEvent*) (*it);
+						createAttack(*aev, atk_sprite, left, top);
+						attCool = 0;
+					}
 				}
                 break;
 			}
@@ -216,18 +221,26 @@ break;
 			{
 				if (Manager::ProjectileManager::getServer())
 				{
-					std::cout << "Vessel:: SK_ATTACK" << std::endl;
-					SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-					std::cout << "ATTACK" << std::endl;
-					createSkAttack(*saev, satk_sprite, left, top);
+					if (attCool >= ATTACK_COOLDOWN)
+					{
+						SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+						createSkAttack(*saev, satk_sprite, left, top);
+						attCool = 0;					
+					}
 				}
                 break;
 			}
             case ::Marx::SET_HEALTH:
             {
                 SetHealthEvent* ev = (SetHealthEvent*) (*it);
-
-                setHealth(ev->getChange());
+				std::cout << "Vessel:: set health" << std::endl;
+                setHealth(getHealth()-ev->getChange());
+				std::cout << "Vessel:: Health = " << currentHealth << std::endl;
+				if(currentHealth <= 0)
+				{
+					std::cout << "Vessel Dead:" << std::endl;
+					onDestroy();
+				}
                 break;
             }
 			case ::Marx::UPDATE:
