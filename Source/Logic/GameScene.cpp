@@ -1229,6 +1229,8 @@ void onClickDemiseTwo() //debuffskillbtn
 void onClickDemiseThree() //summonskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
+	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 0, 0, SKILLTYPE::SPAWN);
 }
 
 float convertX(float x)

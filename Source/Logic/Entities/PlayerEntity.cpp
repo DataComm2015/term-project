@@ -136,6 +136,11 @@ void PlayerEntity::onUpdate(Message msg)
             Vessel *vessel = NULL;
             GateKeeper *keeper = NULL;
             skill *sk = ((skill*) msg.data);
+            
+            if (sk->st == SKILLTYPE::SPAWN)
+            {
+                serverRef->createEnemy(MINION, NULL, sk->curX, sk->curY);
+            }
 
             //for(int i = 0; i < 5; i++)
             //    printf("X: %f, Y: %f, Radius: %d, Value: %d\n", sk.curX, sk.curY, sk.radius, sk.val);
