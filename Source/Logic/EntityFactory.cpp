@@ -1,4 +1,27 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: EntityFactory.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:
+--
+-- DATE:
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--
+----------------------------------------------------------------------------------------------------------------------*/
+
+
+
 #include "GateKeeperSource/src/GateKeeper.h"
+#include "GateKeeperSource/src/Minion.h"
+#include "GateKeeperSource/src/MiniBoss.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
 #include "EntityTypes.h"
@@ -26,6 +49,28 @@ using Marx::Map;
 
 EntityFactory* EntityFactory::instance = 0;
 
+
+/******************************************************************************
+*   FUNCTION: EntityFactory
+*
+*   DATE:
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:
+*
+*   PROGRAMMER: Chris Klassen
+*
+*   REVISIONS: Filip Gutica     -Added resources and SGO for different enemy types.
+*
+*   INTERFACE: EntityFactory();
+*
+*   PARAMETERS:
+*
+*   RETURNS: nothing
+*
+*   NOTES:
+******************************************************************************/
 EntityFactory::EntityFactory()
 {
     // initialize instance variables
@@ -33,26 +78,40 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
     );
 
+    minionSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-magma-sheet.png")
+    );
+
+    miniBossSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/Guardians/wanderer-sheet.png")
+    );
+
 	projSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
     );
 
     vesselSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Body/vessel-idle.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Body/vessel-run-sheet.png")
     );
 
     maskSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Masks/vessel-idle-mask01.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Masks/vessel-run-mask01-sheet.png")
     );
 
     spearSprite = Manager::TextureManager::store(
-        Manager::TextureManager::load("Assets/Art/Player/Idle/Weapons/spear-idle.png")
+        Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/spear-run-sheet.png")
     );
 
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
-	projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
+    minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
+    minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    miniBossSGO.sprite().setTexture(*Manager::TextureManager::get(miniBossSprite));
+    miniBossSGO.sprite().setTextureRect(sf::IntRect(0, 0, 30, 42));
+
+	  projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
     projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 8, 8));
     projSGO.sprite().setScale(1, 1);
     projSGO.middleAnchorPoint(true);
@@ -75,11 +134,51 @@ EntityFactory::EntityFactory()
     spearSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 }
 
+
+/******************************************************************************
+*   FUNCTION:
+*
+*   DATE:
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:
+*
+*   PROGRAMMER:
+*
+*   INTERFACE:
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 EntityFactory::~EntityFactory()
 {
     // release recourses
 }
 
+
+/******************************************************************************
+*   FUNCTION:
+*
+*   DATE:
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:
+*
+*   PROGRAMMER:
+*
+*   INTERFACE:
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 EntityFactory* EntityFactory::getInstance()
 {
     if(instance == 0)
@@ -89,6 +188,26 @@ EntityFactory* EntityFactory::getInstance()
     return instance;
 }
 
+
+/******************************************************************************
+*   FUNCTION:
+*
+*   DATE:
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:
+*
+*   PROGRAMMER:
+*
+*   INTERFACE:
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntityFromNetworkMessage(
     Map* cMap,
     Message* msg,
@@ -126,6 +245,26 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 }
 }
 
+
+/******************************************************************************
+*   FUNCTION:
+*
+*   DATE:
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:
+*
+*   PROGRAMMER:
+*
+*   INTERFACE:
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntityFromNetworkMessage(
     int id,
     Map* cMap,
@@ -145,6 +284,25 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 }
 
 
+/******************************************************************************
+*   FUNCTION:
+*
+*   DATE:
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:
+*
+*   PROGRAMMER:
+*
+*   INTERFACE:
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntity(
     ENTITY_TYPES type,
     Controller* cont,
@@ -159,7 +317,8 @@ Entity* EntityFactory::makeEntity(
     {
         case ENTITY_TYPES::BASIC_TYPE:
         {
-            entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            entity = gk;
             break;
         }
         case ENTITY_TYPES::VESSEL:
@@ -171,7 +330,17 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
+        {
+          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          entity = minion;
+          break;
+        }
         case ENTITY_TYPES::MINI_BOSS:
+        {
+          GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
+          entity = miniboss;
+          break;
+        }
 			break;
         case PROJECTILE:
             //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
@@ -183,6 +352,26 @@ Entity* EntityFactory::makeEntity(
     return entity;
 }
 
+
+/******************************************************************************
+*   FUNCTION:
+*
+*   DATE:
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:
+*
+*   PROGRAMMER:
+*
+*   INTERFACE:
+*
+*   PARAMETERS:
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 Entity* EntityFactory::makeEntity(
     int id,
     ENTITY_TYPES type,
@@ -197,8 +386,11 @@ Entity* EntityFactory::makeEntity(
     switch(type)
     {
         case ENTITY_TYPES::BASIC_TYPE:
-            entity = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+        {
+            GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            entity = gk;
             break;
+        }
         case ENTITY_TYPES::VESSEL:
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
@@ -208,7 +400,17 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::I_DONT_KNOW:
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
+        {
+          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          entity = minion;
+          break;
+        }
         case ENTITY_TYPES::MINI_BOSS:
+        {
+          GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
+          entity = miniboss;
+          break;
+        }
         default:
             break;
     }
