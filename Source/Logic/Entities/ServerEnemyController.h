@@ -1,3 +1,18 @@
+/********************************************************************************
+**	SOURCE FILE:	ServerEnemyController.h -  	Header file for the server enemy controller
+**
+**	PROGRAM:	Term_Project
+**
+**	DATE: 		February 15, 2015
+**
+**
+**	DESIGNER: 	Calvin Rempel
+                Filip Gutica
+**
+**	PROGRAMMER: Calvin Rempel
+**              Filip Gutica
+**
+***********************************************************************************/
 #ifndef _SERVER_ENEMY_CONTROLLER_H_
 #define _SERVER_ENEMY_CONTROLLER_H_
 

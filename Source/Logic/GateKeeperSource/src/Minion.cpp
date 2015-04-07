@@ -59,7 +59,7 @@ Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* 
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
     _range = 10;
-    _health = 100;
+    _health = 60;
     _type = 1;
     _attack = 1;
     _attackSpeed = 1;
