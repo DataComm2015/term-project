@@ -6,7 +6,13 @@
 using namespace Marx;
 
 AttackAction::AttackAction(float _TTL, float _damage) :
-Action(_TTL), damage(_damage)
+Action(_TTL), damage(_damage), speed(5)
+{
+
+}
+
+AttackAction::AttackAction(float _TTL, float _damage, float _speed ) :
+Action(_TTL), damage(_damage), speed(_speed)
 {
 
 }
@@ -15,14 +21,10 @@ void AttackAction::onUpdate(Entity * me, float time)
 {
 	Entity *hit;
 	sf::Vector2f vector = (static_cast<Projectile*>(me))->getVector();
-	vector.x *= -1;
-	vector.y *= -1;
-	/*(static_cast<Projectile*>(me))->setTTL((static_cast<Projectile*>(me))->getTTL() - time);
-	MoveEvent * m = new MoveEvent((static_cast<Projectile*>(me))->getVector().x,
-													 (static_cast<Projectile*>(me))->getVector().y, 0, 0, true);
-*/
-	//me->getController()->addEvent(m);
-	if ((hit = me->rMove(vector, time*5, true)) != nullptr)
+	vector.x *= 1;
+	vector.y *= 1;
+
+	if ((hit = me->rMove(vector, time * speed, true)) != nullptr)
 	{
 		if (hit != (static_cast<Projectile*>(me))->getShooter())
 		{

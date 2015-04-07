@@ -32,11 +32,13 @@ namespace Marx
 	{
 		public:
 			AttackAction(float, float);
+			AttackAction(float, float, float);
 			virtual void onUpdate(Entity * me, float);
 			virtual void onHit(Entity * me, Entity * e );
 			float getDamage() { return damage; };
 		private:
 			float damage;
+			float speed;
 	};
 };
 
