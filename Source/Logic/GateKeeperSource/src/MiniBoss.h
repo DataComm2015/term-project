@@ -43,7 +43,6 @@ class MiniBoss : public GateKeeper
     int getSpeed();
 		void turn();
 		void onCreate();
-		void onDestroy();
 		void onUpdate(float);
 		bool operator==(const VEntity&);
   	void stopAllSounds();

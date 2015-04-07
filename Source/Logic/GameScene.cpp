@@ -325,7 +325,7 @@ void GameScene::positionUI()
 	unsigned int height = Manager::TextureManager::get(butSprite)->getSize().y;
 
 	// Scale button to 10 percent of the window height
-	float buttonScale = 0.10*windowSize.y/height;
+	float buttonScale = 0.50*windowSize.y/height;
 	b1->sprite().setScale(buttonScale, buttonScale);
 	b2->sprite().setScale(buttonScale, buttonScale);
 	b3->sprite().setScale(buttonScale, buttonScale);
@@ -1215,7 +1215,7 @@ void onClickVitalityTwo()//buffskillbtn
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 100, 100, SKILLTYPE::BUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::BUFF);
 }
 
 
@@ -1242,7 +1242,7 @@ void onClickVitalityThree() //healingcircleskillbtn
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 500, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 100, SKILLTYPE::HEAL);
 }
 
 
@@ -1269,7 +1269,7 @@ void onClickDemiseOne() //hurtskillbtn
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 100, 100, SKILLTYPE::DMG);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DMG);
 }
 
 
@@ -1296,7 +1296,7 @@ void onClickDemiseTwo() //debuffskillbtn
 {
 	bs[1].coolDown = 2000; cout << "COOLDOWN:" << bs[1].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 100, 100, SKILLTYPE::DEBUFF);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DEBUFF);
 }
 
 
