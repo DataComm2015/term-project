@@ -201,6 +201,8 @@ void PlayerEntity::onUpdate(Message msg)
                         std::cout << "Entity VALUE: " << sk->val << std::endl;
                         
                         vessel->getController()->addEvent(ev);
+                        
+                        givePoints(20.0);
 
                         vessel = NULL;
                     }
@@ -232,11 +234,14 @@ void PlayerEntity::onUpdate(Message msg)
                         
                         keeper->getController()->addEvent(ev);
                         
+                        givePoints(10.0);
 
                         keeper = NULL;
                     }
                 }
             }
+
+            std::cout << "POINTS: " << getPoints() << std::endl;
 
             auto players = server->getGameState()->getPlayers();
             
