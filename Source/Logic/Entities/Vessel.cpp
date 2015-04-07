@@ -51,7 +51,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		float height,
 		float width
 		/*, job_class jobClass, Ability* abilityList*/ )
-		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0 ),
+		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0, ENTITY_TYPES::VESSEL),
 		mask_sprite(_mask),
 		weapon_sprite(_weapon)
 		//,_controller(controller)
@@ -81,6 +81,9 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
+	
+	currentHealth = 500;
+	maxHealth = 500;
 
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 7);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 7);
@@ -270,6 +273,12 @@ break;
 		runAnim->pause(true);
 		runAnim_mask->pause(true);
 		runAnim_wep->pause(true);
+	}
+
+	if(currentHealth <= 0)
+	{
+		std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+		onDestroy();
 	}
 
 	getController()->clearEvents();
