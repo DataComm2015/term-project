@@ -9,6 +9,6 @@
 #define GAME_ROUND_LENGTH_SECONDS 120
 #define SCOREBOARD_LENGTH_SECONDS 10
 #define MUSIC_OFF 0
-#define MUSIC_ON 0
+#define MUSIC_ON 1
 
 #endif
