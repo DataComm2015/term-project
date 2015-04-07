@@ -50,6 +50,7 @@ Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Act
 	shooter = e;
 }
 
+
 void Projectile::onCreate()
 {
 	Entity::onCreate();
@@ -60,15 +61,26 @@ void Projectile::onCreate()
 void Projectile::onDestroy()
 {
 	VEntity::onDestroy();
+	/*
 	std::cout << "Projectile::Destroy: " << this << std::endl;
 	//act = nullptr;
 	TimeToLive = 0;
-	Manager::ProjectileManager::enqueue(this);
+	Manager::ProjectileManager::enqueue(this);*/
 }
 
 
 void Projectile::onUpdate(float t)
 {
+	if(getController() == NULL)
+	{
+		left = -100;
+		top  = -100;
+
+		return;
+	}
+
+	//std::cout << " X: " << heading.x << " Y: " << heading.y << std::endl;
+
 	Entity *hit;
 	//std::cout << "Time: " << TimeToLive << std::endl;
     if(TimeToLive > 0.0f)
@@ -91,7 +103,7 @@ void Projectile::onUpdate(float t)
 		if (top != -100)
         	onDestroy();
     }
-	
+
 
     // Process events.
     std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
@@ -101,10 +113,15 @@ void Projectile::onUpdate(float t)
         {
             case ::Marx::MOVE:
 			{
-                MoveEvent * ev = static_cast<MoveEvent*>(*it);
-                sf::Vector2f vec(ev->getXDir(), ev->getYDir());
+        MoveEvent * ev = static_cast<MoveEvent*>(*it);
+        sf::Vector2f vec(ev->getXDir(), ev->getYDir());
 				std::cout << "Move from " << left << " " << top << " to " << vec.x << " " << vec.y << std::endl;
-            	aMove( vec.x, vec.y, true );
+				//aMove( (float)ev->getX(), (float)ev->getY(), true );
+				left = ev->getX();
+				top  = ev->getY();
+				onCreate();
+				setTarget(vec);
+				std::cout << "Moved to " << ev->getX() << " " << ev->getY() << std::endl;
 				std::cout << "Now at " << left << " " << top << std::endl;
 				TimeToLive = act->getTTL();
 			}
@@ -118,7 +135,10 @@ void Projectile::onUpdate(float t)
 void Projectile::setTarget(sf::Vector2f t)
 {
 	float hy = sqrt( t.x*t.x + t.y*t.y );
-    heading = sf::Vector2f(t.x / hy, t.y / hy);
+
+  heading = sf::Vector2f(t.x / hy, t.y / hy);
+
+	std::cout << "X: " << heading.x << " Y: " << heading.y << std::endl;
 }
 
 void Projectile::setCurrentPos(float x, float y )
