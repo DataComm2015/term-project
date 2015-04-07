@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: lighting.frag - GLSL linear lighting shader
 --
--- PROGRAM: Project Spectre
+-- PROGRAM: Sojourn
 --
 -- DATE: February 9th, 2015
 --

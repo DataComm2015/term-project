@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: blur.frag - GLSL box blur shader
 --
--- PROGRAM: Project Spectre
+-- PROGRAM: Sojourn
 --
 -- DATE: February 9th, 2015
 --

@@ -10,6 +10,7 @@
 **
 **	PROGRAMMER: Filip Gutica A00781910
 **              Chris Klassen
+**              Lewis Scott
 **
 ***********************************************************************************/
 #include "Minion.h"
@@ -22,11 +23,18 @@
 
 using namespace Manager;
 
-// sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
-static id_resource stoneWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_02.ogg"));
-static id_resource hurtSoundMinion 	 	= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_hurt_01.ogg"));
-static id_resource attackSoundMinion	= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_attack_01.ogg"));
+const char *Minion::travelSnds[4] = {"Assets/Sound/Enemies/wisp/wisp_travel_01.ogg",
+                                        "Assets/Sound/Enemies/wisp/wisp_travel_02.ogg",
+                                        "Assets/Sound/Enemies/wisp/wisp_travel_03.ogg",
+                                        "Assets/Sound/Enemies/wisp/wisp_travel_04.ogg"};
+
+const char *Minion::attackSnds[3] = {"Assets/Sound/Enemies/wisp/wisp_attack_01.ogg",
+                                        "Assets/Sound/Enemies/wisp/wisp_attack_02.ogg",
+                                        "Assets/Sound/Enemies/wisp/wisp_attack_03.ogg"};
+
+const char *Minion::hurtSnds[3] = {"Assets/Sound/Enemies/wisp/wisp_hurt_01.ogg",
+                                      "Assets/Sound/Enemies/wisp/wisp_hurt_02.ogg",
+                                      "Assets/Sound/Enemies/wisp/wisp_hurt_03.ogg"};
 
 id_resource minShadow;
 
@@ -41,6 +49,7 @@ id_resource minShadow;
 *
 *   PROGRAMMER: Filip Gutica
 *               Chris Klassen
+*               Lewis Scott
 *
 *   INTERFACE: Minion(SGO&, Map*, float, float, Controller, float, float)
 *
@@ -88,6 +97,11 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-11, -28);
+
+    grassWalkSoundMinion = SoundManager::store(SoundManager::load(Minion::travelSnds[rand() % 4]));
+    stoneWalkSoundMinion = SoundManager::store(SoundManager::load(Minion::travelSnds[rand() % 4]));
+    hurtSoundMinion     = SoundManager::store(SoundManager::load(Minion::hurtSnds[rand() % 3]));
+    attackSoundMinion = SoundManager::store(SoundManager::load(Minion::attackSnds[rand() % 3]));
 
 }
 

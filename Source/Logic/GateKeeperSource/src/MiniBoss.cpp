@@ -10,6 +10,7 @@
 **
 **	PROGRAMMER: Filip Gutica A00781910
 **              Chris Klassen
+**              Lewis Scott
 **
 ***********************************************************************************/
 #include "MiniBoss.h"
@@ -22,11 +23,20 @@
 
 using namespace Manager;
 
-// sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_travel_01.ogg"));
-static id_resource stoneWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_travel_02.ogg"));
-static id_resource hurtSoundMBoss 	   = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_07.ogg"));
-static id_resource attackSoundMBoss	   = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_01.ogg"));
+const char *MiniBoss::travelSnds[3] = {"Assets/Sound/Enemies/ghost/ghost_travel_01.ogg",
+                                        "Assets/Sound/Enemies/ghost/ghost_travel_02.ogg",
+                                        "Assets/Sound/Enemies/ghost/ghost_travel_03.ogg"};
+
+const char *MiniBoss::attackSnds[5] = {"Assets/Sound/Enemies/ghost/ghost_attack_01.ogg",
+                                        "Assets/Sound/Enemies/ghost/ghost_attack_02.ogg",
+                                        "Assets/Sound/Enemies/ghost/ghost_attack_03.ogg",
+                                        "Assets/Sound/Enemies/ghost/ghost_attack_04.ogg",
+                                        "Assets/Sound/Enemies/ghost/ghost_attack_05.ogg"};
+
+const char *MiniBoss::hurtSnds[4] = {"Assets/Sound/Enemies/ghost/ghost_attack_06.ogg",
+                                      "Assets/Sound/Enemies/ghost/ghost_attack_07.ogg",
+                                      "Assets/Sound/Enemies/ghost/ghost_attack_08.ogg",
+                                      "Assets/Sound/Enemies/ghost/ghost_attack_09.ogg"};
 
 
 /******************************************************************************
@@ -40,6 +50,7 @@ static id_resource attackSoundMBoss	   = SoundManager::store(SoundManager::load(
 *
 *   PROGRAMMER: Filip Gutica
 *               Chris Klassen
+*               Lewis Scott
 *
 *   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
 *
@@ -76,6 +87,10 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 8);
 
+    grassWalkSoundMBoss = SoundManager::store(SoundManager::load(MiniBoss::travelSnds[rand() % 3]));
+    stoneWalkSoundMBoss = SoundManager::store(SoundManager::load(MiniBoss::travelSnds[rand() % 3]));
+    hurtSoundMBoss      = SoundManager::store(SoundManager::load(MiniBoss::hurtSnds[rand() % 4]));
+    attackSoundMBoss    = SoundManager::store(SoundManager::load(MiniBoss::attackSnds[rand() % 5]));
 
 }
 
