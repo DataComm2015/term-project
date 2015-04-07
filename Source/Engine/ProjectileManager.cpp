@@ -25,6 +25,7 @@ using namespace Manager;
 --
 -- Revision: April 1st - Changed controller creation logic to be handled here.
 --	Added Action to projectile.
+--			April 6th - Made projectiles work properly.
 --
 -- Notes:
 -- This manager returns instances of projectiles. The controller setup is
@@ -51,8 +52,6 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 			msgAttk.cellx = v.x;
 			msgAttk.celly = v.y;
 
-			std::cout << "Made Attack" << std::endl;
-
 			cont = new ServerNetworkController();
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
 		}
@@ -63,7 +62,6 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 	}
 	else
 	{
-		std::cout << "Deck Attack" << std::endl;
 		Marx::Projectile* temp = *projectile_pool.begin();
 		//temp->setSprite(_sprite);
 		temp->setAct(action);
