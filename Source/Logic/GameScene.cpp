@@ -44,7 +44,7 @@ id_resource GameScene::hurtskillbtn = Manager::TextureManager::store(Manager::Te
 id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/summon-skill-btn.png"));
 id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
-id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/crosshair.png"));
+id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/crosshair.png"));
 
 id_resource GameScene::deityRNGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deity-ring.png"));
 id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-buff.png"));
@@ -81,37 +81,6 @@ void onclick()
 	i++;
 }
 
-GUI::HealthBar *pubHB;
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void onclickHealthTest()
-{
-	static float health = 1.0;
-
-	health = health - .10;
-
-	if(health >= 0)
-		pubHB->update(health);
-}
 
 GUI::TextBox *pubLevelInd;
 
@@ -146,32 +115,6 @@ void onclickLevelup()
 	else
 		slevel = std::to_string(level++);
 	pubLevelInd->setText(slevel);
-}
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER: Chris Klassen
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void updateMainView(sf::View& v)
-{
-	v = AppWindow::getInstance().getCurrentView();
-	v.zoom(0.33);
 }
 
 
@@ -220,15 +163,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	butSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/button.png"));
 
 	cMap->setTexture(tilemap);
-
-	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Assets/Fonts/arial.ttf");
-
-	tb = new GUI::TextBox(NULL, NULL);
-	tb->text().setScale(0.5, 0.5);
-	tb->text().move(0, -5);
-	tb->toggleSelected(true);
-	tb->text().setFont(*arial);
 
 	// Generate stuff
 
@@ -280,16 +214,16 @@ void GameScene::onLoad()
 	printf("characterType: %d, classType: %d\n",characterType,classType);
 
 	// update views
-	updateMainView(viewMain);
-	viewUI = AppWindow::getInstance().getCurrentView();
+	viewMain = viewUI = viewMinimap = AppWindow::getInstance().getCurrentView();
+	viewMain.zoom(0.33);
 
 	// minimap view
-	viewMinimap = viewMain;
 	viewMinimap.setViewport(sf::FloatRect(0.76f,0.01f,0.23f,0.23f));
 	viewMinimap.zoom(2.f);
+	minimapBorder.setFillColor(sf::Color::Black);
+	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
 
 	// position buttons
-	generateUI();
 	positionUI();
 
 	// Enable buttons
@@ -352,6 +286,14 @@ void GameScene::positionUI()
 	// position and scale level indicator
 	levelInd->text().setPosition(15, 10);
 	levelInd->text().setScale(1.5, 1.5);
+
+	//the border for the minimap
+	minimapBorder.setSize(
+		sf::Vector2f(viewMinimap.getViewport().width*windowSize.x,
+			     viewMinimap.getViewport().height*windowSize.y));
+	minimapBorder.setPosition(
+		sf::Vector2f(viewMinimap.getViewport().left*windowSize.x,
+		  	     viewMinimap.getViewport().top*windowSize.y));
 }
 
 
@@ -681,14 +623,6 @@ void GameScene::processEvents(sf::Event& e)
 
 		// v->stop(e.key.code);
 	}
-	else if (e.type == sf::Event::Resized)
-	{
-		// update views
-		updateMainView(viewMain);
-		viewUI = AppWindow::getInstance().getCurrentView();
-		viewMinimap = AppWindow::getInstance().getCurrentView();
-		positionUI();
-	}
 	else if (e.type == sf::Event::MouseButtonPressed)
 	{
 		if(characterType == PLAYER_MODE::VESSEL)
@@ -710,8 +644,6 @@ void GameScene::processEvents(sf::Event& e)
 			}
 		}
 	}
-
-	tb->process(e);
 }
 
 
@@ -765,29 +697,15 @@ void GameScene::draw()
 		renderer.draw(b3);
 		renderer.draw(crossHairSGO);
 	}
-
-	if(characterType == PLAYER_MODE::VESSEL)
+	else if(characterType == PLAYER_MODE::VESSEL)
 	{
 		renderer.draw(hb);
 		renderer.draw(levelInd);
 	}
-	
+
 	renderer.end();
 
-	//the border for the minimap
-	minimapBorder.setSize(
-		sf::Vector2f(viewMinimap.getViewport().width*window.getSize().x,
-			     viewMinimap.getViewport().height*window.getSize().y));
-
-	minimapBorder.setPosition(
-		sf::Vector2f(viewMinimap.getViewport().left*window.getSize().x,
-		  	     viewMinimap.getViewport().top*window.getSize().y));
-
-	minimapBorder.setFillColor(sf::Color::Black);
-	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
-
 	window.draw(minimapBorder);
-
 
 	//draw the minimap
 	window.setView(viewMinimap);
@@ -1037,8 +955,6 @@ void GameScene::generateUI()
 	sf::Vector2f healthSize = sf::Vector2f(width, height);
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
-
-	pubHB = hb;
 
 	// Create level indicator
 
