@@ -71,14 +71,16 @@ void MiniBee::onUpdate(float deltaTime)
       ; it != eventQueue->end()
       ; ++it )
   {
-
+        int xDir;
+        int yDir;
+        MoveEvent* ev;
     // switch on type
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
-    		MoveEvent* ev = (MoveEvent*) (*it);
-        int xDir = ev->getXDir();
-        int yDir = ev->getYDir();
+    		ev = (MoveEvent*) (*it);
+        xDir = ev->getXDir();
+        yDir = ev->getYDir();
 
         Entity::aMove(ev->getX(), ev->getY(), false);
 
@@ -131,6 +133,40 @@ void MiniBee::onUpdate(float deltaTime)
         //playSound(newXSpeed, newYSpeed);
 
     		break;
+            case ::Marx::SKILL:
+            {
+                // process the skill event, and increase/decrease hp and stuff
+                SkillEvent *ev = (SkillEvent*)(*it);
+                
+                printf("GateKeeper BEFORE Health: %d\n", _health);
+                switch(ev->getSkillType())
+                {
+                    case SKILLTYPE::HEAL:
+                        _health += ev->getValue();
+                    break;
+                    case SKILLTYPE::DMG:
+                        _health -= ev->getValue();
+                    break;
+                    case SKILLTYPE::BUFF:
+                        _xSpeed += ev->getValue();
+                        _ySpeed += ev->getValue();
+                    break;
+                    case SKILLTYPE::DEBUFF:
+                        _xSpeed -= ev->getValue();
+                        _ySpeed -= ev->getValue();
+                    break;
+                }
+                
+                printf("GateKeeper AFTER Health: %d\n", _health);
+                
+                if(_health <= 0)
+                {
+                  std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+                  onDestroy();
+                }
+        
+                break;
+            }
     }
 
 
@@ -140,7 +176,7 @@ void MiniBee::onUpdate(float deltaTime)
 
 
 
-  Entity::rMove(newXSpeed, newYSpeed,false);
+  Entity::rMove(newXSpeed, newYSpeed, true);
 
 
 }
@@ -280,11 +316,6 @@ void MiniBee::turn()
 }
 
 void MiniBee::onCreate()
-{
-
-}
-
-void MiniBee::onDestroy()
 {
 
 }

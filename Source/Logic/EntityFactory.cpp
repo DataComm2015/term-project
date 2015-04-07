@@ -27,6 +27,7 @@
 #include "EntityFactory.h"
 #include "EntityTypes.h"
 #include "Creature.h"
+#include "Entities/CommandEntity.h"
 
 #include "../Engine/AttackAction.h"
 
@@ -118,6 +119,10 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/spear-run-sheet.png")
     );
 
+    staffSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Player/Run/Weapons/staff-run-sheet.png")
+    );
+
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
@@ -161,6 +166,9 @@ EntityFactory::EntityFactory()
 
     spearSGO.sprite().setTexture(*Manager::TextureManager::get(spearSprite));
     spearSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    staffSGO.sprite().setTexture(*Manager::TextureManager::get(staffSprite));
+    staffSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 }
 
 
@@ -342,7 +350,7 @@ Entity* EntityFactory::makeEntity(
     float y)
 {
     Entity* entity;
-
+    int classType;
 
     switch(type)
     {
@@ -352,9 +360,16 @@ Entity* EntityFactory::makeEntity(
             entity = gk;
             break;
         }
-        case ENTITY_TYPES::VESSEL:
+            //sanderschangestart
+        case ENTITY_TYPES::VESSEL_WARRIOR:
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
+            printf("warrior selected whooooooooo\n");
             break;
+        case ENTITY_TYPES::VESSEL_SHAMAN:
+            entity = new Vessel(vesselSGO, maskSGO, staffSGO,map,x,y,cont,1,1);
+            printf("shaman selected whooooooooo\n");
+            break;
+            //sanderschangeend*/
         case STRUCTURES:
             //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
             break;
@@ -379,14 +394,12 @@ Entity* EntityFactory::makeEntity(
           entity = minibee;
           break;
         }
-			break;
         case PROJECTILE:
             //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
             break;
         default:
             break;
     }
-
     return entity;
 }
 
@@ -423,6 +436,7 @@ Entity* EntityFactory::makeEntity(
 {
     Entity* entity;
 
+    std::cout << "SDAGDRHDARH" << std::endl;
 
     switch(type)
     {
@@ -433,6 +447,7 @@ Entity* EntityFactory::makeEntity(
             break;
         }
         case ENTITY_TYPES::VESSEL:
+            //
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
             break;
         case STRUCTURES:
