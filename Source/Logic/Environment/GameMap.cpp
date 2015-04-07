@@ -982,7 +982,7 @@ void GameMap::generateMiniBosses()
 				{
 					cell = blockMap[j][i].getRandomCell();
 
-					eh->getEnemy(&enemy, "grass/lost_grass/air_grass");
+					eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
 					gameScene->createEnemy(getEnemyType(enemy), NULL,
 						cell->getX(), cell->getY());
 				}
