@@ -1,15 +1,51 @@
+/*----------------------------------------------------------------------------------------------
+-- FILE:        	Event.cpp
+--
+-- DATE:			April 1, 2015
+--
+-- REVISIONS:		(Date and Description)
+--
+-- DESIGNER:		Jeff Bayntun
+--
+-- PROGRAMMER:		Jeff Bayntun, Sanders Lee
+--
+-- INTERFACE:		MoveEvent(float _x, float _y, int _xDir, int _yDir, bool f=false);
+                    MoveEvent(MoveEvent&& other);
+                    MoveEvent(const MoveEvent& other);
+                    float getX();
+                    float setX(float _x);
+                    float getY();
+                    float setY(float _y);
+                    int getXDir();
+                    int getYDir();
+                    bool forced();
+
+
+-- NOTES:			These are events that can be send to entities for things like moving and
+                    attacking.
+-----------------------------------------------------------------------------------------------*/
 #include "Event.h"
 
 #include "../Engine/Event.h"
 
 /* ------------------------------- Move Event ----------------------------------- */
-/**
- * constructs a new move event
- *
- * @param _x new n position the entity should move to
- * @param _y new y position that the entity should move to
- * @param f whatever forced means
- */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	MoveEvent
+--
+-- DATE:		April 1, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Jeff Bayntun
+--
+-- PROGRAMMER:	Jeff Bayntun
+--
+-- INTERFACE:	MoveEvent::MoveEvent(float _x, float _y, int _xDir, int _yDir, bool f)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		constructs a move event.
+-----------------------------------------------------------------------------------------------*/
 MoveEvent::MoveEvent(float _x, float _y, int _xDir, int _yDir, bool f)
     :Event(Marx::MOVE)
 {
@@ -30,11 +66,23 @@ MoveEvent::MoveEvent(const MoveEvent& other)
     force = other.force;
 }
 
-/**
- * returns the x property of the move event.
- *
- * @return   x property of the move event.
- */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	getX
+--
+-- DATE:		April 1, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Jeff Bayntun
+--
+-- PROGRAMMER:	Jeff Bayntun
+--
+-- INTERFACE:	float getX()
+--
+-- RETURNS: 	X value to move to
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
 float MoveEvent::getX()
 {
     return x;
@@ -52,11 +100,23 @@ float MoveEvent::setX(float _x)
     return x;
 }
 
-/**
- * returns the y property of the move event.
- *
- * @return   y property of the move event.
- */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	getY
+--
+-- DATE:		April 1, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Jeff Bayntun
+--
+-- PROGRAMMER:	Jeff Bayntun
+--
+-- INTERFACE:	float getY()
+--
+-- RETURNS: 	Y value to move to
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
 float MoveEvent::getY()
 {
     return y;
@@ -84,11 +144,23 @@ int MoveEvent::getYDir()
     return yDir;
 }
 
-/**
- * returns the force property of the move event.
- *
- * @return   force property of the move event.
- */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	forced
+--
+-- DATE:		April 1, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Jeff Bayntun
+--
+-- PROGRAMMER:	Jeff Bayntun
+--
+-- INTERFACE:	bool forced()
+--
+-- RETURNS: 	true if the move is forced
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
 bool MoveEvent::forced()
 {
     return force;
@@ -250,4 +322,42 @@ float AddPointsEvent::getPoints()
 }
 
 
+// Ability notification start 
+SkillNotification::SkillNotification(float _x, float _y, SKILLTYPE _skillType) :Event(Marx::SKILL_NOTIFY)
+{
+    x = _x;
+    y = _y;
+    skillType = _skillType;
+}
+
+float SkillNotification::getX()
+{
+    return x;
+}
+
+void SkillNotification::setX(float _x)
+{
+    x = _x;
+}
+
+float SkillNotification::getY()
+{
+    return y;
+}
+
+void SkillNotification::setY(float _y)
+{
+    y = _y;
+}
+
+SKILLTYPE SkillNotification::getSkillType()
+{
+    return skillType;
+}
+
+void SkillNotification::setSkillType(SKILLTYPE _skillType)
+{
+    skillType = _skillType;
+}
+// Ability notification end 
 
