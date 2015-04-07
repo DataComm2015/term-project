@@ -41,14 +41,15 @@ using namespace Marx;
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Action * _act, sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0) :
-	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
+VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
 	TimeToLive = _act->getTTL();
-    std::cout << act << std::endl;
-    float hy = sqrt( vector.x*vector.x + vector.y*vector.y );
-    heading = sf::Vector2f(vector.x / hy, vector.y / hy);
+	std::cout << act << std::endl;
+	float hy = sqrt( vector.x*vector.x + vector.y*vector.y );
+	heading = sf::Vector2f(vector.x / hy, vector.y / hy);
 	shooter = e;
 }
+
 
 void Projectile::onCreate()
 {
@@ -60,56 +61,69 @@ void Projectile::onCreate()
 void Projectile::onDestroy()
 {
 	VEntity::onDestroy();
+	/*
 	std::cout << "Projectile::Destroy: " << this << std::endl;
 	//act = nullptr;
 	TimeToLive = 0;
-	Manager::ProjectileManager::enqueue(this);
+	Manager::ProjectileManager::enqueue(this);*/
 }
 
 
 void Projectile::onUpdate(float t)
 {
+	if(getController() == NULL)
+	{
+		left = -100;
+		top  = -100;
+
+		return;
+	}
+
+	//std::cout << " X: " << heading.x << " Y: " << heading.y << std::endl;
+
 	Entity *hit;
 	//std::cout << "Time: " << TimeToLive << std::endl;
-    if(TimeToLive > 0.0f)
-    {
+	if(TimeToLive > 0.0f)
+	{
 		//std::cout << "Projectile alive" << std::endl;
 		if (act != nullptr)
 		{
-        	act->onUpdate(this, t);
+			act->onUpdate(this, t);
 		}
 		else
 		{
 			std::cout << "No action" << std::endl;
 			onDestroy();
 		}
-        TimeToLive -= t;
-    }
-    else
-    {
+		TimeToLive -= t;
+	}
+	else
+	{
 		//std::cout << "Projectile destroy" << std::endl;
 		if (top != -100)
-        	onDestroy();
-    }
-	
+		onDestroy();
+	}
 
-    // Process events.
-    std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
-    for(std::vector<Marx::Event*>::iterator it = eventQueue->begin(); it != eventQueue->end(); ++it )
-    {
-        switch((*it)->type)
-        {
-            case ::Marx::MOVE:
+
+	// Process events.
+	std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+	for(std::vector<Marx::Event*>::iterator it = eventQueue->begin(); it != eventQueue->end(); ++it )
+	{
+		switch((*it)->type)
+		{
+			case ::Marx::MOVE:
 			{
-                MoveEvent * ev = static_cast<MoveEvent*>(*it);
-                sf::Vector2f vec(ev->getXDir(), ev->getYDir());
-				std::cout << "Move from " << left << " " << top << " to " << vec.x << " " << vec.y << std::endl;
-            	aMove( vec.x, vec.y, true );
-				std::cout << "Now at " << left << " " << top << std::endl;
+				MoveEvent * ev = static_cast<MoveEvent*>(*it);
+				sf::Vector2f vec(ev->getXDir(), ev->getYDir());
+				//aMove( (float)ev->getX(), (float)ev->getY(), true );
+				left = ev->getX();
+				top  = ev->getY();
+				onCreate();
+				setTarget(vec);
 				TimeToLive = act->getTTL();
 			}
-        }
-    }
+		}
+	}
 
 	getController()->clearEvents();
 
@@ -118,7 +132,10 @@ void Projectile::onUpdate(float t)
 void Projectile::setTarget(sf::Vector2f t)
 {
 	float hy = sqrt( t.x*t.x + t.y*t.y );
-    heading = sf::Vector2f(t.x / hy, t.y / hy);
+
+	heading = sf::Vector2f(t.x / hy, t.y / hy);
+
+	std::cout << "X: " << heading.x << " Y: " << heading.y << std::endl;
 }
 
 void Projectile::setCurrentPos(float x, float y )
@@ -129,7 +146,7 @@ void Projectile::setCurrentPos(float x, float y )
 
 void Projectile::setAct(Action * act)
 {
-    TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
+	TimeToLive = act->getTTL();	// Time to live must be updated within this class. Action should not change it's own time to live.
 }
 
 float Projectile::getTTL()

@@ -1,3 +1,36 @@
+/*------------------------------------------------------------------------------
+-- FILE:        ClientNetworkController.cpp
+--
+-- DATE:            March 17, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Network Teams
+--
+-- PROGRAMMER:      Jeff Bayntun, Eric Tsang
+--
+-- INTERFACE:       NetworkEntity(int id, int type);
+                    NetworkEntity(int type);
+                    virtual ~NetworkEntity();
+                    virtual void update(Message message);
+                    void registerSession(Session * session, Message message);
+                    void unregisterSession(Session * session, Message message);
+                    int getType();
+                    int getId();
+                    virtual void onRegister(Session *session);
+                    virtual void onUnregister(Session * session, Message message);
+                    virtual void onUpdate(Message message);
+                    int silentRegister(Session* session);
+                    int silentUnregister(Session* session);
+
+-- RETURNS:         void
+--
+-- NOTES:           the {ServerNetworkController} class on the server is logically mapped to a
+                    {ClientNetworkController} on the client. other controllers such as AI
+                    controllers should inherit from the {ClientNetworkController} class, and
+                    get their entity to do stuff by using the addEvent method.
+------------------------------------------------------------------------------*/
+
 #include "NetworkEntity.h"
 #include "Session.h"
 #include "NetworkEntityMultiplexer.h"
@@ -45,6 +78,23 @@ Networking::NetworkEntity::NetworkEntity( int id_, int type_ )
     mux->entities[id] = this;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        NetworkEntity::~NetworkEntity
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Teams
+--
+-- PROGRAMMER:
+--
+-- INTERFACE:       NetworkEntity::~NetworkEntity()
+
+-- RETURNS:         void
+--
+-- NOTES:           destructs a network entity
+-----------------------------------------------------------------------------------------------*/
 Networking::NetworkEntity::~NetworkEntity()
 {
     // unregister all sessions registered in this entity from this entity

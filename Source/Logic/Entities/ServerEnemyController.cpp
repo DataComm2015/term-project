@@ -1,5 +1,5 @@
 /********************************************************************************
-**	SOURCE FILE:	ServerEnemyController.cpp -  	GateKeeper server class controller class
+**	SOURCE FILE:	ServerEnemyController.cpp -  	Enemy server controller class
 **                                              maintains and updates gatekeper behaviour on
 **                                              the server.
 **	PROGRAM:	Term_Project
@@ -32,6 +32,8 @@ ServerEnemyController::ServerEnemyController(Behaviour *behaviour, ServerGameSce
   moving = false;
 
   _servGameScene = sgs;
+
+  attackTimer = 1;
 }
 
 ServerEnemyController::~ServerEnemyController()
@@ -120,11 +122,15 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
           event = new MoveEvent(gk_X, gk_Y, xDirection, yDirection, 0);
           addEvent(event);
+        }
+        attackTimer -= deltaTime;
 
-          attackEvent = new AttackEvent(getId(), ActionType::normalAttack, vessel_X, vessel_Y);
+        if (attackTimer <= 0)
+        {
+          attackEvent = new AttackEvent(getId(), ActionType::normalAttack, targetVessel->left, targetVessel->top);
 
           addEvent(attackEvent);
-
+          attackTimer = 1;
         }
 
     }

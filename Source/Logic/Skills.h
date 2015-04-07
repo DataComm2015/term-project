@@ -8,8 +8,8 @@ enum class SKILLTYPE
     HEAL,
     DMG,
     BUFF,
-    DEBUFF
-    
+    DEBUFF,
+    SPAWN
 };
 
 struct skill{
