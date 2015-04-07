@@ -45,7 +45,6 @@ Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Act
 {
     std::cout << act << std::endl;
     float hy = sqrt( vector.x*vector.x + vector.y*vector.y );
-	std::cout << "Hypotenuse " << hy << " x " << vector.x << " y " << vector.y << std::endl;
     heading = sf::Vector2f(vector.x / hy, vector.y / hy);
 	shooter = e;
 }
@@ -115,7 +114,6 @@ void Projectile::onUpdate(float t)
 void Projectile::setTarget(sf::Vector2f t)
 {
 	float hy = sqrt( t.x*t.x + t.y*t.y );
-	std::cout << "SetTarget:Hypotenuse " << hy << " x " << t.x << " y " << t.y << std::endl;
     heading = sf::Vector2f(t.x / hy, t.y / hy);
 }
 
