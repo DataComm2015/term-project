@@ -695,7 +695,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "stone/lost_stone", true, 10);
+						eh->getEnemy(&enemy, "stone/lost_stone", true, 1);
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
@@ -982,7 +982,7 @@ void GameMap::generateMiniBosses()
 				{
 					cell = blockMap[j][i].getRandomCell();
 
-					eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
+					eh->getEnemy(&enemy, "grass/lost_grass/ground_grass/enemy_wisp");
 					gameScene->createEnemy(getEnemyType(enemy), NULL,
 						cell->getX(), cell->getY());
 				}
