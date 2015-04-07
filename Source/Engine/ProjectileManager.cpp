@@ -8,7 +8,6 @@
 
 std::set<Marx::Projectile*> Manager::ProjectileManager::projectile_pool;
 ServerCommand * Manager::ProjectileManager::SERVER = nullptr;
-Marx::Map * Manager::ProjectileManager::cMap = nullptr;
 
 using namespace Manager;
 
@@ -33,7 +32,6 @@ using namespace Manager;
 Marx::Projectile* ProjectileManager::
 getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *action, sf::Vector2f & v, float h = 1.0, float w = 1.0, Marx::Controller * _cont = NULL)
 {
-	ProjectileManager::cMap = map;
 	std::cout << "Projectile Q: " << projectile_pool.size() << std::endl;
 	if (projectile_pool.size() < 1)
 	{
@@ -83,14 +81,12 @@ void ProjectileManager::
 enqueue(Marx::Projectile * projectile)
 {
 	projectile_pool.insert(projectile);
-	ProjectileManager::cMap->rem(*projectile);
 }
 
 void ProjectileManager::
 dequeue(Marx::Projectile* projectile)
 {
 	projectile_pool.erase(projectile);
-	ProjectileManager::cMap->add(*projectile);
 }
 
 void ProjectileManager::
