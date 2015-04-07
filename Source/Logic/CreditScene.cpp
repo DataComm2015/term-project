@@ -70,7 +70,7 @@ void CreditScene::onLoad()
     updateMainView(viewMain);
 
     music->play();
-	lord.play();
+	lord->play();
 }
 
 void CreditScene::update(sf::Time t)
