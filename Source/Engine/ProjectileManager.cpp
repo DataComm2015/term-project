@@ -38,8 +38,6 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 	{
 		if(SERVER)
 		{
-			ServerNetworkController * cont;
-
 			Message msg;
 			AttackMessage msgAttk;
 
@@ -51,8 +49,9 @@ getProjectile(SGO &_sprite, Marx::Map *map,  Marx::Entity * e, Marx::Action *act
 			msgAttk.cellx = v.x;
 			msgAttk.celly = v.y;
 
-			cont = new ServerNetworkController();
+			ServerNetworkController * cont = new ServerNetworkController();
 			SERVER->getGameState()->registerWithAllPlayers(cont, &msg);	// thing does here to register
+			return new Marx::Projectile(_sprite, map, e, e->left, e->top, action, v, cont, h, w);			
 		}
 		else
 		{

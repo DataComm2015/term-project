@@ -67,17 +67,24 @@ void Projectile::onUpdate(float t)
 {
 	Entity *hit;
 
+	if (Manager::ProjectileManager::getServer())
+	{
+		std::cout << "Projectile onUpdate server" << std::endl;
+	}
+
     if(TimeToLive > 0.0f)
     {
-		if(top == -100)
-			return;
+		std::cout << "Projectile alive" << std::endl;
         act->onUpdate(this, t);
         TimeToLive -= t;
     }
     else
     {
+		std::cout << "Projectile destroy" << std::endl;
         onDestroy();
     }
+	
+	
 
     // Process events.
     /*std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
@@ -107,6 +114,7 @@ void Projectile::onUpdate(float t)
 			}
         }
     }*/
+	std::cout << "Projectile getController" << std::endl;
 	getController()->clearEvents();
 
 }

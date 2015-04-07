@@ -493,3 +493,4 @@ Projectile* EntityFactory::makeProjectile(
     std::cout << "MakeProjectile" << std::endl;
     return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }
+

@@ -116,6 +116,8 @@ void GateKeeper::onUpdate(float deltaTime)
       ; ++it )
   {
 
+	std::cout << "GateKeeper::Event " << (*it)->type << std::endl;
+
     // switch on type
     switch((*it)->type)
     {
