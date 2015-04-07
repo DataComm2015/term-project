@@ -47,6 +47,6 @@ namespace GUI
 	*/
 	void HealthBar::update(float percent)
 	{
-		bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x - (barSize.x * (1.0 - percent)), barSize.y));
+		//bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x - (barSize.x * (1.0 - percent)), barSize.y));
 	}
 }

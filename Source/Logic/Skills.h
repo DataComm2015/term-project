@@ -9,6 +9,7 @@ enum class SKILLTYPE
     DMG,
     BUFF,
     DEBUFF,
+    BIGHEAL,
     SPAWN
 };
 

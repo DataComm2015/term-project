@@ -1105,7 +1105,7 @@ void onClickVitalityOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::HEAL);
 }
 
 /******************************************************************************
@@ -1157,7 +1157,7 @@ void onClickVitalityThree()
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 30, SKILLTYPE::BIGHEAL);
 }
 
 /******************************************************************************
@@ -1183,7 +1183,7 @@ void onClickDemiseOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DMG);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::DMG);
 }
 
 /******************************************************************************
@@ -1330,6 +1330,9 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 			snSGO = new SGO(*Manager::TextureManager::get(deityBUFImg));
 		break;
 		case SKILLTYPE::DEBUFF:
+			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
+		break;
+		case SKILLTYPE::BIGHEAL:
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
 		break;
 	}
