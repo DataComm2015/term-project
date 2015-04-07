@@ -198,13 +198,11 @@ void GateKeeper::onUpdate(float deltaTime)
     case ::Marx::ATTACK:
     {
       _attackSpeed -= deltaTime;
-      if (_attackSpeed <= 0)
-      {
+
         SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
         std::cout << "ATTACK" << std::endl;
         createSkAttack(*saev, getSprite(), left, top);
-        _attackSpeed = 1;
-      }
+
       break;
     }
     case ::Marx::SKILL:
