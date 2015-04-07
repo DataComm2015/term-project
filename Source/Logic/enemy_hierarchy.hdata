@@ -34,18 +34,27 @@ root
 		root
 
 			ground_grass
-			test_enemy1
+			enemy_wisp
 			leaf
-			test1
+			wisp
 
 		lost_grass
 		air_grass
 		root
 
 			air_grass
-			test_enemy3
+			enemy_bee
 			leaf
-			test2
+			bee
+
+	grass
+	guardian_grass
+	root
+
+		guardian_grass
+		enemy_wanderer
+		leaf
+		wanderer
 
 # STONE #
 	
@@ -58,19 +67,19 @@ root
 	root
 
 		lost_stone
-		ground_stone
-		root
-
-			ground_stone
-			test_enemy1
-			leaf
-			test1
-
-		lost_stone
 		air_stone
 		root
 
 			air_stone
-			test_enemy3
+			enemy_queen2
 			leaf
-			test2
+			queen_bee
+
+	stone
+	guardian_stone
+	root
+
+		guardian_stone
+		enemy_wanderer2
+		leaf
+		wanderer

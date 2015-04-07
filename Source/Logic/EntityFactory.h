@@ -53,14 +53,18 @@ class EntityFactory
             Marx::Action * action,
             sf::Vector2f & v,
             float height,
-            float width);
+            float width,
+            Marx::Controller *);
     protected:
         EntityFactory();
         ~EntityFactory();
     private:
         static EntityFactory* instance;
-        id_resource gkSprite, minionSprite, projSprite, vesselSprite, maskSprite, spearSprite, staffSprite, structImage;
-        SGO gkSGO, minionSGO, projSGO, vesselSGO, maskSGO, spearSGO, staffSGO, structSprite;
+
+        id_resource gkSprite, minionSprite, minion2Sprite, minion3Sprite, miniBossSprite, miniBeeSprite, projSprite, vesselSprite, maskSprite, spearSprite, staffSprite,structImage;
+        SGO gkSGO, minionSGO, projSGO, miniBossSGO, vesselSGO, maskSGO, spearSGO, staffSGO, structSprite;
+        SGO minion2SGO, minion3SGO, miniBeeSGO;
+        std::vector<SGO> whispSGOs;
 };
 
 #endif

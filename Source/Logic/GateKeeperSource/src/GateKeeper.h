@@ -86,7 +86,6 @@ class GateKeeper : public Marx::VEntity, public Creature
 		bool _moving;
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
-		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		sf::Sound footstep;
 		sf::Sound voice;
 		BlockZone steppedTile;

@@ -53,6 +53,7 @@ ClientGameState::ClientGameState(int id, CommandEntity *command, ClientLobbyScen
     , _scoreScene(scoreScene)
     , command(command)
 {
+    _fakeLobby = new ClientLobbyScene(true);
 }
 
 /*------------------------------------------------------------------------------
@@ -74,6 +75,7 @@ ClientGameState::ClientGameState(int id, CommandEntity *command, ClientLobbyScen
 ------------------------------------------------------------------------------*/
 ClientGameState::~ClientGameState()
 {
+    delete _fakeLobby;
 }
 
 /*------------------------------------------------------------------------------
@@ -85,7 +87,7 @@ ClientGameState::~ClientGameState()
 --
 -- DESIGNER:        Eric Tsang, Calvin Rempel
 --
--- PROGRAMMER:      Eric Tsang, Calvin Rempel
+-- PROGRAMMER:      Eric Tsang, Calvin Rempel, Jeff Bayntun
 --
 -- INTERFACE:       void ClientGameState::onUpdate(Message msg)
 --                  msg - network message received by the remote host
@@ -160,7 +162,7 @@ void ClientGameState::onUpdate(Message msg)
          */
         case ServerGameStateClientGameStateMsgType::FAKE_LOBBY:
             AppWindow::getInstance().removeScene(1);
-            AppWindow::getInstance().addScene(_lobbyScene);
+            AppWindow::getInstance().addScene(_fakeLobby);
             break;
 
         /*

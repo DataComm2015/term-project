@@ -145,8 +145,9 @@ void ServerGameScene::enterScene()
 	  gMap->generateMap(worldSeed, this);
 
     createPlayers();
-	  createEnemy(BASIC_TYPE, NULL, 48, 48);
-    createEnemy(MINION, NULL, 48, 48);
+	  //createEnemy(BASIC_TYPE, NULL, 48, 48);
+    //createEnemy(MINION, NULL, 48, 48);
+    //createEnemy(MINI_BOSS, NULL, 48, 48);
 }
 
 void ServerGameScene::leaveScene()
@@ -243,6 +244,8 @@ void ServerGameScene::createPlayers()
         currSession = it->first;
         mode = currPlayer->getMode();
         type = currPlayer->getType(); //sanderschange
+        currPlayer->setSGameScene(this);
+
         switch(mode)
         {
             case PLAYER_MODE::VESSEL:
@@ -250,7 +253,6 @@ void ServerGameScene::createPlayers()
                 // create the controller, and bind it with the player
                 ServerNetworkController* cont = new ServerNetworkController();
                 currPlayer->setController(cont);
-                currPlayer->setSGameScene(this);
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;

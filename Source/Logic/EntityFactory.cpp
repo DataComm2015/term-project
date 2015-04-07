@@ -21,6 +21,8 @@
 
 #include "GateKeeperSource/src/GateKeeper.h"
 #include "GateKeeperSource/src/Minion.h"
+#include "GateKeeperSource/src/MiniBoss.h"
+#include "GateKeeperSource/src/MiniBee.h"
 #include "EnemyControllerInit.h"
 #include "EntityFactory.h"
 #include "EntityTypes.h"
@@ -41,6 +43,8 @@
 #include "Entities/Structure.h"
 
 #include <iostream>
+#include <stdlib.h>
+ #include <time.h>
 
 using Networking::Message;
 using Marx::Controller;
@@ -61,6 +65,8 @@ EntityFactory* EntityFactory::instance = 0;
 *
 *   PROGRAMMER: Chris Klassen
 *
+*   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
+*
 *   INTERFACE: EntityFactory();
 *
 *   PARAMETERS:
@@ -71,6 +77,7 @@ EntityFactory* EntityFactory::instance = 0;
 ******************************************************************************/
 EntityFactory::EntityFactory()
 {
+    srand ( time(NULL) );
     // initialize instance variables
     gkSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
@@ -80,7 +87,23 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-magma-sheet.png")
     );
 
-	projSprite = Manager::TextureManager::store(
+    minion2Sprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-blue-sheet.png")
+    );
+
+    minion3Sprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-purple-sheet.png")
+    );
+
+    miniBeeSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Grass/The Lost/bug-sheet.png")
+    );
+
+    miniBossSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/Guardians/wanderer-sheet.png")
+    );
+
+	  projSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
     );
 
@@ -103,8 +126,24 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
+    miniBeeSGO.sprite().setTexture(*Manager::TextureManager::get(miniBeeSprite));
+    miniBeeSGO.sprite().setTextureRect(sf::IntRect(0, 0, 16, 16));
+
     minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
     minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    minion2SGO.sprite().setTexture(*Manager::TextureManager::get(minion2Sprite));
+    minion2SGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    minion3SGO.sprite().setTexture(*Manager::TextureManager::get(minion3Sprite));
+    minion3SGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    whispSGOs.push_back(minionSGO);
+    whispSGOs.push_back(minion2SGO);
+    whispSGOs.push_back(minion3SGO);
+
+    miniBossSGO.sprite().setTexture(*Manager::TextureManager::get(miniBossSprite));
+    miniBossSGO.sprite().setTextureRect(sf::IntRect(0, 0, 30, 42));
 
 	  projSGO.sprite().setTexture(*Manager::TextureManager::get(projSprite));
     projSGO.sprite().setTextureRect(sf::IntRect(0, 0, 8, 8));
@@ -213,13 +252,18 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 {
     if( msg->type == Marx::ATTACK )
     {
+	std::cout << "EnittyFactory::makeEntity" << std::endl;
         AttackMessage * ms = (AttackMessage *) msg->data;
 
         sf::Vector2f v(ms->cellx, ms->celly);
-        Marx::AttackAction * action = new Marx::AttackAction(10.0f, 10.0f);
+        Marx::AttackAction * action = new Marx::AttackAction(100.0f, 10.0f);
 
         std::cout << action << std::endl;
-        return new Marx::Projectile(projSGO, cMap, ms->srcx, ms->srcy, action, v, cont, 1.0, 1.0);
+        Entity * e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ms->srcid))->getEntity();
+
+	std::cout << "EnittyFactory::after dynamic_cast" << std::endl;
+
+        return makeProjectile(cMap, e, action, v, 1.0f, 1.0f, cont);
 
     }
     else
@@ -288,6 +332,8 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *
 *   PROGRAMMER:
 *
+*                 Filip Gutica     - Added cases for Basic types, Minions, mini bees and
+*                                    mini bosses.
 *   INTERFACE:
 *
 *   PARAMETERS:
@@ -306,88 +352,55 @@ Entity* EntityFactory::makeEntity(
     Entity* entity;
     int classType;
 
-    //sanderschangestart
-    /*std::cout << "WHAT IS HAPPENING??" << std::endl;
-
-    //check the PLC for the value of the class type
-    ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-        std::cout << "got a cm" << std::endl;
-    if ( cm->getCommandEntity() != NULL)
+    switch(type)
     {
-          std::cout << "cm not null" << std::endl;
-          PLAYER_MODE characterType = cm->getCommandEntity()->getPlayerMode();
-          std::cout << "got the character type" << std::endl;
-          switch (characterType)
-          {
-              case PLAYER_MODE::VESSEL:
-                classType = (int) cm->getCommandEntity()->getLobbyOption()->vesselChoice;
-                break;
-              case PLAYER_MODE::DEITY:
-                classType = (int) cm->getCommandEntity()->getLobbyOption()->deityChoice;
-                break;
-          }
-    //sanderschangeend*/
-          switch(type)
-          {
-              case ENTITY_TYPES::BASIC_TYPE:
-              {
-                  GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
-                  entity = gk;
-                  break;
-              }
-              //sanderschangestart
-              /*
-              case ENTITY_TYPES::VESSEL:
-                  std::cout << "making a vessel" << std::endl;
-                  if ( classType == 1 )
-                  {
-                    std::cout << "class type 1" << std::endl;
-                    entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
-                  }
-                  if ( classType == 2 )
-                  {
-                    std::cout << "class type 2" << std::endl;
-                    entity = new Vessel(vesselSGO, maskSGO, staffSGO,map,x,y,cont,1,1);
-                  }
-                  break;
-                  //sanderschangeend*/
-              case ENTITY_TYPES::VESSEL_WARRIOR:
-                  entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
-                  printf("warrior selected whooooooooo\n");
-                  break;
-              case ENTITY_TYPES::VESSEL_SHAMAN:
-                  entity = new Vessel(vesselSGO, maskSGO, staffSGO,map,x,y,cont,1,1);
-                  printf("shaman selected whooooooooo\n");
-                  break;
-              case STRUCTURES:
-                  //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
-                  break;
-              case ENTITY_TYPES::I_DONT_KNOW:
-              case ENTITY_TYPES::BAWS:
-              case ENTITY_TYPES::MINION:
-              {
-                GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
-                entity = minion;
-                break;
-              }
-              case ENTITY_TYPES::MINI_BOSS:
-      			       break;
-              case PROJECTILE:
-                  //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
-                  break;
-              default:
-                  break;
-          }
-          return entity;
-    //sanderschangestart
-    /*
+        case ENTITY_TYPES::BASIC_TYPE:
+        {
+            GateKeeper *gk = new GateKeeper(gkSGO,map,x,y,cont,1,1);
+            entity = gk;
+            break;
+        }
+            //sanderschangestart
+        case ENTITY_TYPES::VESSEL_WARRIOR:
+            entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
+            printf("warrior selected whooooooooo\n");
+            break;
+        case ENTITY_TYPES::VESSEL_SHAMAN:
+            entity = new Vessel(vesselSGO, maskSGO, staffSGO,map,x,y,cont,1,1);
+            printf("shaman selected whooooooooo\n");
+            break;
+            //sanderschangeend*/
+        case STRUCTURES:
+            //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
+            break;
+        case ENTITY_TYPES::I_DONT_KNOW:
+        case ENTITY_TYPES::BAWS:
+        case ENTITY_TYPES::MINION:
+        {
+          int random = rand() % 3;
+          GateKeeper *minion = new Minion(whispSGOs[random], map, x, y, cont, 1, 1);
+          entity = minion;
+          break;
+        }
+        case ENTITY_TYPES::MINI_BOSS:
+        {
+          GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
+          entity = miniboss;
+          break;
+        }
+        case ENTITY_TYPES::MINI_BEE:
+        {
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
+          entity = minibee;
+          break;
+        }
+        case PROJECTILE:
+            //entity = new VEntity(maskSGO, map, x, y, cont, 1, 1);
+            break;
+        default:
+            break;
     }
-    else
-    {
-      std::cout << "null null null" << std::endl;
-      return NULL;
-    }
-    //sanderschangeend*/
+    return entity;
 }
 
 
@@ -401,6 +414,9 @@ Entity* EntityFactory::makeEntity(
 *   DESIGNER:
 *
 *   PROGRAMMER:
+*
+*                 Filip Gutica     -  Added cases for Basic types, Minions, mini bees and
+*                                     mini bosses.
 *
 *   INTERFACE:
 *
@@ -441,11 +457,23 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         {
-          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          int random = rand() % 3;
+          GateKeeper *minion = new Minion(whispSGOs[random], map, x, y, cont, 1, 1);
           entity = minion;
           break;
         }
         case ENTITY_TYPES::MINI_BOSS:
+        {
+          GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
+          entity = miniboss;
+          break;
+        }
+        case ENTITY_TYPES::MINI_BEE:
+        {
+          GateKeeper *minibee = new MiniBee(miniBeeSGO, map, x, y, cont, 1, 1);
+          entity = minibee;
+          break;
+        }
         default:
             break;
     }
@@ -459,8 +487,9 @@ Projectile* EntityFactory::makeProjectile(
     Marx::Action * action,
     sf::Vector2f & v,
     float height,
-    float width )
+    float width,
+    Marx::Controller * cont = NULL)
 {
-    std::cout << "Map!" << std::endl;
-    return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width);
+    std::cout << "MakeProjectile" << std::endl;
+    return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }
