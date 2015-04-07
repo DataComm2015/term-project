@@ -71,13 +71,6 @@ void Minion::onUpdate(float deltaTime)
       ; it != eventQueue->end()
       ; ++it )
   {
-
-	if (_health <= 0)
-	{
-		// Die.
-        std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-        onDestroy();
-	}
         int xDir;
         int yDir;
         MoveEvent* ev;
@@ -165,6 +158,12 @@ void Minion::onUpdate(float deltaTime)
                 }
                 
                 printf("GateKeeper AFTER Health: %d\n", _health);
+                
+                if(_health <= 0)
+                {
+                  std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+                  onDestroy();
+                }
         
                 break;
             }
@@ -317,11 +316,6 @@ void Minion::turn()
 }
 
 void Minion::onCreate()
-{
-
-}
-
-void Minion::onDestroy()
 {
 
 }

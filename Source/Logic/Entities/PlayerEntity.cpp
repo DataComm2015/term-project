@@ -8,7 +8,7 @@
 #include "../Creature.h"
 #include "ServerNetworkController.h"
 #include "ServerGameState.h"
-#include "EntityTypes.h"
+#include "../EntityTypes.h"
 
 #include <cstdio>
 

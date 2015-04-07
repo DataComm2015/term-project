@@ -109,13 +109,6 @@ void GateKeeper::onUpdate(float deltaTime)
   //Perform the generic gatekeeper animation
   animate();
 
-	if (_health <= 0)
-	{
-		// Die.
-        std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-        onDestroy();
-	}
-
   //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
   std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
   for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
@@ -127,6 +120,7 @@ void GateKeeper::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
+        {
     		MoveEvent* ev = (MoveEvent*) (*it);
         int xDir = ev->getXDir();
         int yDir = ev->getYDir();
@@ -221,6 +215,12 @@ void GateKeeper::onUpdate(float deltaTime)
             }
             
             printf("GateKeeper AFTER Health: %d\n", _health);
+            
+            if(_health <= 0)
+            {
+              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+              onDestroy();
+            }
     
             break;
         }
@@ -426,11 +426,6 @@ void GateKeeper::turn()
 }
 
 void GateKeeper::onCreate()
-{
-
-}
-
-void GateKeeper::onDestroy()
 {
 
 }

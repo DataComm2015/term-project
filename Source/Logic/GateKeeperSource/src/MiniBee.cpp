@@ -62,13 +62,6 @@ MiniBee::~MiniBee()
 ***/
 void MiniBee::onUpdate(float deltaTime)
 {
-
-  if (_health <= 0)
-  {
-      // Die.
-      std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-      onDestroy();
-  }
   //Perform the generic gatekeeper animation
   animate();
 
@@ -165,6 +158,12 @@ void MiniBee::onUpdate(float deltaTime)
                 }
                 
                 printf("GateKeeper AFTER Health: %d\n", _health);
+                
+                if(_health <= 0)
+                {
+                  std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+                  onDestroy();
+                }
         
                 break;
             }
@@ -317,11 +316,6 @@ void MiniBee::turn()
 }
 
 void MiniBee::onCreate()
-{
-
-}
-
-void MiniBee::onDestroy()
 {
 
 }

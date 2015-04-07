@@ -63,13 +63,6 @@ void MiniBoss::onUpdate(float deltaTime)
   //Perform the generic gatekeeper animation
   animate();
 
-	if (_health <= 0)
-	{
-		// Die.
-        std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-        onDestroy();
-	}
-
   //  std::cout << "GateKeeper.cpp ON UPDATE." << std::endl;
   std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
   for( std::vector< Marx::Event*>::iterator it = eventQueue->begin()
@@ -163,6 +156,12 @@ void MiniBoss::onUpdate(float deltaTime)
                 }
                 
                 printf("GateKeeper AFTER Health: %d\n", _health);
+                
+                if(_health <= 0)
+                {
+                  std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+                  onDestroy();
+                }
         
                 break;
             }
@@ -313,11 +312,6 @@ void MiniBoss::turn()
 }
 
 void MiniBoss::onCreate()
-{
-
-}
-
-void MiniBoss::onDestroy()
 {
 
 }
