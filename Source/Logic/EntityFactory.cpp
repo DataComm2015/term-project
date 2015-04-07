@@ -41,6 +41,8 @@
 #include "Entities/Structure.h"
 
 #include <iostream>
+#include <stdlib.h>
+ #include <time.h>
 
 using Networking::Message;
 using Marx::Controller;
@@ -73,6 +75,7 @@ EntityFactory* EntityFactory::instance = 0;
 ******************************************************************************/
 EntityFactory::EntityFactory()
 {
+    srand ( time(NULL) );
     // initialize instance variables
     gkSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/Grass/Guardians/Queen Bee/queen-idle-sheet.png")
@@ -82,11 +85,23 @@ EntityFactory::EntityFactory()
         Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-magma-sheet.png")
     );
 
+    minion2Sprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-blue-sheet.png")
+    );
+
+    minion3Sprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Stone/The Lost/wisp-purple-sheet.png")
+    );
+
+    miniBeeSprite = Manager::TextureManager::store(
+        Manager::TextureManager::load("Assets/Art/Enemies/Grass/The Lost/bug-sheet.png")
+    );
+
     miniBossSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/Stone/Guardians/wanderer-sheet.png")
     );
 
-	projSprite = Manager::TextureManager::store(
+	  projSprite = Manager::TextureManager::store(
         Manager::TextureManager::load("Assets/Art/Enemies/projectile-enemy-sheet.png")
     );
 
@@ -105,8 +120,21 @@ EntityFactory::EntityFactory()
     gkSGO.sprite().setTexture(*Manager::TextureManager::get(gkSprite));
     gkSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 
+    miniBeeSGO.sprite().setTexture(*Manager::TextureManager::get(miniBeeSprite));
+    miniBeeSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
     minionSGO.sprite().setTexture(*Manager::TextureManager::get(minionSprite));
     minionSGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    minion2SGO.sprite().setTexture(*Manager::TextureManager::get(minion2Sprite));
+    minion2SGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    minion3SGO.sprite().setTexture(*Manager::TextureManager::get(minion3Sprite));
+    minion3SGO.sprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+    whispSGOs.push_back(minionSGO);
+    whispSGOs.push_back(minion2SGO);
+    whispSGOs.push_back(minion3SGO);
 
     miniBossSGO.sprite().setTexture(*Manager::TextureManager::get(miniBossSprite));
     miniBossSGO.sprite().setTextureRect(sf::IntRect(0, 0, 30, 42));
@@ -331,7 +359,8 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         {
-          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          int random = rand() % 3;
+          GateKeeper *minion = new Minion(whispSGOs[random], map, x, y, cont, 1, 1);
           entity = minion;
           break;
         }
@@ -339,6 +368,12 @@ Entity* EntityFactory::makeEntity(
         {
           GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
           entity = miniboss;
+          break;
+        }
+        case ENTITY_TYPES::MINI_BEE:
+        {
+          GateKeeper *minibee = new MiniBoss(miniBeeSGO, map, x, y, cont, 1, 1);
+          entity = minibee;
           break;
         }
 			break;
@@ -401,7 +436,8 @@ Entity* EntityFactory::makeEntity(
         case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         {
-          GateKeeper *minion = new Minion(minionSGO, map, x, y, cont, 1, 1);
+          int random = rand() % 3;
+          GateKeeper *minion = new Minion(whispSGOs[random], map, x, y, cont, 1, 1);
           entity = minion;
           break;
         }
@@ -409,6 +445,12 @@ Entity* EntityFactory::makeEntity(
         {
           GateKeeper *miniboss = new MiniBoss(miniBossSGO, map, x, y, cont, 1, 1);
           entity = miniboss;
+          break;
+        }
+        case ENTITY_TYPES::MINI_BEE:
+        {
+          GateKeeper *minibee = new MiniBoss(miniBeeSGO, map, x, y, cont, 1, 1);
+          entity = minibee;
           break;
         }
         default:
