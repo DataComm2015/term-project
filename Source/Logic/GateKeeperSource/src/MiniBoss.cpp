@@ -59,7 +59,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
 	travel_Snd.setLoop(true);
     travel_Snd.play();*/
-	
+
 }
 
 MiniBoss::~MiniBoss()

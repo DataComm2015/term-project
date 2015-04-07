@@ -86,7 +86,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-11, -28);
-	
+
 	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
     attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_attack_02.ogg"));
     hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_hurt_03.ogg"));
@@ -152,15 +152,13 @@ void Minion::onUpdate(float deltaTime)
         processMoveEvent(ev);
 
     		break;
+
   		}
   		case ::Marx::SET_HEALTH:
   		{
-			if (top != -100)
-			{
-	  			SetHealthEvent * event = (SetHealthEvent*)(*it);
+  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-		    	processSetHealthEvent(event);
-			}
+        processSetHealthEvent(event);
 
         break;
   		}
