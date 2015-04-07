@@ -13,6 +13,7 @@
  */
 
 #include "SGO.h"
+#include <iostream>
 
 #include "../Renderer.h"
 
@@ -96,7 +97,7 @@ const sf::Sprite& SGO::sprite() const
  *
  * @return     The transformation matrix
  */
-const sf::Transform& SGO::getLocalTransform() const
+sf::Transform SGO::getLocalTransform() const
 {
 	return data.getTransform();
 }

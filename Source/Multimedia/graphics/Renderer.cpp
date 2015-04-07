@@ -13,6 +13,7 @@
  *             > All basic game object rendering
  *             > Sprite batching
  *             > Map rendering
+ *             > Visible entities rendering
  */
 
 #include "Renderer.h"
@@ -25,6 +26,7 @@
 #include "../../Engine/TextureManager.h"
 #include "../../Engine/TileManager.h"
 #include "../../Engine/Map.h"
+#include "../../Engine/VEntity.h"
 
 #include <iostream>
 
@@ -191,8 +193,9 @@ void Renderer::resetStats()
 
 /**
  * The general draw call for any kind of game object.
+ * This draws both the object passed in and its children.
  *
- * @date       2015-02-25
+ * @date       2015-04-03
  *
  * @revisions
  *
@@ -200,21 +203,20 @@ void Renderer::resetStats()
  *
  * @programmer Melvin Loho
  *
- * @param      go         The game object to draw
- * @param      scenegraph Whether to draw the whole hierarchy or just the specified game object
+ * @param      bgo        The game object to draw
  * @param      states     The render states
  */
-void Renderer::draw(const BGO *go, bool scenegraph, sf::RenderStates states)
+void Renderer::draw(const BGO *bgo, sf::RenderStates states)
 {
 	if (!active) throw "Renderer is not active.";
 
 	mergeRenderStates(states);
 
-	scenegraph ? go->drawSG(*this, states) : go->draw(*this, states);
+	bgo->drawSceneGraph(*this, states);
 }
 
 /**
- * Draws the specifies SGO.
+ * Draws the specified SGO.
  *
  * @date       2015-02-25
  *
@@ -304,7 +306,7 @@ void Renderer::draw(const TGO &tgo, sf::RenderStates states)
  *
  * @programmer Melvin Loho
  *
- * @param      map    The specified Map
+ * @param      map    The specified map
  * @param      states The render states
  */
 void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
@@ -394,6 +396,60 @@ void Renderer::draw(const Marx::Map& map, sf::RenderStates states)
 	sf_draw(vertices, mapWidth * mapHeight * TILE_VERTICES, sf::TrianglesStrip, states);
 
 	count = 0;
+}
+
+/**
+ * Draws the specified visible entity.
+ *
+ * @date       2015-04-03
+ *
+ * @revisions
+ *
+ * @designer   Melvin Loho
+ *
+ * @programmer Melvin Loho
+ *
+ * @param      map    The specified visible entity
+ * @param      states The render states
+ */
+void Renderer::draw(const Marx::VEntity& ve, sf::RenderStates states)
+{
+	if (!active) throw "Renderer is not active.";
+
+	// Combine transformations with the object's local transformations
+	states.transform.combine(ve.getLocalTransform());
+
+	// Store transformed vertices positions
+
+	sf::Vector2f vPos[RECT_POINTS];
+	sf::FloatRect sgoLB = ve.getSprite().sprite().getLocalBounds();
+
+	vPos[0] = states.transform.transformPoint(sgoLB.left, sgoLB.top);
+	vPos[1] = states.transform.transformPoint(sgoLB.left, sgoLB.top + sgoLB.height);
+	vPos[2] = states.transform.transformPoint(sgoLB.left + sgoLB.width, sgoLB.top);
+	vPos[3] = states.transform.transformPoint(sgoLB.left + sgoLB.width, sgoLB.top + sgoLB.height);
+
+	// Create appropriate vertices
+
+	sf::Vertex vertices[SPRITE_VERTICES];
+	sf::IntRect texRect = ve.getSprite().sprite().getTextureRect();
+
+	vertices[0].position = vPos[0];	vertices[2].position = vPos[2];
+	vertices[1].position = vPos[1];	vertices[3].position = vPos[2];
+	vertices[5].position = vPos[1];	vertices[4].position = vPos[3];
+
+	for (unsigned int v = 0; v < SPRITE_VERTICES; v++) vertices[v].color = ve.getSprite().sprite().getColor();
+
+	vertices[0].texCoords = { static_cast<float>(texRect.left), static_cast<float>(texRect.top) };
+	vertices[1].texCoords = { static_cast<float>(texRect.left), static_cast<float>(texRect.top + texRect.height) };
+	vertices[2].texCoords = { static_cast<float>(texRect.left + texRect.width), static_cast<float>(texRect.top) };
+	vertices[3].texCoords = vertices[2].texCoords;
+	vertices[4].texCoords = { static_cast<float>(texRect.left + texRect.width), static_cast<float>(texRect.top + texRect.height) };
+	vertices[5].texCoords = vertices[1].texCoords;
+
+	// Send vertices and texture
+
+	batchSprite(*ve.getSprite().sprite().getTexture(), vertices);
 }
 
 /**

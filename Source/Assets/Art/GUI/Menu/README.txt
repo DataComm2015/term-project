@@ -10,3 +10,8 @@ CONNECT/CREDITS BUTTON SIZE:
 ASPECTS/CLASSES:
 ~~~~~~~~~~~~~~~`
 48x49
+
+
+TEXT BOX:
+~~~~~~~~~~~~~~~~~~~~
+152x26

@@ -2,6 +2,7 @@
 #define GAME_SCENE_H_
 
 #include <set>
+#include <deque>
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
@@ -12,6 +13,8 @@
 #include "../Engine/TextureManager.h"
 #include "../Engine/TileManager.h"
 #include "../Engine/ProjectileManager.h"
+#include "../Engine/VEntity.h"
+#include "../Engine/EGTheSpinner.h"
 #include "../Multimedia/graphics/Renderer.h"
 #include "../Multimedia/graphics/object/BGO.h"
 #include "../Multimedia/graphics/object/SGO.h"
@@ -22,11 +25,12 @@
 #include "../Multimedia/gui/HealthBar.h"
 #include "../Multimedia/manager/SoundManager.h"
 #include "../Multimedia/manager/MusicManager.h"
-#include "../Engine/VEntity.h"
-#include "../Engine/EGTheSpinner.h"
+#include "../Network/NetworkEntity.h"
 #include "Entities/Vessel.h"
+#include "../Logic/PlayerMode.h"
 
 #include "KeyListener.h"
+#include "ClickListener.h"
 
 /* The water buffer around the island */
 #define WATER_BUFFER 20
@@ -39,6 +43,26 @@
 /*
 *	This is the In-game Scene where all round-events occur.
 */
+struct btnStatus
+{
+	GUI::Button* btn;
+	int coolDown = 0;
+};
+
+void onClickDemiseThree();
+void onClickDemiseTwo();
+void onClickDemiseOne();
+void onClickVitalityThree();
+void onClickVitalityTwo();
+void onClickVitalityOne();
+
+float convertX(float);
+float convertY(float);
+
+static btnStatus bs[3];
+static Marx::Map *myMap;
+static sf::View vm;
+
 class GameScene : public Scene
 {
 	public:
@@ -53,66 +77,114 @@ class GameScene : public Scene
 
 		void addKeyListener(KeyListener* listener);
 		void rmKeyListener(KeyListener* listener);
+		void addClickListener(ClickListener* listener);
+		void rmClickListener(ClickListener* listener);
 
-        void generateMap(int seed);
+		void generateMap(int seed);
 		void generateWater();
 		void generateUI();
-		void positionButtons();
+		void positionUI();
+		void setPlayerVessel(Vessel *vessel);
+        void stopAllSounds();
 		
+		void addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType);
+
+
+		friend void onClickVitalityOne();
+		friend void onClickVitalityTwo();
+		friend void onClickVitalityThree();
+		friend void onClickDemiseOne();
+		friend void onClickDemiseTwo();
+		friend void onClickDemiseThree();
+		friend float convertX(float x);
+		friend float convertY(float y);
+
 	private:
 		/**
 		 * set of registered key listeners that should be notified whenever a
 		 *   keyboard event occurs.
 		 */
 		std::set<KeyListener*> keyListeners;
+		std::set<ClickListener*> clickListeners;
 
-
-		GameMap *gMap;
+		// Renderer & views
 
 		Renderer renderer;
-
 		sf::View viewMain;
 		sf::View viewUI;
+		sf::View viewMinimap;
+		sf::RectangleShape minimapBorder;
 
-		sf::Sound current;
+		// Resources
 
-		id_resource tilemap;
-		id_resource championSprite;
-		id_resource maskSprite;
-		id_resource wepSprite;
-		id_resource butSprite;
-		id_resource hbarSprite;
-		id_resource hbgSprite;
-		id_resource scat_music;
-		id_resource chick_sound;
-		id_resource placeholderSprite;
+		static id_resource tilemap;
+
+		static id_resource hbarSprite;
+		static id_resource hbgSprite;
+
+		static id_resource butSprite;
+		static id_resource demiseBtn;
+		static id_resource vitalityBtn;
+		static id_resource warriorBtn;
+		static id_resource shamanBtn;
+
+		static id_resource crosshairImg;
+
+		//VITALITY
+		static id_resource buffskillbtn;
+		static id_resource healskillbtn;
+		static id_resource healingcircleskillbtn;
+
+		//DEMISE
+		static id_resource debuffskillbtn;
+		static id_resource hurtskillbtn;
+		static id_resource summonskillbtn;
+
+		// Deity AOE's
+		static id_resource deityHLGImg;
+		static id_resource deityDBFImg;
+		static id_resource deityDMGImg;
+		static id_resource deityBUFImg;
+		static id_resource deityRNGImg;
 
 		sf::Shader waveShader;
 		float phase;
 
 		// Game Objects
-		Vessel *vessel;
 
 		Marx::Map *cMap;
 		Marx::Map *waterMap;
-		Marx::Projectile * p;
 
-		SGO championSGO;
-		SGO maskSGO;
-		SGO wepSGO;
-		SGO placeHolderSGO;
-		TheSpinner *s;
-		TheSpinner *s2;
+		Vessel *myVessel;
 
 		// UI
+
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
-		GUI::Button *b4;
-		GUI::Button *b5;
-		GUI::Button *b6;
-		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
+		GUI::TextBox *levelInd;
+		SGO *crossHairSGO;
+
+		// Misc
+
+		GameMap *gMap;
+
+		PLAYER_MODE characterType;
+		int classType;
+
+		sf::Sound current;
+
+		// tech demos:
+		sf::Vector2f butSize;
+		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
+		
+		std::deque<skill_notify> snQueue;
+
+		void checkBtns(sf::Time);
+		void createClassUI();
+		
+		void updateSkillGraphics(sf::Time t);
 };
 
 #endif
