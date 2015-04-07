@@ -253,6 +253,22 @@ void ServerNetworkController::sendEventMessage(Event *event)
 		      update(message);
 		      break;
 		}
+		case ::Marx::ADD_POINTS:
+		{
+			AddPointsEvent *pe = (AddPointsEvent*) event;
+			AddPointsMessage pm;
+			pm.points      = pe->getPoints();
+
+			Message message;
+
+			message.data = &pm;
+			message.len  = sizeof(UpdateMessage);
+			message.type = ::Marx::ADD_POINTS;
+
+			// send the network event
+			update(message);
+			break;
+		}
 		default:
 		    printf("\r\nWARNING: NetworkController::sendEventMessage received an "
 		        "unknown event type. please add new case to switch statement\r\n");

@@ -277,7 +277,7 @@ void ServerGameState::goToScoreboard()
         fprintf(stdout, "SERVER NICKNAME: %s\n", playerEntity->getNickname());
         fflush(stdout);
         player_stats[i].type = (int) playerEntity->getMode();
-        player_stats[i].score = 999;
+        player_stats[i].score = playerEntity->getPoints();
         i++;
     }
 
