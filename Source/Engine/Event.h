@@ -47,7 +47,7 @@ namespace Marx
         SET_HEALTH,
         SKILL,
 		SKILL_NOTIFY,
-	ADD_POINTS
+		ADD_POINTS
     };
 
     /*

@@ -43,6 +43,7 @@ using namespace Marx;
 Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Action * _act, sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0) :
 	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
+	TimeToLive = _act->getTTL();
     std::cout << act << std::endl;
     float hy = sqrt( vector.x*vector.x + vector.y*vector.y );
     heading = sf::Vector2f(vector.x / hy, vector.y / hy);
@@ -51,6 +52,7 @@ Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Act
 
 void Projectile::onCreate()
 {
+	Entity::onCreate();
 	drawable = true;
 	Manager::ProjectileManager::dequeue(this);
 }
@@ -58,7 +60,9 @@ void Projectile::onCreate()
 void Projectile::onDestroy()
 {
 	VEntity::onDestroy();
-
+	std::cout << "Projectile::Destroy: " << this << std::endl;
+	//act = nullptr;
+	TimeToLive = 0;
 	Manager::ProjectileManager::enqueue(this);
 }
 
@@ -66,21 +70,31 @@ void Projectile::onDestroy()
 void Projectile::onUpdate(float t)
 {
 	Entity *hit;
-
+	//std::cout << "Time: " << TimeToLive << std::endl;
     if(TimeToLive > 0.0f)
     {
-		if(top == -100)
-			return;
-        act->onUpdate(this, t);
+		//std::cout << "Projectile alive" << std::endl;
+		if (act != nullptr)
+		{
+        	act->onUpdate(this, t);
+		}
+		else
+		{
+			std::cout << "No action" << std::endl;
+			onDestroy();
+		}
         TimeToLive -= t;
     }
     else
     {
-        onDestroy();
+		//std::cout << "Projectile destroy" << std::endl;
+		if (top != -100)
+        	onDestroy();
     }
+	
 
     // Process events.
-    /*std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
+    std::vector<Marx::Event*>* eventQueue = getController()->getEvents();
     for(std::vector<Marx::Event*>::iterator it = eventQueue->begin(); it != eventQueue->end(); ++it )
     {
         switch((*it)->type)
@@ -90,24 +104,14 @@ void Projectile::onUpdate(float t)
                 MoveEvent * ev = static_cast<MoveEvent*>(*it);
                 sf::Vector2f vec(ev->getXDir(), ev->getYDir());
 				std::cout << "Move from " << left << " " << top << " to " << vec.x << " " << vec.y << std::endl;
-            	if ((hit = rMove( vec, t, true )) != nullptr)
-				{
-					std::cout << "Hit something" << std::endl;
-					if(hit != shooter)
-					{
-						if (Manager::ProjectileManager::getServer())
-						{
-							std::cout << "Hit" << std::endl;
-							act->onHit(shooter, hit);
-						}
-						onDestroy();
-					}
-				}
+            	aMove( vec.x, vec.y, true );
 				std::cout << "Now at " << left << " " << top << std::endl;
+				TimeToLive = act->getTTL();
 			}
         }
-    }*/
-	//getController()->clearEvents();
+    }
+
+	getController()->clearEvents();
 
 }
 
