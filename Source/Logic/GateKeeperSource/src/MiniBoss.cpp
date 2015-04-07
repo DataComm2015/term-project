@@ -29,15 +29,15 @@ using namespace Manager;
 MiniBoss::MiniBoss(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
-    _range = 10;
+    _range = 15;
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 1;
+    _attackSpeed = 3;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.09;
-    _ySpeed = 0.09;
+    _xSpeed = 0.08;
+    _ySpeed = 0.08;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
     int randDirection = (rand() % 3) - 1;
@@ -154,12 +154,23 @@ void MiniBoss::onUpdate(float deltaTime)
 
             break;
 		}
+        case ::Marx::ATTACK:
+        {
+          _attackSpeed -= deltaTime;
+          if (_attackSpeed <= 0)
+          {
+            SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+            std::cout << "ATTACK" << std::endl;
+            createSkAttack(*saev, getSprite(), left, top);
+            _attackSpeed = 3;
+          }
+          break;
+        }
         case ::Marx::SKILL:
         {
-			std::cout << "Skill Event " << (*it)->type << std::endl;
             // process the skill event, and increase/decrease hp and stuff
             SkillEvent *ev = (SkillEvent*)(*it);
-            
+
             printf("GateKeeper BEFORE Health: %d\n", _health);
             switch(ev->getSkillType())
             {
@@ -195,7 +206,6 @@ void MiniBoss::onUpdate(float deltaTime)
 			return;
 		}
     }
-
 
   }
 
@@ -282,7 +292,7 @@ void MiniBoss::setAttack(int a)
   _attack = a;
 }
 
-void MiniBoss::setAttackSpeed(int as)
+void MiniBoss::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
@@ -324,7 +334,7 @@ int MiniBoss::getAttack()
   return _attack;
 }
 
-int MiniBoss::getAttackSpeed()
+float MiniBoss::getAttackSpeed()
 {
   return _attackSpeed;
 }

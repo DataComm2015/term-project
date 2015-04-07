@@ -178,25 +178,7 @@ void PlayerEntity::onUpdate(Message msg)
                         std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
                         std::cout << "Entity Health BEFORE: " << vessel->getHealth() << std::endl;
                         std::cout << "Entity VALUE: " << sk->val << std::endl;
-                        //switch(sk->st)
-                        //{
-                        //    case SKILLTYPE::HEAL:
-                        //        vessel->setHealth(vessel->getHealth() + sk->val);
-                        //        vessel->getController()->addEvent(ev);
-                        //    break;
-                        //    case SKILLTYPE::DMG:
-                        //        vessel->setHealth(vessel->getHealth() - sk->val);
-                        //        vessel->getController()->addEvent(ev);
-                        //    break;
-                        //    case SKILLTYPE::BUFF:
-                        //        vessel->setSpeed(vessel->getSpeed() + sk->val);
-                        //        vessel->getController()->addEvent(ev);
-                        //    break;
-                        //    case SKILLTYPE::DEBUFF:
-                        //        vessel->setSpeed(vessel->getSpeed() - sk->val);
-                        //        vessel->getController()->addEvent(ev);
-                        //    break;
-                        //}
+                        
                         vessel->getController()->addEvent(ev);
                         std::cout << "Entity Health After: " << vessel->getHealth() << std::endl;
 
@@ -238,7 +220,20 @@ void PlayerEntity::onUpdate(Message msg)
                 }
             }
 
-
+            auto players = server->getGameState()->getPlayers();
+            
+            for(auto entry = players.begin(); entry != players.end(); entry++)
+            {
+                PlayerEntity* playerEntity = entry->second;
+                
+                Message message;
+                
+                message.type = (int)PlayerCommandMsgType::SKILL_NOTIFY;
+                message.data = (void*)sk;
+                message.len  = sizeof(sk);
+                
+                playerEntity->update(message);
+            }
 
             break;
         }

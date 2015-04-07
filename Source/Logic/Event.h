@@ -144,6 +144,23 @@ class SkillEvent: public ::Marx::Event
         SKILLTYPE skillType;
 };
 
+class SkillNotification: public ::Marx::Event
+{
+    public:
+        SkillNotification(float _x, float _y, SKILLTYPE _skillType);
+        float getX();
+        void setX(float _x);
+        float getY();
+        void setY(float _y);
+        SKILLTYPE getSkillType();
+        void setSkillType(SKILLTYPE _skillType);
+    
+    private:
+        float x;
+        float y;
+        SKILLTYPE skillType;
+};
+
 struct AddPointsMessage
 {
 	int entid; // Entity id source
