@@ -273,9 +273,11 @@ break;
 				{
 					case SKILLTYPE::HEAL:
 						currentHealth += ev->getValue();
+						myHealthBar->update((float)currentHealth/(float)maxHealth);
 					break;
 					case SKILLTYPE::DMG:
 						currentHealth -= ev->getValue();
+						myHealthBar->update((float)currentHealth/(float)maxHealth);
 					break;
 					case SKILLTYPE::BUFF:
 						xSpeed += ev->getValue();
@@ -1180,6 +1182,8 @@ void Vessel::setHealth(int health)
         currentHealth = 0;
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
+
+    myHealthBar->update((float)currentHealth/(float)maxHealth);
 }
 
 void Vessel::setSpeed(int _speed)
@@ -1294,4 +1298,9 @@ float Vessel::getYPosition()
 float Vessel::getXPosition()
 {
 	return yPos;
+}
+
+void Vessel::setHealthBar(GUI::HealthBar* hb)
+{
+	myHealthBar = hb;
 }
