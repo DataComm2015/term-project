@@ -321,6 +321,16 @@ void MiniBee::setSpeed(int _speed)
     _ySpeed = _speed;
 }
 
+float MiniBee::getXSpeed()
+{
+	return _xSpeed;
+}
+
+float MiniBee::getYSpeed()
+{
+	return _ySpeed;
+}
+
 int MiniBee::getSpeed()
 {
 	return _xSpeed;
@@ -346,10 +356,6 @@ float MiniBee::getAttackSpeed()
   return _attackSpeed;
 }
 
-int MiniBee::getMovementSpeed()
-{
-  return _movementSpeed;
-}
 
 void MiniBee::turn()
 {

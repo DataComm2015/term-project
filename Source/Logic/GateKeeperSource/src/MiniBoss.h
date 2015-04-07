@@ -35,11 +35,12 @@ class MiniBoss : public GateKeeper
 		void setXSpeed(float x);
 		void setYSpeed(float y);
     void setSpeed(int _speed);
+		float getXSpeed();
+		float getYSpeed();
 		int getRange();
 		int getHealth();
 		int getAttack();
 		float getAttackSpeed();
-		int getMovementSpeed();
     int getSpeed();
 		void turn();
 		void onCreate();

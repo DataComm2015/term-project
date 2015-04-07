@@ -314,6 +314,16 @@ void MiniBoss::setSpeed(int _speed)
     _ySpeed = _speed;
 }
 
+float MiniBoss::getXSpeed()
+{
+	return _xSpeed;
+}
+
+float MiniBoss::getYSpeed()
+{
+	return _ySpeed;
+}
+
 int MiniBoss::getSpeed()
 {
 	return _xSpeed;
@@ -339,10 +349,7 @@ float MiniBoss::getAttackSpeed()
   return _attackSpeed;
 }
 
-int MiniBoss::getMovementSpeed()
-{
-  return _movementSpeed;
-}
+
 
 void MiniBoss::turn()
 {

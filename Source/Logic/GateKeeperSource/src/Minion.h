@@ -35,6 +35,8 @@ class Minion : public GateKeeper
 		void setXSpeed(float x);
 		void setYSpeed(float y);
     void setSpeed(int _speed);
+		float getXSpeed();
+		float getYSpeed();
 		int getRange();
 		int getHealth();
 		int getAttack();
