@@ -589,7 +589,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 	{
 		case GRASS:
 		{
-			int grassChoices = 2;
+			int grassChoices = 4;
 			int selection = rand() % grassChoices;
 
 			switch(selection)
@@ -600,7 +600,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "grass/lost_grass");
+						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass", true, 5);
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
@@ -614,7 +614,35 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "grass/lost_grass", true, 5);
+						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
+							cell->getX(), cell->getY());
+					}
+
+					break;
+				}
+
+				case 2:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						cell = block->getRandomCell();
+
+						eh->getEnemy(&enemy, "grass/lost_grass");
+						gameScene->createEnemy(getEnemyType(enemy), NULL,
+							cell->getX(), cell->getY());
+					}
+
+					break;
+				}
+
+				case 3:
+				{
+					for (int i = 0; i < num; i++)
+					{
+						cell = block->getRandomCell();
+
+						eh->getEnemy(&enemy, "grass/lost_grass", true, 1);
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
@@ -653,7 +681,7 @@ void GameMap::createEnemyGroup(Block *block, BlockZone z, int num)
 					{
 						cell = block->getRandomCell();
 
-						eh->getEnemy(&enemy, "grass/lost_grass");
+						eh->getEnemy(&enemy, "grass/lost_grass/ground_grass");
 						gameScene->createEnemy(getEnemyType(enemy), NULL,
 							cell->getX(), cell->getY());
 					}
