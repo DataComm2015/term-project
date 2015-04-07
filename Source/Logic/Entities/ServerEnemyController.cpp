@@ -32,6 +32,8 @@ ServerEnemyController::ServerEnemyController(Behaviour *behaviour, ServerGameSce
   moving = false;
 
   _servGameScene = sgs;
+
+  attackTimer = 1;
 }
 
 ServerEnemyController::~ServerEnemyController()
@@ -120,11 +122,15 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
 
           event = new MoveEvent(gk_X, gk_Y, xDirection, yDirection, 0);
           addEvent(event);
+        }
+        attackTimer -= deltaTime;
 
+        if (attackTimer <= 0)
+        {
           attackEvent = new AttackEvent(getId(), ActionType::normalAttack, vessel_X, vessel_Y);
 
           addEvent(attackEvent);
-
+          attackTimer = 1;
         }
 
     }

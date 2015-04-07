@@ -33,7 +33,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 3;
+    _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.06;
@@ -162,7 +162,7 @@ void MiniBoss::onUpdate(float deltaTime)
             SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
             std::cout << "ATTACK" << std::endl;
             createSkAttack(*saev, getSprite(), left, top);
-            _attackSpeed = 3;
+            _attackSpeed = 1;
           }
           break;
         }

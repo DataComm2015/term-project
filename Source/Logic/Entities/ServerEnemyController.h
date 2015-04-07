@@ -36,6 +36,7 @@ class ServerEnemyController : public ServerNetworkController
         int yDirection;
         Vessel* targetVessel;
         bool moving;
+        float attackTimer;
 };
 
 #endif
