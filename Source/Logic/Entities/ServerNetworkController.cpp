@@ -286,7 +286,7 @@ void ServerNetworkController::sendEventMessage(Event *event)
 --
 -- DESIGNER:        Eric Tsang
 --
--- PROGRAMMER:      Calvin Rempel, Eric Tsang
+-- PROGRAMMER:      Calvin Rempel, Eric Tsang, Jeff Bayntun
 --		            Sanders Lee (Debugged synchronization problem across clients)
 --
 --
