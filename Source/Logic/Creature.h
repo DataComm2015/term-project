@@ -15,7 +15,8 @@ using Marx::Entity;
  * including the player. This allows them to be buffed/debuffed identically.
  *
  * PROGRAMMER: Calvin Rempel
-*				Thomas Tallentire
+ *			Thomas Tallentire
+ *      Marc Vouve
  */
 class Creature
 {

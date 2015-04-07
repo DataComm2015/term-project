@@ -12,6 +12,7 @@
 -- DESIGNER: Marc Vouve
 --
 -- PROGRAMMER:  Thomas Tallentire
+--              Marc Vouve
 --
 -- NOTES:
 -- This class will be held by a projectile. It will define the action
