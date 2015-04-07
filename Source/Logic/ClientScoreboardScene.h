@@ -47,7 +47,7 @@
 #define SCALE 0.66
 #define SCREEN_SCALE 0.33
 
-#define SCORE_COUNTDOWN 10
+#define SCORE_COUNTDOWN SCOREBOARD_LENGTH_SECONDS
 
 /*
 *   This is the Lobby scene.
@@ -92,4 +92,3 @@ class ClientScoreboardScene : public Scene
 };
 
 #endif
-
