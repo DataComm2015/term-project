@@ -56,7 +56,7 @@ using namespace Manager;
 *          Sets animation.
 ******************************************************************************/
 GateKeeper::GateKeeper(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
-VEntity(sprite, map, x, y, ctrl, h, w)
+VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
 {
     _range = 10;
     _health = 100;
@@ -120,6 +120,7 @@ void GateKeeper::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
+        {
     		MoveEvent* ev = (MoveEvent*) (*it);
         int xDir = ev->getXDir();
         int yDir = ev->getYDir();
@@ -175,6 +176,54 @@ void GateKeeper::onUpdate(float deltaTime)
         playSound(newXSpeed, newYSpeed);
 
     		break;
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			SetHealthEvent* ev = (SetHealthEvent*) (*it);
+
+            setHealth(ev->getChange());
+			Controller *attackerCont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
+			if (ev->getChange() > 0)
+			{
+				AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
+				attackerCont->addEvent(pointsEvent);
+			}
+            break;
+		}
+        case ::Marx::SKILL:
+        {
+            // process the skill event, and increase/decrease hp and stuff
+            SkillEvent *ev = (SkillEvent*)(*it);
+            
+            printf("GateKeeper BEFORE Health: %d\n", _health);
+            switch(ev->getSkillType())
+            {
+                case SKILLTYPE::HEAL:
+                    _health += ev->getValue();
+                break;
+                case SKILLTYPE::DMG:
+                    _health -= ev->getValue();
+                break;
+                case SKILLTYPE::BUFF:
+                    _xSpeed += ev->getValue();
+                    _ySpeed += ev->getValue();
+                break;
+                case SKILLTYPE::DEBUFF:
+                    _xSpeed -= ev->getValue();
+                    _ySpeed -= ev->getValue();
+                break;
+            }
+            
+            printf("GateKeeper AFTER Health: %d\n", _health);
+            
+            if(_health <= 0)
+            {
+              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+              onDestroy();
+            }
+    
+            break;
+        }
     }
 
 
@@ -381,11 +430,6 @@ void GateKeeper::onCreate()
 
 }
 
-void GateKeeper::onDestroy()
-{
-
-}
-
 void GateKeeper::stopAllSounds()
 {
     footstep.stop();
@@ -417,4 +461,9 @@ bool GateKeeper::operator==(const VEntity&)
 Entity *GateKeeper::getEntity()
 {
     return this;
+}
+
+ENTITY_TYPES GateKeeper::getType()
+{
+	return ENTITY_TYPES::BASIC_TYPE;
 }

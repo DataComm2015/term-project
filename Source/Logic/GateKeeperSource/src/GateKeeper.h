@@ -54,7 +54,6 @@ class GateKeeper : public Marx::VEntity, public Creature
         virtual int getSpeed();
 		virtual void turn();
 		virtual void onCreate();
-		virtual void onDestroy();
 		virtual void onUpdate(float);
 		virtual bool operator==(const VEntity&);
         virtual void stopAllSounds();
@@ -62,6 +61,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual bool isMoving();
 		virtual void playSound(float, float);
 		virtual void animate();
+        ENTITY_TYPES getType();
 
 
 	protected:
