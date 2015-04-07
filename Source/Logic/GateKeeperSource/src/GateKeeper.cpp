@@ -44,7 +44,6 @@ VEntity(sprite, map, x, y, ctrl, h, w)
     _ySpeed = 0.06;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
-    srand (time(NULL));
 
     int randDirection = (rand() % 3) - 1;
 
