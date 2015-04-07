@@ -115,6 +115,8 @@ void GateKeeper::onUpdate(float deltaTime)
       ; ++it )
   {
 
+	std::cout << "GateKeeper::Event " << (*it)->type << std::endl;
+
     // switch on type
     switch((*it)->type)
     {
@@ -179,13 +181,16 @@ void GateKeeper::onUpdate(float deltaTime)
 		case ::Marx::SET_HEALTH:
 		{
 			SetHealthEvent * event = (SetHealthEvent*)(*it);
-			std::cout << "Set Health " << event->getChange() << std::endl;
-			setHealth(getHealth()+event->getChange());
-			if (event->getChange() < 0)
+			_health = getHealth()-event->getChange();
+
+			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+			cont->addEvent(pointsEvent);
+
+			if(_health <= 0)
 			{
-				Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
-				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
-				cont->addEvent(pointsEvent);
+				std::cout << "GateKeeper Dead" << std::endl;
+				onDestroy();
 			}
 
       break;

@@ -78,78 +78,96 @@ void Minion::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
+		{
     		ev = (MoveEvent*) (*it);
-        xDir = ev->getXDir();
-        yDir = ev->getYDir();
+			xDir = ev->getXDir();
+			yDir = ev->getYDir();
 
-        Entity::aMove(ev->getX(), ev->getY(), false);
+			Entity::aMove(ev->getX(), ev->getY(), false);
 
-        if (yDir < 0)
-        {
-          newYSpeed = -_ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingUp = true;
-          movingDown = false;
-        }
-        else
-        {
-          newYSpeed = _ySpeed;
-          int randDirection = (rand() % 3) - 1;
-          getSprite().sprite().setScale(randDirection, 1);
-          movingDown = true;
-          movingUp = false;
-        }
+			if (yDir < 0)
+			{
+			  newYSpeed = -_ySpeed;
+			  int randDirection = (rand() % 3) - 1;
+			  getSprite().sprite().setScale(randDirection, 1);
+			  movingUp = true;
+			  movingDown = false;
+			}
+			else
+			{
+			  newYSpeed = _ySpeed;
+			  int randDirection = (rand() % 3) - 1;
+			  getSprite().sprite().setScale(randDirection, 1);
+			  movingDown = true;
+			  movingUp = false;
+			}
 
-        if (xDir > 0)
-        {
-          newXSpeed = _xSpeed;
-          getSprite().sprite().setScale(1, 1);
-          movingRight = true;
-          movingLeft = false;
-        }
-        else
-        {
-          newXSpeed = -_xSpeed;
-          getSprite().sprite().setScale(-1, 1);
-          movingLeft = true;
-          movingRight = false;
-        }
+			if (xDir > 0)
+			{
+			  newXSpeed = _xSpeed;
+			  getSprite().sprite().setScale(1, 1);
+			  movingRight = true;
+			  movingLeft = false;
+			}
+			else
+			{
+			  newXSpeed = -_xSpeed;
+			  getSprite().sprite().setScale(-1, 1);
+			  movingLeft = true;
+			  movingRight = false;
+			}
 
-        if (xDir == 0)
-        {
-          newXSpeed = 0;
-          movingLeft = false;
-          movingRight = false;
-        }
+			if (xDir == 0)
+			{
+			  newXSpeed = 0;
+			  movingLeft = false;
+			  movingRight = false;
+			}
 
-        if (yDir == 0)
-        {
-          newYSpeed = 0;
-          movingUp = false;
-          movingDown = false;
-        }
+			if (yDir == 0)
+			{
+			  newYSpeed = 0;
+			  movingUp = false;
+			  movingDown = false;
+			}
 
-        //playSound(newXSpeed, newYSpeed);
+			//playSound(newXSpeed, newYSpeed);
 
     		break;
-				case ::Marx::ATTACK:
-				{
-					_attackSpeed -= deltaTime;
-					if (_attackSpeed <= 0)
-					{
-						SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-						std::cout << "ATTACK" << std::endl;
-						createSkAttack(*saev, getSprite(), left, top);
-						_attackSpeed = 3;
-					}
-					break;
-				}
+		}
+		case ::Marx::SET_HEALTH:
+		{
+			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			_health = getHealth()-event->getChange();
+			
+			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+			cont->addEvent(pointsEvent);
+
+			if(_health <= 0)
+			{
+				std::cout << "Minion Dead" << std::endl;
+				onDestroy();
+			}
+
+            break;
+		}
+		case ::Marx::ATTACK:
+		{
+			_attackSpeed -= deltaTime;
+			if (_attackSpeed <= 0)
+			{
+				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
+				std::cout << "ATTACK" << std::endl;
+				createSkAttack(*saev, getSprite(), left, top);
+				_attackSpeed = 3;
+			}
+			break;
+		}
         case ::Marx::SKILL:
         {
             // process the skill event, and increase/decrease hp and stuff
             SkillEvent *ev = (SkillEvent*)(*it);
-
             printf("GateKeeper BEFORE Health: %d\n", _health);
             switch(ev->getSkillType())
             {
@@ -168,15 +186,14 @@ void Minion::onUpdate(float deltaTime)
                     _ySpeed -= ev->getValue();
                 break;
             }
-
+            
             printf("GateKeeper AFTER Health: %d\n", _health);
-
+            
             if(_health <= 0)
             {
               std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
               onDestroy();
             }
-
             break;
         }
     }

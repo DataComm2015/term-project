@@ -101,6 +101,7 @@ class Vessel : public Marx::VEntity, public Creature
 		float myY;
 		float servX;
 		float servY;
+		float attCool;
 		int direction;	//0 = right, 1 = left //why not a bool?
 		bool movingLeft;
 	  bool movingRight;

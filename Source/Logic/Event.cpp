@@ -291,13 +291,18 @@ int SkillAttackEvent::getDestY()
 }
 
 /* ------------------------------- Set Health Event ------------------------------------*/
-SetHealthEvent::SetHealthEvent(int id, float _change) : entid(id), change(_change), Event(Marx::SET_HEALTH)
+SetHealthEvent::SetHealthEvent(int id, bool _type, float _change) : entid(id), typeHeal(_type), change(_change), Event(Marx::SET_HEALTH)
 {
 }
 
 int SetHealthEvent::getEntId()
 {
 	return entid;
+}
+
+bool SetHealthEvent::getTypeHeal()
+{
+	return type;
 }
 
 float SetHealthEvent::getChange()
@@ -355,3 +360,4 @@ void SkillNotification::setSkillType(SKILLTYPE _skillType)
     skillType = _skillType;
 }
 // Ability notification end 
+
