@@ -44,7 +44,7 @@ void AttackAction::onHit(Entity * me, Entity *e)
     ServerNetworkController *cont = (ServerNetworkController*)((Projectile*)me)->getShooter()->getController();
     Controller *contEnemy = static_cast<ServerNetworkController*>(e->getController());
     /*           Set Health            */
-    SetHealthEvent *event = new SetHealthEvent(cont->getId(), damage);
+    SetHealthEvent *event = new SetHealthEvent(cont->getId(), false,damage);
 	std::cout << "OnHit event type: " << event->type << std::endl;
     contEnemy->addEvent(event);
     /*           Set Points            */

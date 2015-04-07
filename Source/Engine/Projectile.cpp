@@ -43,6 +43,7 @@ using namespace Marx;
 Projectile::Projectile(SGO &_sprite, Map *map, Entity * e, float x, float y, Action * _act, sf::Vector2f vector, Controller * ctrl = NULL,  float h = 1.0, float w = 1.0) :
 	VEntity(_sprite, map, x, y, ctrl, h, w), act(_act), heading(vector)
 {
+	TimeToLive = _act->getTTL();
     std::cout << act << std::endl;
     float hy = sqrt( vector.x*vector.x + vector.y*vector.y );
     heading = sf::Vector2f(vector.x / hy, vector.y / hy);
@@ -60,7 +61,7 @@ void Projectile::onDestroy()
 {
 	VEntity::onDestroy();
 	std::cout << "Projectile::Destroy: " << this << std::endl;
-	act = nullptr;
+	//act = nullptr;
 	TimeToLive = 0;
 	Manager::ProjectileManager::enqueue(this);
 }
@@ -69,7 +70,7 @@ void Projectile::onDestroy()
 void Projectile::onUpdate(float t)
 {
 	Entity *hit;
-
+	//std::cout << "Time: " << TimeToLive << std::endl;
     if(TimeToLive > 0.0f)
     {
 		//std::cout << "Projectile alive" << std::endl;
@@ -105,6 +106,7 @@ void Projectile::onUpdate(float t)
 				std::cout << "Move from " << left << " " << top << " to " << vec.x << " " << vec.y << std::endl;
             	aMove( vec.x, vec.y, true );
 				std::cout << "Now at " << left << " " << top << std::endl;
+				TimeToLive = act->getTTL();
 			}
         }
     }

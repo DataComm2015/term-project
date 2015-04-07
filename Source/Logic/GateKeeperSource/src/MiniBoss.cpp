@@ -141,15 +141,11 @@ void MiniBoss::onUpdate(float deltaTime)
 		{
 			std::cout << "Health Event " << (*it)->type << std::endl;
 			SetHealthEvent * event = (SetHealthEvent*)(*it);
-			std::cout << "Set Health " << event->getChange() << std::endl;
-			setHealth(getHealth()+event->getChange());
-			std::cout << "Current Health: " << getHealth() << std::endl;
-			if (event->getChange() < 0)
-			{
-				Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
-				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
-				cont->addEvent(pointsEvent);
-			}
+			_health = getHealth()-event->getChange();
+
+			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
+			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
+			cont->addEvent(pointsEvent);
 			if(_health <= 0)
 			{
 				std::cout << "MiniBoss Dead" << std::endl;
