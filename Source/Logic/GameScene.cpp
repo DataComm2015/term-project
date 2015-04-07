@@ -85,8 +85,6 @@ void onclick()
 }
 
 
-GUI::TextBox *pubLevelInd;
-
 
 /******************************************************************************
 *	FUNCTION:
@@ -117,7 +115,7 @@ void onclickLevelup()
 		slevel = "0" + std::to_string(level++);
 	else
 		slevel = std::to_string(level++);
-	pubLevelInd->setText(slevel);
+    //pubLevelInd->setText(slevel);
 }
 
 
@@ -176,8 +174,6 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	std::cout << "before generate water" << std::endl;
 	generateWater();
 	std::cout << "after generate water" << std::endl;
-	generateUI();
-	std::cout << "after generate ui" << std::endl;
 
 	music = Manager::MusicManager::get(GameScene::game_msc);
 	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
@@ -230,6 +226,7 @@ void GameScene::onLoad()
 	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
 
 	// position buttons
+	generateUI();
 	positionUI();
 
 	// Enable buttons
@@ -291,9 +288,6 @@ void GameScene::positionUI()
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-	// position and scale level indicator
-	levelInd->text().setPosition(15, 10);
-	levelInd->text().setScale(1.5, 1.5);
 
 	//the border for the minimap
 	minimapBorder.setSize(
@@ -467,12 +461,15 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != NULL)
 	{
-		//to test:
 		//myVessel->getSprite().sprite().rotate(1);
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
         sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+	}
+	else
+	{
+		crossHairSGO->sprite().rotate(1);
 	}
 
 	/*
@@ -709,7 +706,6 @@ void GameScene::draw()
 	else if(characterType == PLAYER_MODE::VESSEL)
 	{
 		renderer.draw(hb);
-		renderer.draw(levelInd);
 	}
 
 	renderer.end();
@@ -937,7 +933,7 @@ void GameScene::generateWater()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Jeff Bayntun
 *
 *	INTERFACE:
 *
@@ -949,8 +945,6 @@ void GameScene::generateWater()
 ******************************************************************************/
 void GameScene::generateUI()
 {
-	createClassUI();
-
 	sf::Vector2u imageSize = Manager::TextureManager::get(butSprite)->getSize();
 	unsigned int width = imageSize.x / 4;
 	unsigned int height = imageSize.y;
@@ -965,16 +959,8 @@ void GameScene::generateUI()
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
 
-	// Create level indicator
 
-	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Assets/Fonts/arial.ttf");
-
-	levelInd = new GUI::TextBox(nullptr, nullptr);
-	levelInd->toggleSelected(true);
-	levelInd->text().setFont(*arial);
-	levelInd->setText("01");
-	pubLevelInd = levelInd;
+	createClassUI();
 }
 
 
