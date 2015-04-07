@@ -114,9 +114,9 @@ class Vessel : public Marx::VEntity, public Creature
 		float attCool;
 		int direction;	//0 = right, 1 = left //why not a bool?
 		bool movingLeft;
-	  bool movingRight;
+	    bool movingRight;
 		bool movingUp;
-	  bool movingDown;
+	    bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
 		SGO mask_sprite;
 		SGO atk_sprite;
@@ -140,6 +140,10 @@ class Vessel : public Marx::VEntity, public Creature
 		virtual ~Vessel();
 		virtual void onUpdate(float);
 		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
+
+		void playFootstepSound();
+		void playHurtSound();
+		void playAttackSound();
 
 		void setPlayerEntity(PlayerEntity *entity);
 
