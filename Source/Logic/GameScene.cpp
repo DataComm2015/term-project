@@ -85,9 +85,6 @@ void onclick()
 }
 
 
-GUI::TextBox *pubLevelInd;
-
-
 /******************************************************************************
 *	FUNCTION:
 *
@@ -117,7 +114,7 @@ void onclickLevelup()
 		slevel = "0" + std::to_string(level++);
 	else
 		slevel = std::to_string(level++);
-	pubLevelInd->setText(slevel);
+    //pubLevelInd->setText(slevel);
 }
 
 
@@ -290,10 +287,6 @@ void GameScene::positionUI()
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-	// position and scale level indicator
-	levelInd->text().setPosition(15, 10);
-	levelInd->text().setScale(1.5, 1.5);
-
 	//the border for the minimap
 	minimapBorder.setSize(
 		sf::Vector2f(viewMinimap.getViewport().width*windowSize.x,
@@ -326,6 +319,7 @@ void GameScene::positionUI()
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
 	myVessel = vessel;
+	myVessel->setHealthBar(hb);
 }
 
 
@@ -711,7 +705,6 @@ void GameScene::draw()
 	else if(characterType == PLAYER_MODE::VESSEL)
 	{
 		renderer.draw(hb);
-		renderer.draw(levelInd);
 	}
 
 	renderer.end();
@@ -939,7 +932,7 @@ void GameScene::generateWater()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Jeff Bayntun
 *
 *	INTERFACE:
 *
@@ -964,17 +957,6 @@ void GameScene::generateUI()
 	sf::Vector2f healthSize = sf::Vector2f(width, height);
 
 	hb = new GUI::HealthBar(*Manager::TextureManager::get(hbgSprite), *Manager::TextureManager::get(hbarSprite), healthSize, viewUI);
-
-	// Create level indicator
-
-	sf::Font *arial = new sf::Font();
-	arial->loadFromFile("Assets/Fonts/arial.ttf");
-
-	levelInd = new GUI::TextBox(nullptr, nullptr);
-	levelInd->toggleSelected(true);
-	levelInd->text().setFont(*arial);
-	levelInd->setText("01");
-	pubLevelInd = levelInd;
 
 	createClassUI();
 }

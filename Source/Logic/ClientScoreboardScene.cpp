@@ -66,15 +66,15 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
 
     background = new SGO(*Manager::TextureManager::get(backgroundImg));
 
-    sf::Font *arial = new sf::Font();
-    arial->loadFromFile("Assets/Fonts/arial.ttf");
+    sf::Font *font = new sf::Font();
+    font->loadFromFile("Assets/Fonts/hud.ttf");
 
     for (int i = 0; i < SCORE_COLS; i++)
     {
         scoreboard[0][i].text().setScale(SCALE, SCALE);
         scoreboard[0][i].text().move(SCORE_X + (i * OFFSET_X), SCORE_Y);
         scoreboard[0][i].toggleSelected(false);
-        scoreboard[0][i].text().setFont(*arial);
+        scoreboard[0][i].text().setFont(*font);
 
         scoreboard[0][i].setText(SCORE_ELEMENTS[i]);
     }
@@ -86,15 +86,15 @@ ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance
             scoreboard[rows][cols].text().setScale(SCALE, SCALE);
             scoreboard[rows][cols].text().move(SCORE_X + (cols * OFFSET_X), SCORE_Y + (rows * OFFSET_Y));
             scoreboard[rows][cols].toggleSelected(false);
-            scoreboard[rows][cols].text().setFont(*arial);
+            scoreboard[rows][cols].text().setFont(*font);
         }
     }
 
     countdownBox = new GUI::TextBox();
-    countdownBox->text().setScale(SCALE * 2, SCALE * 2);
-    countdownBox->text().move(C_BOX_X, C_BOX_Y);
+    countdownBox->text().setScale(SCALE, SCALE);
+    countdownBox->text().move(C_BOX_X + 90, C_BOX_Y + 50);
     countdownBox->toggleSelected(false);
-    countdownBox->text().setFont(*arial);
+    countdownBox->text().setFont(*font);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -362,4 +362,3 @@ void ClientScoreboardScene::setScoreboard(Player* players)
         }
     }
 }
-
