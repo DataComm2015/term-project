@@ -50,6 +50,17 @@ ServerGameScene::~ServerGameScene()
 {
 	delete gMap;
 
+    for (int i = 0; i < enemyControllers.size(); i++)
+    {
+        delete (enemyControllers[i]);
+    }
+
+    for (int i = 0; i < playerList.size(); i++)
+    {
+        delete (playerList[i]->getController());
+        delete (playerList[i]);
+    }
+
 	for (int i = 0; i < cMap->getHeight(); i++)
 	{
 		for (int j = 0; j < cMap->getWidth(); j++)
@@ -61,19 +72,45 @@ ServerGameScene::~ServerGameScene()
 	delete cMap;
 }
 
+
 void ServerGameScene::update(sf::Time time)
 {
-    auto entities = cMap->getEntities();
-    for ( auto it = entities.begin(); it != entities.end(); ++it)
-    {
-      (*it)->onUpdate();
-    }
 
     if (timer > 0)
     {
+        // Check if the game round should end
+        if (!ALLOW_SINGLE_PLAYER && gameShouldEnd())
+        {
+            timer = 0;
+        }
+
+        /*
+        if (syncTimer > 0)
+        {
+          syncTimer -= time.asSeconds();
+        }
+        else
+        {
+
+          for (int i = 0; i < playerList.size(); i++)
+          {
+            //Vessel* curVessel = playerList[i];
+            //static_cast<ServerNetworkController*>(curVessel->getController())->
+              //addEvent(new UpdateEvent(curVessel->left, curVessel->top));
+          }
+
+          syncTimer = SYNC_INTERVAL;
+        }
+        */
+
+        auto entities = cMap->getEntities();
+        for ( auto it = entities.begin(); it != entities.end(); ++it)
+        {
+          (*it)->onUpdate(time.asSeconds());
+        }
+
         for (int i = 0; i < enemyControllers.size(); i++)
             enemyControllers[i]->updateBehaviour(time.asSeconds());
-
         timer -= time.asSeconds();
     }
     else
@@ -82,7 +119,6 @@ void ServerGameScene::update(sf::Time time)
         {
             command->goToScoreboard();
         }
-
         if (lobtimer > 0)
         {
             lobtimer -= time.asSeconds();
@@ -92,12 +128,8 @@ void ServerGameScene::update(sf::Time time)
             command->goToLobby();
         }
     }
-
-
-
-
-	return;
 }
+
 
 void ServerGameScene::processEvents(sf::Event& e)
 {
@@ -119,7 +151,9 @@ void ServerGameScene::enterScene()
 	  gMap->generateMap(worldSeed, this);
 
     createPlayers();
-	  createEnemy(BASIC_TYPE, NULL, 48, 48);
+	  //createEnemy(BASIC_TYPE, NULL, 48, 48);
+    //createEnemy(MINION, NULL, 48, 48);
+    //createEnemy(MINI_BOSS, NULL, 48, 48);
 }
 
 void ServerGameScene::leaveScene()
@@ -155,13 +189,40 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
     ServerEnemyController *enemyController = new ServerEnemyController(behaviour, this);
     enemyControllers.push_back(enemyController);
 
-    Entity *entity = EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y);
+    GateKeeper *entity = static_cast<GateKeeper*>(EntityFactory::getInstance()->makeEntity(type,enemyController,cMap,x,y));
 
     enemies.push_back((Creature*)entity);
-    enemyController->setEntity(entity);
+    enemyController->setEntity(static_cast<GateKeeper*>(entity));
     enemyController->init();
     command->getGameState()->registerWithAllPlayers(enemyController, &msg);
 }
+
+/*void ServerGameScene::createProjectile(Marx::Action &action, float x, float y)
+{
+    EnemyControllerInit initData;
+    initData.type = ENTITY_TYPES::PROJECTILE;
+    initData.x = x;
+    initData.y = y;
+
+    Message msg;
+    msg.type = 0;
+    msg.data = (void*) &initData;
+    msg.len = sizeof(initData);
+
+    // Create the enemy
+    command->getGameState()->registerWithAllPlayers(enemyController, &msg);
+
+	std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+	PlayerEntity* currPlayer;
+
+    // create vessel, pass it server vessel controller too
+    Entity* e = EntityFactory::getInstance()->makeEntityFromNetworkMessage(cMap,&msg,cont);
+
+    cont->registerSession(currSession,msg);
+
+    command->getGameState()->registerWithAllPlayers(cont,&msg);
+
+}*/
 
 /**
 
@@ -177,6 +238,7 @@ void ServerGameScene::createPlayers()
     PlayerEntity* currPlayer;
     Session* currSession;
     PLAYER_MODE mode;
+    PLAYER_TYPE type;
     int vesselNo = 0;
     int vesselX = 0;
     int vesselY = 0;
@@ -187,6 +249,8 @@ void ServerGameScene::createPlayers()
         currPlayer = it->second;
         currSession = it->first;
         mode = currPlayer->getMode();
+        type = currPlayer->getType(); //sanderschange
+        currPlayer->setSGameScene(this);
 
         switch(mode)
         {
@@ -198,7 +262,18 @@ void ServerGameScene::createPlayers()
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
-                initData.type = ENTITY_TYPES::VESSEL;
+                //sanderschangestart
+                //initData.type = ENTITY_TYPES::VESSEL;
+                switch(type)
+                {
+                  case PLAYER_TYPE::WARRIOR:
+                      initData.type = ENTITY_TYPES::VESSEL_WARRIOR;
+                      break;
+                  case PLAYER_TYPE::SHAMAN:
+                      initData.type = ENTITY_TYPES::VESSEL_SHAMAN;
+                      break;
+                }
+                //sanderschangeend
 		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;
@@ -238,7 +313,41 @@ void ServerGameScene::createPlayers()
     }
 }
 
-std::vector<Vessel*> ServerGameScene::getPlayerList()
+void ServerGameScene::createStructure(ENTITY_TYPES type, float x, float y)
 {
-  return playerList;
+/*
+    EnemyControllerInit initData;
+    initData.type = ENTITY_TYPES::STRUCTURES;
+    initData.x = (float) x;
+    initData.y = (float) y;
+
+    Message msg;
+    msg.data = (void*) &initData;
+    msg.len = sizeof(initData);
+
+    Entity *entity = EntityFactory::getInstance()->makeEntity(type,NULL,cMap,x,y);
+    command->getGameState()->registerWithAllPlayers((Networking::NetworkEntity*) entity, &msg);
+*/
 }
+
+std::vector<Vessel*> *ServerGameScene::getPlayerList()
+{
+  return &playerList;
+}
+
+bool ServerGameScene::gameShouldEnd()
+{
+    int alive = 0;    
+
+    for (int i = 0; i < playerList.size(); i++)
+    {
+        if (!playerList[i]->checkDeath())
+        {
+            alive++;
+        }
+    }
+
+    return (alive <= 1);
+}
+
+

@@ -268,7 +268,7 @@ void ServerGameState::goToScoreboard()
         player_stats[i].score = 0;
     }
 
-    i = 0;  
+    i = 0;
 
     for(auto entry = players.begin(); entry != players.end(); ++entry)
     {
@@ -445,6 +445,7 @@ void ServerGameState::assignPlayerModes()
     std::map<Session*, PlayerEntity*>::iterator itr = players.begin();
     while (itr != players.end())
     {
+        PLAYER_INFO info;
         // If there are still vessels left to place, check if player should be
         // vessel
         if (vesselsRemaining > 0)
@@ -543,9 +544,27 @@ void ServerGameState::unregisterFromAllPlayers(Networking::NetworkEntity *entity
         itr++;
     }
 }
+/**
+ * @brief ServerGameState::update
+ *  This overrides NetworkEntity on update so that if a player joins after,
+ *  they can be send to a fake lobby, but are then picked up by the game the
+ *  next round.
+ *
+ * @param message
+ * message to send
+ * @author  Jeff Bayntun
+ * @designer Jeff Bayntun
+ */
+void ServerGameState::update( Message message )
+{
+    if(message.type == (int)ServerGameStateClientGameStateMsgType::FAKE_LOBBY)
+    {
+        Session* session = (Session*) message.data;
+        std::set<Session*> mySet;
+        mySet.insert(session);
+        mux->update(id, mySet, message);
+        return;
+    }
+    NetworkEntity::update(message);
 
-
-
-
-
-
+}

@@ -6,6 +6,8 @@
 #include "Logic/ServerCommand.h"
 #include "Logic/Entities/ServerNetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
+#include "Engine/ProjectileManager.h"
+#include "Multimedia/manager/SoundManager.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -26,10 +28,15 @@ void run(ServerCommand *server);
 
 int main( int argc, char ** argv )
 {
-    printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
-    fflush(stdout);
+    if( argc < 2 )
+    {
+        printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
+        fflush(stdout);
+    }
 
     ServerCommand server;
+    Manager::ProjectileManager::setServer(&server);
+    Manager::SoundManager::disabled = true;
 
     server.startServer(atoi(argv[1]));
     run(&server);
@@ -48,7 +55,7 @@ void run(ServerCommand *server)
     sf::Time m_timeSinceLastUpdate;
     sf::Time m_sleepTime;
 
-    //m_sleepTime = sf::seconds(1.0/60);
+    m_sleepTime = sf::seconds(1.0/120);
     m_timePerFrame = sf::seconds(1.0/60);
 
     if (!isRunning)
@@ -74,7 +81,7 @@ void run(ServerCommand *server)
                 m_timeSinceLastUpdate -= m_timePerFrame;
                 server->getActiveScene()->update(m_timePerFrame);
 
-                //sf::sleep(m_sleepTime);
+                sf::sleep(m_sleepTime);
             }
         }
 

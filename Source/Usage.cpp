@@ -39,7 +39,6 @@
 #include "Multimedia/graphics/object/BGO.h"
 #include "Multimedia/graphics/object/SGO.h"
 #include "Multimedia/graphics/object/TGO.h"
-//#include "Logic/Champion/Vessel.h"
 
 class StartScreen : public Marx::Scene
 {
@@ -97,7 +96,6 @@ public:
 		// YESS so many switch case statements!!
 		switch (event.type)
 		{
-
 		case sf::Event::KeyPressed:
 			v->move(event.key);
 			break;
@@ -151,7 +149,6 @@ public:
 
 		renderer.draw(background);
 
-
 		renderer.end(); // always end when you're done rendering or want to start fresh again
 
 		renderer.begin();
@@ -173,7 +170,6 @@ private:
 	sf::View view_hud, view_main;
 
 	Renderer renderer;
-
 
 	id_resource texture_1, texture_2;
 	SGO background;

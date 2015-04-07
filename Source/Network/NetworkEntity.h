@@ -23,21 +23,22 @@ namespace Networking
         NetworkEntity(int id, int type);
         NetworkEntity(int type);
         virtual ~NetworkEntity();
-        void update(Message message);
+        virtual void update(Message message);
         void registerSession(Session * session, Message message);
         void unregisterSession(Session * session, Message message);
         int getType();
+	    int getId();
     protected:
         virtual void onRegister(Session *session);
         virtual void onUnregister(Session * session, Message message);
         virtual void onUpdate(Message message);
+        NetworkEntityMultiplexer* mux;
         const int type;
         const int id;
     private:
         int silentRegister(Session* session);
         int silentUnregister(Session* session);
         static int nextId;
-        NetworkEntityMultiplexer* mux;
         std::set< Session * > registeredSessions;
     };
 }

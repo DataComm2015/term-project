@@ -1,3 +1,23 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: MainMenuScene.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:      
+--
+-- DATE: March 30, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--        
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "../AppWindow.h"
 #include "../Network/Message.h"
 #include "../Network/Client.h"
@@ -18,6 +38,7 @@ using Networking::Client;
 using Networking::Message;
 
 bool MainMenuScene::connectFailed;
+GameScene *MainMenuScene::gameScene = NULL;
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: MainMenuScene * MainMenuScene::getInstance()
@@ -52,7 +73,7 @@ MainMenuScene * MainMenuScene::getInstance()
 --
 -- DESIGNER: Alex Lam, Manuel Gonzales and Georgi Hristov
 --
--- PROGRAMMER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- PROGRAMMER: Alex Lam, Manuel Gonzales, Chris Klassen and Georgi Hristov
 --
 -- INTERFACE: MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
 --
@@ -72,10 +93,9 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     connectFailed = false;
 
     client = new Client();
-    gameScene = new GameScene();
     lobbyScene = new ClientLobbyScene();
     scoreScene = new ClientScoreboardScene();
-    clientmux = new ClientMux(gameScene,lobbyScene, scoreScene);
+    clientmux = new ClientMux(lobbyScene, scoreScene);
     NetworkEntityMultiplexer::setInstance(clientmux);
 
     backgroundImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/lobby.png"));
@@ -96,9 +116,8 @@ MainMenuScene::MainMenuScene() : renderer(AppWindow::getInstance(), 48400)
     textBoxes[ SERVER_TXT ]   = new GUI::TextBox( nextTextBox, this, 16 );
     textBoxes[ SERVER_TXT ]   ->setText("localhost");
     textBoxes[ PORT_TXT ]     = new GUI::TextBox( nextTextBox, this, 4 );
-    textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this, 16 );
     textBoxes[ PORT_TXT ]     ->setText("7000");
-    textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this );
+    textBoxes[ NICKNAME_TXT ] = new GUI::TextBox( nextTextBox, this, 16 );
 
 
 
@@ -193,7 +212,7 @@ MainMenuScene::~MainMenuScene()
 --
 -- DESIGNER: Alex Lam, Manuel Gonzales and Georgi Hristov
 --
--- PROGRAMMER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- PROGRAMMER: Alex Lam, Chris Klassen, Manuel Gonzales and Georgi Hristov
 --
 -- INTERFACE: void MainMenuScene::onLoad()
 --
@@ -301,9 +320,9 @@ void MainMenuScene::processEvents(sf::Event& e)
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- DESIGNER: Alex Lam, Chris Klassen, Manuel Gonzales and Georgi Hristov
 --
--- PROGRAMMER: Alex Lam, Manuel Gonzales and Georgi Hristov
+-- PROGRAMMER: Alex Lam, Chris Klassen, Manuel Gonzales and Georgi Hristov
 --
 -- INTERFACE: void MainMenuScene::draw()
 --
@@ -393,12 +412,17 @@ void MainMenuScene::onClick()
     if(port != 0 && 1) //TODO: add check for address filled in
     {
       char* nickname_text = (char *)MainMenuScene::getInstance()->textBoxes[ NICKNAME_TXT ]->getText().c_str();
+      if (strlen(nickname_text) == 0)
+      {
+         connectFailed = true;
+         return;
+      }
 
       MainMenuScene::getInstance()->clientmux->message.type = (int)PlayerCommandMsgType::SERVER_SELECTED_NICKNAME;
       MainMenuScene::getInstance()->clientmux->message.len = strlen(nickname_text);
       //clientmux->message.data = (char*)"TEST";
       MainMenuScene::getInstance()->name_sent = new char[16];
-      memcpy(MainMenuScene::getInstance()->name_sent, nickname_text, strlen(nickname_text));
+      memcpy(MainMenuScene::getInstance()->name_sent, nickname_text, strlen(nickname_text) + 1);
       MainMenuScene::getInstance()->clientmux->message.data = MainMenuScene::getInstance()->name_sent;
 
       short port = atoi( MainMenuScene::getInstance()->textBoxes[ PORT_TXT ]->getText().c_str() );
@@ -410,7 +434,7 @@ void MainMenuScene::onClick()
       }
       else
       {
-         printf("connected\n");
+          printf("connected\n");
       }
     }
 
@@ -467,6 +491,56 @@ void MainMenuScene::updateMainView(sf::View& v)
 {
     v = AppWindow::getInstance().getCurrentView();
     v.zoom(0.33);
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: GameScene* MainMenuScene::getGameScene()
+--
+-- DATE: April 5, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: GameScene* MainMenuScene::getGameScene()
+--
+-- RETURNS: the active GameScene (creates a new one if none is active)
+--
+-- NOTES:
+----------------------------------------------------------------------------------------------------------------------*/
+GameScene *MainMenuScene::getGameScene()
+{
+    if (gameScene == NULL)
+    {
+        gameScene = new GameScene();
+    }
+
+    return gameScene;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: void clearGameScene()
+--
+-- DATE: April 5, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Calvin Rempel
+--
+-- PROGRAMMER: Calvin Rempel
+--
+-- INTERFACE: void clearGameScene()
+--
+-- RETURNS: void
+--
+-- NOTES: deletes the current game scene
+----------------------------------------------------------------------------------------------------------------------*/
+void MainMenuScene::clearGameScene()
+{
+    delete gameScene;
+    gameScene = NULL;
 }
 
 /*------------------------------------------------------------------------------------------------------------------

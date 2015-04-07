@@ -7,6 +7,8 @@
 #include "../../Network/NetworkEntity.h"
 #include "../PlayerMode.h"
 #include "../PlayerLobbyChoices.h"
+#include "../Skills.h"
+#include "../ServerGameScene.h"
 #include "ServerNetworkController.h"
 
 class ServerCommand;
@@ -30,11 +32,15 @@ class PlayerEntity : public NetworkEntity
         virtual ~PlayerEntity();
 
         void setMode(PLAYER_MODE mode);
+        void setType(PLAYER_TYPE type); //sanderschange
         PLAYER_MODE getMode();
+        PLAYER_TYPE getType();
 
         void setController(ServerNetworkController* controller);
         void unsetController();
         char* getNickname();
+        float getDistance(float, float, float, float);
+        void setSGameScene(ServerGameScene *ref);
 
     protected:
         virtual void onUnregister(Session* session, Message msg);
@@ -43,9 +49,11 @@ class PlayerEntity : public NetworkEntity
 
     private:
         char* nickname;
+        ServerGameScene *serverRef;
         ServerNetworkController* controller;
         ServerCommand *server;
         PLAYER_MODE mode;
+        PLAYER_TYPE type;
         PlayerLobbyChoices lobbyChoices;
 };
 

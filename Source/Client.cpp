@@ -5,6 +5,7 @@
 
 #include "Logic/Entities/ClientMux.h"
 #include "Logic/EntityFactory.h"
+#include "Engine/ProjectileManager.h"
 #include "Logic/GameScene.h"
 
 using Networking::NetworkEntityMultiplexer;
@@ -16,14 +17,12 @@ using Networking::Client;
 
 int main(int argc, char* argv[])
 {
-    // Print Launch Instructions
-    printf("USAGE: %s [REMOTE_IP] [REMOTE_PORT]\n",argv[0]);
-    fflush(stdout);
-
     // force the entity factory to create their graphics on the main thread
     EntityFactory::getInstance();
 
     AppWindow::getInstance().setVerticalSyncEnabled(true);
+
+    //AppWindow::getInstance().setKeyRepeatEnabled(false);
 
     AppWindow::getInstance().addScene(MainMenuScene::getInstance());
     //AppWindow::getInstance().addScene(ClientScoreboardScene::getInstance());

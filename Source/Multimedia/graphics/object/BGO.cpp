@@ -3,10 +3,8 @@
  *
  * @date       2015-02-25
  *
- * @revisions  2015-03-24
- *             Game objects are now sf::Transformable.
- *             Render states objects are non longer passed around when drawing.
- *             Use the renderer's public render states member variable instead.
+ * @revisions  2015-04-05
+ *             Game objects now have custom children drawing support.
  *
  * @designer   Melvin Loho
  *
@@ -213,18 +211,45 @@ bool BGO::hasChildren() const
  *
  * @programmer Melvin Loho
  *
- * @param      arg to ignore or not to ignore
+ * @param      arg To ignore or not to ignore
  */
 void BGO::ignoreChildren(bool arg)
 {
 	m_ignoringChildren = arg;
 }
 
-const sf::Transform& BGO::getLocalTransform() const
+/**
+ * Gets the transformations of this game object.
+ *
+ * @date       2015-02-25
+ *
+ * @revisions
+ *
+ * @designer   Melvin Loho
+ *
+ * @programmer Melvin Loho
+ *
+ * @return     The local transform
+ */
+sf::Transform BGO::getLocalTransform() const
 {
 	return sf::Transform::Identity;
 }
 
+/**
+ * Gets the transformations of this game object
+ * that has been affected by the scene graph.
+ *
+ * @date       2015-04-03
+ *
+ * @revisions
+ *
+ * @designer   Melvin Loho
+ *
+ * @programmer Melvin Loho
+ *
+ * @return     The global transform
+ */
 const sf::Transform& BGO::getGlobalTransform() const
 {
 	return m_globaltrans;
@@ -273,11 +298,17 @@ void BGO::update(const sf::Time& t)
 {}
 
 /**
- * Draws this game object's children and itself.
+ * Draws this game object and its children.
  *
- * @date       2015-04-03
+ * @date       2015-02-25
  *
- * @revisions
+ * @revisions  2015-04-03
+ *             This method now caches the transformations
+ *             that are passed down the hierarchy system
+ *
+ *             2015-04-05
+ *             This method now supports the overridable drawChildren() method
+ *             in addition to the already available overridable draw() method
  *
  * @designer   Melvin Loho
  *
@@ -286,7 +317,7 @@ void BGO::update(const sf::Time& t)
  * @param      renderer The renderer
  * @param      states   The render states
  */
-void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
+void BGO::drawSceneGraph(Renderer& renderer, sf::RenderStates states) const
 {
 	// Draw self
 	draw(renderer, states);
@@ -298,12 +329,30 @@ void BGO::drawSG(Renderer& renderer, sf::RenderStates states) const
 	m_globaltrans = states.transform;
 
 	// Draw children
-	if (hasChildren())
+	if (!m_ignoringChildren) drawChildren(renderer, states);
+}
+
+/**
+ * Draws this game object's children.
+ *
+ * @date       2015-04-05
+ *
+ * @revisions
+ *
+ * @designer   Melvin Loho
+ *
+ * @programmer Melvin Loho
+ *
+ * @param      renderer The renderer
+ * @param      states   The render states
+ */
+void BGO::drawChildren(Renderer& renderer, sf::RenderStates states) const
+{
+	if (m_children.empty()) return;
+	
+	for (const BGO* bgo : m_children)
 	{
-		for (const BGO* go : m_children)
-		{
-			go->drawSG(renderer, states);
-		}
+		bgo->drawSceneGraph(renderer, states);
 	}
 }
 

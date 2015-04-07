@@ -12,6 +12,7 @@
 **	DESIGNER: 	Filip Gutica A00781910
 **
 **	PROGRAMMER: Filip Gutica A00781910
+**				Sanders Lee
 **
 ***********************************************************************************/
 
@@ -21,12 +22,15 @@
 #include "../../../Engine/Cell.h"
 #include "../../../Engine/Controller.h"
 #include "../../Creature.h"
+#include "../../../Engine/TileManager.h"
+#include "../../../Multimedia/manager/SoundManager.h"
+#include "../../../Multimedia/graphics/Animation.h"
 
 class GateKeeper : public Marx::VEntity, public Creature
 {
 
 	public:
-		GateKeeper(SGO &sprite,
+		GateKeeper(SGO& sprite,
 			Marx::Map* map,
 			float x,
 			float y,
@@ -35,35 +39,29 @@ class GateKeeper : public Marx::VEntity, public Creature
 			float w
 		);
 		virtual ~GateKeeper();
-		virtual void detectPlayers();
-		virtual void enterCombat();
-		virtual void leaveCombat();
-		virtual bool inCombatRange();
 		virtual void setRange(int r);
 		virtual void setHealth(int h);
 		virtual void setAttack(int a);
-		virtual void setAttackSpeed(int as);
-		virtual void setMovementSPed(int ms);
-		virtual void setTarget(/*Player*/);
-		virtual void setCooldown(/*Timer*/);
-		virtual void setPosition(float x, float y);
+		virtual void setAttackSpeed(float as);
 		virtual void setXSpeed(float x);
 		virtual void setYSpeed(float y);
+        virtual void setSpeed(int _speed);
 		virtual int getRange();
 		virtual int getHealth();
 		virtual int getAttack();
-		virtual int getAttackSpeed();
+		virtual float getAttackSpeed();
 		virtual int getMovementSpeed();
-		//virtual Vessel getTarget();
-		virtual time_t getCooldown();
+        virtual int getSpeed();
 		virtual void turn();
 		virtual void onCreate();
-		virtual void onDestroy();
-		virtual void onUpdate();
+		virtual void onUpdate(float);
 		virtual bool operator==(const VEntity&);
+        virtual void stopAllSounds();
     virtual Entity* getEntity();
 		virtual bool isMoving();
-
+		virtual void playSound(float, float);
+		virtual void animate();
+        ENTITY_TYPES getType();
 
 
 	protected:
@@ -75,10 +73,12 @@ class GateKeeper : public Marx::VEntity, public Creature
 		int _type;
 		int _health;
 		int _attack;
-		int _attackSpeed;
+		float _attackSpeed;
 		int _movementSpeed;
 		float _xSpeed;
 		float _ySpeed;
+		float newXSpeed = 0;
+		float newYSpeed = 0;
 		int _direction;
 		float _xPos;
 		float _yPos;
@@ -86,13 +86,11 @@ class GateKeeper : public Marx::VEntity, public Creature
 		bool _moving;
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
-
-	private:
-
-		//Player _target;
-		//PatrolRadius _radius;
-		//Timer _cooldownTimer;
-		//AI _ai;
+		sf::Sound footstep;
+		sf::Sound voice;
+		BlockZone steppedTile;
+		bool soundActive;
+		Animation *gkAnimation;
 
 
 
