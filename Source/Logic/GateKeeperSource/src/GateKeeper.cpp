@@ -423,9 +423,9 @@ void GateKeeper::setHealth(int h)
 *
 *   PARAMETERS: void
 *
-*   RETURNS: void   - If this enemy is moving
+*   RETURNS: a   - New attack for the enemy
 *
-*   NOTES: Returns true if enemy is moving, false otherwise
+*   NOTES: Sets new attack for the enemy
 ******************************************************************************/
 void GateKeeper::setAttack(int a)
 {
@@ -433,7 +433,7 @@ void GateKeeper::setAttack(int a)
 }
 
 /******************************************************************************
-*   FUNCTION: isMoving()
+*   FUNCTION: setAttackSpeed()
 *
 *   DATE: April 6 2014
 *
@@ -441,13 +441,13 @@ void GateKeeper::setAttack(int a)
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: isMoving()
+*   INTERFACE: setAttackSpeed(float as)
 *
-*   PARAMETERS: void
+*   PARAMETERS: as    - New attack speed for the enemy
 *
-*   RETURNS: bool   - If this enemy is moving
+*   RETURNS: as       - New attack speed for enemy
 *
-*   NOTES: Returns true if enemy is moving, false otherwise
+*   NOTES: Sets new attack speed for the enemy
 ******************************************************************************/
 void GateKeeper::setAttackSpeed(float as)
 {
