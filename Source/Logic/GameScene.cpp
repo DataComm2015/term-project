@@ -51,6 +51,8 @@ id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::Tex
 id_resource GameScene::deityDMGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-debuff.png"));
 id_resource GameScene::deityDBFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-damage.png"));
 id_resource GameScene::deityHLGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healing.png"));
+id_resource GameScene::deityBIGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healingcircle.png"));
+id_resource GameScene::deitySUMImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-summon.png"));
 
 id_resource GameScene::game_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_gameplay.ogg"));
 id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/Environment/ambient_01.ogg"));
@@ -1318,6 +1320,8 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 
 	sn.timer = timer;
 
+	std::cout << "SKILLTYPE: " << (int)_skillType << std::endl;
+
 	switch(_skillType)
 	{
 		case SKILLTYPE::HEAL:
@@ -1333,7 +1337,10 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
 		break;
 		case SKILLTYPE::BIGHEAL:
-			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
+			snSGO = new SGO(*Manager::TextureManager::get(deityBIGImg));
+		break;
+		case SKILLTYPE::SPAWN:
+			snSGO = new SGO(*Manager::TextureManager::get(deitySUMImg));
 		break;
 	}
 

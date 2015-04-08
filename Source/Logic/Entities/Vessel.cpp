@@ -296,6 +296,13 @@ break;
 						xSpeed -= val;
 						ySpeed -= val;
 					break;
+					case SKILLTYPE::BIGHEAL:
+						currentHealth += ev->getValue();
+						myHealthBar->update((float)currentHealth/(float)maxHealth);
+					break;
+					case SKILLTYPE::SPAWN:
+						// Vessel implementation not needed
+					break;
 				}
 
 				break;

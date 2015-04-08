@@ -190,6 +190,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 break;
         }
         serverRef->createEnemy(type, NULL, sk->curX, sk->curY);
+        
+        givePoints(30.0);
+        
         return;
     }
 
@@ -209,15 +212,10 @@ void PlayerEntity::skillCaseHandler(Message msg)
             y2 = vessel->top;
 
             std::cout << "CHECKING VESSEL" << std::endl;
-
             std::cout << "x1 " << x1 << std::endl;
-
             std::cout << "y1 " << y1 << std::endl;
             std::cout << "x2 " << x2 << std::endl;
-
             std::cout << "y2 " << y2 << std::endl;
-
-
             std::cout << "Radius " << sk->radius << std::endl;
 
             if (getDistance(x1, y1, x2, y2) <= sk->radius )
@@ -229,7 +227,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 
                 vessel->getController()->addEvent(ev);
                 
-                givePoints(20.0);
+                givePoints(15.0);
 
                 vessel = NULL;
             }
@@ -241,15 +239,10 @@ void PlayerEntity::skillCaseHandler(Message msg)
             y2 = keeper->top;
 
             std::cout << "CHECKING GATEKEEPER" << std::endl;
-
             std::cout << "x1 " << x1 << std::endl;
-
             std::cout << "y1 " << y1 << std::endl;
             std::cout << "x2 " << x2 << std::endl;
-
             std::cout << "y2 " << y2 << std::endl;
-
-
             std::cout << "Radius " << sk->radius << std::endl;
 
             if (getDistance(x1, y1, x2, y2) <= sk->radius )
@@ -261,7 +254,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 
                 keeper->getController()->addEvent(ev);
                 
-                givePoints(10.0);
+                givePoints(15.0);
 
                 keeper = NULL;
             }
