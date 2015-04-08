@@ -69,6 +69,7 @@ id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::Musi
 *	DESIGNER: Chris Klassen
 *
 *	PROGRAMMER: Chris Klassen
+*               Melvin Loho
 *
 *	INTERFACE: GameScene()
 *
@@ -136,10 +137,11 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 *
 *	PROGRAMMER: Alex Lam
 *				Jonathan Chu
+*               Melvin Loho
 *
-*	INTERFACE:void GameScene::onLoad()
+*	INTERFACE: void GameScene::onLoad()
 *
-*	PARAMETERS:none
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
@@ -207,6 +209,7 @@ void GameScene::onLoad()
 *
 *	PROGRAMMER:	Marc Rafanan
 *				Jonathan Chu
+*               Melvin Loho
 *
 *	INTERFACE:	void GameScene::positionUI()
 *
@@ -250,23 +253,23 @@ void GameScene::positionUI()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: setPlayerVessel
 *
-*	DATE:
+*	DATE: April 7, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Melvin Loho
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Melvin Loho
 *
-*	INTERFACE:
+*	INTERFACE: void GameScene::setPlayerVessel(Vessel *vessel)
 *
-*	PARAMETERS:
+*	PARAMETERS: vessel The Vessel object
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Sets the specified Vessel object as the one that we own now.
 ******************************************************************************/
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
@@ -926,13 +929,13 @@ void GameScene::generateUI()
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam
+*	DESIGNER: Alex Lam, Melvin Loho
 *
-*	PROGRAMMER: Alex Lam
+*	PROGRAMMER: Alex Lam, Melvin Loho
 *
 *	INTERFACE: void GameScene::createClassUI()
 *
-*	PARAMETERS:none
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
@@ -1190,7 +1193,7 @@ void onClickDemiseThree()
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam, Julian Brandrick
+*	DESIGNER: Melvin Loho, Alex Lam, Julian Brandrick
 *
 *	PROGRAMMER: Alex Lam, Julian Brandrick
 *
@@ -1216,7 +1219,7 @@ float convertX(float x)
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam, Julian Brandrick
+*	DESIGNER: Melvin Loho, Alex Lam, Julian Brandrick
 *
 *	PROGRAMMER: Alex Lam, Julian Brandrick
 *
