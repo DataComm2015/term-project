@@ -88,19 +88,6 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-4, -17);
-
-	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_travel_02_baby.ogg"));
-    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_attack_01_baby.ogg"));
-    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_hurt_02_baby.ogg"));
-    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_death_01_baby.ogg"));
-
-    travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
-	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
-	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
-	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
-
-	travel_Snd.setLoop(true);
-    travel_Snd.play();*/
 }
 
 MiniBee::~MiniBee()
@@ -348,7 +335,7 @@ void MiniBee::processSetHealthEvent(SetHealthEvent* ev)
 {
   _health = getHealth() - ev->getChange();
   playHurtSound();
-  
+
   Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
   AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
   cont->addEvent(pointsEvent);
@@ -384,9 +371,8 @@ void MiniBee::processAttackEvent(AttackEvent* aev)
   playAttackSound();
 }
 
-void MiniBee::playTravelSound(float xSpeed, float ySpeed)
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -396,7 +382,7 @@ void MiniBee::playTravelSound(float xSpeed, float ySpeed)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
@@ -405,7 +391,7 @@ void MiniBee::playTravelSound(float xSpeed, float ySpeed)
 *
 *   NOTES: Plays sound associated with this enemy
 ******************************************************************************/
-void MiniBee::playSound(float xSpeed, float ySpeed)
+void MiniBee::playTravelSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;

@@ -74,18 +74,6 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(30, 42), 4, 8);
 
-	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_travel_01.ogg"));
-    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_02.ogg"));
-    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_03.ogg"));
-    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/ghost/ghost_death.ogg"));
-
-    travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
-	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
-	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
-	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
-
-	travel_Snd.setLoop(true);
-    travel_Snd.play();*/
 
 }
 
@@ -371,7 +359,7 @@ void MiniBoss::processAttackEvent(AttackEvent* aev)
 }
 
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -381,7 +369,7 @@ void MiniBoss::processAttackEvent(AttackEvent* aev)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
@@ -390,7 +378,7 @@ void MiniBoss::processAttackEvent(AttackEvent* aev)
 *
 *   NOTES: Plays sound associated with this enemy
 ******************************************************************************/
-void MiniBoss::playSound(float xSpeed, float ySpeed)
+void MiniBoss::playTravelSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;
