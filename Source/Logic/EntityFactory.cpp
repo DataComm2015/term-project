@@ -333,8 +333,6 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *   DESIGNER:
 *
 *   PROGRAMMER:
-*               Filip Gutica
-*               Sanders Lee
 *
 *   INTERFACE:  Entity* EntityFactory::makeEntity(ENTITY_TYPES type,
 *                   Controller* cont, Map* map, float x, float y)
@@ -409,14 +407,13 @@ Entity* EntityFactory::makeEntity(
 *
 *   DATE:
 *
-*   REVISIONS: (Date and Description)
+*   REVISIONS:  Filip Gutica     -  Added cases for Basic types, Minions, mini bees and
+*                                     mini bosses.
 *
 *   DESIGNER:
 *
 *   PROGRAMMER:
 *
-*                 Filip Gutica     -  Added cases for Basic types, Minions, mini bees and
-*                                     mini bosses.
 *
 *   INTERFACE:
 *
