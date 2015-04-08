@@ -227,7 +227,7 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
 /**
 
   Designer: Jeff Bayntun, Eric Tsang
-  Coder:    Jeff Bayntun
+  Coder:    Jeff Bayntun, Sanders Lee (Added code for getting player type)
  * @brief ServerGameScene::createPlayers
  * Creates all the vessels and deitys, this includes hooking them up
  * across the network.
@@ -249,7 +249,7 @@ void ServerGameScene::createPlayers()
         currPlayer = it->second;
         currSession = it->first;
         mode = currPlayer->getMode();
-        type = currPlayer->getType(); //sanderschange
+        type = currPlayer->getType();
         currPlayer->setSGameScene(this);
 		currPlayer->setVessel(NULL);
 
@@ -263,8 +263,6 @@ void ServerGameScene::createPlayers()
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
-                //sanderschangestart
-                //initData.type = ENTITY_TYPES::VESSEL;
                 switch(type)
                 {
                   case PLAYER_TYPE::WARRIOR:
@@ -274,7 +272,6 @@ void ServerGameScene::createPlayers()
                       initData.type = ENTITY_TYPES::VESSEL_SHAMAN;
                       break;
                 }
-                //sanderschangeend
 		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;
@@ -340,7 +337,7 @@ std::vector<Vessel*> *ServerGameScene::getPlayerList()
 
 bool ServerGameScene::gameShouldEnd()
 {
-    int alive = 0;    
+    int alive = 0;
 
     for (int i = 0; i < playerList.size(); i++)
     {
@@ -352,5 +349,3 @@ bool ServerGameScene::gameShouldEnd()
 
     return (alive <= 1);
 }
-
-

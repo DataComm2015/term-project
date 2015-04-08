@@ -19,6 +19,14 @@ using Networking::Session;
 using Networking::Message;
 
 /**
+ * CLASS:       PlayerEntity : public NetworkEntity
+ *
+ * DESIGNER:    ???
+ *
+ * PROGRAMMER:  ???
+ *              Sanders Lee
+ *
+ * NOTES:
  * the {Player} is resides the server, and is logically mapped to the {Command}
  *   class over the network, which is on the client side.
  *
@@ -33,9 +41,9 @@ class PlayerEntity : public NetworkEntity
         virtual ~PlayerEntity();
 
         void setMode(PLAYER_MODE mode);
-        void setType(PLAYER_TYPE type); //sanderschange
+        void setType(PLAYER_TYPE type); // Sets the player type - Sanders Lee
         PLAYER_MODE getMode();
-        PLAYER_TYPE getType();
+        PLAYER_TYPE getType(); // Gets the player type - Sanders Lee
 
         void setController(ServerNetworkController* controller);
         void unsetController();

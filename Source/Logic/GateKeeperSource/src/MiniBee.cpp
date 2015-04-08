@@ -269,6 +269,7 @@ void MiniBee::processMoveEvent(MoveEvent* ev)
 *
 *   PROGRAMMER: Alex Lam
 *               Julian Brandrick
+*               Sanders Lee (Inserted sound effect)
 *
 *   INTERFACE: processSkillEvent(SkillEvent* ev)
 *
@@ -322,7 +323,8 @@ void MiniBee::processSkillEvent(SkillEvent* ev)
 *
 *   DESIGNER:   Thomas Tallentire
 *
-*   PROGRAMMER: Thomas Tallenire
+*   PROGRAMMER: Thomas Tallentire
+*               Sanders Lee (Inserted sound effect)
 *
 *   INTERFACE: processSetHealthEvent(SetHealthEvent* ev)
 *
@@ -358,6 +360,7 @@ void MiniBee::processSetHealthEvent(SetHealthEvent* ev)
 *   DESIGNER:   Filip Gutica
 *
 *   PROGRAMMER: Filip Gutica
+*               Sanders Lee (Inserted sound effect)
 *
 *   INTERFACE: processAttackEvent(AttackEvent* ev)
 *
@@ -391,7 +394,7 @@ void MiniBee::processAttackEvent(AttackEvent* aev)
 *
 *   RETURNS: void
 *
-*   NOTES: Plays sound associated with this enemy
+*   NOTES: Plays travelling sound associated with this enemy
 ******************************************************************************/
 void MiniBee::playTravelSound(float xSpeed, float ySpeed)
 {
@@ -459,7 +462,7 @@ void MiniBee::playTravelSound(float xSpeed, float ySpeed)
 *
 *   RETURNS: void
 *
-*   NOTES: Plays sound associated with this enemy
+*   NOTES: Plays hurt sound associated with this enemy
 ******************************************************************************/
 void MiniBee::playHurtSound()
 {
@@ -488,7 +491,7 @@ void MiniBee::playHurtSound()
 *
 *   RETURNS: void
 *
-*   NOTES: Plays sound associated with this enemy
+*   NOTES: Plays attack sound associated with this enemy
 ******************************************************************************/
 void MiniBee::playAttackSound()
 {

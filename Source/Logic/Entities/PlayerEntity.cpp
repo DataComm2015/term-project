@@ -50,7 +50,25 @@ void PlayerEntity::setMode(PLAYER_MODE mode)
     update(msg);
 }
 
-//sanderschange
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	setType
+--
+-- DATE:		April 7, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Sanders Lee
+--
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void PlayerEntity::setType(PLAYER_TYPE type)
+-- PLAYER_TYPE type: the type of PlayerEntity this is
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Sets the player type (Warrior or Shaman, Life or Death) for the PlayerEntity.
+--              Part of the function chain that propagates menu selection from lobby to game field.
+-----------------------------------------------------------------------------------------------*/
 void PlayerEntity::setType(PLAYER_TYPE type)
 {
     this->type = type;
@@ -61,7 +79,24 @@ PLAYER_MODE PlayerEntity::getMode()
     return mode;
 }
 
-//sanderschange
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	getType
+--
+-- DATE:		April 7, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Sanders Lee
+--
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	PLAYER_TYPE PlayerEntity::getType()
+--
+-- RETURNS: 	PLAYER_TYPE
+--
+-- NOTES:       Gets the player type (Warrior or Shaman, Life or Death) for the PlayerEntity.
+--              Part of the function chain that propagates menu selection from lobby to game field.
+-----------------------------------------------------------------------------------------------*/
 PLAYER_TYPE PlayerEntity::getType()
 {
     return type;
@@ -169,7 +204,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
     Vessel *vessel = NULL;
     GateKeeper *keeper = NULL;
     skill *sk = ((skill*) msg.data);
-    
+
     if (sk->st == SKILLTYPE::SPAWN)
     {
         int enemyType = rand() % 4;
@@ -190,9 +225,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 break;
         }
         serverRef->createEnemy(type, NULL, sk->curX, sk->curY);
-        
+
         givePoints(30.0);
-        
+
         return;
     }
 
@@ -202,7 +237,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
 
     std::cout << "SKILL RECEIVED" << std::endl;
     auto entities = serverRef->getcMap()->getEntities();
-    
+
     for(Entity *entity : entities)
     {
         if(entity->getType() == ENTITY_TYPES::VESSEL)
@@ -224,9 +259,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
                 std::cout << "Entity Health: " << vessel->getHealth() << std::endl;
                 std::cout << "Entity VALUE: " << sk->val << std::endl;
-                
+
                 vessel->getController()->addEvent(ev);
-                
+
                 givePoints(15.0);
 
                 vessel = NULL;
@@ -251,9 +286,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
                 std::cout << "Entity Health: " << keeper->getHealth() << std::endl;
                 std::cout << "Entity VALUE: " << sk->val << std::endl;
-                
+
                 keeper->getController()->addEvent(ev);
-                
+
                 givePoints(15.0);
 
                 keeper = NULL;
@@ -264,13 +299,13 @@ void PlayerEntity::skillCaseHandler(Message msg)
     std::cout << "POINTS: " << getPoints() << std::endl;
 
     auto players = server->getGameState()->getPlayers();
-    
+
     for(auto entry = players.begin(); entry != players.end(); entry++)
     {
         PlayerEntity* playerEntity = entry->second;
-        
+
         Message message;
-        
+
         message.type = (int)PlayerCommandMsgType::SKILL_NOTIFY;
         message.data = (void*)sk;
         message.len  = sizeof(skill);

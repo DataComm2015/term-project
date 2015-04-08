@@ -321,22 +321,29 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 
 
 /******************************************************************************
-*   FUNCTION:
+*   FUNCTION:   makeEntity
 *
-*   DATE:
+*   DATE:       April 7, 2015
 *
-*   REVISIONS:    Filip Gutica     - Add and handle cases for Basic types, Minions,
-*                                    mini bees and mini bosses.
+*   REVISIONS:  Filip Gutica     - Add and handle cases for Basic types, Minions,
+*                                  mini bees and mini bosses.
+*               Sanders Lee      - Added extra entity types so entity selection
+*                                  propagates from lobby to server
 *
 *   DESIGNER:
 *
 *   PROGRAMMER:
+*               Filip Gutica
+*               Sanders Lee
 *
-*   INTERFACE:
+*   INTERFACE:  Entity* EntityFactory::makeEntity(ENTITY_TYPES type,
+*                   Controller* cont, Map* map, float x, float y)
+*   ENTITY_TYPES type: type of entity to be created
+*   Controller* cont: controller to be associated with the entity
+*   Map* map: the map the entity is on
+*   float x, float y: the coordinates of the entity on the map*
 *
-*   PARAMETERS:
-*
-*   RETURNS: void
+*   RETURNS:    Entity* object created by the EntityFactory
 *
 *   NOTES:
 ******************************************************************************/
@@ -358,16 +365,13 @@ Entity* EntityFactory::makeEntity(
             entity = gk;
             break;
         }
-            //sanderschangestart
+
         case ENTITY_TYPES::VESSEL_WARRIOR:
             entity = new Vessel(vesselSGO, maskSGO, spearSGO,map,x,y,cont,1,1);
-            printf("warrior selected whooooooooo\n");
             break;
         case ENTITY_TYPES::VESSEL_SHAMAN:
             entity = new Vessel(vesselSGO, maskSGO, staffSGO,map,x,y,cont,1,1);
-            printf("shaman selected whooooooooo\n");
             break;
-            //sanderschangeend*/
         case STRUCTURES:
             //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
             break;
