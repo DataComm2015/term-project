@@ -45,6 +45,7 @@ id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::
 id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
 id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/crosshair.png"));
+id_resource GameScene::deathImage = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/game_over.png"));
 
 id_resource GameScene::deityRNGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deity-ring.png"));
 id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-buff.png"));
@@ -182,6 +183,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	music = Manager::MusicManager::get(GameScene::game_msc);
 	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
+	deathScreen = new SGO(*Manager::TextureManager::get(deathImage));
 }
 
 
@@ -479,11 +481,12 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != NULL)
 	{
-		//myVessel->getSprite().sprite().rotate(1);
+		deathScreen->middleAnchorPoint(true);
+		deathScreen->sprite().setPosition(viewMain.getCenter());
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
-        sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+        	sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
 	}
 	else
 	{
@@ -742,6 +745,12 @@ void GameScene::draw()
 	renderer.draw(waterMap);
 	renderer.states.shader = nullptr;
 	renderer.draw(cMap);
+
+	if(myVessel->checkDeath())
+	{
+		window.setView(viewMain);
+		renderer.draw(deathScreen);
+	}
 
 	renderer.end();
 
