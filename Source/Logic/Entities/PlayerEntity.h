@@ -47,6 +47,7 @@ class PlayerEntity : public NetworkEntity
 		void givePoints(float points);
 		float getPoints();
         void skillCaseHandler(Message msg);
+        void sendNotification(skill *sk);
         void clearControllerEvents();
 
     protected:

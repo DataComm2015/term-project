@@ -152,6 +152,9 @@ void PlayerEntity::onUpdate(Message msg)
 --
 -- DATE: April 5, 2015
 --
+-- REVISIONS: Calvin Rempel - April 7, 2015
+--              -> Randomized enemy spawns
+--
 -- DESIGNER: Julian Brandrick, Alex Lam
 --
 -- PROGRAMMER: Julian Brandrick, Alex Lam
@@ -162,14 +165,17 @@ void PlayerEntity::onUpdate(Message msg)
 --      msg -> The message received from the player.
 --
 -- NOTES:
---  This function handles all messages
+--  This function handles all skill messages passed to the server.
 ----------------------------------------------------------------------------------------------------------------------*/
 void PlayerEntity::skillCaseHandler(Message msg)
 {
     Vessel *vessel = NULL;
     GateKeeper *keeper = NULL;
+    
+    // Retrieving the skills struct from the message
     skill *sk = ((skill*) msg.data);
     
+    // If the skill type is a spawn, randomize spawned enemy
     if (sk->st == SKILLTYPE::SPAWN)
     {
         int enemyType = rand() % 4;
@@ -193,6 +199,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
         
         givePoints(30.0);
         
+        // Send the notification to all clients
+        sendNotification(sk);
+        
         return;
     }
 
@@ -203,8 +212,10 @@ void PlayerEntity::skillCaseHandler(Message msg)
     std::cout << "SKILL RECEIVED" << std::endl;
     auto entities = serverRef->getcMap()->getEntities();
     
+    // For each entity on the map, check to see if it was affected by the skill
     for(Entity *entity : entities)
     {
+        // If the entity is a vessel
         if(entity->getType() == ENTITY_TYPES::VESSEL)
         {
             vessel = dynamic_cast<Vessel*>((entity));
@@ -217,7 +228,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
             std::cout << "x2 " << x2 << std::endl;
             std::cout << "y2 " << y2 << std::endl;
             std::cout << "Radius " << sk->radius << std::endl;
-
+            
+            // If the entity was within the skill radius, add the skill event to its event queue and add points to the
+            //  player
             if (getDistance(x1, y1, x2, y2) <= sk->radius )
             {
                 SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
@@ -232,6 +245,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 vessel = NULL;
             }
         }
+        // Else if the entity is a gatekeeper
         else if(entity->getType() == ENTITY_TYPES::BASIC_TYPE)
         {
             keeper = dynamic_cast<GateKeeper*>((entity));
@@ -244,7 +258,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
             std::cout << "x2 " << x2 << std::endl;
             std::cout << "y2 " << y2 << std::endl;
             std::cout << "Radius " << sk->radius << std::endl;
-
+            
+            // If the entity was within the skill radius, add the skill event to its event queue and add points to the
+            //  player
             if (getDistance(x1, y1, x2, y2) <= sk->radius )
             {
                 SkillEvent *ev = new SkillEvent(x1, y1, sk->radius, sk->val, sk->st);
@@ -263,6 +279,32 @@ void PlayerEntity::skillCaseHandler(Message msg)
 
     std::cout << "POINTS: " << getPoints() << std::endl;
 
+    // Send the notification to all clients
+    sendNotification(sk);
+}
+
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendNotification
+--
+-- DATE: April 5, 2015
+--
+-- REVISIONS: Calvin Rempel - April 7, 2015
+--              -> Randomized enemy spawns
+--
+-- DESIGNER: Julian Brandrick, Alex Lam
+--
+-- PROGRAMMER: Julian Brandrick, Alex Lam
+--
+-- INTERFACE: void sendNotification(skill *sk)
+--
+-- PARAMETERS:
+--      sk -> The skill structure containing the notification to send
+--
+-- NOTES:
+--  Sends a skill notification to all clients in the game.
+----------------------------------------------------------------------------------------------------------------------*/
+void PlayerEntity::sendNotification(skill *sk)
+{
     auto players = server->getGameState()->getPlayers();
     
     for(auto entry = players.begin(); entry != players.end(); entry++)
