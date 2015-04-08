@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: VEntity.cpp
 --
--- PROGRAM:
+-- PROGRAM: Sojourn
 --
 -- FUNCTIONS:
 --            VEntity(SGO & _sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w, ENTITY_TYPES eType = ENTITY_TYPES::I_DONT_KNOW);
