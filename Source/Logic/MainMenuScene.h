@@ -81,6 +81,10 @@ class MainMenuScene : public Scene
         id_resource textBackgroundImg;
         id_resource textBackgroundBoxImg;
 
+	id_resource menuMsc;
+
+	sf::Music *music;
+
         GUI::Label * serverLbl;
         GUI::Label * portLbl;
         GUI::Label * nicknameLbl;

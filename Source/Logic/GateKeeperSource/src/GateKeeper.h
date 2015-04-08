@@ -45,13 +45,14 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void setAttackSpeed(float as);
 		virtual void setXSpeed(float x);
 		virtual void setYSpeed(float y);
-        virtual void setSpeed(int _speed);
+        virtual void setSpeed(int);
 		virtual int getRange();
 		virtual int getHealth();
 		virtual int getAttack();
 		virtual float getAttackSpeed();
-		virtual int getMovementSpeed();
         virtual int getSpeed();
+				virtual float getXSpeed();
+				virtual float getYSpeed();
 		virtual void turn();
 		virtual void onCreate();
 		virtual void onUpdate(float);
@@ -59,9 +60,17 @@ class GateKeeper : public Marx::VEntity, public Creature
         virtual void stopAllSounds();
     virtual Entity* getEntity();
 		virtual bool isMoving();
+
 		virtual void playSound(float, float);
 		virtual void animate();
-        ENTITY_TYPES getType();
+		virtual void processMoveEvent(MoveEvent* ev);
+		virtual void processSkillEvent(SkillEvent* ev);
+		virtual void processSetHealthEvent(SetHealthEvent* ev);
+		virtual void processAttackEvent(AttackEvent* aev);
+  	ENTITY_TYPES getType();
+
+	id_resource travel_SndB, attack_SndB, hurt_SndB, death_SndB;
+	//sf::Sound travel_Snd, voice_Snd;
 
 
 	protected:
@@ -74,6 +83,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 		int _health;
 		int _attack;
 		float _attackSpeed;
+		float _atackTimer;
 		int _movementSpeed;
 		float _xSpeed;
 		float _ySpeed;

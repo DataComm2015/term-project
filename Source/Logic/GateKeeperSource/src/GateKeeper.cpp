@@ -18,15 +18,15 @@
 #include <typeinfo>
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-//static id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-//static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
-
+id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 
 /******************************************************************************
@@ -34,7 +34,7 @@ using namespace Manager;
 *
 *   DATE: April 6 2014
 *
-*   REVISIONS: (Date and Description)
+*   REVISIONS:
 *
 *   DESIGNER:   Filip Gutica
 *
@@ -62,7 +62,7 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     _health = 100;
     _type = 1;
     _attack = 1;
-    _attackSpeed = 3;
+    _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
     _xSpeed = 0.06;
@@ -72,9 +72,20 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     int randDirection = (rand() % 3) - 1;
     getSprite().sprite().setScale(randDirection, 1);
 
+	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_02.ogg"));
+    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_03.ogg"));
+    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_death_02.ogg"));
+	
+	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
+	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
+	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
+	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
 
-    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 7);
-
+	travel_Snd.setLoop(true);
+    travel_Snd.play();*/
+	
+    gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
 GateKeeper::~GateKeeper()
@@ -87,7 +98,8 @@ GateKeeper::~GateKeeper()
 *
 *   DATE: April 6 2014
 *
-*   REVISIONS: (Date and Description)
+*   REVISIONS: Thomas Tallentire - Added handling for Marx::SET_HEALTH Events
+*              Alex Lam - Added handling for Marx::SKILL Events
 *
 *   DESIGNER:   Filip Gutica
 *
@@ -121,126 +133,41 @@ void GateKeeper::onUpdate(float deltaTime)
     switch((*it)->type)
     {
     	case ::Marx::MOVE:
-		{
+  		{
     		MoveEvent* ev = (MoveEvent*) (*it);
-		    int xDir = ev->getXDir();
-		    int yDir = ev->getYDir();
 
-		    Entity::aMove(ev->getX(), ev->getY(), false);
-
-		    if (yDir < 0)
-		    {
-		      newYSpeed = -_ySpeed;
-		      int randDirection = (rand() % 3) - 1;
-		      getSprite().sprite().setScale(randDirection, 1);
-		      movingUp = true;
-		      movingDown = false;
-		    }
-		    else
-		    {
-		      newYSpeed = _ySpeed;
-		      int randDirection = (rand() % 3) - 1;
-		      getSprite().sprite().setScale(randDirection, 1);
-		      movingDown = true;
-		      movingUp = false;
-		    }
-
-		    if (xDir > 0)
-		    {
-		      newXSpeed = _xSpeed;
-		      getSprite().sprite().setScale(1, 1);
-		      movingRight = true;
-		      movingLeft = false;
-		    }
-		    else
-		    {
-		      newXSpeed = -_xSpeed;
-		      getSprite().sprite().setScale(-1, 1);
-		      movingLeft = true;
-		      movingRight = false;
-		    }
-
-		    if (xDir == 0)
-		    {
-		      newXSpeed = 0;
-		      movingLeft = false;
-		      movingRight = false;
-		    }
-
-		    if (yDir == 0)
-		    {
-		      newYSpeed = 0;
-		      movingUp = false;
-		      movingDown = false;
-		    }
-
-		    playSound(newXSpeed, newYSpeed);
+       		processMoveEvent(ev);
 
     		break;
-		}
-		case ::Marx::SET_HEALTH:
-		{
-			SetHealthEvent * event = (SetHealthEvent*)(*it);
-			_health = getHealth()-event->getChange();
-
-			Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
-			AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
-			cont->addEvent(pointsEvent);
-
-			if(_health <= 0)
+  		}
+  		case ::Marx::SET_HEALTH:
+  		{
+			if (top != -100)
 			{
-				std::cout << "GateKeeper Dead" << std::endl;
-				onDestroy();
+	  			SetHealthEvent * event = (SetHealthEvent*)(*it);
+
+		   	 	processSetHealthEvent(event);
 			}
 
-      break;
-		}
-    case ::Marx::ATTACK:
-    {
-      _attackSpeed -= deltaTime;
-      if (_attackSpeed <= 0)
+        break;
+  		}
+      case ::Marx::ATTACK:
       {
-        SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-        std::cout << "ATTACK" << std::endl;
-        createSkAttack(*saev, getSprite(), left, top);
-        _attackSpeed = 3;
+        AttackEvent* aev = (AttackEvent*) (*it);
+
+        processAttackEvent(aev);
+
+        break;
       }
-      break;
-    }
-    case ::Marx::SKILL:
-    {
+      case ::Marx::SKILL:
+      {
         // process the skill event, and increase/decrease hp and stuff
         SkillEvent *ev = (SkillEvent*)(*it);
 
-        printf("GateKeeper BEFORE Health: %d\n", _health);
-        switch(ev->getSkillType())
-        {
-            case SKILLTYPE::HEAL:
-                _health += ev->getValue();
-            break;
-            case SKILLTYPE::DMG:
-                _health -= ev->getValue();
-            break;
-            case SKILLTYPE::BUFF:
-                _xSpeed += ev->getValue();
-                _ySpeed += ev->getValue();
-            break;
-            case SKILLTYPE::DEBUFF:
-                _xSpeed -= ev->getValue();
-                _ySpeed -= ev->getValue();
-            break;
-        }
-
-        printf("GateKeeper AFTER Health: %d\n", _health);
-
-        if(_health <= 0)
-        {
-          std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-          onDestroy();
-        }
+        processSkillEvent(ev);
 
         break;
-    }
+      }
     }
 
 
@@ -252,6 +179,171 @@ void GateKeeper::onUpdate(float deltaTime)
 
 }
 
+/******************************************************************************
+*   FUNCTION: processMoveEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: onUpdate(float)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Processes move events generated by the server enemy controller.
+*   Moves this entity
+******************************************************************************/
+void GateKeeper::processMoveEvent(MoveEvent* ev)
+{
+  int xDir = ev->getXDir();
+  int yDir = ev->getYDir();
+
+  Entity::aMove(ev->getX(), ev->getY(), false);
+
+  if (yDir < 0)
+  {
+    newYSpeed = -_ySpeed;
+    int randDirection = (rand() % 3) - 1;
+    getSprite().sprite().setScale(randDirection, 1);
+    movingUp = true;
+    movingDown = false;
+  }
+  else
+  {
+    newYSpeed = _ySpeed;
+    int randDirection = (rand() % 3) - 1;
+    getSprite().sprite().setScale(randDirection, 1);
+    movingDown = true;
+    movingUp = false;
+  }
+
+  if (xDir > 0)
+  {
+    newXSpeed = _xSpeed;
+    getSprite().sprite().setScale(1, 1);
+    movingRight = true;
+    movingLeft = false;
+  }
+  else
+  {
+    newXSpeed = -_xSpeed;
+    getSprite().sprite().setScale(-1, 1);
+    movingLeft = true;
+    movingRight = false;
+  }
+
+  if (xDir == 0)
+  {
+    newXSpeed = 0;
+    movingLeft = false;
+    movingRight = false;
+  }
+
+  if (yDir == 0)
+  {
+    newYSpeed = 0;
+    movingUp = false;
+    movingDown = false;
+  }
+
+  playSound(newXSpeed, newYSpeed);
+}
+
+/******************************************************************************
+*   FUNCTION: processMoveEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: onUpdate(SkillEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Processes move events generated by the server enemy controller.
+*   Moves this entity
+******************************************************************************/
+void GateKeeper::processSkillEvent(SkillEvent* ev)
+{
+  printf("GateKeeper BEFORE Health: %d\n", _health);
+  switch(ev->getSkillType())
+  {
+      case SKILLTYPE::HEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::DMG:
+          _health -= ev->getValue();
+      break;
+      case SKILLTYPE::BUFF:
+          _xSpeed += ev->getValue();
+          _ySpeed += ev->getValue();
+      break;
+      case SKILLTYPE::DEBUFF:
+          _xSpeed -= ev->getValue();
+          _ySpeed -= ev->getValue();
+      break;
+  }
+
+  printf("GateKeeper AFTER Health: %d\n", _health);
+
+  if(_health <= 0)
+  {
+    std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
+    onDestroy();
+  }
+}
+
+/******************************************************************************
+*   FUNCTION: processSetHealthEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: processSetHealthEvent(SetHealthEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Processes set health events generated by the server enemy controller.
+*   Moves this entity
+******************************************************************************/
+void GateKeeper::processSetHealthEvent(SetHealthEvent* ev)
+{
+  _health = getHealth()-ev->getChange();
+
+  Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
+  AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
+  cont->addEvent(pointsEvent);
+
+  if(_health <= 0)
+  {
+    std::cout << "GateKeeper Dead" << std::endl;
+    onDestroy();
+  }
+}
+void GateKeeper::processAttackEvent(AttackEvent* aev)
+{
+  std::cout << "ATTACK" << std::endl;
+  createAttack(*aev, getSprite(), left, top);
+}
 
 /******************************************************************************
 *   FUNCTION: playSound()
@@ -275,7 +367,7 @@ void GateKeeper::onUpdate(float deltaTime)
 ******************************************************************************/
 void GateKeeper::playSound(float xSpeed, float ySpeed)
 {
-  /*soundActive = false;
+  soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
@@ -370,88 +462,400 @@ bool GateKeeper::isMoving()
   return (movingLeft || movingRight || movingUp || movingDown);
 }
 
+/******************************************************************************
+*   FUNCTION: setRange(int)
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setRange(int)
+*
+*   PARAMETERS: r   - New range for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets a new range for this enemy
+******************************************************************************/
 void GateKeeper::setRange(int r)
 {
   _range = r;
 }
 
+/******************************************************************************
+*   FUNCTION: setHealth
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setHealth(int h)
+*
+*   PARAMETERS: h   - new Health for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets a new health for this enemy
+******************************************************************************/
 void GateKeeper::setHealth(int h)
 {
   _health = h;
 }
 
+/******************************************************************************
+*   FUNCTION: setAttack
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setAttack(int a)
+*
+*   PARAMETERS: a   - new attack for enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets new attack for the enemy
+******************************************************************************/
 void GateKeeper::setAttack(int a)
 {
   _attack = a;
 }
 
+/******************************************************************************
+*   FUNCTION: setAttackSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setAttackSpeed(float as)
+*
+*   PARAMETERS: as    - New attack speed for the enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets new attack speed for the enemy
+******************************************************************************/
 void GateKeeper::setAttackSpeed(float as)
 {
   _attackSpeed == as;
 }
 
-
+/******************************************************************************
+*   FUNCTION: setXSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setXSpeed(float x)
+*
+*   PARAMETERS: x   - new horizonatl speed for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets new horizontal speed for this enemy
+******************************************************************************/
 void GateKeeper::setXSpeed(float x)
 {
   _xSpeed = x;
 }
 
+/******************************************************************************
+*   FUNCTION: setYSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setYSpeed(float y)
+*
+*   PARAMETERS: y   - new Vertical speeed for the enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Set new vertical speed for the enemy
+******************************************************************************/
 void GateKeeper::setYSpeed(float y)
 {
   _ySpeed = y;
 }
 
-void GateKeeper::setSpeed(int _speed)
+
+/******************************************************************************
+*   FUNCTION: setSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setSpeed(int speed)
+*
+*   PARAMETERS: speed   new horizontal and vertical speed for enemy
+*
+*   RETURNS:  void
+*
+*   NOTES: set new horizontal and vertical speed for the enemy
+******************************************************************************/
+void GateKeeper::setSpeed(int speed)
 {
-    _xSpeed = _speed;
-    _ySpeed = _speed;
+    _xSpeed = speed;
+    _ySpeed = speed;
 }
 
+/******************************************************************************
+*   FUNCTION: getXSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getXSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - x speed
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
+float GateKeeper::getXSpeed()
+{
+  return _xSpeed;
+}
+
+/******************************************************************************
+*   FUNCTION: getYSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getYSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - y speed
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
+float GateKeeper::getYSpeed()
+{
+  return _ySpeed;
+}
+
+/******************************************************************************
+*   FUNCTION: getSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Avarage speed of the enemy
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
 int GateKeeper::getSpeed()
 {
-	return _xSpeed;
+	return (_xSpeed + _ySpeed)/2;
 }
 
+/******************************************************************************
+*   FUNCTION: getRange()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getRange()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Range (attack and aggro) of this enemy
+*
+*   NOTES: Returns the range of this enemy
+******************************************************************************/
 int GateKeeper::getRange()
 {
   return _range;
 }
 
+/******************************************************************************
+*   FUNCTION: getHealth()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getHealth()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - current health of the enemy
+*
+*   NOTES: Returns current health of the enemy
+******************************************************************************/
 int GateKeeper::getHealth()
 {
   return _health;
 }
 
+/******************************************************************************
+*   FUNCTION: getAttack()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getAttack()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Attack of this enemy
+*
+*   NOTES: Returns attack of the enemy (attack power)
+******************************************************************************/
 int GateKeeper::getAttack()
 {
   return _attack;
 }
 
+/******************************************************************************
+*   FUNCTION: getAttackSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getAttackSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - Attack speed of this enemy
+*
+*   NOTES: returns enemy's attack speed
+******************************************************************************/
 float GateKeeper::getAttackSpeed()
 {
   return _attackSpeed;
 }
 
-int GateKeeper::getMovementSpeed()
-{
-  return _movementSpeed;
-}
 
+/******************************************************************************
+*   FUNCTION: turn()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: turn()
+*
+*   PARAMETERS: void
+*
+*   RETURNS:
+*
+*   NOTES:
+******************************************************************************/
 void GateKeeper::turn()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: onCreate()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: onCreate()
+*
+*   PARAMETERS: void
+*
+*   RETURNS:
+*
+*   NOTES:
+******************************************************************************/
 void GateKeeper::onCreate()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: stopAllSounds()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: stopAllSounds()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Stops gatekeeper sounds
+******************************************************************************/
 void GateKeeper::stopAllSounds()
 {
     footstep.stop();
 }
 
+/******************************************************************************
+*   FUNCTION: operator==
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: operator==(const VEntity&)
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - true
+*
+*   NOTES: Overloaded compare operator
+******************************************************************************/
 bool GateKeeper::operator==(const VEntity&)
 {
   return true;
