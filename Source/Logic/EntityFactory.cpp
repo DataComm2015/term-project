@@ -61,6 +61,10 @@ EntityFactory* EntityFactory::instance = 0;
 *   DATE:
 *
 *   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
+*              Sebastian Pelka  -Added resources for running animation
+*              Sebastian Pelka  -Added additional SGOs for weapon types
+*              Sebastian Pelka and Sanders Lee
+*                               -Warrior/Shaman selection logic
 *
 *   DESIGNER:
 *
@@ -331,6 +335,9 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *                                  mini bees and mini bosses.
 *               Sanders Lee      - Added extra entity types so entity selection
 *                                  propagates from lobby to server
+*
+*                 Sebastian Pelka and Sanders Lee
+*                                  - Logic for Selecting warrior or shaman
 *
 *   DESIGNER:
 *
