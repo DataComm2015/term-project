@@ -149,6 +149,8 @@ class GameScene : public Scene
 		static id_resource deityDMGImg;
 		static id_resource deityBUFImg;
 		static id_resource deityRNGImg;
+		static id_resource deityBIGImg;
+		static id_resource deitySUMImg;
 
 		sf::Shader waveShader;
 		float phase;

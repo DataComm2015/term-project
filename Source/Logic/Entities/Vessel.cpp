@@ -86,9 +86,9 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
-
-	currentHealth = 500;
-	maxHealth = 500;
+	
+	currentHealth = 100;
+	maxHealth = 100;
 
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 3);
@@ -304,6 +304,13 @@ void Vessel::onUpdate(float deltaTime)
 
 						xSpeed -= val;
 						ySpeed -= val;
+					break;
+					case SKILLTYPE::BIGHEAL:
+						currentHealth += ev->getValue();
+						myHealthBar->update((float)currentHealth/(float)maxHealth);
+					break;
+					case SKILLTYPE::SPAWN:
+						// Vessel implementation not needed
 					break;
 				}
 

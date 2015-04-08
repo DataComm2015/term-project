@@ -46,6 +46,7 @@ class PlayerEntity : public NetworkEntity
 		Vessel *getVessel();
 		void givePoints(float points);
 		float getPoints();
+        void skillCaseHandler(Message msg);
 
     protected:
         virtual void onUnregister(Session* session, Message msg);

@@ -244,6 +244,12 @@ void MiniBee::processSkillEvent(SkillEvent* ev)
           _xSpeed -= ev->getValue();
           _ySpeed -= ev->getValue();
       break;
+      case SKILLTYPE::BIGHEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::SPAWN:
+          // Vessel implementation not needed
+      break;
   }
 
   printf("MiniBee AFTER Health: %d\n", _health);
