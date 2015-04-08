@@ -51,6 +51,8 @@ id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::Tex
 id_resource GameScene::deityDMGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-debuff.png"));
 id_resource GameScene::deityDBFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-damage.png"));
 id_resource GameScene::deityHLGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healing.png"));
+id_resource GameScene::deityBIGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healingcircle.png"));
+id_resource GameScene::deitySUMImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-summon.png"));
 
 id_resource GameScene::game_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_gameplay.ogg"));
 id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/Environment/ambient_01.ogg"));
@@ -173,6 +175,11 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	}
 	generateWater();
 
+	const char *randomsounds[21] = {"Assets/Sound/Announcer/Random/canlee.ogg", "Assets/Sound/Announcer/Random/cts_win.ogg", "Assets/Sound/Announcer/Random/dank_memes.ogg", "Assets/Sound/Announcer/Random/database_colour.ogg", "Assets/Sound/Announcer/Random/georgi.ogg", "Assets/Sound/Announcer/Random/get_client_rekt.ogg", "Assets/Sound/Announcer/Random/get_rekt.ogg", "Assets/Sound/Announcer/Random/good_mark.ogg", "Assets/Sound/Announcer/Random/grapefruit_time.ogg", "Assets/Sound/Announcer/Random/hello.ogg", "Assets/Sound/Announcer/Random/how_are_you_doing.ogg", "Assets/Sound/Announcer/Random/i_am_manuel.ogg", "Assets/Sound/Announcer/Random/i_am_manuel_2.ogg", "Assets/Sound/Announcer/Random/jo-el.ogg", "Assets/Sound/Announcer/Random/pizza_time.ogg", "Assets/Sound/Announcer/Random/pooping_back_and_forth.ogg", "Assets/Sound/Announcer/Random/sampres.ogg", "Assets/Sound/Announcer/Random/smarties.ogg", "Assets/Sound/Announcer/Random/star_dot_cpp.ogg", "Assets/Sound/Announcer/Random/ts_win.ogg", "Assets/Sound/Announcer/Random/tuts_my_barreh.ogg"};
+
+	rand_msc = Manager::MusicManager::store(Manager::MusicManager::load(randomsounds[(rand() % 20)]));
+	randsound = Manager::MusicManager::get(rand_msc);
+
 	music = Manager::MusicManager::get(GameScene::game_msc);
 	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
 }
@@ -232,9 +239,18 @@ void GameScene::onLoad()
 	b2->toggleEnabled(true);
 	b3->toggleEnabled(true);
 
+	randsound->setVolume(160);
+	randsound->setRelativeToListener(false);
+	randsound->setMinDistance(5000);
+	randsound->setAttenuation(0.f);
+	randsound->play();
+
 	music->setVolume(60);
 	music->play();
-	ambience->setVolume(40);
+	ambience->setVolume(50);
+	ambience->setRelativeToListener(false);
+	ambience->setMinDistance(5000);
+	ambience->setAttenuation(0.f);
 	ambience->play();
 }
 
@@ -1103,7 +1119,7 @@ void onClickVitalityOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::HEAL);
 }
 
 /******************************************************************************
@@ -1155,7 +1171,7 @@ void onClickVitalityThree()
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 30, SKILLTYPE::BIGHEAL);
 }
 
 /******************************************************************************
@@ -1181,7 +1197,7 @@ void onClickDemiseOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DMG);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::DMG);
 }
 
 /******************************************************************************
@@ -1316,6 +1332,8 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 
 	sn.timer = timer;
 
+	std::cout << "SKILLTYPE: " << (int)_skillType << std::endl;
+
 	switch(_skillType)
 	{
 		case SKILLTYPE::HEAL:
@@ -1329,6 +1347,12 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 		break;
 		case SKILLTYPE::DEBUFF:
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
+		break;
+		case SKILLTYPE::BIGHEAL:
+			snSGO = new SGO(*Manager::TextureManager::get(deityBIGImg));
+		break;
+		case SKILLTYPE::SPAWN:
+			snSGO = new SGO(*Manager::TextureManager::get(deitySUMImg));
 		break;
 	}
 

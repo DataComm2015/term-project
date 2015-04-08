@@ -46,10 +46,12 @@ class MiniBoss : public GateKeeper
 		void onCreate();
 		void onUpdate(float);
 		bool operator==(const VEntity&);
-  	void stopAllSounds();
-    Entity* getEntity();
-	  bool isMoving();
-		void playSound(float, float);
+  		void stopAllSounds();
+    	Entity* getEntity();
+	  	bool isMoving();
+		void playTravelSound(float, float);
+		void playHurtSound();
+		void playAttackSound();
 		void animate();
 		void processMoveEvent(MoveEvent* ev);
 		void processSkillEvent(SkillEvent* ev);
@@ -58,9 +60,9 @@ class MiniBoss : public GateKeeper
 
 	protected:
 		bool movingLeft;
-    bool movingRight;
+    	bool movingRight;
 		bool movingUp;
-    bool movingDown;
+    	bool movingDown;
 		int _range;
 		int _type;
 		int _health;

@@ -445,21 +445,106 @@ void Entity::onUpdate(float deltaTime)
 	// logic team
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::setBlocking
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: void Entity::setBlocking(bool b)
+--							bool b : If the entity is blocking or not.
+--							
+--
+-- RETURNS:
+--     void.
+--
+-- NOTES:
+--    This function sets an entity to blocking or non-blocking
+--
+------------------------------------------------------------------------------*/
 void Entity::setBlocking(bool b)
 {
 	blocking = b;
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::getBlocking
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: bool Entity::getBlocking()
+--							
+--
+-- RETURNS:
+--     bool - If the entity is blocking or not
+--
+-- NOTES:
+--    This function returns if an entity is blocking or non-blocking
+--
+------------------------------------------------------------------------------*/
 bool Entity::getBlocking()
 {
 	return blocking;
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::getMap
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: Map * Entity::getMap()
+--							
+--
+-- RETURNS:
+--     Map* - A pointer to the map the entity is in.
+--
+-- NOTES:
+--    This function returns a pointer to the map the entity is in.
+--
+------------------------------------------------------------------------------*/
 Map * Entity::getMap()
 {
     return map;
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::getType
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: ENTITY_TYPES Entity::getType()
+--							
+--
+-- RETURNS:
+--     ENTITY_TYPES - The type of the entity.
+--
+-- NOTES:
+--    This function returns the type of the entity
+--
+------------------------------------------------------------------------------*/
 ENTITY_TYPES Entity::getType()
 {
     return type;

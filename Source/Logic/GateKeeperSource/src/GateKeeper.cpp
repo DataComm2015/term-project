@@ -250,7 +250,7 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
 /******************************************************************************
@@ -292,6 +292,12 @@ void GateKeeper::processSkillEvent(SkillEvent* ev)
       case SKILLTYPE::DEBUFF:
           _xSpeed -= ev->getValue();
           _ySpeed -= ev->getValue();
+      break;
+      case SKILLTYPE::BIGHEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::SPAWN:
+          // Vessel implementation not needed
       break;
   }
 
@@ -362,7 +368,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 }
 
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -372,7 +378,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
@@ -381,7 +387,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   NOTES: Plays sound associated with this enemy
 ******************************************************************************/
-void GateKeeper::playSound(float xSpeed, float ySpeed)
+void GateKeeper::playTravelSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;

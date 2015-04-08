@@ -50,7 +50,9 @@ class Minion : public GateKeeper
   	void stopAllSounds();
     Entity* getEntity();
 	  bool isMoving();
-		void playSound(float, float);
+		void playTravelSound(float, float);
+		void playHurtSound();
+		void playAttackSound();
 		void animate();
 		void processMoveEvent(MoveEvent* ev);
 		void processSkillEvent(SkillEvent* ev);
@@ -59,9 +61,9 @@ class Minion : public GateKeeper
 
 	protected:
 		bool movingLeft;
-    bool movingRight;
+    	bool movingRight;
 		bool movingUp;
-    bool movingDown;
+    	bool movingDown;
 		int _range;
 		int _type;
 		int _health;
