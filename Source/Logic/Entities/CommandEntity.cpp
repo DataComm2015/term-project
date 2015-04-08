@@ -209,11 +209,6 @@ void CommandEntity::onUpdate(Message msg)
             playerMode = *((PLAYER_MODE*) msg.data);
 
             break;
-        case PlayerCommandMsgType::SKILL_NOTIFY:
-            skill *sk = (skill*)msg.data;
-        
-            MainMenuScene::getGameScene()->addSkillNotification(sk->curX, sk->curY, 3000, sk->st);
-        break;
     }
 }
 
