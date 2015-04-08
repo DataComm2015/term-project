@@ -9,7 +9,7 @@ using namespace Marx;
 -- PROGRAMMER: Marc Vouve
 --
 -- DESIGNER: Melvin Loho
--- 	     Marc Vouve
+-- 	         Marc Vouve
 --
 -- DATE: Sunday February 15th, 2015
 --
