@@ -58,68 +58,6 @@ id_resource GameScene::deitySUMImg = Manager::TextureManager::store(Manager::Tex
 id_resource GameScene::game_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_gameplay.ogg"));
 id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/Environment/ambient_01.ogg"));
 
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES: Deprecated. Used for testing
-******************************************************************************/
-void onclick()
-{
-	static int i = 0;
-
-	if (i > 6)
-		exit(0);
-
-	i++;
-}
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES: Deprecated. Used for testing
-******************************************************************************/
-void onclickLevelup()
-{
-	static int level = 1;
-	std::string slevel;
-
-	// level should be double digits
-	if(level < 10)
-		slevel = "0" + std::to_string(level++);
-	else
-		slevel = std::to_string(level++);
-    //pubLevelInd->setText(slevel);
-}
-
 
 /******************************************************************************
 *	FUNCTION: GameScene
@@ -751,10 +689,13 @@ void GameScene::draw()
 	renderer.states.shader = nullptr;
 	renderer.draw(cMap);
 
-	if(myVessel->checkDeath())
+	if(characterType == PLAYER_MODE::VESSEL)
 	{
-		window.setView(viewMain);
-		renderer.draw(deathScreen);
+		if(myVessel->checkDeath())
+		{
+			window.setView(viewMain);
+			renderer.draw(deathScreen);
+		}
 	}
 
 	renderer.end();
@@ -1003,23 +944,11 @@ void GameScene::createClassUI()
 {
 	switch (characterType)
 	{
+/*
 		case PLAYER_MODE::VESSEL: // VESSEL
-		{
-			switch(classType)
-			{
-				case 1: //SHAMAN
-					b1 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-				break;
-				case 2: //WARRIOR
-					b1 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-				break;
-			}
-		}
-		break;
+			break;
+*/
+
 		case PLAYER_MODE::DEITY: // DEITY
 			crossHairSGO = new SGO(*Manager::TextureManager::get(crosshairImg));
 			crossHairSGO->middleAnchorPoint(true);
@@ -1039,21 +968,21 @@ void GameScene::createClassUI()
 				break;
 			}
 			break;
+
+/*
 		case PLAYER_MODE::GHOST: // GHOST
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 			break;
-		default: //ORIGINAL
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+*/
+
+		default:
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
 	}
 
 	bs[0].btn = b1;
 	bs[1].btn = b2;
 	bs[2].btn = b3;
-
 }
 
 
