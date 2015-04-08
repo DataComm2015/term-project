@@ -17,6 +17,7 @@
 --             Jeff Bayntun
 --             Eric Tsang
 --             Thomas Tallentire
+--			   Julian Brandrick
 --
 -- NOTES:
 -- This file defines the Event class members
