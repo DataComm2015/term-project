@@ -59,7 +59,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
 	travel_Snd.setLoop(true);
     travel_Snd.play();*/
-	
+
 }
 
 MiniBoss::~MiniBoss()
@@ -116,10 +116,12 @@ void MiniBoss::onUpdate(float deltaTime)
   		}
   		case ::Marx::SET_HEALTH:
   		{
-  			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			if (top != -100)
+			{
+	  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-        	processSetHealthEvent(event);
-
+		    	processSetHealthEvent(event);
+			}
         break;
   		}
 		  case ::Marx::ATTACK:
