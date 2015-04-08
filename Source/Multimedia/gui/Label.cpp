@@ -10,7 +10,7 @@ namespace GUI
 	*
 	* @revisions	2015-03-18 - Removed BGO parent from constructor
 	*
-	* @designer
+	* @designer     
 	*
 	* @programmer   Jonathan Chu
 	*				Marc Rafanan
@@ -31,7 +31,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer
+	* @designer     
 	*
 	* @programmer   Jonathan Chu
 	*
@@ -49,7 +49,7 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer
+	* @designer     
 	*
 	* @programmer   Jonathan Chu
 	*
