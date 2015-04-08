@@ -22,9 +22,10 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-//static id_resource stoneWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource hurtSoundMBoss 		  = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-//static id_resource attackSoundMBoss		 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+static id_resource grassWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_travel_01.ogg"));
+static id_resource stoneWalkSoundMBoss = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_travel_02.ogg"));
+static id_resource hurtSoundMBoss 	   = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_07.ogg"));
+static id_resource attackSoundMBoss	   = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/ghost/ghost_attack_01.ogg"));
 
 
 MiniBoss::MiniBoss(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
@@ -206,7 +207,7 @@ void MiniBoss::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
 void MiniBoss::processSkillEvent(SkillEvent* ev)
@@ -219,6 +220,7 @@ void MiniBoss::processSkillEvent(SkillEvent* ev)
       break;
       case SKILLTYPE::DMG:
           _health -= ev->getValue();
+          playHurtSound();
       break;
       case SKILLTYPE::BUFF:
           _xSpeed += ev->getValue();
@@ -246,7 +248,8 @@ void MiniBoss::processSkillEvent(SkillEvent* ev)
 }
 void MiniBoss::processSetHealthEvent(SetHealthEvent* ev)
 {
-  _health = getHealth()-ev->getChange();
+  _health = getHealth() - ev->getChange();
+  playHurtSound();
 
   Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
   AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
@@ -262,11 +265,12 @@ void MiniBoss::processAttackEvent(AttackEvent* aev)
 {
   std::cout << "ATTACK" << std::endl;
   createAttack(*aev, getSprite(), left, top);
+  playAttackSound();
 }
 
-void MiniBoss::playSound(float xSpeed, float ySpeed)
+void MiniBoss::playTravelSound(float xSpeed, float ySpeed)
 {
-  /*soundActive = false;
+  soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
@@ -311,6 +315,26 @@ void MiniBoss::playSound(float xSpeed, float ySpeed)
     footstep.stop();
     soundActive = false;
   }//*/
+}
+
+void MiniBoss::playHurtSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(hurtSoundMBoss, soundPos);
+	voice.play();
+}
+
+void MiniBoss::playAttackSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(attackSoundMBoss, soundPos);
+	voice.play();
 }
 
 void MiniBoss::animate()

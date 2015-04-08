@@ -22,10 +22,10 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-//static id_resource grassWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource hurtSoundMiniBee 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-//static id_resource attackSoundMiniBee		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+static id_resource grassWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+static id_resource stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_02.ogg"));
+static id_resource hurtSoundMiniBee 	 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+static id_resource attackSoundMiniBee	 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 id_resource beeShadow;
 
@@ -222,7 +222,7 @@ void MiniBee::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
 void MiniBee::processSkillEvent(SkillEvent* ev)
@@ -235,6 +235,7 @@ void MiniBee::processSkillEvent(SkillEvent* ev)
       break;
       case SKILLTYPE::DMG:
           _health -= ev->getValue();
+          playHurtSound();
       break;
       case SKILLTYPE::BUFF:
           _xSpeed += ev->getValue();
@@ -262,8 +263,9 @@ void MiniBee::processSkillEvent(SkillEvent* ev)
 }
 void MiniBee::processSetHealthEvent(SetHealthEvent* ev)
 {
-  _health = getHealth()-ev->getChange();
-
+  _health = getHealth() - ev->getChange();
+  playHurtSound();
+  
   Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
   AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
   cont->addEvent(pointsEvent);
@@ -274,30 +276,33 @@ void MiniBee::processSetHealthEvent(SetHealthEvent* ev)
     onDestroy();
   }
 }
+
 void MiniBee::processAttackEvent(AttackEvent* aev)
 {
   std::cout << "ATTACK" << std::endl;
   createAttack(*aev, getSprite(), left, top);
+  playAttackSound();
 }
-void MiniBee::playSound(float xSpeed, float ySpeed)
+
+void MiniBee::playTravelSound(float xSpeed, float ySpeed)
 {
-  /*soundActive = false;
+  soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
   // first get the tile type we're walking on
   Cell* footstepTile = *getCell().begin();
   sf::Vector2f soundPos(left, top);
-    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's MiniBee's
+  footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's MiniBee's
                                   // footsteps from fading & being off-center
-    footstep.setMinDistance(3.0);
+  footstep.setMinDistance(3.0);
 
   if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
   {
     // we need the extra soundActive boolean to make sure we're not playing a new
     // sound when there's already a walking sound active for our vessel
     if (((xSpeed != 0 || ySpeed != 0) && !soundActive) ||
-      (soundActive && steppedTile != GRASS))
+        (soundActive && steppedTile != GRASS))
     {
       footstep.stop();
       footstep = SoundManager::play(grassWalkSoundMiniBee, soundPos);
@@ -326,6 +331,26 @@ void MiniBee::playSound(float xSpeed, float ySpeed)
     footstep.stop();
     soundActive = false;
   }//*/
+}
+
+void MiniBee::playHurtSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(hurtSoundMiniBee, soundPos);
+	voice.play();
+}
+
+void MiniBee::playAttackSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(attackSoundMiniBee, soundPos);
+	voice.play();
 }
 
 void MiniBee::animate()

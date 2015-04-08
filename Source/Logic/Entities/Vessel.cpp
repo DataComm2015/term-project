@@ -453,7 +453,7 @@ void Vessel::playHurtSound()
 	voice.setMinDistance(3.0);
 	voice = SoundManager::play(hurtSound, soundPos);
 	voice.play();
-	printf("Hurt sound should play\n");
+	//printf("Hurt sound should play\n");
 }
 
 /***
@@ -473,7 +473,7 @@ void Vessel::playAttackSound()
 	voice.setMinDistance(3.0);
 	voice = SoundManager::play(attackSound, soundPos);
 	voice.play();
-	printf("Attack sound should play\n");
+	//printf("Attack sound should play\n");
 }
 
 /*---------

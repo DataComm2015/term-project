@@ -22,10 +22,10 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-//static id_resource grassWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource stoneWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource hurtSoundMinion 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-//static id_resource attackSoundMinion		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+static id_resource grassWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
+static id_resource stoneWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_02.ogg"));
+static id_resource hurtSoundMinion 	 	= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_hurt_01.ogg"));
+static id_resource attackSoundMinion	= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_attack_01.ogg"));
 
 id_resource minShadow;
 
@@ -246,7 +246,7 @@ void Minion::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
 void Minion::processSkillEvent(SkillEvent* ev)
@@ -259,6 +259,7 @@ void Minion::processSkillEvent(SkillEvent* ev)
       break;
       case SKILLTYPE::DMG:
           _health -= ev->getValue();
+          playHurtSound();
       break;
       case SKILLTYPE::BUFF:
           _xSpeed += ev->getValue();
@@ -286,7 +287,8 @@ void Minion::processSkillEvent(SkillEvent* ev)
 }
 void Minion::processSetHealthEvent(SetHealthEvent* ev)
 {
-  _health = getHealth()-ev->getChange();
+  _health = getHealth() - ev->getChange();
+  playHurtSound();
 
   Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
   AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
@@ -302,10 +304,11 @@ void Minion::processAttackEvent(AttackEvent* aev)
 {
   std::cout << "ATTACK" << std::endl;
   createAttack(*aev, getSprite(), left, top);
+  playAttackSound();
 }
 
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -315,7 +318,7 @@ void Minion::processAttackEvent(AttackEvent* aev)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
@@ -324,18 +327,18 @@ void Minion::processAttackEvent(AttackEvent* aev)
 *
 *   NOTES: Plays sound associated with this enemy
 ******************************************************************************/
-void Minion::playSound(float xSpeed, float ySpeed)
+void Minion::playTravelSound(float xSpeed, float ySpeed)
 {
-/*  soundActive = false;
+  soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
   // first get the tile type we're walking on
   Cell* footstepTile = *getCell().begin();
   sf::Vector2f soundPos(left, top);
-    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's Minion's
+  footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's Minion's
                                   // footsteps from fading & being off-center
-    footstep.setMinDistance(3.0);
+  footstep.setMinDistance(3.0);
 
   if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
   {
@@ -371,6 +374,26 @@ void Minion::playSound(float xSpeed, float ySpeed)
     footstep.stop();
     soundActive = false;
   }//*/
+}
+
+void Minion::playHurtSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(hurtSoundMinion, soundPos);
+	voice.play();
+}
+
+void Minion::playAttackSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(attackSoundMinion, soundPos);
+	voice.play();
 }
 
 /******************************************************************************
