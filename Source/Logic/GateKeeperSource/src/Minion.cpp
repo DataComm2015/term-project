@@ -9,6 +9,7 @@
 **	DESIGNER: 	Filip Gutica A00781910
 **
 **	PROGRAMMER: Filip Gutica A00781910
+**              Chris Klassen
 **
 ***********************************************************************************/
 #include "Minion.h"
@@ -39,6 +40,7 @@ id_resource minShadow;
 *   DESIGNER:   Filip Gutica
 *
 *   PROGRAMMER: Filip Gutica
+*               Chris Klassen
 *
 *   INTERFACE: Minion(SGO&, Map*, float, float, Controller, float, float)
 *

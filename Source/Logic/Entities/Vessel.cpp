@@ -32,7 +32,7 @@ id_resource vesselShadow;
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
--- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun, Chris Klassen
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
