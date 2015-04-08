@@ -129,6 +129,10 @@ class GameScene : public Scene
 		static id_resource shamanBtn;
 
 		static id_resource crosshairImg;
+		static id_resource deathImage;
+
+		static id_resource game_msc;
+		static id_resource ambience_msc;
 
 		//VITALITY
 		static id_resource buffskillbtn;
@@ -146,6 +150,8 @@ class GameScene : public Scene
 		static id_resource deityDMGImg;
 		static id_resource deityBUFImg;
 		static id_resource deityRNGImg;
+		static id_resource deityBIGImg;
+		static id_resource deitySUMImg;
 
 		sf::Shader waveShader;
 		float phase;
@@ -162,10 +168,9 @@ class GameScene : public Scene
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
-		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
-		GUI::TextBox *levelInd;
 		SGO *crossHairSGO;
+		SGO *deathScreen;
 
 		// Misc
 
@@ -175,6 +180,12 @@ class GameScene : public Scene
 		int classType;
 
 		sf::Sound current;
+		
+		id_resource rand_msc;
+
+		sf::Music *music;
+		sf::Music *ambience;
+		sf::Music *randsound;
 
 		// tech demos:
 		sf::Vector2f butSize;
