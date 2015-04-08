@@ -282,8 +282,6 @@ void Vessel::onUpdate(float deltaTime)
 				// process the skill event, and increase/decrease hp and stuff
 				SkillEvent *ev = (SkillEvent*)(*it);
 
-				printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN SKILL\n");
-
 				switch(ev->getSkillType())
 				{
 					case SKILLTYPE::HEAL:
@@ -1266,8 +1264,6 @@ void Vessel::setHealth(int health)
     else if (currentHealth > maxHealth)
         currentHealth = maxHealth;
 
-    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. %p\n", myHealthBar);
-
     if (myHealthBar) myHealthBar->update((float)currentHealth/(float)maxHealth);
 }
 
@@ -1387,7 +1383,5 @@ float Vessel::getXPosition()
 
 void Vessel::setHealthBar(GUI::HealthBar* hb)
 {
-	printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SETTING HEALTH BAR\n");
-
 	myHealthBar = hb;
 }

@@ -49,7 +49,6 @@ namespace GUI
 	{
 		if (percent > 1) percent = 1;
 		else if (percent < 0) percent = 0;
-		std::cout << "HEALTHBAR UPDATE w/ " << percent << std::endl;
 		bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x * percent, barSize.y));
 	}
 }
