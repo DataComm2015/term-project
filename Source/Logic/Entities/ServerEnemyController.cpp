@@ -35,6 +35,7 @@
 *   DESIGNER:   Calvin Rempel
 *
 *   PROGRAMMER: Calvin Rempel
+*               Filip Gutica
 *
 *   INTERFACE: Minion(Behaviour*, ServergameScene*)
 *

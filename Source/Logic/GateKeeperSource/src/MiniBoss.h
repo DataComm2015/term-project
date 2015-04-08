@@ -46,21 +46,28 @@ class MiniBoss : public GateKeeper
 		void onCreate();
 		void onUpdate(float);
 		bool operator==(const VEntity&);
-  	void stopAllSounds();
-    Entity* getEntity();
-	  bool isMoving();
-		void playSound(float, float);
+  		void stopAllSounds();
+    	Entity* getEntity();
+	  	bool isMoving();
+		void playTravelSound(float, float);
+		void playHurtSound();
+		void playAttackSound();
 		void animate();
 		void processMoveEvent(MoveEvent* ev);
 		void processSkillEvent(SkillEvent* ev);
 		void processSetHealthEvent(SetHealthEvent* ev);
 		void processAttackEvent(AttackEvent* aev);
 
+		id_resource grassWalkSoundMBoss;
+		id_resource stoneWalkSoundMBoss;
+		id_resource hurtSoundMBoss;
+		id_resource attackSoundMBoss;
+
 	protected:
 		bool movingLeft;
-    bool movingRight;
+    	bool movingRight;
 		bool movingUp;
-    bool movingDown;
+    	bool movingDown;
 		int _range;
 		int _type;
 		int _health;
@@ -83,6 +90,13 @@ class MiniBoss : public GateKeeper
 		BlockZone steppedTile;
 		bool soundActive;
 		Animation *gkAnimation;
+
+	public:
+		static const char *travelSnds[3];
+
+		static const char *attackSnds[5];
+
+		static const char *hurtSnds[4];
 
 };
 

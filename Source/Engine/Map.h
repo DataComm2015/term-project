@@ -1,31 +1,9 @@
-/*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE: Map.h
---
--- PROGRAM:
---
--- FUNCTIONS: N/A
---
--- DATE: February 16, 2015
---
--- REVISIONS:
---
--- DESIGNER: Marc Vouve
---           Marc Rafanan
---
--- PROGRAMMER: Marc Rafanan
---
--- NOTES:
---        This file defines the Map class members
---
-----------------------------------------------------------------------------------------------------------------------*/
-
-
 #ifndef MAP_H_
 #define MAP_H_
 
 namespace Marx
 {
-	class Map;
+    class Map;
 }
 
 #include <vector>
@@ -53,13 +31,13 @@ namespace Marx
             Cell* getCell(const int x, const int y) const;
             void setTexture(const uint texture_id);
             uint getTexture() const;
-			std::set<Entity*> getEntities() const;
-			sf::Transform getLocalTransform() const override;
-			sf::Transform trans;
+            std::set<Entity*> getEntities() const;
+            sf::Transform getLocalTransform() const override;
+            sf::Transform trans;
 
-	protected:
-        void drawChildren(Renderer& renderer, sf::RenderStates states) const override;
-		void draw(Renderer& renderer, sf::RenderStates states) const override;
+        protected:
+            void drawChildren(Renderer& renderer, sf::RenderStates states) const override;
+            void draw(Renderer& renderer, sf::RenderStates states) const override;
 
         private:
             int width_;

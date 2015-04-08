@@ -6,8 +6,6 @@
 
 namespace GUI
 {
-    // class button extends from sgo
-    // so it has everything from sgo and add extra defined here
 	class Button : public SGO
 	{
 		public:

@@ -45,77 +45,18 @@ id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::
 id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
 id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/crosshair.png"));
+id_resource GameScene::deathImage = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/game_over.png"));
 
 id_resource GameScene::deityRNGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deity-ring.png"));
 id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-buff.png"));
 id_resource GameScene::deityDMGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-debuff.png"));
 id_resource GameScene::deityDBFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-damage.png"));
 id_resource GameScene::deityHLGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healing.png"));
+id_resource GameScene::deityBIGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healingcircle.png"));
+id_resource GameScene::deitySUMImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-summon.png"));
 
 id_resource GameScene::game_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_gameplay.ogg"));
 id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/Environment/ambient_01.ogg"));
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void onclick()
-{
-	static int i = 0;
-
-	if (i > 6)
-		exit(0);
-
-	i++;
-}
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void onclickLevelup()
-{
-	static int level = 1;
-	std::string slevel;
-
-	// level should be double digits
-	if(level < 10)
-		slevel = "0" + std::to_string(level++);
-	else
-		slevel = std::to_string(level++);
-    //pubLevelInd->setText(slevel);
-}
 
 
 /******************************************************************************
@@ -128,6 +69,7 @@ void onclickLevelup()
 *	DESIGNER: Chris Klassen
 *
 *	PROGRAMMER: Chris Klassen
+*               Melvin Loho
 *
 *	INTERFACE: GameScene()
 *
@@ -173,8 +115,14 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	}
 	generateWater();
 
+	const char *randomsounds[21] = {"Assets/Sound/Announcer/Random/canlee.ogg", "Assets/Sound/Announcer/Random/cts_win.ogg", "Assets/Sound/Announcer/Random/dank_memes.ogg", "Assets/Sound/Announcer/Random/database_colour.ogg", "Assets/Sound/Announcer/Random/georgi.ogg", "Assets/Sound/Announcer/Random/get_client_rekt.ogg", "Assets/Sound/Announcer/Random/get_rekt.ogg", "Assets/Sound/Announcer/Random/pooping_back_and_forth.ogg", "Assets/Sound/Announcer/Random/grapefruit_time.ogg", "Assets/Sound/Announcer/Random/hello.ogg", "Assets/Sound/Announcer/Random/how_are_you_doing.ogg", "Assets/Sound/Announcer/Random/i_am_manuel.ogg", "Assets/Sound/Announcer/Random/i_am_manuel_2.ogg", "Assets/Sound/Announcer/Random/jo-el.ogg", "Assets/Sound/Announcer/Random/pizza_time.ogg", "Assets/Sound/Announcer/Random/good_mark.ogg", "Assets/Sound/Announcer/Random/sampres.ogg", "Assets/Sound/Announcer/Random/smarties.ogg", "Assets/Sound/Announcer/Random/star_dot_cpp.ogg", "Assets/Sound/Announcer/Random/ts_win.ogg", "Assets/Sound/Announcer/Random/tuts_my_barreh.ogg"};
+
+	rand_msc = Manager::MusicManager::store(Manager::MusicManager::load(randomsounds[(rand() % 20)]));
+	randsound = Manager::MusicManager::get(rand_msc);
+
 	music = Manager::MusicManager::get(GameScene::game_msc);
 	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
+	deathScreen = new SGO(*Manager::TextureManager::get(deathImage));
 }
 
 
@@ -188,10 +136,12 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 *	DESIGNER: Alex Lam
 *
 *	PROGRAMMER: Alex Lam
+*				Jonathan Chu
+*               Melvin Loho
 *
-*	INTERFACE:void GameScene::onLoad()
+*	INTERFACE: void GameScene::onLoad()
 *
-*	PARAMETERS:none
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
@@ -232,31 +182,43 @@ void GameScene::onLoad()
 	b2->toggleEnabled(true);
 	b3->toggleEnabled(true);
 
+	randsound->setVolume(160);
+	randsound->setRelativeToListener(false);
+	randsound->setMinDistance(5000);
+	randsound->setAttenuation(0.f);
+	randsound->play();
+
 	music->setVolume(60);
 	music->play();
-	ambience->setVolume(40);
+	ambience->setVolume(50);
+	ambience->setRelativeToListener(false);
+	ambience->setMinDistance(5000);
+	ambience->setAttenuation(0.f);
 	ambience->play();
 }
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: GameScene::positionUI()
 *
-*	DATE:
+*	DATE:	April 3rd 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Marc Rafanan
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Marc Rafanan
+*				Jonathan Chu
+*               Melvin Loho
 *
-*	INTERFACE:
+*	INTERFACE:	void GameScene::positionUI()
 *
 *	PARAMETERS:
 *
 *	RETURNS: void
 *
 *	NOTES:
+*		Used to position UI elements
 ******************************************************************************/
 void GameScene::positionUI()
 {
@@ -291,23 +253,23 @@ void GameScene::positionUI()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: setPlayerVessel
 *
-*	DATE:
+*	DATE: April 7, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Melvin Loho
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Melvin Loho
 *
-*	INTERFACE:
+*	INTERFACE: void GameScene::setPlayerVessel(Vessel *vessel)
 *
-*	PARAMETERS:
+*	PARAMETERS: vessel The Vessel object
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Sets the specified Vessel object as the one that we own now.
 ******************************************************************************/
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
@@ -321,7 +283,7 @@ void GameScene::setPlayerVessel(Vessel *vessel)
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-	myVessel = vessel;	
+	myVessel = vessel;
 	myVessel->setHealthBar(hb);
 }
 
@@ -433,23 +395,22 @@ GameScene::~GameScene()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:	update
 *
-*	DATE:
+*	DATE:		April 7, 2015
 *
-*	REVISIONS: (Date and Description)
+*	REVISIONS: 	(Date and Description)
 *
 *	DESIGNER:
 *
-*	PROGRAMMER: Melvin Loho, Sanders Lee
+*	PROGRAMMER: Melvin Loho, Sanders Lee, Marc Rafanan, Jonathan Chu
 *
-*	INTERFACE:
+*	INTERFACE:	void GameScene::update(sf::Time t)
+*	sf::Time t: the time of the update
 *
-*	PARAMETERS:
+*	RETURNS: 	void
 *
-*	RETURNS: void
-*
-*	NOTES:
+*	NOTES:		updates all the entities in the game
 ******************************************************************************/
 void GameScene::update(sf::Time t)
 {
@@ -463,11 +424,12 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != NULL)
 	{
-		//myVessel->getSprite().sprite().rotate(1);
+		deathScreen->middleAnchorPoint(true);
+		deathScreen->sprite().setPosition(viewMain.getCenter());
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
-        sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+        	sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
 	}
 	else
 	{
@@ -554,6 +516,7 @@ void GameScene::update(sf::Time t)
 *	DESIGNER: Alex Lam
 *
 *	PROGRAMMER: Alex Lam
+*				Jonathan Chu
 *
 *	INTERFACE: void GameScene::processEvents(sf::Event& e)
 *
@@ -667,7 +630,7 @@ void GameScene::processEvents(sf::Event& e)
 *
 *	DESIGNER: Chris Klassen
 *
-*	PROGRAMMER: Chris Klassen
+*	PROGRAMMER: Chris Klassen, Alex Lam, Marc Rafanan, Jonathan Chu
 *
 *	INTERFACE: draw();
 *
@@ -727,22 +690,20 @@ void GameScene::draw()
 	renderer.states.shader = nullptr;
 	renderer.draw(cMap);
 
+	if(characterType == PLAYER_MODE::VESSEL)
+	{
+		if(myVessel->checkDeath())
+		{
+			window.setView(viewMain);
+			renderer.draw(deathScreen);
+		}
+	}
+
 	renderer.end();
 
 	window.display();
 }
 
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-  SKILLTYPE st;
 
 /******************************************************************************
 *	FUNCTION:
@@ -930,23 +891,24 @@ void GameScene::generateWater()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:	void GameScene::generateUI()
 *
-*	DATE:
+*	DATE:		March 16, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Marc Rafanan
 *
-*	PROGRAMMER: Jeff Bayntun
+*	PROGRAMMER: Jeff Bayntun, Marc Rafanan
 *
-*	INTERFACE:
+*	INTERFACE:	void GameScene::generateUI()
 *
 *	PARAMETERS:
 *
 *	RETURNS: void
 *
 *	NOTES:
+*		Initial UI generation
 ******************************************************************************/
 void GameScene::generateUI()
 {
@@ -967,13 +929,13 @@ void GameScene::generateUI()
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam
+*	DESIGNER: Alex Lam, Melvin Loho
 *
-*	PROGRAMMER: Alex Lam
+*	PROGRAMMER: Alex Lam, Melvin Loho
 *
 *	INTERFACE: void GameScene::createClassUI()
 *
-*	PARAMETERS:none
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
@@ -983,23 +945,11 @@ void GameScene::createClassUI()
 {
 	switch (characterType)
 	{
+/*
 		case PLAYER_MODE::VESSEL: // VESSEL
-		{
-			switch(classType)
-			{
-				case 1: //SHAMAN
-					b1 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-				break;
-				case 2: //WARRIOR
-					b1 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-				break;
-			}
-		}
-		break;
+			break;
+*/
+
 		case PLAYER_MODE::DEITY: // DEITY
 			crossHairSGO = new SGO(*Manager::TextureManager::get(crosshairImg));
 			crossHairSGO->middleAnchorPoint(true);
@@ -1019,21 +969,21 @@ void GameScene::createClassUI()
 				break;
 			}
 			break;
+
+/*
 		case PLAYER_MODE::GHOST: // GHOST
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 			break;
-		default: //ORIGINAL
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+*/
+
+		default:
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
 	}
 
 	bs[0].btn = b1;
 	bs[1].btn = b2;
 	bs[2].btn = b3;
-
 }
 
 
@@ -1103,7 +1053,7 @@ void onClickVitalityOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::HEAL);
 }
 
 /******************************************************************************
@@ -1155,7 +1105,7 @@ void onClickVitalityThree()
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 30, SKILLTYPE::BIGHEAL);
 }
 
 /******************************************************************************
@@ -1181,7 +1131,7 @@ void onClickDemiseOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DMG);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::DMG);
 }
 
 /******************************************************************************
@@ -1243,7 +1193,7 @@ void onClickDemiseThree()
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam, Julian Brandrick
+*	DESIGNER: Melvin Loho, Alex Lam, Julian Brandrick
 *
 *	PROGRAMMER: Alex Lam, Julian Brandrick
 *
@@ -1269,7 +1219,7 @@ float convertX(float x)
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam, Julian Brandrick
+*	DESIGNER: Melvin Loho, Alex Lam, Julian Brandrick
 *
 *	PROGRAMMER: Alex Lam, Julian Brandrick
 *
@@ -1316,6 +1266,8 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 
 	sn.timer = timer;
 
+	std::cout << "SKILLTYPE: " << (int)_skillType << std::endl;
+
 	switch(_skillType)
 	{
 		case SKILLTYPE::HEAL:
@@ -1329,6 +1281,12 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 		break;
 		case SKILLTYPE::DEBUFF:
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
+		break;
+		case SKILLTYPE::BIGHEAL:
+			snSGO = new SGO(*Manager::TextureManager::get(deityBIGImg));
+		break;
+		case SKILLTYPE::SPAWN:
+			snSGO = new SGO(*Manager::TextureManager::get(deitySUMImg));
 		break;
 	}
 

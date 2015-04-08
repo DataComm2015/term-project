@@ -5,6 +5,7 @@
 #include "../Event.h"
 #include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
+#include "../../Engine/AttackAction.h"
 #include "PlayerEntity.h"
 
 #define ATTACK_COOLDOWN 0.5F
@@ -23,11 +24,6 @@ id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets
 
 id_resource vesselShadow;
 
-//TO DO:
-//1) GIVE IT A SPRITE
-//2) MAKE THE SPRITE ANIMATE
-//3) DIAGONAL MODEMENT
-
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel constructor
 --
@@ -36,7 +32,7 @@ id_resource vesselShadow;
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
--- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun, Chris Klassen
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
@@ -87,15 +83,28 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	myX = 0;
 	myY = 0;
 
-	currentHealth = 500;
-	maxHealth = 500;
+	currentHealth = 100;
+	maxHealth = 100;
+
+	// TODO: Set the new attack based on the class
+	// delete actionList[normalAttack];
+	//
+	// if (true)
+	// {
+	// 	actionList[normalAttack] = new Marx::AttackAction(5, 20);
+	// }
+	// else
+	// {
+	// 	actionList[normalAttack] = new Marx::AttackAction(10, 5);
+	// }
+
 
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 3);
 
 	this->add(mask_sprite);
-  this->add(weapon_sprite);
+  	this->add(weapon_sprite);
 
 	// Add the drop shadow
 	vesselShadow = Manager::TextureManager::store(
@@ -117,10 +126,11 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 --
 -- PROGRAMMER:  Sebastian Pelka
 --				Sanders Lee (Debugged synchronization problem across clients,
---							 Added sound for walking)
+--							 Inserted sound effects)
 --				Alex Lam
 --				Julian Brandrick
 --				Thomas Tallentire
+--              Melvin Loho
 --
 -- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events
@@ -305,6 +315,13 @@ void Vessel::onUpdate(float deltaTime)
 						xSpeed -= val;
 						ySpeed -= val;
 					break;
+					case SKILLTYPE::BIGHEAL:
+						currentHealth += ev->getValue();
+						if (myHealthBar) myHealthBar->update((float)currentHealth/(float)maxHealth);
+					break;
+					case SKILLTYPE::SPAWN:
+						// Vessel implementation not needed
+					break;
 				}
 
 				break;
@@ -371,15 +388,23 @@ void Vessel::setPlayerEntity(PlayerEntity *entity)
 	player = entity;
 }
 
-/***
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	playFootstepSound
 --
---	DESIGNER:	Sanders Lee
+-- DATE:		April 7, 2015
 --
---	PROGRAMMER:	Sanders Lee
+-- REVISIONS:	(Date and Description)
 --
---	Code for playing footstep sounds
+-- DESIGNER:	Sanders Lee
 --
-***/
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void Vessel::playFootstepSound()
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Plays Vessel footstep sounds. Sound changes depending on grass or stone floor.
+-----------------------------------------------------------------------------------------------*/
 void Vessel::playFootstepSound()
 {
 	static bool soundActive = false;
@@ -429,15 +454,23 @@ void Vessel::playFootstepSound()
 	}
 }
 
-/***
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	playHurtSound
 --
---	DESIGNER:	Sanders Lee
+-- DATE:		April 7, 2015
 --
---	PROGRAMMER:	Sanders Lee
+-- REVISIONS:	(Date and Description)
 --
---	Code for playing hurt sounds
+-- DESIGNER:	Sanders Lee
 --
-***/
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void Vessel::playHurtSound()
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Plays the sound of Vessel getting hurt.
+-----------------------------------------------------------------------------------------------*/
 void Vessel::playHurtSound()
 {
 	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
@@ -446,18 +479,26 @@ void Vessel::playHurtSound()
 	voice.setMinDistance(3.0);
 	voice = SoundManager::play(hurtSound, soundPos);
 	voice.play();
-	printf("Hurt sound should play\n");
+	//printf("Hurt sound should play\n");
 }
 
-/***
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	playAttackSound
 --
---	DESIGNER:	Sanders Lee
+-- DATE:		April 7, 2015
 --
---	PROGRAMMER:	Sanders Lee
+-- REVISIONS:	(Date and Description)
 --
---	Code for playing attack sounds
+-- DESIGNER:	Sanders Lee
 --
-***/
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void Vessel::playAttackSound()
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Plays the sound of Vessel attacking.
+-----------------------------------------------------------------------------------------------*/
 void Vessel::playAttackSound()
 {
 	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
@@ -466,7 +507,7 @@ void Vessel::playAttackSound()
 	voice.setMinDistance(3.0);
 	voice = SoundManager::play(attackSound, soundPos);
 	voice.play();
-	printf("Attack sound should play\n");
+	//printf("Attack sound should play\n");
 }
 
 /*---------
@@ -1032,6 +1073,9 @@ int Vessel::getDefaultSpeed()
 -- DESIGNER:	Sanders Lee
 --
 -- PROGRAMMER:	Sanders Lee
+--		Marc Rafanan
+--		Jonathan Chu
+--
 --
 -- INTERFACE: bool Vessel::checkDeath()
 --
@@ -1042,7 +1086,7 @@ int Vessel::getDefaultSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::checkDeath()
 {
-	return (top == -100 && left == -100);
+	return (currentHealth <= 0);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -1236,20 +1280,20 @@ job_class Vessel::getJobClass()
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: setHealth
+-- FUNCTION:	setHealth
 --
--- DATE:
+-- DATE:		April 7, 2015
 --
--- REVISIONS: (Date and Description)
+-- REVISIONS:	(Date and Description)
 --
--- DESIGNER:	Calvin Rempel
+-- DESIGNER:	Calvin Rempel, Melvin Loho
 --
--- PROGRAMMER:	Calvin Rempel
+-- PROGRAMMER:	Calvin Rempel, Melvin Loho
 --
--- INTERFACE: void setHealth(int health)
--- int attack: the amount to set health to
+-- INTERFACE:	void setHealth(int health)
+--				int attack: the amount to set health to
 --
--- RETURNS: nothing
+-- RETURNS:		nothing
 --
 -- NOTES:
 -- This function provides a common interface for setting health for
@@ -1349,7 +1393,7 @@ void Vessel::stopAllSounds()
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: setAttack
+-- FUNCTION: getEntity
 --
 -- DATE:
 --
@@ -1381,6 +1425,25 @@ float Vessel::getXPosition()
 	return yPos;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION:	setHealthBar
+--
+-- DATE:		April 7, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Melvin Loho
+--
+-- PROGRAMMER:	Melvin Loho
+--
+-- INTERFACE:	void Vessel::setHealthBar(GUI::HealthBar* hb)
+--				hb: the health bar that this Vessel will use
+--
+-- RETURNS:		void
+--
+-- NOTES:
+-- This function associates the specified health bar with this Vessel.
+----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::setHealthBar(GUI::HealthBar* hb)
 {
 	myHealthBar = hb;

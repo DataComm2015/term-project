@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: huesat.frag - GLSL hue and saturation shader
 --
--- PROGRAM: Project Spectre
+-- PROGRAM: Sojourn
 --
 -- FUNCTIONS:
 -- float saturate(float);

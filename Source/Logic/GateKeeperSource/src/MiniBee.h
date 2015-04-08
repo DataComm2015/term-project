@@ -34,33 +34,41 @@ class MiniBee : public GateKeeper
 		void setAttackSpeed(float as);
 		void setXSpeed(float x);
 		void setYSpeed(float y);
-    void setSpeed(int _speed);
+    	void setSpeed(int _speed);
 		float getXSpeed();
 		float getYSpeed();
 		int getRange();
 		int getHealth();
 		int getAttack();
 		float getAttackSpeed();
-    int getSpeed();
+    	int getSpeed();
 		void turn();
 		void onCreate();
 		void onUpdate(float);
 		bool operator==(const VEntity&);
-  	void stopAllSounds();
-    Entity* getEntity();
-	  bool isMoving();
-		void playSound(float, float);
+  		void stopAllSounds();
+    	Entity* getEntity();
+	  	bool isMoving();
+		void playTravelSound(float, float);
+		void playHurtSound();
+		void playAttackSound();
 		void animate();
 		void processMoveEvent(MoveEvent* ev);
 		void processSkillEvent(SkillEvent* ev);
 		void processSetHealthEvent(SetHealthEvent* ev);
 		void processAttackEvent(AttackEvent* aev);
 
+		id_resource grassWalkSoundMiniBee;
+		id_resource stoneWalkSoundMiniBee;
+		id_resource hurtSoundMiniBee;
+		id_resource attackSoundMiniBee;
+
+
 	protected:
 		bool movingLeft;
-    bool movingRight;
+    	bool movingRight;
 		bool movingUp;
-    bool movingDown;
+    	bool movingDown;
 		int _range;
 		int _type;
 		int _health;
@@ -86,6 +94,15 @@ class MiniBee : public GateKeeper
 
 	private:
 		SGO shadow;
+
+	public:
+		static const char *travelSnds[4];
+
+		static const char *attackSnds[3];
+
+		static const char *hurtSnds[4];
+
+		static const char *deathSnds[3];
 };
 
 #endif

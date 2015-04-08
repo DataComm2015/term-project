@@ -7,6 +7,7 @@
 #include "Artificial Intelligence/Behaviour.h"
 #include "Entities/ServerEnemyController.h"
 #include "../Network/Message.h"
+#include "../Network/NetworkEntity.h"
 #include "EnemyControllerInit.h"
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
@@ -22,6 +23,7 @@ using std::cerr;
 using std::endl;
 using Networking::Message;
 using Networking::Session;
+using Networking::NetworkEntity;
 using namespace Marx;
 
 ServerGameScene::ServerGameScene(ServerCommand *command)
@@ -165,6 +167,20 @@ void ServerGameScene::leaveScene()
         //command->getGameState()->unregisterFromAllPlayers(controller);
     }
 
+    std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+    for(auto it = players.begin(); it != players.end(); ++it)
+    {
+        Vessel *vessel = it->second->getVessel();
+	if (vessel)
+	{
+		NetworkEntity *ne = dynamic_cast<NetworkEntity*>(vessel->getController());
+		if (ne)
+		{
+			command->getGameState()->unregisterFromAllPlayers(ne);
+		}
+	}
+    }
+
     enemies.clear();
 }
 
@@ -173,6 +189,30 @@ int ServerGameScene::getWorldSeed()
     return worldSeed;
 }
 
+/******************************************************************************
+*   FUNCTION: createEnemy
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica     - Added initializing of the server enemy controller
+*                                 adding enemies to the list of gate keepers
+*                                 mapping each enemy to a server enemy controller
+*
+*   DESIGNER:
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: createEnemy(ENTITY_TYPES, Behaviour*, float, float)
+*
+*   PARAMETERS: type          - Type of enemy to create
+*               behaviour     - Behaviour
+*               x             - x coordinate
+*               y             - y coordinate
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y)
 {
     EnemyControllerInit initData;
@@ -227,7 +267,7 @@ void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float
 /**
 
   Designer: Jeff Bayntun, Eric Tsang
-  Coder:    Jeff Bayntun
+  Coder:    Jeff Bayntun, Sanders Lee (Added code for getting player type)
  * @brief ServerGameScene::createPlayers
  * Creates all the vessels and deitys, this includes hooking them up
  * across the network.
@@ -249,9 +289,9 @@ void ServerGameScene::createPlayers()
         currPlayer = it->second;
         currSession = it->first;
         mode = currPlayer->getMode();
-        type = currPlayer->getType(); //sanderschange
+        type = currPlayer->getType();
         currPlayer->setSGameScene(this);
-		currPlayer->setVessel(NULL);
+	currPlayer->setVessel(NULL);
 
         switch(mode)
         {
@@ -263,8 +303,6 @@ void ServerGameScene::createPlayers()
 
                 // register the vessel controller with all clients
                 EnemyControllerInit initData;
-                //sanderschangestart
-                //initData.type = ENTITY_TYPES::VESSEL;
                 switch(type)
                 {
                   case PLAYER_TYPE::WARRIOR:
@@ -274,8 +312,8 @@ void ServerGameScene::createPlayers()
                       initData.type = ENTITY_TYPES::VESSEL_SHAMAN;
                       break;
                 }
-                //sanderschangeend
-		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
+
+		        gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;
 
@@ -340,7 +378,7 @@ std::vector<Vessel*> *ServerGameScene::getPlayerList()
 
 bool ServerGameScene::gameShouldEnd()
 {
-    int alive = 0;    
+    int alive = 0;
 
     for (int i = 0; i < playerList.size(); i++)
     {
@@ -350,7 +388,5 @@ bool ServerGameScene::gameShouldEnd()
         }
     }
 
-    return (alive <= 1);
+    return (alive <= 0);
 }
-
-

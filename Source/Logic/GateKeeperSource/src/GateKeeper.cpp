@@ -10,6 +10,8 @@
 **	DESIGNER: 	Filip Gutica A00781910
 **
 **	PROGRAMMER: Filip Gutica A00781910
+**              Chris Klassen
+**              Lewis Scott
 **
 ***********************************************************************************/
 #include "GateKeeper.h"
@@ -20,14 +22,25 @@
 #include <cstdlib>
 #include <cmath>
 
+const char *GateKeeper::travelSnds[4] = {"Assets/Sound/Enemies/bee/bee_travel_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_travel_02.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_travel_angry_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_travel_angry_02.ogg"};
+
+const char *GateKeeper::attackSnds[3] = {"Assets/Sound/Enemies/bee/bee_attack_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_attack_02.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_attack_03.ogg"};
+
+const char *GateKeeper::hurtSnds[4] = {"Assets/Sound/Enemies/bee/bee_hurt_01.ogg",
+                                      "Assets/Sound/Enemies/bee/bee_hurt_02.ogg",
+                                      "Assets/Sound/Enemies/bee/bee_hurt_03.ogg",
+                                      "Assets/Sound/Enemies/bee/bee_hurt_04.ogg"};
+
+const char *GateKeeper::deathSnds[3] = {"Assets/Sound/Enemies/bee/bee_death_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_death_02.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_death_03.ogg"};
+
 using namespace Manager;
-
-// sound set loaded should be determined by enemy type
-id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
-
 
 /******************************************************************************
 *   FUNCTION: GateKeeper() Constructor
@@ -39,6 +52,8 @@ id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound
 *   DESIGNER:   Filip Gutica
 *
 *   PROGRAMMER: Filip Gutica
+*               Chris Klassen
+*               Lewis Scott
 *
 *   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
 *
@@ -72,20 +87,12 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     int randDirection = (rand() % 3) - 1;
     getSprite().sprite().setScale(randDirection, 1);
 
-	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_02.ogg"));
-    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_03.ogg"));
-    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_death_02.ogg"));
-	
-	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
-	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
-	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
-	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
-
-	travel_Snd.setLoop(true);
-    travel_Snd.play();*/
-	
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
+
+    grassWalkSoundGK = SoundManager::store(SoundManager::load(GateKeeper::travelSnds[rand() % 4]));
+    stoneWalkSoundGK = SoundManager::store(SoundManager::load(GateKeeper::travelSnds[rand() % 4]));
+    hurtSoundGK = SoundManager::store(SoundManager::load(GateKeeper::hurtSnds[rand() % 4]));
+    attackSoundGK = SoundManager::store(SoundManager::load(GateKeeper::attackSnds[rand() % 3]));
 }
 
 GateKeeper::~GateKeeper()
@@ -126,8 +133,6 @@ void GateKeeper::onUpdate(float deltaTime)
       ; it != eventQueue->end()
       ; ++it )
   {
-
-	std::cout << "GateKeeper::Event " << (*it)->type << std::endl;
 
     // switch on type
     switch((*it)->type)
@@ -190,7 +195,7 @@ void GateKeeper::onUpdate(float deltaTime)
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: onUpdate(float)
+*   INTERFACE: processMoveEvent(MoveEvent* ev)
 *
 *   PARAMETERS: ev   - Event to be processed
 *
@@ -252,21 +257,23 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
 /******************************************************************************
-*   FUNCTION: processMoveEvent
+*   FUNCTION: processSkillEvent
 *
 *   DATE: April 6 2014
 *
-*   REVISIONS:
+*   REVISIONS: Filip Gutica   - Created seperate function
 *
-*   DESIGNER:   Filip Gutica
+*   DESIGNER:   Alex Lam
+*               Julian Brandrick
 *
-*   PROGRAMMER: Filip Gutica
+*   PROGRAMMER: Alex Lam
+*               Julian Brandrick
 *
-*   INTERFACE: onUpdate(SkillEvent* ev)
+*   INTERFACE: processSkillEvent(SkillEvent* ev)
 *
 *   PARAMETERS: ev   - Event to be processed
 *
@@ -277,7 +284,6 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
 ******************************************************************************/
 void GateKeeper::processSkillEvent(SkillEvent* ev)
 {
-  printf("GateKeeper BEFORE Health: %d\n", _health);
   switch(ev->getSkillType())
   {
       case SKILLTYPE::HEAL:
@@ -294,13 +300,17 @@ void GateKeeper::processSkillEvent(SkillEvent* ev)
           _xSpeed -= ev->getValue();
           _ySpeed -= ev->getValue();
       break;
+      case SKILLTYPE::BIGHEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::SPAWN:
+          // Vessel implementation not needed
+      break;
   }
 
-  printf("GateKeeper AFTER Health: %d\n", _health);
 
   if(_health <= 0)
   {
-    std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
     onDestroy();
   }
 }
@@ -310,11 +320,11 @@ void GateKeeper::processSkillEvent(SkillEvent* ev)
 *
 *   DATE: April 6 2014
 *
-*   REVISIONS:
+*   REVISIONS:  Filip Gutica    - Made seperate function
 *
-*   DESIGNER:   Filip Gutica
+*   DESIGNER:   Thomas Tallentire
 *
-*   PROGRAMMER: Filip Gutica
+*   PROGRAMMER: Thomas Tallenire
 *
 *   INTERFACE: processSetHealthEvent(SetHealthEvent* ev)
 *
@@ -335,18 +345,37 @@ void GateKeeper::processSetHealthEvent(SetHealthEvent* ev)
 
   if(_health <= 0)
   {
-    std::cout << "GateKeeper Dead" << std::endl;
     onDestroy();
   }
 }
+
+
+/******************************************************************************
+*   FUNCTION: processAttackEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:  Filip Gutica    - Made seperate function
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: processAttackEvent(AttackEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Proces attack events. Generate attacks
+******************************************************************************/
 void GateKeeper::processAttackEvent(AttackEvent* aev)
 {
-  std::cout << "ATTACK" << std::endl;
   createAttack(*aev, getSprite(), left, top);
 }
 
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -356,16 +385,16 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
 *
 *   RETURNS: void
 *
-*   NOTES: Plays sound associated with this enemy
+*   NOTES: Plays travelling sound associated with this enemy
 ******************************************************************************/
-void GateKeeper::playSound(float xSpeed, float ySpeed)
+void GateKeeper::playTravelSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;
@@ -424,9 +453,9 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: animate(float)
+*   INTERFACE: animate()
 *
-*   PARAMETERS: deltaTime   - Time this onUpdate was called
+*   PARAMETERS: void
 *
 *   RETURNS: void
 *
