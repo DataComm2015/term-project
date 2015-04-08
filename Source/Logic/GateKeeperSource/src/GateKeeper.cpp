@@ -10,6 +10,7 @@
 **	DESIGNER: 	Filip Gutica A00781910
 **
 **	PROGRAMMER: Filip Gutica A00781910
+**              Chris Klassen
 **
 ***********************************************************************************/
 #include "GateKeeper.h"
@@ -39,6 +40,7 @@ id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound
 *   DESIGNER:   Filip Gutica
 *
 *   PROGRAMMER: Filip Gutica
+*               Chris Klassen
 *
 *   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
 *
