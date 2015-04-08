@@ -1,7 +1,7 @@
 CXX=g++
 CPPFLAGS=-std=c++11 -g
-CLIENT_EXE=app
-SERVER_EXE=serv
+CLIENT_EXE=Soujourn
+SERVER_EXE=server
 
 ## FILES
 
