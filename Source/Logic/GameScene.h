@@ -176,9 +176,12 @@ class GameScene : public Scene
 		int classType;
 
 		sf::Sound current;
+		
+		id_resource rand_msc;
 
 		sf::Music *music;
 		sf::Music *ambience;
+		sf::Music *randsound;
 
 		// tech demos:
 		sf::Vector2f butSize;
