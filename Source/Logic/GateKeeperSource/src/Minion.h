@@ -50,18 +50,25 @@ class Minion : public GateKeeper
   	void stopAllSounds();
     Entity* getEntity();
 	  bool isMoving();
-		void playSound(float, float);
+		void playTravelSound(float, float);
+		void playHurtSound();
+		void playAttackSound();
 		void animate();
 		void processMoveEvent(MoveEvent* ev);
 		void processSkillEvent(SkillEvent* ev);
 		void processSetHealthEvent(SetHealthEvent* ev);
 		void processAttackEvent(AttackEvent* aev);
 
+		id_resource grassWalkSoundMinion;
+		id_resource stoneWalkSoundMinion;
+		id_resource hurtSoundMinion;
+		id_resource attackSoundMinion;
+
 	protected:
 		bool movingLeft;
-    bool movingRight;
+    	bool movingRight;
 		bool movingUp;
-    bool movingDown;
+    	bool movingDown;
 		int _range;
 		int _type;
 		int _health;
@@ -87,6 +94,13 @@ class Minion : public GateKeeper
 
 	private:
 		SGO shadow;
+
+	public:
+		static const char *travelSnds[4];
+
+		static const char *attackSnds[3];
+
+		static const char *hurtSnds[3];
 
 };
 

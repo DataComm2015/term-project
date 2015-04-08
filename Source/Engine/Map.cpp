@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: Map.cpp
 --
--- PROGRAM:
+-- PROGRAM: Sojourn
 --
 -- FUNCTIONS:
 --          Map(const uint height, const uint width)
@@ -11,6 +11,10 @@
 --          Cell getCell(const uint x, const uint y) const
 --          void setTexture(const uint texture_id)
 --          uint getTexture() const
+--          std::set<Entity*> getEntities() const
+--          sf::Transform getLocalTransform() const override
+--          void drawChildren(Renderer& renderer, sf::RenderStates states) const override
+--          void draw(Renderer& renderer, sf::RenderStates states) const override
 --
 -- DATE: February 16, 2015
 --
@@ -18,8 +22,11 @@
 --
 -- DESIGNER: Marc Rafanan
 --           Marc Vouve
+--           Melvin Loho
 --
--- PROGRAMMER: Marc Rafanan
+-- PROGRAMMER:
+--             Marc Rafanan
+--             Melvin Loho
 --
 -- NOTES:
 --      This file implements the Map class members
@@ -295,11 +302,53 @@ uint Map::getTexture() const
     return texture_id_;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: getLocalTransform
+--
+-- DATE: April 3, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Melvin Loho
+--
+-- PROGRAMMER: Melvin Loho
+--
+-- INTERFACE: sf::Transform Map::getLocalTransform() const
+--
+-- PARAMETERS:
+--
+-- RETURNS: the Transform object
+--
+-- NOTES:
+--        Returns the transform object associated with this map.
+----------------------------------------------------------------------------------------------------------------------*/
 sf::Transform Map::getLocalTransform() const
 {
 	return trans;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: drawChildren
+--
+-- DATE: April 3, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Melvin Loho
+--
+-- PROGRAMMER: Melvin Loho
+--
+-- INTERFACE: void Map::drawChildren(Renderer& renderer, sf::RenderStates states) const
+--
+-- PARAMETERS:
+--             renderer The renderer
+--             states The render states
+--
+-- RETURNS: void
+--
+-- NOTES:
+--        Overrides the drawChildren method which draws all of the entities that have been added to this map.
+----------------------------------------------------------------------------------------------------------------------*/
 void Map::drawChildren(Renderer& renderer, sf::RenderStates states) const
 {
 	for (const Entity* e : getEntities())
@@ -308,6 +357,28 @@ void Map::drawChildren(Renderer& renderer, sf::RenderStates states) const
 	}
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: draw
+--
+-- DATE: April 3, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Melvin Loho
+--
+-- PROGRAMMER: Melvin Loho
+--
+-- INTERFACE: void Map::draw(Renderer& renderer, sf::RenderStates states) const
+--
+-- PARAMETERS:
+--             renderer The renderer
+--             states The render states
+--
+-- RETURNS: void
+--
+-- NOTES:
+--        Overrides the draw method which draws this map.
+----------------------------------------------------------------------------------------------------------------------*/
 void Map::draw(Renderer& renderer, sf::RenderStates states) const
 {
 	renderer.draw(*this, states);
