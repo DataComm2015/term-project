@@ -1,3 +1,30 @@
+/*------------------------------------------------------------------------------
+-- FILE:            Session.cpp
+--
+-- DATE:            March 17, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Network Teams
+--
+-- PROGRAMMER:      Eric Tsang, Jeff Bayntun, Calvin Rempel
+--
+-- INTERFACE:       Session(int socket);
+                    virtual ~Session();
+                    void send(Message* msg);
+                    void disconnect();
+                    void onMessage(Message* msg);
+                    void onDisconnect(int remote);
+                    void handleMessages();
+                    void markForDeletion();
+
+--
+-- NOTES:           the {ServerNetworkController} class on the server is logically mapped to a
+                    {ClientNetworkController} on the client. other controllers such as AI
+                    controllers should inherit from the {ClientNetworkController} class, and
+                    get their entity to do stuff by using the addEvent method.
+------------------------------------------------------------------------------*/
+
 #include "Session.h"
 #include "Message.h"
 #include "semaphores.h"
@@ -14,12 +41,30 @@
 
 using namespace Networking;
 
-static int SESSION_SET_SEM_KEY = rand() % 5000 + 10;
+static int SESSION_SET_SEM_KEY = rand() % 5000 + 11;
 static int SESSION_SEM = initSessionSem(SESSION_SET_SEM_KEY);
 static int MESSAGE_SEM_KEY = 9956;
 static std::set<Session*> SESSIONS;
 static std::set<Session*> sessionsToDelete;
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        Session::Session(int socket)
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Teams
+--
+-- PROGRAMMER:      Jeff Bayntun
+--
+-- INTERFACE:       Session(int socket)
+                    socket for this session
+
+-- RETURNS:         void
+--
+-- NOTES:           Creates a Session
+-----------------------------------------------------------------------------------------------*/
 Session::Session(int socket)
 {
     #ifdef DEBUG
@@ -36,6 +81,23 @@ Session::Session(int socket)
     releaseSem(SESSION_SEM);
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        Session::~Session()
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Networking Teams
+--
+-- PROGRAMMER:      Jeff Bayntun
+--
+-- INTERFACE:       ~Session()
+
+-- RETURNS:         void
+--
+-- NOTES:           destroys a Session
+-----------------------------------------------------------------------------------------------*/
 Session::~Session()
 {
     SESSIONS.erase(this);
@@ -52,7 +114,23 @@ Session::~Session()
     deleteSem(messagesSem);
     disconnect();
 }
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        send
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE:       void Session::send(Message* msg)
 
+-- RETURNS:         void
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
 void Session::send(Message* msg)
 {
     int packetlen = msg->len+sizeof(msg->len)+sizeof(msg->type);
@@ -62,21 +140,46 @@ void Session::send(Message* msg)
     write(socket,msg->data,msg->len);
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        disconnect
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE:       void Session::disconnect()
+
+-- RETURNS:         void
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
 void Session::disconnect()
 {
     close(socket);
 }
-/**
- * @brief Session::onMessage
- *          takes a message from the network and adds it to the
- *          queue for later use.
- * @param msg
- *          pointer to the message received
- *
- * @designer Network Teams
- *
- * @author Jeff Bayntun, Eric Tsang
- */
+
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        onMessage
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Network Teams
+--
+-- PROGRAMMER:      Jeff Bayntun, Eric Tsang
+--
+-- INTERFACE:       void Session::onMessage(Message* msg)
+
+-- RETURNS:         void
+--
+-- NOTES:           takes a message from the network and adds it to the
+                      queue for later use.
+-----------------------------------------------------------------------------------------------*/
 void Session::onMessage(Message* msg)
 {
     #ifdef DEBUG
@@ -99,6 +202,23 @@ void Session::onMessage(Message* msg)
     releaseSem(messagesSem);
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        disconnect
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE:       void Session::disconnect()
+
+-- RETURNS:         void
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
 void Session::onDisconnect(int remote)
 {
     #ifdef DEBUG
@@ -121,6 +241,24 @@ void Session::onDisconnect(int remote)
  * @author   Jeff Bayntun
  *
  */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        handleMessages
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Jeff Bayntun
+--
+-- PROGRAMMER:      Jeff Bayntun
+--
+-- INTERFACE:       void Session::handleMessages()
+
+-- RETURNS:         void
+--
+-- NOTES:           iterates through the messages for this session and sends them to the
+                    muxxer
+-----------------------------------------------------------------------------------------------*/
 void Session::handleMessages()
 {
     accessSem(messagesSem);
@@ -142,6 +280,24 @@ void Session::handleMessages()
    // printf("end actual messages");
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        handleSessionMessages
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Jeff Bayntun
+--
+-- PROGRAMMER:      Jeff Bayntun
+--
+-- INTERFACE:       void Session::handleSessionMessages()
+
+-- RETURNS:         void
+--
+-- NOTES:           iterates through the sessions telling them to iterate through
+                    their current received messages from the network.
+-----------------------------------------------------------------------------------------------*/
 void Networking::handleSessionMessages()
 {
     // obtain synchronization objects
@@ -164,6 +320,23 @@ void Networking::handleSessionMessages()
     releaseSem(SESSION_SEM);
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        markForDeletion
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:
+--
+-- INTERFACE:       void Session::markForDeletion()
+
+-- RETURNS:         void
+--
+-- NOTES:
+-----------------------------------------------------------------------------------------------*/
 void Session::markForDeletion()
 {
     // obtain synchronization objects

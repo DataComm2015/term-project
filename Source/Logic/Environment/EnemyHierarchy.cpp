@@ -1,3 +1,32 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: EnemyHierarchy.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:		
+--		EnemyHierarchy(ifstream *dataFile);
+--		~EnemyHierarchy();
+--		string getEnemy(string *dest, string enemyPath, bool stepUp, float stepUpChance);
+--		void constructNode(ifstream *dataFile);
+--		void getWordsFromLine(vector<string> *wordList, ifstream *dataFile);
+--		int findNode(string nodeName);
+--		EnemyHierarchy* getInstance();
+--
+-- DATE: March 14, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: Chris Klassen
+--
+-- PROGRAMMER:  Chris Klassen
+--
+-- NOTES:
+--        This file contains the implementation of the enemy hierarchy.
+--		  The enemy hierarchy is used to load data from a file in order to 
+--		  construct logical groupings of enemies used for generation.
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include <sstream>
 #include "EnemyHierarchy.h"
 

@@ -1,5 +1,5 @@
 /********************************************************************************
-**	SOURCE FILE:	ServerEnemyController.cpp -  	GateKeeper server class controller class
+**	SOURCE FILE:	ServerEnemyController.cpp -  	Enemy server controller class
 **                                              maintains and updates gatekeper behaviour on
 **                                              the server.
 **	PROGRAM:	Term_Project
@@ -8,9 +8,10 @@
 **
 **
 **	DESIGNER: 	Calvin Rempel
+**              Filip Gutica
 **
 **	PROGRAMMER: Calvin Rempel
-**              Filip Gutica A00781910
+**              Filip Gutica
 **
 ***********************************************************************************/
 #include "ServerEnemyController.h"
@@ -18,12 +19,33 @@
 #include "../NetworkEntityPairs.h"
 #include "../Artificial Intelligence/Behaviour.h"
 #include "../Event.h"
+#include "../Creature.h"
 
 #include <cmath>
 
 #include <cstdio>
 
-
+/******************************************************************************
+*   FUNCTION: ServerEnemyController() Constructor
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:   Calvin Rempel
+*
+*   PROGRAMMER: Calvin Rempel
+*
+*   INTERFACE: Minion(Behaviour*, ServergameScene*)
+*
+*   PARAMETERS: behaviour   - Behaviour for this enemy controller
+*               sgs         - Pointer to the server game scene
+*
+*   RETURNS: void
+*
+*   NOTES: Constructor for the server enemy controller initializes the enemy to not
+*          be moving, initilizes the server game scene, and sets the enemy attack timer
+******************************************************************************/
 ServerEnemyController::ServerEnemyController(Behaviour *behaviour, ServerGameScene* sgs)
     : ServerNetworkController()
     , behaviour(behaviour)
@@ -31,12 +53,33 @@ ServerEnemyController::ServerEnemyController(Behaviour *behaviour, ServerGameSce
   moving = false;
 
   _servGameScene = sgs;
+
+  attackTimer = 1;
 }
 
 ServerEnemyController::~ServerEnemyController()
 {
 }
 
+/******************************************************************************
+*   FUNCTION: init
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:   Calvin Rempel
+*
+*   PROGRAMMER: Calvin Rempel
+*
+*   INTERFACE: init()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Initializes the behaviour
+******************************************************************************/
 void ServerEnemyController::init()
 {
     if (behaviour)
@@ -45,7 +88,29 @@ void ServerEnemyController::init()
     }
 }
 
-
+/******************************************************************************
+*   FUNCTION: updateBehaviour
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:  Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: updateBehaviour(float deltatime)
+*
+*   PARAMETERS: deltatime   - Time amount of time since the last update behaviour call
+*
+*   RETURNS: void
+*
+*   NOTES: Updates the behaviour of the enemy. This is where all of the AI logic
+*          resides. The enemy scans for near by players and when a player enters the
+*          gatekeeper's range, the gate keeper will begin following the player and attackin
+*          the player until the player either kills the enemy or moves out of the enemy's
+*          range.
+******************************************************************************/
 void ServerEnemyController::updateBehaviour(float deltaTime)
 {
     float vessel_X;
@@ -55,6 +120,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
     float gk_Y;
 
     MoveEvent *event;
+    AttackEvent *attackEvent;
 
     if (_servGameScene && _currEntity)
     {
@@ -68,6 +134,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
             event = new MoveEvent(gk_X, gk_Y, 0, 0, 0);
             addEvent(event);
             moving = false;
+            return;
           }
           return;
         }
@@ -76,9 +143,6 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
           vessel_X = targetVessel->left;
           vessel_Y = targetVessel->top;
         }
-
-      //  std::cout << "Vessel x: " << vessel_X << std::endl;
-      //  std::cout << "Vessel y: " << vessel_Y << std::endl;
 
         xDirection = 0;
         yDirection = 0;
@@ -107,15 +171,22 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         if (prevX != xDirection || prevY != yDirection)
         {
           moving = true;
-          std::cout << "Adding move event" << std::endl;
-          std::cout << "X Direction " << xDirection << std::endl;
-          std::cout << "Y Direction " << yDirection << std::endl;
 
           prevX = xDirection;
           prevY = yDirection;
 
           event = new MoveEvent(gk_X, gk_Y, xDirection, yDirection, 0);
           addEvent(event);
+        }
+        attackTimer -= deltaTime;
+
+        // Attack every tick of attackTimer
+        if (attackTimer <= 0)
+        {
+          attackEvent = new AttackEvent(getId(), ActionType::normalAttack, targetVessel->left - gk_X, targetVessel->top - gk_Y);
+
+          addEvent(attackEvent);
+          attackTimer = 1;
         }
 
     }
@@ -126,6 +197,26 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
     }
 }
 
+/******************************************************************************
+*   FUNCTION: detectVessels
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:  Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: detectVessels()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: Vessel*  - The vessel detected within this enemy's range
+*
+*   NOTES: Checks the coordinates of every player in the game against the enemy's
+*          current position. If a vessel is detected, the detected vessel is returned.
+******************************************************************************/
 Vessel* ServerEnemyController::detectVessels()
 {
   float x1 = _currEntity->left;
@@ -140,13 +231,35 @@ Vessel* ServerEnemyController::detectVessels()
     x2 = (_servGameScene->getPlayerList()->at(i))->left;
     y2 = (_servGameScene->getPlayerList()->at(i))->top;
 
-    if (getDistance(x1, y1, x2, y2) <= AGGRO_RADIUS)
+    if (getDistance(x1, y1, x2, y2) <= _currEntity->getRange())
       return (_servGameScene->getPlayerList()->at(i));
   }
 
   return NULL;
 }
 
+/******************************************************************************
+*   FUNCTION: getDistance
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:  Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getDistance(float x1, float y1, float x2, float y2)
+*
+*   PARAMETERS: x1  - x coordinate of the first point
+*               y1  - y coordinate of the first point
+*               x2  - x coordinate of the second point
+*               y2  - y coordinate of the second point
+*
+*   RETURNS: float  - Distance between the two coordinates passed
+*
+*   NOTES: Returns the distance between the two points provided
+******************************************************************************/
 float ServerEnemyController::getDistance(float x1, float y1, float x2, float y2 )
 {
   float result;
@@ -156,6 +269,25 @@ float ServerEnemyController::getDistance(float x1, float y1, float x2, float y2 
   return result;
 }
 
+/******************************************************************************
+*   FUNCTION: setEntity
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: (Date and Description)
+*
+*   DESIGNER:  Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setEntity(GateKeeper* e)
+*
+*   PARAMETERS: e   - Means of passing the controlled entity to this controller
+*
+*   RETURNS: void
+*
+*   NOTES: Sets the entity controlled by this conroller
+******************************************************************************/
 void ServerEnemyController::setEntity(GateKeeper* e)
 {
   _currEntity = e;

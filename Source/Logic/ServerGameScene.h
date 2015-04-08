@@ -1,3 +1,4 @@
+
 #ifndef SERVER_GAME_SCENE_H_
 #define SERVER_GAME_SCENE_H_
 
@@ -60,6 +61,8 @@ class ServerGameScene : public Scene
         std::vector<Creature*> enemies;
         std::vector<ServerEnemyController*> enemyControllers;
         std::vector<Vessel*> playerList;
+
+        bool gameShouldEnd();
 };
 
 #endif

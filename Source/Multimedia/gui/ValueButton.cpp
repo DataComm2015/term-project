@@ -7,7 +7,7 @@
 *
 * @revisions	2015-03-18 - Removed BGO parent from constructor
 *
-* @designer   
+* @designer     
 *
 * @programmer   Jonathan Chu
 *				Marc Rafanan
@@ -24,12 +24,37 @@ ValueButton::ValueButton(sf::IntRect* decButton, Button* incButton, Button*, Lab
     mod_by = modBy;
 }
 
+/**
+* Destructor for the value buttons
+*
+* @date         2015-02-28
+*
+* @revisions	
+*
+* @designer     
+*
+* @programmer   Jonathan Chu
+*
+* @return       initializer
+*/
 ValueButton::~ValueButton()
 {
     //need to know what this valueButton does
 }
 
-
+/**
+* Set the format for the button
+*
+* @date         2015-02-28
+*
+* @revisions	
+*
+* @designer     
+*
+* @programmer   Jonathan Chu
+*
+* @return       initializer
+*/
 ValueButton::void setFormat(int, bool, sf::Color)
 {
     

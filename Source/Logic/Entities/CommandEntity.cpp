@@ -11,6 +11,7 @@
 #include "../Event.h"
 #include "../NetworkEntityPairs.h"
 #include "../ClientLobbyScene.h"
+#include "../MainMenuScene.h"
 
 #include "../ServerGameScene.h"
 #include "../../Network/Client.h"
@@ -24,20 +25,21 @@
 
 using Networking::Client;
 
-CommandEntity::CommandEntity(int id, GameScene* gameScene, ClientMux * client)
+CommandEntity::CommandEntity(int id, ClientMux * client)
     :NetworkEntity(id,(int)NetworkEntityPair::PLAYER_COMMAND)
-    ,_gameScene(gameScene)
 {
     clientmux = client;
-    _gameScene->addKeyListener(this);
-	_gameScene->addClickListener(this);
     playerMode = PLAYER_MODE::GHOST;
 }
 
 CommandEntity::~CommandEntity()
 {
-    _gameScene->rmKeyListener(this);
-	_gameScene->rmClickListener(this);
+}
+
+void CommandEntity::attachListeners()
+{
+    MainMenuScene::getGameScene()->addKeyListener(this);
+	MainMenuScene::getGameScene()->addClickListener(this);
 }
 
 PLAYER_MODE CommandEntity::getPlayerMode()
@@ -207,6 +209,11 @@ void CommandEntity::onUpdate(Message msg)
             playerMode = *((PLAYER_MODE*) msg.data);
 
             break;
+        case PlayerCommandMsgType::SKILL_NOTIFY:
+            skill *sk = (skill*)msg.data;
+
+            MainMenuScene::getGameScene()->addSkillNotification(sk->curX, sk->curY, 3000, sk->st);
+        break;
     }
 }
 

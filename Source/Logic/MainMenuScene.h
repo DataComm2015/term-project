@@ -53,9 +53,11 @@ class MainMenuScene : public Scene
         void updateMainView(sf::View& v);
         friend void nextTextBox( void * );
 
+        static GameScene *getGameScene();
+        static void clearGameScene();
     private:
+        static GameScene *gameScene;
         Networking::Client *client;
-        GameScene *gameScene;
         ClientLobbyScene *lobbyScene;
         ClientScoreboardScene* scoreScene;
         ClientMux* clientmux;
@@ -78,6 +80,10 @@ class MainMenuScene : public Scene
         id_resource backgroundImg;
         id_resource textBackgroundImg;
         id_resource textBackgroundBoxImg;
+
+	id_resource menuMsc;
+
+	sf::Music *music;
 
         GUI::Label * serverLbl;
         GUI::Label * portLbl;

@@ -196,7 +196,7 @@ void AppWindow::run()
 	}
 }
 
-AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(1366, 768), "The Game", sf::Style::Close, sf::ContextSettings(0,0,0))
+AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(1366, 768), "Sojourn", sf::Style::Close, sf::ContextSettings(0,0,0))
 {
 	Scene *s = new Scene;
 	scene.emplace_back(s);
