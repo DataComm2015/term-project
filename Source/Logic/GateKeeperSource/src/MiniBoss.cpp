@@ -26,19 +26,19 @@ using namespace Manager;
 //static id_resource hurtSoundMBoss 		  = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
 //static id_resource attackSoundMBoss		 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
-// bug fix by Sanders Lee
+
 MiniBoss::MiniBoss(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
     _range = 15;
-    _health = 100;
+    _health = 150;
     _type = 1;
     _attack = 1;
     _attackSpeed = 1;
     _xPos = x;
     _yPos = y;
-    _xSpeed = 0.06;
-    _ySpeed = 0.06;
+    _xSpeed = 0.05;
+    _ySpeed = 0.05;
     movingLeft = movingRight = movingUp = movingDown = _moving = false;
 
     int randDirection = (rand() % 3) - 1;
@@ -59,7 +59,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
 	travel_Snd.setLoop(true);
     travel_Snd.play();*/
-	
+
 }
 
 MiniBoss::~MiniBoss()
@@ -116,10 +116,12 @@ void MiniBoss::onUpdate(float deltaTime)
   		}
   		case ::Marx::SET_HEALTH:
   		{
-  			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			if (top != -100)
+			{
+	  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-        	processSetHealthEvent(event);
-
+		    	processSetHealthEvent(event);
+			}
         break;
   		}
 		  case ::Marx::ATTACK:

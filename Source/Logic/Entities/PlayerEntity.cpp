@@ -29,7 +29,7 @@ PlayerEntity::PlayerEntity(ServerCommand *server)
     this->controller = 0;
     nickname = 0;
 	vessel = NULL;
-	points = 0;
+	points = 0.0F;
 }
 
 PlayerEntity::~PlayerEntity()
@@ -201,6 +201,8 @@ void PlayerEntity::onUpdate(Message msg)
                         std::cout << "Entity VALUE: " << sk->val << std::endl;
                         
                         vessel->getController()->addEvent(ev);
+                        
+                        givePoints(20.0);
 
                         vessel = NULL;
                     }
@@ -232,11 +234,14 @@ void PlayerEntity::onUpdate(Message msg)
                         
                         keeper->getController()->addEvent(ev);
                         
+                        givePoints(10.0);
 
                         keeper = NULL;
                     }
                 }
             }
+
+            std::cout << "POINTS: " << getPoints() << std::endl;
 
             auto players = server->getGameState()->getPlayers();
             
@@ -301,6 +306,7 @@ Vessel *PlayerEntity::getVessel()
 
 void PlayerEntity::givePoints(float _points)
 {
+	std::cout << "Points:: got: " << _points << std::endl;
 	points += _points;
 	std::cout << "MOAR POINTS!! " << points << std::endl;
 }

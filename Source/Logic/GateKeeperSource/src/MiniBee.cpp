@@ -35,7 +35,7 @@ MiniBee::MiniBee(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
     _range = 20;
-    _health = 100;
+    _health = 50;
     _type = 1;
     _attack = 1;
     _attackSpeed = 1;
@@ -62,7 +62,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-4, -17);
-	
+
 	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_travel_02_baby.ogg"));
     attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_attack_01_baby.ogg"));
     hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/babby/bee_hurt_02_baby.ogg"));
@@ -131,9 +131,12 @@ void MiniBee::onUpdate(float deltaTime)
   		}
   		case ::Marx::SET_HEALTH:
   		{
-  			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			if (top != -100)
+			{
+	  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-        processSetHealthEvent(event);
+				processSetHealthEvent(event);
+			}
 
         break;
   		}
