@@ -251,7 +251,7 @@ void ClientLobbyScene::onLoad()
 --
 -- DESIGNER: Alex Lam, Chris Klassen and Michael Chimick
 --
--- PROGRAMMER: Alex Lam, Chris Klassen, Michael Chimick and Melvin Loho, Jeff Bayntun
+-- PROGRAMMER: Alex Lam, Chris Klassen, Michael Chimick and Melvin Loho, Jeff Bayntun, Manuel Gonzales
 --
 -- INTERFACE: void ClientLobbyScene::update(sf::Time t)
 --
