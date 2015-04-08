@@ -219,7 +219,7 @@ void GameScene::onLoad()
 
 	// minimap view
 	viewMinimap.setViewport(sf::FloatRect(0.76f,0.01f,0.23f,0.23f));
-	viewMinimap.zoom(2.f);
+	viewMinimap.zoom(0.5f);
 	minimapBorder.setFillColor(sf::Color::Black);
 	minimapBorder.setOutlineThickness(5); //thickness set to 5 pixels
 
