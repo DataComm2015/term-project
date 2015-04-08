@@ -23,11 +23,6 @@ id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets
 
 id_resource vesselShadow;
 
-//TO DO:
-//1) GIVE IT A SPRITE
-//2) MAKE THE SPRITE ANIMATE
-//3) DIAGONAL MODEMENT
-
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel constructor
 --
@@ -1246,20 +1241,20 @@ job_class Vessel::getJobClass()
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: setHealth
+-- FUNCTION:	setHealth
 --
--- DATE:
+-- DATE:		April 7, 2015
 --
--- REVISIONS: (Date and Description)
+-- REVISIONS:	(Date and Description)
 --
--- DESIGNER:	Calvin Rempel
+-- DESIGNER:	Calvin Rempel, Melvin Loho
 --
--- PROGRAMMER:	Calvin Rempel
+-- PROGRAMMER:	Calvin Rempel, Melvin Loho
 --
--- INTERFACE: void setHealth(int health)
--- int attack: the amount to set health to
+-- INTERFACE:	void setHealth(int health)
+--				int attack: the amount to set health to
 --
--- RETURNS: nothing
+-- RETURNS:		nothing
 --
 -- NOTES:
 -- This function provides a common interface for setting health for
@@ -1359,7 +1354,7 @@ void Vessel::stopAllSounds()
 }
 
 /*------------------------------------------------------------------------------------------------------------------
--- FUNCTION: setAttack
+-- FUNCTION: getEntity
 --
 -- DATE:
 --
@@ -1391,6 +1386,25 @@ float Vessel::getXPosition()
 	return yPos;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION:	setHealthBar
+--
+-- DATE:		April 7, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Melvin Loho
+--
+-- PROGRAMMER:	Melvin Loho
+--
+-- INTERFACE:	void Vessel::setHealthBar(GUI::HealthBar* hb)
+--				hb: the health bar that this Vessel will use
+--
+-- RETURNS:		void
+--
+-- NOTES:
+-- This function associates the specified health bar with this Vessel.
+----------------------------------------------------------------------------------------------------------------------*/
 void Vessel::setHealthBar(GUI::HealthBar* hb)
 {
 	myHealthBar = hb;
