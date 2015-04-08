@@ -82,7 +82,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
-	
+
 	currentHealth = 100;
 	maxHealth = 100;
 
@@ -126,7 +126,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 --
 -- PROGRAMMER:  Sebastian Pelka
 --				Sanders Lee (Debugged synchronization problem across clients,
---							 Added sound for walking)
+--							 Inserted sound effects)
 --				Alex Lam
 --				Julian Brandrick
 --				Thomas Tallentire
@@ -387,15 +387,23 @@ void Vessel::setPlayerEntity(PlayerEntity *entity)
 	player = entity;
 }
 
-/***
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	playFootstepSound
 --
---	DESIGNER:	Sanders Lee
+-- DATE:		April 7, 2015
 --
---	PROGRAMMER:	Sanders Lee
+-- REVISIONS:	(Date and Description)
 --
---	Code for playing footstep sounds
+-- DESIGNER:	Sanders Lee
 --
-***/
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void Vessel::playFootstepSound()
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Plays Vessel footstep sounds. Sound changes depending on grass or stone floor.
+-----------------------------------------------------------------------------------------------*/
 void Vessel::playFootstepSound()
 {
 	static bool soundActive = false;
@@ -445,15 +453,23 @@ void Vessel::playFootstepSound()
 	}
 }
 
-/***
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	playHurtSound
 --
---	DESIGNER:	Sanders Lee
+-- DATE:		April 7, 2015
 --
---	PROGRAMMER:	Sanders Lee
+-- REVISIONS:	(Date and Description)
 --
---	Code for playing hurt sounds
+-- DESIGNER:	Sanders Lee
 --
-***/
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void Vessel::playHurtSound()
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Plays the sound of Vessel getting hurt.
+-----------------------------------------------------------------------------------------------*/
 void Vessel::playHurtSound()
 {
 	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
@@ -465,15 +481,23 @@ void Vessel::playHurtSound()
 	//printf("Hurt sound should play\n");
 }
 
-/***
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	playAttackSound
 --
---	DESIGNER:	Sanders Lee
+-- DATE:		April 7, 2015
 --
---	PROGRAMMER:	Sanders Lee
+-- REVISIONS:	(Date and Description)
 --
---	Code for playing attack sounds
+-- DESIGNER:	Sanders Lee
 --
-***/
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void Vessel::playAttackSound()
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Plays the sound of Vessel attacking.
+-----------------------------------------------------------------------------------------------*/
 void Vessel::playAttackSound()
 {
 	sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
@@ -1050,7 +1074,7 @@ int Vessel::getDefaultSpeed()
 -- PROGRAMMER:	Sanders Lee
 --		Marc Rafanan
 --		Jonathan Chu
---		
+--
 --
 -- INTERFACE: bool Vessel::checkDeath()
 --

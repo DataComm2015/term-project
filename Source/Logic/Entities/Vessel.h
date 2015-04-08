@@ -4,48 +4,75 @@
 -- PROGRAM: 4981 game project
 --
 -- FUNCTIONS:
---     Vessel( job_class jobclass, GameMap gmap, int x, int y );
---     ~Vessel();
+--	    VesselVessel( SGO& _sprite, SGO _mask, SGO _weapon, Marx::Map * gmap,
+--			float x, float y, Marx::Controller* controller, float height, float width);
+-- 	    virtual ~Vessel();
+--		virtual void onUpdate(float);
+--     	void setPosition( int x, int y );
 --
---     void setPosition( int x, int y );
+--  	void playFootstepSound();
+-- 		void playHurtSound();
+-- 		void playAttackSound();
 --
---     void resetEXP();
---     void increaseEXP( int exp );
---     int  getEXP();
---     int  getNextLevelEXP();
+-- 		void setPlayerEntity(PlayerEntity *entity);
 --
---     int  getLevel();
---     void increaseLevel();
+-- 		void setPosition( float x, float y );
+-- 		float getXPosition();
+-- 		float getYPosition();
 --
---     void resetHP();
---     void increaseHP( int hp );
---     void decreaseHP( int hp );
---     int  getHP();
---     int  getMaxHP();
+-- 		int getXSpeed();
+-- 		int getYSpeed();
+-- 		bool isMoving();
+-- 		int getDirection();
 --
---     void resetAttackPower();
---     void attackPowerUp( int attackpower );
---     void attackPowerDown( int attackpower );
---     int  getAttackPower();
---     int  getDefaultAttackPower();
+-- 		void resetEXP();
+-- 		void increaseEXP( int exp );
+-- 		int  getEXP();
+--		int  getNextLevelEXP();
+-- 		int  getLevel();
+-- 		void increaseLevel();
 --
---     void resetSpeed();
---     void speedUp( int speed );
---     void speedDown( int speed );
---     int  getSpeed();
---     int  getDefaultSpeed();
+-- 		job_class getJobClass();
 --
---     bool checkDeath();
---     void die();
+-- 		void resetHP();
+-- 		void increaseHP( int hp );
+-- 		void decreaseHP( int hp );
+-- 		int  getMaxHP();
 --
---     void move( int direction );
+-- 		void resetAttackPower();
+-- 		void attackPowerUp( int attackpower );
+-- 		void attackPowerDown( int attackpower );
+-- 		int  getAttackPower();
+-- 		int  getDefaultAttackPower();
 --
---     void normalAttack( int x, int y );
---     void useAbility( int abilityNum );
+-- 		void resetSpeed();
+-- 		void speedUp( int speed );
+-- 		void speedDown( int speed );
+-- 		int  getDefaultSpeed();
+--
+-- 		bool checkDeath();
+-- 		void die();
+--
+-- 		void move();
+-- 		void stop(int key);
+--
+-- 		void normalAttack( int x, int y );
+-- 		void useAbility( int abilityNum, int x, int y );
+--
+-- 		void setHealthBar(GUI::HealthBar* hb);
+--
+-- 		virtual int getHealth();
+-- 		virtual void setHealth(int _health);
+-- 		virtual int getSpeed();
+-- 		virtual void setSpeed(int _speed);
+-- 		virtual void setAttack(int attack);
+-- 		virtual void stopAllSounds();
+-- 		virtual Entity *getEntity();
+-- 		ENTITY_TYPES getType();
 --
 -- DATE: February 15, 2015
 --
--- REVISIONS: (Date and Description)
+-- REVISIONS: April 7, 2015 - Sanders Lee - Required functions have changed a bit
 --
 -- DESIGNER: Sanders Lee
 --

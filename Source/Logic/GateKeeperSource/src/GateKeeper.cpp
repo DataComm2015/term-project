@@ -374,7 +374,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   RETURNS: void
 *
-*   NOTES: Plays sound associated with this enemy
+*   NOTES: Plays travelling sound associated with this enemy
 ******************************************************************************/
 void GateKeeper::playTravelSound(float xSpeed, float ySpeed)
 {
