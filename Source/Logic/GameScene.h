@@ -129,6 +129,7 @@ class GameScene : public Scene
 		static id_resource shamanBtn;
 
 		static id_resource crosshairImg;
+		static id_resource deathImage;
 
 		static id_resource game_msc;
 		static id_resource ambience_msc;
@@ -169,6 +170,7 @@ class GameScene : public Scene
 		GUI::Button *b3;
 		GUI::HealthBar *hb;
 		SGO *crossHairSGO;
+		SGO *deathScreen;
 
 		// Misc
 
@@ -178,9 +180,12 @@ class GameScene : public Scene
 		int classType;
 
 		sf::Sound current;
+		
+		id_resource rand_msc;
 
 		sf::Music *music;
 		sf::Music *ambience;
+		sf::Music *randsound;
 
 		// tech demos:
 		sf::Vector2f butSize;

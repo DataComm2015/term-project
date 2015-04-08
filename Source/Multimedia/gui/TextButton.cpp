@@ -7,7 +7,7 @@
 *
 * @revisions	2015-03-18 - Removed BGO parent from constructor
 *
-* @designer   
+* @designer     
 *
 * @programmer   Jonathan Chu
 *				Marc Rafanan
@@ -21,6 +21,19 @@ TextButton(sf::IntRect* theStates, std::function onClick, std::string theText)
     text = theText;
 }
 
+/**
+* The destructor for the text button
+*
+* @date         2015-02-27
+*
+* @revisions
+*
+* @designer     
+*
+* @programmer   Jonathan Chu
+*
+* @return       void
+*/
 ~TextButton()
 {
     
@@ -33,7 +46,7 @@ TextButton(sf::IntRect* theStates, std::function onClick, std::string theText)
 *
 * @revisions
 *
-* @designer   
+* @designer     
 *
 * @programmer   Jonathan Chu
 *
@@ -52,7 +65,7 @@ void setText(std::string theText)
 *
 * @revisions
 *
-* @designer   
+* @designer     
 *
 * @programmer   Jonathan Chu
 *
@@ -62,6 +75,20 @@ void setOffset(sf::Vector2f theOffset)
 {
     offset = theOffset;
 }
+
+/**
+* sets the format to the one give
+*
+* @date         2015-02-27
+*
+* @revisions
+*
+* @designer     
+*
+* @programmer   Jonathan Chu
+*
+* @return       void
+*/
 void setFormat(int, bool, sf::Color)
 {
     
