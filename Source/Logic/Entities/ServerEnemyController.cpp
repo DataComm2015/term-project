@@ -183,7 +183,7 @@ void ServerEnemyController::updateBehaviour(float deltaTime)
         // Attack every tick of attackTimer
         if (attackTimer <= 0)
         {
-          attackEvent = new AttackEvent(getId(), ActionType::normalAttack, targetVessel->left, targetVessel->top);
+          attackEvent = new AttackEvent(getId(), ActionType::normalAttack, targetVessel->left - gk_X, targetVessel->top - gk_Y);
 
           addEvent(attackEvent);
           attackTimer = 1;

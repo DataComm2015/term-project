@@ -39,14 +39,16 @@ namespace GUI
 	*
 	* @revisions
 	*
-	* @designer		Marc Rafanan
+	* @designer		Melvin Loho, Marc Rafanan
 	*
-	* @programmer   Marc Rafanan
+	* @programmer   Melvin Loho, Marc Rafanan
 	*
 	* @return       void
 	*/
 	void HealthBar::update(float percent)
 	{
-		//bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x - (barSize.x * (1.0 - percent)), barSize.y));
+		if (percent > 1) percent = 1;
+		else if (percent < 0) percent = 0;
+		bar.sprite().setTextureRect(sf::IntRect(0, 0, barSize.x * percent, barSize.y));
 	}
 }
