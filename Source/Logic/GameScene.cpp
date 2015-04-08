@@ -171,9 +171,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	{
 		cerr << "Invalid map dimensions." << endl;
 	}
-	std::cout << "before generate water" << std::endl;
 	generateWater();
-	std::cout << "after generate water" << std::endl;
 
 	music = Manager::MusicManager::get(GameScene::game_msc);
 	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
@@ -322,9 +320,6 @@ void GameScene::setPlayerVessel(Vessel *vessel)
 	hb->sprite().setScale(3, 3);
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
-
-	std::cout << ">>>>>>>>>>> HB: " << std::endl;
-	printf("%p\n", hb);
 
 	myVessel = vessel;	
 	myVessel->setHealthBar(hb);
