@@ -41,6 +41,9 @@ CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstan
 
     credits_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.wav"));
     music = Manager::MusicManager::get(credits_msc);
+	
+	lord_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/lorde.wav"));
+    lord = Manager::MusicManager::get(lord_msc);
 }
 
 
@@ -67,6 +70,7 @@ void CreditScene::onLoad()
     updateMainView(viewMain);
 
     music->play();
+	lord.play();
 }
 
 void CreditScene::update(sf::Time t)
