@@ -45,77 +45,18 @@ id_resource GameScene::summonskillbtn = Manager::TextureManager::store(Manager::
 id_resource GameScene::hbarSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDhealthbar.png"));
 id_resource GameScene::hbgSprite = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/HUDbase.png"));
 id_resource GameScene::crosshairImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Deity/crosshair.png"));
+id_resource GameScene::deathImage = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/game_over.png"));
 
 id_resource GameScene::deityRNGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deity-ring.png"));
 id_resource GameScene::deityBUFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-buff.png"));
 id_resource GameScene::deityDMGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-debuff.png"));
 id_resource GameScene::deityDBFImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-damage.png"));
 id_resource GameScene::deityHLGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healing.png"));
+id_resource GameScene::deityBIGImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-healingcircle.png"));
+id_resource GameScene::deitySUMImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/Deity/deitycircle-summon.png"));
 
 id_resource GameScene::game_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Music/music_gameplay.ogg"));
 id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/Environment/ambient_01.ogg"));
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void onclick()
-{
-	static int i = 0;
-
-	if (i > 6)
-		exit(0);
-
-	i++;
-}
-
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-*	PROGRAMMER:
-*
-*	INTERFACE:
-*
-*	PARAMETERS:
-*
-*	RETURNS: void
-*
-*	NOTES:
-******************************************************************************/
-void onclickLevelup()
-{
-	static int level = 1;
-	std::string slevel;
-
-	// level should be double digits
-	if(level < 10)
-		slevel = "0" + std::to_string(level++);
-	else
-		slevel = std::to_string(level++);
-    //pubLevelInd->setText(slevel);
-}
 
 
 /******************************************************************************
@@ -180,6 +121,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 
 	music = Manager::MusicManager::get(GameScene::game_msc);
 	ambience = Manager::MusicManager::get(GameScene::ambience_msc);
+	deathScreen = new SGO(*Manager::TextureManager::get(deathImage));
 }
 
 
@@ -477,11 +419,12 @@ void GameScene::update(sf::Time t)
 
 	if (myVessel != NULL)
 	{
-		//myVessel->getSprite().sprite().rotate(1);
+		deathScreen->middleAnchorPoint(true);
+		deathScreen->sprite().setPosition(viewMain.getCenter());
 
 		viewMain.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
 		viewMinimap.setCenter(myVessel->getGlobalTransform().transformPoint(16,16));
-        sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
+        	sf::Listener::setPosition(myVessel->left, myVessel->top, 0);
 	}
 	else
 	{
@@ -741,6 +684,15 @@ void GameScene::draw()
 	renderer.states.shader = nullptr;
 	renderer.draw(cMap);
 
+	if(characterType == PLAYER_MODE::VESSEL)
+	{
+		if(myVessel->checkDeath())
+		{
+			window.setView(viewMain);
+			renderer.draw(deathScreen);
+		}
+	}
+
 	renderer.end();
 
 	window.display();
@@ -997,23 +949,11 @@ void GameScene::createClassUI()
 {
 	switch (characterType)
 	{
+/*
 		case PLAYER_MODE::VESSEL: // VESSEL
-		{
-			switch(classType)
-			{
-				case 1: //SHAMAN
-					b1 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(shamanBtn), butSize, viewUI, onclick);
-				break;
-				case 2: //WARRIOR
-					b1 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b2 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-					b3 = new GUI::Button(*Manager::TextureManager::get(warriorBtn), butSize, viewUI, onclick);
-				break;
-			}
-		}
-		break;
+			break;
+*/
+
 		case PLAYER_MODE::DEITY: // DEITY
 			crossHairSGO = new SGO(*Manager::TextureManager::get(crosshairImg));
 			crossHairSGO->middleAnchorPoint(true);
@@ -1033,21 +973,21 @@ void GameScene::createClassUI()
 				break;
 			}
 			break;
+
+/*
 		case PLAYER_MODE::GHOST: // GHOST
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
 			break;
-		default: //ORIGINAL
-			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
-			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, onclick);
+*/
+
+		default:
+			b1 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
+			b2 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
+			b3 = new GUI::Button(*Manager::TextureManager::get(butSprite), butSize, viewUI, NULL);
 	}
 
 	bs[0].btn = b1;
 	bs[1].btn = b2;
 	bs[2].btn = b3;
-
 }
 
 
@@ -1117,7 +1057,7 @@ void onClickVitalityOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::HEAL);
 }
 
 /******************************************************************************
@@ -1169,7 +1109,7 @@ void onClickVitalityThree()
 {
 	bs[2].coolDown = 5000; cout << "COOLDOWN:" << bs[2].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 100, SKILLTYPE::HEAL);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 4, 30, SKILLTYPE::BIGHEAL);
 }
 
 /******************************************************************************
@@ -1195,7 +1135,7 @@ void onClickDemiseOne()
 {
 	bs[0].coolDown = 1000; cout << "COOLDOWN:" << bs[0].coolDown << endl;
 	ClientMux* cm = static_cast<ClientMux*>(NetworkEntityMultiplexer::getInstance());
-	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 100, SKILLTYPE::DMG);
+	cm->getCommandEntity()->SendSkill(convertX(vm.getCenter().x), convertY(vm.getCenter().y), 2, 15, SKILLTYPE::DMG);
 }
 
 /******************************************************************************
@@ -1330,6 +1270,8 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 
 	sn.timer = timer;
 
+	std::cout << "SKILLTYPE: " << (int)_skillType << std::endl;
+
 	switch(_skillType)
 	{
 		case SKILLTYPE::HEAL:
@@ -1343,6 +1285,12 @@ void GameScene::addSkillNotification(float _x, float _y, int timer, SKILLTYPE _s
 		break;
 		case SKILLTYPE::DEBUFF:
 			snSGO = new SGO(*Manager::TextureManager::get(deityDBFImg));
+		break;
+		case SKILLTYPE::BIGHEAL:
+			snSGO = new SGO(*Manager::TextureManager::get(deityBIGImg));
+		break;
+		case SKILLTYPE::SPAWN:
+			snSGO = new SGO(*Manager::TextureManager::get(deitySUMImg));
 		break;
 	}
 

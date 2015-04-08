@@ -86,16 +86,16 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
-
-	currentHealth = 500;
-	maxHealth = 500;
+	
+	currentHealth = 100;
+	maxHealth = 100;
 
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 3);
 
 	this->add(mask_sprite);
-  this->add(weapon_sprite);
+  	this->add(weapon_sprite);
 
 	// Add the drop shadow
 	vesselShadow = Manager::TextureManager::store(
@@ -305,6 +305,13 @@ void Vessel::onUpdate(float deltaTime)
 						xSpeed -= val;
 						ySpeed -= val;
 					break;
+					case SKILLTYPE::BIGHEAL:
+						currentHealth += ev->getValue();
+						myHealthBar->update((float)currentHealth/(float)maxHealth);
+					break;
+					case SKILLTYPE::SPAWN:
+						// Vessel implementation not needed
+					break;
 				}
 
 				break;
@@ -446,7 +453,7 @@ void Vessel::playHurtSound()
 	voice.setMinDistance(3.0);
 	voice = SoundManager::play(hurtSound, soundPos);
 	voice.play();
-	printf("Hurt sound should play\n");
+	//printf("Hurt sound should play\n");
 }
 
 /***
@@ -466,7 +473,7 @@ void Vessel::playAttackSound()
 	voice.setMinDistance(3.0);
 	voice = SoundManager::play(attackSound, soundPos);
 	voice.play();
-	printf("Attack sound should play\n");
+	//printf("Attack sound should play\n");
 }
 
 /*---------
@@ -1032,6 +1039,9 @@ int Vessel::getDefaultSpeed()
 -- DESIGNER:	Sanders Lee
 --
 -- PROGRAMMER:	Sanders Lee
+--		Marc Rafanan
+--		Jonathan Chu
+--		
 --
 -- INTERFACE: bool Vessel::checkDeath()
 --
@@ -1042,7 +1052,7 @@ int Vessel::getDefaultSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::checkDeath()
 {
-	return (top == -100 && left == -100);
+	return (currentHealth <= 0);
 }
 
 /*------------------------------------------------------------------------------------------------------------------

@@ -76,7 +76,7 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_02.ogg"));
     hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_03.ogg"));
     death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_death_02.ogg"));
-	
+
 	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
 	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
 	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
@@ -84,7 +84,7 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
 
 	travel_Snd.setLoop(true);
     travel_Snd.play();*/
-	
+
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
@@ -252,7 +252,7 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
 /******************************************************************************
@@ -293,6 +293,12 @@ void GateKeeper::processSkillEvent(SkillEvent* ev)
       case SKILLTYPE::DEBUFF:
           _xSpeed -= ev->getValue();
           _ySpeed -= ev->getValue();
+      break;
+      case SKILLTYPE::BIGHEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::SPAWN:
+          // Vessel implementation not needed
       break;
   }
 
@@ -346,7 +352,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 }
 
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -356,7 +362,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
@@ -365,7 +371,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   NOTES: Plays sound associated with this enemy
 ******************************************************************************/
-void GateKeeper::playSound(float xSpeed, float ySpeed)
+void GateKeeper::playTravelSound(float xSpeed, float ySpeed)
 {
   soundActive = false;
   steppedTile = GRASS;
