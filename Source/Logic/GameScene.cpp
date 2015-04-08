@@ -75,7 +75,7 @@ id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::Musi
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Deprecated. Used for testing
 ******************************************************************************/
 void onclick()
 {
@@ -105,7 +105,7 @@ void onclick()
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Deprecated. Used for testing
 ******************************************************************************/
 void onclickLevelup()
 {
@@ -197,6 +197,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 *	DESIGNER: Alex Lam
 *
 *	PROGRAMMER: Alex Lam
+*				Jonathan Chu
 *
 *	INTERFACE:void GameScene::onLoad()
 *
@@ -258,23 +259,25 @@ void GameScene::onLoad()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: GameScene::positionUI()
 *
-*	DATE:
+*	DATE:	April 3rd 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Marc Rafanan
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Marc Rafanan
+*				Jonathan Chu
 *
-*	INTERFACE:
+*	INTERFACE:	void GameScene::positionUI()
 *
 *	PARAMETERS:
 *
 *	RETURNS: void
 *
 *	NOTES:
+*		Used to position UI elements
 ******************************************************************************/
 void GameScene::positionUI()
 {
@@ -459,7 +462,7 @@ GameScene::~GameScene()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER: Melvin Loho, Sanders Lee
+*	PROGRAMMER: Melvin Loho, Sanders Lee, Marc Rafanan
 *
 *	INTERFACE:
 *
@@ -573,6 +576,7 @@ void GameScene::update(sf::Time t)
 *	DESIGNER: Alex Lam
 *
 *	PROGRAMMER: Alex Lam
+*				Jonathan Chu
 *
 *	INTERFACE: void GameScene::processEvents(sf::Event& e)
 *
@@ -686,7 +690,8 @@ void GameScene::processEvents(sf::Event& e)
 *
 *	DESIGNER: Chris Klassen
 *
-*	PROGRAMMER: Chris Klassen
+*	PROGRAMMER: Chris Klassen, Alex Lam, Marc Rafanan
+*				Jonathan Chu
 *
 *	INTERFACE: draw();
 *
@@ -757,17 +762,6 @@ void GameScene::draw()
 	window.display();
 }
 
-
-/******************************************************************************
-*	FUNCTION:
-*
-*	DATE:
-*
-*	REVISIONS: (Date and Description)
-*
-*	DESIGNER:
-*
-  SKILLTYPE st;
 
 /******************************************************************************
 *	FUNCTION:
@@ -955,23 +949,24 @@ void GameScene::generateWater()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:	void GameScene::generateUI()
 *
-*	DATE:
+*	DATE:		March 16, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Marc Rafanan
 *
-*	PROGRAMMER: Jeff Bayntun
+*	PROGRAMMER: Jeff Bayntun, Marc Rafanan
 *
-*	INTERFACE:
+*	INTERFACE:	void GameScene::generateUI()
 *
 *	PARAMETERS:
 *
 *	RETURNS: void
 *
 *	NOTES:
+*		Initial UI generation
 ******************************************************************************/
 void GameScene::generateUI()
 {
