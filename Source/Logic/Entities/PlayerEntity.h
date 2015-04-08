@@ -47,11 +47,11 @@ class PlayerEntity : public NetworkEntity
 		void givePoints(float points);
 		float getPoints();
         void skillCaseHandler(Message msg);
+        void clearControllerEvents();
 
     protected:
         virtual void onUnregister(Session* session, Message msg);
         virtual void onUpdate(Message msg);
-        void clearControllerEvents();
 
     private:
         char* nickname;
