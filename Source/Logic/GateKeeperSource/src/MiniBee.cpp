@@ -440,6 +440,25 @@ void MiniBee::playTravelSound(float xSpeed, float ySpeed)
   }//*/
 }
 
+/******************************************************************************
+*   FUNCTION: playHurtSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playHurtSound()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
 void MiniBee::playHurtSound()
 {
     sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
@@ -450,6 +469,25 @@ void MiniBee::playHurtSound()
 	voice.play();
 }
 
+/******************************************************************************
+*   FUNCTION: playAttackSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playAttackSound()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
 void MiniBee::playAttackSound()
 {
     sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
@@ -595,74 +633,310 @@ void MiniBee::setAttackSpeed(float as)
   _attackSpeed == as;
 }
 
-
+/******************************************************************************
+*   FUNCTION: setXSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setXSpeed(float x)
+*
+*   PARAMETERS: x   - new horizonatl speed for this enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Sets new horizontal speed for this enemy
+******************************************************************************/
 void MiniBee::setXSpeed(float x)
 {
   _xSpeed = x;
 }
 
+/******************************************************************************
+*   FUNCTION: setYSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setYSpeed(float y)
+*
+*   PARAMETERS: y   - new Vertical speeed for the enemy
+*
+*   RETURNS: void
+*
+*   NOTES: Set new vertical speed for the enemy
+******************************************************************************/
 void MiniBee::setYSpeed(float y)
 {
   _ySpeed = y;
 }
 
+/******************************************************************************
+*   FUNCTION: setSpeed
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: setSpeed(int speed)
+*
+*   PARAMETERS: speed   new horizontal and vertical speed for enemy
+*
+*   RETURNS:  void
+*
+*   NOTES: set new horizontal and vertical speed for the enemy
+******************************************************************************/
 void MiniBee::setSpeed(int _speed)
 {
     _xSpeed = _speed;
     _ySpeed = _speed;
 }
 
+/******************************************************************************
+*   FUNCTION: getXSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getXSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - x speed
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
 float MiniBee::getXSpeed()
 {
 	return _xSpeed;
 }
 
+/******************************************************************************
+*   FUNCTION: getYSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getYSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - y speed
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
 float MiniBee::getYSpeed()
 {
 	return _ySpeed;
 }
 
+/******************************************************************************
+*   FUNCTION: getSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Avarage speed of the enemy
+*
+*   NOTES: Returns the average of the x and y speeds for this enemy
+******************************************************************************/
 int MiniBee::getSpeed()
 {
 	return _xSpeed;
 }
 
+/******************************************************************************
+*   FUNCTION: getRange()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getRange()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Range (attack and aggro) of this enemy
+*
+*   NOTES: Returns the range of this enemy
+******************************************************************************/
 int MiniBee::getRange()
 {
   return _range;
 }
 
+/******************************************************************************
+*   FUNCTION: getHealth()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getHealth()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - current health of the enemy
+*
+*   NOTES: Returns current health of the enemy
+******************************************************************************/
 int MiniBee::getHealth()
 {
   return _health;
 }
 
+/******************************************************************************
+*   FUNCTION: getAttack()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getAttack()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: int   - Attack of this enemy
+*
+*   NOTES: Returns attack of the enemy (attack power)
+******************************************************************************/
 int MiniBee::getAttack()
 {
   return _attack;
 }
 
+/******************************************************************************
+*   FUNCTION: getAttackSpeed()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: getAttackSpeed()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: float   - Attack speed of this enemy
+*
+*   NOTES: returns enemy's attack speed
+******************************************************************************/
 float MiniBee::getAttackSpeed()
 {
   return _attackSpeed;
 }
 
-
+/******************************************************************************
+*   FUNCTION: turn()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: turn()
+*
+*   PARAMETERS: void
+*
+*   RETURNS:
+*
+*   NOTES:
+******************************************************************************/
 void MiniBee::turn()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: onCreate()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: onCreate()
+*
+*   PARAMETERS: void
+*
+*   RETURNS:
+*
+*   NOTES:
+******************************************************************************/
 void MiniBee::onCreate()
 {
 
 }
 
+/******************************************************************************
+*   FUNCTION: stopAllSounds()
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: stopAllSounds()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Stops gatekeeper sounds
+******************************************************************************/
 void MiniBee::stopAllSounds()
 {
     footstep.stop();
 }
 
+/******************************************************************************
+*   FUNCTION: operator==
+*
+*   DATE: April 6 2014
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: operator==(const VEntity&)
+*
+*   PARAMETERS: void
+*
+*   RETURNS: bool   - true
+*
+*   NOTES: Overloaded compare operator
+******************************************************************************/
 bool MiniBee::operator==(const VEntity&)
 {
   return true;

@@ -427,6 +427,25 @@ void MiniBoss::playTravelSound(float xSpeed, float ySpeed)
   }//*/
 }
 
+/******************************************************************************
+*   FUNCTION: playHurtSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playHurtSound()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
 void MiniBoss::playHurtSound()
 {
     sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
@@ -437,6 +456,25 @@ void MiniBoss::playHurtSound()
 	voice.play();
 }
 
+/******************************************************************************
+*   FUNCTION: playAttackSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playAttackSound()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
 void MiniBoss::playAttackSound()
 {
     sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
