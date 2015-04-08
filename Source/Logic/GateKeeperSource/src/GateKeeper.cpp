@@ -72,19 +72,6 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     int randDirection = (rand() % 3) - 1;
     getSprite().sprite().setScale(randDirection, 1);
 
-	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_02.ogg"));
-    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_03.ogg"));
-    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_death_02.ogg"));
-
-	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
-	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
-	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
-	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
-
-	travel_Snd.setLoop(true);
-    travel_Snd.play();*/
-
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
@@ -126,8 +113,6 @@ void GateKeeper::onUpdate(float deltaTime)
       ; it != eventQueue->end()
       ; ++it )
   {
-
-	std::cout << "GateKeeper::Event " << (*it)->type << std::endl;
 
     // switch on type
     switch((*it)->type)
@@ -190,7 +175,7 @@ void GateKeeper::onUpdate(float deltaTime)
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: onUpdate(float)
+*   INTERFACE: processMoveEvent(MoveEvent* ev)
 *
 *   PARAMETERS: ev   - Event to be processed
 *
@@ -256,17 +241,19 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
 }
 
 /******************************************************************************
-*   FUNCTION: processMoveEvent
+*   FUNCTION: processSkillEvent
 *
 *   DATE: April 6 2014
 *
-*   REVISIONS:
+*   REVISIONS: Filip Gutica   - Created seperate function
 *
-*   DESIGNER:   Filip Gutica
+*   DESIGNER:   Alex Lam
+*               Julian Brandrick
 *
-*   PROGRAMMER: Filip Gutica
+*   PROGRAMMER: Alex Lam
+*               Julian Brandrick
 *
-*   INTERFACE: onUpdate(SkillEvent* ev)
+*   INTERFACE: processSkillEvent(SkillEvent* ev)
 *
 *   PARAMETERS: ev   - Event to be processed
 *
@@ -277,7 +264,6 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
 ******************************************************************************/
 void GateKeeper::processSkillEvent(SkillEvent* ev)
 {
-  printf("GateKeeper BEFORE Health: %d\n", _health);
   switch(ev->getSkillType())
   {
       case SKILLTYPE::HEAL:
@@ -302,11 +288,9 @@ void GateKeeper::processSkillEvent(SkillEvent* ev)
       break;
   }
 
-  printf("GateKeeper AFTER Health: %d\n", _health);
 
   if(_health <= 0)
   {
-    std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
     onDestroy();
   }
 }
@@ -316,11 +300,11 @@ void GateKeeper::processSkillEvent(SkillEvent* ev)
 *
 *   DATE: April 6 2014
 *
-*   REVISIONS:
+*   REVISIONS:  Filip Gutica    - Made seperate function
 *
-*   DESIGNER:   Filip Gutica
+*   DESIGNER:   Thomas Tallentire
 *
-*   PROGRAMMER: Filip Gutica
+*   PROGRAMMER: Thomas Tallenire
 *
 *   INTERFACE: processSetHealthEvent(SetHealthEvent* ev)
 *
@@ -341,13 +325,32 @@ void GateKeeper::processSetHealthEvent(SetHealthEvent* ev)
 
   if(_health <= 0)
   {
-    std::cout << "GateKeeper Dead" << std::endl;
     onDestroy();
   }
 }
+
+
+/******************************************************************************
+*   FUNCTION: processAttackEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:  Filip Gutica    - Made seperate function
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: processAttackEvent(AttackEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Proces attack events. Generate attacks
+******************************************************************************/
 void GateKeeper::processAttackEvent(AttackEvent* aev)
 {
-  std::cout << "ATTACK" << std::endl;
   createAttack(*aev, getSprite(), left, top);
 }
 
@@ -430,9 +433,9 @@ void GateKeeper::playTravelSound(float xSpeed, float ySpeed)
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: animate(float)
+*   INTERFACE: animate()
 *
-*   PARAMETERS: deltaTime   - Time this onUpdate was called
+*   PARAMETERS: void
 *
 *   RETURNS: void
 *
