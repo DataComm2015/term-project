@@ -7,6 +7,7 @@
 #include "Artificial Intelligence/Behaviour.h"
 #include "Entities/ServerEnemyController.h"
 #include "../Network/Message.h"
+#include "../Network/NetworkEntity.h"
 #include "EnemyControllerInit.h"
 #include "NetworkEntityPairs.h"
 #include "Entities/PlayerEntity.h"
@@ -22,6 +23,7 @@ using std::cerr;
 using std::endl;
 using Networking::Message;
 using Networking::Session;
+using Networking::NetworkEntity;
 using namespace Marx;
 
 ServerGameScene::ServerGameScene(ServerCommand *command)
@@ -165,6 +167,20 @@ void ServerGameScene::leaveScene()
         //command->getGameState()->unregisterFromAllPlayers(controller);
     }
 
+    std::map<Session*, PlayerEntity*> players = command->getGameState()->getPlayers();
+    for(auto it = players.begin(); it != players.end(); ++it)
+    {
+        Vessel *vessel = it->second->getVessel();
+	if (vessel)
+	{
+		NetworkEntity *ne = dynamic_cast<NetworkEntity*>(vessel->getController());
+		if (ne)
+		{
+			command->getGameState()->unregisterFromAllPlayers(ne);
+		}
+	}
+    }
+
     enemies.clear();
 }
 
@@ -251,7 +267,7 @@ void ServerGameScene::createPlayers()
         mode = currPlayer->getMode();
         type = currPlayer->getType(); //sanderschange
         currPlayer->setSGameScene(this);
-		currPlayer->setVessel(NULL);
+	currPlayer->setVessel(NULL);
 
         switch(mode)
         {
@@ -275,7 +291,7 @@ void ServerGameScene::createPlayers()
                       break;
                 }
                 //sanderschangeend
-		            gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
+		gMap->getVesselPosition(vesselNo++, &vesselX, &vesselY);
                 initData.x = (float) vesselX;
                 initData.y = (float) vesselY;
 
@@ -350,7 +366,7 @@ bool ServerGameScene::gameShouldEnd()
         }
     }
 
-    return (alive <= 1);
+    return (alive <= 0);
 }
 
 

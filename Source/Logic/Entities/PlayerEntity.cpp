@@ -118,7 +118,7 @@ void PlayerEntity::onUpdate(Message msg)
         {
 
             char* username = new char[16];
-            memcpy(username, msg.data, strlen((char*)msg.data));
+            memcpy(username, msg.data, strlen((char*)msg.data) + 1);
             nickname = username;
             fprintf(stdout, "PLAYER USERNAME: %s\n", username);
             fprintf(stdout, "PLAYER NICKNAME: %s\n", nickname);
