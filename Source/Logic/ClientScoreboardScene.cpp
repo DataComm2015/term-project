@@ -328,7 +328,7 @@ ClientScoreboardScene * ClientScoreboardScene::getInstance()
 --
 -- DESIGNER: Michael Chimick
 --
--- PROGRAMMER: Michael Chimick
+-- PROGRAMMER: Michael Chimick, Manuel Gonzales
 --
 -- INTERFACE: void ClientScoreboardScene::setScoreboard(Player* players)
 --                Player* players // the players from the last round

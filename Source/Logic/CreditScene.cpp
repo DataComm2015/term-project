@@ -12,17 +12,17 @@ using std::endl;
 using namespace Marx;
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: getInstance()
 *
-*	DATE:
+*	DATE:	March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Manuel Gonzales
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Georgi Hristov
 *
-*	INTERFACE:
+*	INTERFACE: CreditScene::getInstance()
 *
 *	PARAMETERS:
 *
@@ -37,22 +37,22 @@ CreditScene * CreditScene::getInstance()
 }
 
 /******************************************************************************
-*	FUNCTION:   The constructor for the credit scene
+*	FUNCTION:   CreditScene
 *
-*	DATE:
+*	DATE:	March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Manuel Gonzales
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *               Jonathan Chu
 *
 *	PARAMETERS: 
 *
 *	RETURNS:    void
 *
-*	NOTES:
+*	NOTES: The constructor for the credit scene
 ******************************************************************************/
 CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstance(), 48400)
 {
@@ -85,17 +85,17 @@ CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstan
 }
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:~CreditScene
 *
-*	DATE:
+*	DATE: March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Manuel Gonzales
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *
-*	INTERFACE:
+*	INTERFACE: CreditScene::~CreditScene()
 *
 *	PARAMETERS:
 *
@@ -115,15 +115,15 @@ CreditScene::~CreditScene()
 }
 
 /******************************************************************************
-*	FUNCTION:   loads the objects
+*	FUNCTION:   onLoad()
 *
-*	DATE:
+*	DATE: March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Manuel Gonzales
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *               Jonathan Chu
 *
 *	INTERFACE:  void CreditScene::onLoad()
@@ -132,7 +132,7 @@ CreditScene::~CreditScene()
 *
 *	RETURNS:    void
 *
-*	NOTES:
+*	NOTES:	loads the objects
 ******************************************************************************/
 void CreditScene::onLoad()
 {
@@ -149,23 +149,23 @@ void CreditScene::onLoad()
 }
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: update
 *
-*	DATE:
+*	DATE: March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Manuel Gonzales
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *
-*	INTERFACE:
+*	INTERFACE: void CreditScene::update(sf::Time t)
 *
 *	PARAMETERS:
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: moves the text image upward
 ******************************************************************************/
 void CreditScene::update(sf::Time t)
 {
@@ -183,17 +183,17 @@ void CreditScene::update(sf::Time t)
 }
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: processEvents
 *
-*	DATE:
+*	DATE: March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Manuel Gonzales
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *
-*	INTERFACE:
+*	INTERFACE: CreditScene::processEvents(sf::Event& e)
 *
 *	PARAMETERS:
 *
@@ -210,17 +210,17 @@ void CreditScene::processEvents(sf::Event& e)
 }
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: draw
 *
-*	DATE:
+*	DATE:	March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
 *	DESIGNER:
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *
-*	INTERFACE:
+*	INTERFACE: CreditScene::draw()
 *
 *	PARAMETERS:
 *
@@ -251,23 +251,23 @@ void CreditScene::draw()
 }
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:onClick
 *
-*	DATE:
+*	DATE: March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER:	Manuel Gonzales
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *
-*	INTERFACE:
+*	INTERFACE: CreditScene::onClick()
 *
 *	PARAMETERS:
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Go back to main Menu Scene
 ******************************************************************************/
 void CreditScene::onClick()
 {
@@ -277,17 +277,17 @@ void CreditScene::onClick()
 }
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: updateMainView
 *
-*	DATE:
+*	DATE: March 28, 2015
 *
 *	REVISIONS: (Date and Description)
 *
 *	DESIGNER:
 *
-*	PROGRAMMER:
+*	PROGRAMMER:	Manuel Gonzales
 *
-*	INTERFACE:
+*	INTERFACE: void CreditScene::updateMainView(sf::View& v)
 *
 *	PARAMETERS:
 *
