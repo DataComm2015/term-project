@@ -746,10 +746,13 @@ void GameScene::draw()
 	renderer.states.shader = nullptr;
 	renderer.draw(cMap);
 
-	if(myVessel->checkDeath())
+	if(characterType == PLAYER_MODE::VESSEL)
 	{
-		window.setView(viewMain);
-		renderer.draw(deathScreen);
+		if(myVessel->checkDeath())
+		{
+			window.setView(viewMain);
+			renderer.draw(deathScreen);
+		}
 	}
 
 	renderer.end();
