@@ -30,7 +30,7 @@ class GateKeeper : public Marx::VEntity, public Creature
 {
 
 	public:
-		GateKeeper(SGO &sprite,
+		GateKeeper(SGO& sprite,
 			Marx::Map* map,
 			float x,
 			float y,
@@ -42,25 +42,35 @@ class GateKeeper : public Marx::VEntity, public Creature
 		virtual void setRange(int r);
 		virtual void setHealth(int h);
 		virtual void setAttack(int a);
-		virtual void setAttackSpeed(int as);
+		virtual void setAttackSpeed(float as);
 		virtual void setXSpeed(float x);
 		virtual void setYSpeed(float y);
-        virtual void setSpeed(int _speed);
+        virtual void setSpeed(int);
 		virtual int getRange();
 		virtual int getHealth();
 		virtual int getAttack();
-		virtual int getAttackSpeed();
-		virtual int getMovementSpeed();
+		virtual float getAttackSpeed();
         virtual int getSpeed();
-		//virtual Vessel getTarget();
-		virtual time_t getCooldown();
+				virtual float getXSpeed();
+				virtual float getYSpeed();
 		virtual void turn();
 		virtual void onCreate();
-		virtual void onDestroy();
 		virtual void onUpdate(float);
 		virtual bool operator==(const VEntity&);
+        virtual void stopAllSounds();
     virtual Entity* getEntity();
 		virtual bool isMoving();
+
+		virtual void playTravelSound(float, float);
+		virtual void animate();
+		virtual void processMoveEvent(MoveEvent* ev);
+		virtual void processSkillEvent(SkillEvent* ev);
+		virtual void processSetHealthEvent(SetHealthEvent* ev);
+		virtual void processAttackEvent(AttackEvent* aev);
+  	ENTITY_TYPES getType();
+
+	id_resource travel_SndB, attack_SndB, hurt_SndB, death_SndB;
+	//sf::Sound travel_Snd, voice_Snd;
 
 
 	protected:
@@ -72,7 +82,8 @@ class GateKeeper : public Marx::VEntity, public Creature
 		int _type;
 		int _health;
 		int _attack;
-		int _attackSpeed;
+		float _attackSpeed;
+		float _atackTimer;
 		int _movementSpeed;
 		float _xSpeed;
 		float _ySpeed;
@@ -85,16 +96,11 @@ class GateKeeper : public Marx::VEntity, public Creature
 		bool _moving;
 		Marx::Controller* _ctrl;
 		time_t _cooldown;
-		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
-		SGO* _sprite;
-
-	private:
 		sf::Sound footstep;
 		sf::Sound voice;
-		//Player _target;
-		//PatrolRadius _radius;
-		//Timer _cooldownTimer;
-		//AI _ai;
+		BlockZone steppedTile;
+		bool soundActive;
+		Animation *gkAnimation;
 
 
 

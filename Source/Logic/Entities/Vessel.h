@@ -64,13 +64,19 @@
 #include "../../Engine/Cell.h"
 #include "../../Engine/Controller.h"
 #include "../../Engine/TileManager.h"
+#include "../../Multimedia/graphics/Animation.h"
 #include "../Creature.h"
+#include "../EntityTypes.h"
+#include "../../Multimedia/gui/HealthBar.h"
 #include <SFML/Audio.hpp>
+
 
 #define MAX_LEVEL 10;
 
 typedef char Weapon;
 typedef char Ability;
+
+class PlayerEntity;
 
 typedef enum job_class { WARRIOR, SHAMAN, HUNTER, SCOUT, TEGUH } job_class;
 
@@ -80,6 +86,12 @@ class Vessel : public Marx::VEntity, public Creature
 	private:
 		sf::Sound footstep;
 		sf::Sound voice;
+		//Animation *runAnim;
+		//Animation *runAnim_mask;
+		//Animation *runAnim_wep;
+		SGO shadow;
+		PlayerEntity *player;
+		GUI::HealthBar* myHealthBar;
 
 	protected:
 		job_class jobClass;
@@ -99,23 +111,24 @@ class Vessel : public Marx::VEntity, public Creature
 		float myY;
 		float servX;
 		float servY;
+		float attCool;
 		int direction;	//0 = right, 1 = left //why not a bool?
 		bool movingLeft;
-	  bool movingRight;
+	    bool movingRight;
 		bool movingUp;
-	  bool movingDown;
+	    bool movingDown;
 		Ability* abilities;	//3 abilities for each Vessel
-		SGO &mask_sprite;
+		SGO mask_sprite;
 		SGO atk_sprite;
 		SGO satk_sprite;
-		SGO &weapon_sprite;
-		id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
+		SGO weapon_sprite;
+		static id_resource grassWalkSound, stoneWalkSound, hurtSound, attackSound;
 		//TO DO: pointer to the game map needed in the future
 
 	public:
         float newXSpeed;
         float newYSpeed;
-		Vessel( SGO &_sprite, SGO &_mask, SGO &_weapon,
+		Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 						Marx::Map * gmap,
 						float x,
 						float y,
@@ -127,6 +140,12 @@ class Vessel : public Marx::VEntity, public Creature
 		virtual ~Vessel();
 		virtual void onUpdate(float);
 		//virtual void draw(Renderer& renderer, sf::RenderStates states) const override;
+
+		void playFootstepSound();
+		void playHurtSound();
+		void playAttackSound();
+
+		void setPlayerEntity(PlayerEntity *entity);
 
 		void setPosition( float x, float y );
 		float getXPosition();
@@ -171,12 +190,16 @@ class Vessel : public Marx::VEntity, public Creature
 		void normalAttack( int x, int y );
 		void useAbility( int abilityNum, int x, int y );
 
+		void setHealthBar(GUI::HealthBar* hb);
+
         virtual int getHealth();
         virtual void setHealth(int _health);
         virtual int getSpeed();
         virtual void setSpeed(int _speed);
 		virtual void setAttack(int attack);
+        virtual void stopAllSounds();
 		virtual Entity *getEntity();
+		ENTITY_TYPES getType();
 };
 
 #endif

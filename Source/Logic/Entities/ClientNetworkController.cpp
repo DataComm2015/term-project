@@ -1,3 +1,28 @@
+/*------------------------------------------------------------------------------
+-- FILE:        ClientNetworkController.cpp
+--
+-- DATE:            March 17, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:        Jeff Bayntun
+--
+-- PROGRAMMER:      Jeff Bayntun, Eric Tsang
+--
+-- INTERFACE:       ClientNetworkController(int id);
+                    virtual ~ClientNetworkController();
+                    virtual void onUpdate(Networking::Message message);
+                    virtual void onUnregister(Networking::Session* session, Networking::Message message);
+                    void parseEventMessage(Networking::Message& message);
+
+-- RETURNS:         void
+--
+-- NOTES:           the {ServerNetworkController} class on the server is logically mapped to a
+                    {ClientNetworkController} on the client. other controllers such as AI
+                    controllers should inherit from the {ClientNetworkController} class, and
+                    get their entity to do stuff by using the addEvent method.
+------------------------------------------------------------------------------*/
+
 #include "ClientNetworkController.h"
 
 #include "../../Engine/Event.h"
@@ -139,7 +164,7 @@ void ClientNetworkController::parseEventMessage( Message& message )
 			SetHealthMessage* mm = (SetHealthMessage*) message.data;
 
 			// create event from message data
-			SetHealthEvent *ev = new SetHealthEvent(mm->change);
+			SetHealthEvent *ev = new SetHealthEvent(mm->entid, mm->typeHeal, mm->change);
 
 			// add event to event queue
 			addEvent(ev);
@@ -161,6 +186,14 @@ void ClientNetworkController::parseEventMessage( Message& message )
             addEvent(ev);
             break;
         }
+		case ::Marx::ADD_POINTS:
+		{
+			AddPointsMessage *pm = (AddPointsMessage*) message.data;
+			AddPointsEvent *ev = new AddPointsEvent(pm->points);
+
+			addEvent(ev);
+			break;
+		}
         default:
         {
             printf("WARNING: ClientNetworkController::parseEventMessage received an "

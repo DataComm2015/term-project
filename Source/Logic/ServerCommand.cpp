@@ -22,12 +22,36 @@ using Networking::Session;
 
 ServerCommand::ServerCommand()
 {
-    gameScene = new ServerGameScene(this);
+    gameScene = NULL;
     lobbyScene = new ServerLobbyScene(this);
     gameState = new ServerGameState(this);
     goToLobby();
 }
+/**
+ * @brief ServerCommand::onConnect
+ * When a new client connects, this handles adding them to
+ * the game
+ * @param session   session that connected
+ *
+ * @author Calvin Rempel, Jeff Bayntun
+ */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        onConnect
+--
+-- DATE:            February 27, 2015
+--
+-- REVISIONS:       (Date and Description)
+--
+-- DESIGNER:
+--
+-- PROGRAMMER:      Calvin Rempel, Jeff Bayntun
+--
+-- INTERFACE:       void ServerCommand::onConnect(Session* session)
 
+-- RETURNS:         void
+--
+-- NOTES:          handles a newly connected client, directing them to the proper scene
+-----------------------------------------------------------------------------------------------*/
 void ServerCommand::onConnect(Session* session)
 {
     // create an entity that the new connection can use to communicate
@@ -54,11 +78,16 @@ void ServerCommand::onConnect(Session* session)
     {
         gameState->goToLobby();
     }
-    // If game is in progress -> go to game scene as ghost
+    // If game is in progress -> go to a fake lobby to wait for end of match
     else
     {
         player->setMode(PLAYER_MODE::GHOST);
-        gameState->goToGame(gameScene->getWorldSeed());
+        Message fake_lobby;
+        fake_lobby.type = (int)ServerGameStateClientGameStateMsgType::FAKE_LOBBY;
+        fake_lobby.data = (void*) session;
+        fake_lobby.len = strlen((char*)fake_lobby.data);
+
+        gameState->update(fake_lobby);
     }
 
 }
@@ -112,6 +141,8 @@ void ServerCommand::prepareForGameState()
 
 void ServerCommand::goToGame()
 {
+    if (!isGameInProgress())
+        gameScene = new ServerGameScene(this);
     activeScene = gameScene;
     gameScene->enterScene();
 }

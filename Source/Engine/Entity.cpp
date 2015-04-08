@@ -54,22 +54,10 @@ using namespace Marx;
 --        Constructor for an Entity
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(Map * _map, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
-    map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl)
+Entity::Entity(Map * _map, ENTITY_TYPES eType, float x, float y, Controller * ctrl = NULL, float h = 1.0, float w = 1.0 ) :
+    map(_map), sf::FloatRect(x, y, h, w ), controller(ctrl), type(eType)
 {
-    if(ctrl != NULL)
-      ctrl->setEntity(this);
-
-	  occupiedCells = std::set<Cell*>();
-
-    for(int i = floor(x); i < width + floor(x); i++)
-    {
-        for(int j = floor(y); j < height + floor(y); j++)
-        {
-            occupiedCells.emplace(map->getCell(floor(i),floor(j)));
-			      map->getCell(floor(i),floor(j))->addEntity(this);
-        }
-    }
+    onCreate();
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -258,6 +246,14 @@ Entity * Entity::aMove(float x, float y, bool force = false)
 
 				return e;
 			}
+      if(!blocking)
+      {
+
+        if( intersects(*e) && e != this)
+  			{
+  				return e;
+  			}
+      }
 		}
 	}
 
@@ -366,7 +362,7 @@ bool Entity::operator==(const Entity& entity)
 --
 -- DATE: February 19, 2015
 --
--- REVISIONS:
+-- REVISIONS: April 6th - Moved out of constructor.
 --
 -- DESIGNER:
 --
@@ -381,7 +377,20 @@ bool Entity::operator==(const Entity& entity)
 ----------------------------------------------------------------------------------------------------------------------*/
 void Entity::onCreate()
 {
-	// logic team
+    if(controller != NULL)
+      controller->setEntity(this);
+
+	  occupiedCells = std::set<Cell*>();
+
+    for(int i = floor(left); i < width + floor(left); i++)
+    {
+        for(int j = floor(top); j < height + floor(top); j++)
+        {
+            occupiedCells.emplace(map->getCell(floor(i),floor(j)));
+			      map->getCell(floor(i),floor(j))->addEntity(this);
+        }
+    }
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -404,7 +413,13 @@ void Entity::onCreate()
 ----------------------------------------------------------------------------------------------------------------------*/
 void Entity::onDestroy()
 {
-	// logic team
+    for(Cell * c: occupiedCells )
+    {
+        c->removeEntity(this);
+    }
+    top = -100;
+    left = -100;
+    map->getCell(-1,-1)->addEntity(this);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
@@ -430,17 +445,107 @@ void Entity::onUpdate(float deltaTime)
 	// logic team
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::setBlocking
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: void Entity::setBlocking(bool b)
+--							bool b : If the entity is blocking or not.
+--							
+--
+-- RETURNS:
+--     void.
+--
+-- NOTES:
+--    This function sets an entity to blocking or non-blocking
+--
+------------------------------------------------------------------------------*/
 void Entity::setBlocking(bool b)
 {
 	blocking = b;
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::getBlocking
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: bool Entity::getBlocking()
+--							
+--
+-- RETURNS:
+--     bool - If the entity is blocking or not
+--
+-- NOTES:
+--    This function returns if an entity is blocking or non-blocking
+--
+------------------------------------------------------------------------------*/
 bool Entity::getBlocking()
 {
 	return blocking;
 }
 
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::getMap
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: Map * Entity::getMap()
+--							
+--
+-- RETURNS:
+--     Map* - A pointer to the map the entity is in.
+--
+-- NOTES:
+--    This function returns a pointer to the map the entity is in.
+--
+------------------------------------------------------------------------------*/
 Map * Entity::getMap()
 {
     return map;
+}
+
+/*------------------------------------------------------------------------------
+-- FUNCTION: Entity::getType
+--
+-- DATE: March 30th, 2015
+--
+-- REVISIONS: 
+--
+-- DESIGNER: Marc Vouve
+--
+-- PROGRAMMER: Marc Vouve
+--
+-- INTERFACE: ENTITY_TYPES Entity::getType()
+--							
+--
+-- RETURNS:
+--     ENTITY_TYPES - The type of the entity.
+--
+-- NOTES:
+--    This function returns the type of the entity
+--
+------------------------------------------------------------------------------*/
+ENTITY_TYPES Entity::getType()
+{
+    return type;
 }

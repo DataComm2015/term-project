@@ -1,7 +1,29 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: ClientLobbyScene.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:
+--
+-- DATE: March 30, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: Calvin Rempel, Alex Lam and Michael Chimick
+--
+-- PROGRAMMER: Alex Lam, Chris Klassen, Michael Chimick, Calvin Rempel, Melvin Loho
+--
+-- NOTES:
+--        This file contains the implementation of the lobby scene for the client.
+----------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "ClientLobbyScene.h"
+#include "MainMenuScene.h"
 #include <iostream>
 #include <SFML/System/Time.hpp>
 #include "Entities/ClientMux.h"
+#include "Entities/CommandEntity.h"
 #include "../Multimedia/manager/SoundManager.h"
 
 using std::cout;
@@ -29,10 +51,10 @@ int ClientLobbyScene::currScrollHeight;
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Calvin Rempel, Alex Lam and Michael Chimick
+-- DESIGNER: Calvin Rempel, Alex Lam, Chris Klassen and Michael Chimick
 --
--- PROGRAMMER: Calvin Rempel, Alex Lam and Michael Chimick
---             Sanders Lee (Added title call)
+-- PROGRAMMER: Calvin Rempel, Alex Lam, Chris Klassen and Michael Chimick
+--             Sanders Lee (Added title call), Jeff Bayntun
 --
 -- INTERFACE: ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
 --
@@ -44,7 +66,7 @@ int ClientLobbyScene::currScrollHeight;
 -- Creates background, buttons and textboxes
 -- Sets up lobby network logic
 ----------------------------------------------------------------------------------------------------------------------*/
-ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
+ClientLobbyScene::ClientLobbyScene(bool isfake) : renderer(AppWindow::getInstance(), 48400)
 {
     /* Get texture assets */
     // as art assets are created for these, add them
@@ -54,6 +76,7 @@ ClientLobbyScene::ClientLobbyScene() : renderer(AppWindow::getInstance(), 48400)
     deityChoice = 1;
     timego = false;
     click = 0;
+    fake_lobby = isfake;
 
     circle = Manager::TextureManager::store(Manager::TextureManager::load("Assets/Art/GUI/Menu/selected.png"));
 
@@ -167,9 +190,9 @@ ClientLobbyScene::~ClientLobbyScene()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Alex Lam and Michael Chimick
+-- DESIGNER: Alex Lam, Chris Klassen and Michael Chimick
 --
--- PROGRAMMER: Alex Lam and Michael Chimick
+-- PROGRAMMER: Alex Lam, Chris Klassen and Michael Chimick
 --             Sanders Lee (Added title call)
 --
 -- INTERFACE: void ClientLobbyScene::onLoad()
@@ -182,8 +205,12 @@ ClientLobbyScene::~ClientLobbyScene()
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::onLoad()
 {
-    title.play();
+    // Delete GameScene everytime player enters the lobby
+    MainMenuScene::clearGameScene();
+    MainMenuScene::getGameScene();
+    ((ClientMux*)NetworkEntityMultiplexer::getInstance())->getCommandEntity()->attachListeners();
 
+    title.play();
     clck.restart();
 
     /* Set btntest positions */
@@ -204,8 +231,6 @@ void ClientLobbyScene::onLoad()
     deityVitalityCircleSGO->sprite().setPosition((SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) + 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64);
     deityDemiseCircleSGO->sprite().setPosition((SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH_B / 2) - 64, SCN_HEIGHT / 2 - CLASS_BTN_HEIGHT_B / 2 + 64  );
 
-    leaveBtn->sprite().setPosition(SCN_WIDTH - SCN_WIDTH / 3 - CLASS_BTN_WIDTH - 8, SCN_HEIGHT / 3 + 8);
-
 
     //background->sprite().setPosition(SCN_WIDTH / 3, (SCN_HEIGHT / 3 - 188));
     height = MAX_SCROLL;
@@ -224,9 +249,9 @@ void ClientLobbyScene::onLoad()
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Alex Lam and Michael Chimick
+-- DESIGNER: Alex Lam, Chris Klassen and Michael Chimick
 --
--- PROGRAMMER: Alex Lam, Michael Chimick and Melvin Loho
+-- PROGRAMMER: Alex Lam, Chris Klassen, Michael Chimick and Melvin Loho, Jeff Bayntun
 --
 -- INTERFACE: void ClientLobbyScene::update(sf::Time t)
 --
@@ -238,6 +263,11 @@ void ClientLobbyScene::onLoad()
 ----------------------------------------------------------------------------------------------------------------------*/
 void ClientLobbyScene::update(sf::Time t)
 {
+    if(fake_lobby)
+    {
+        countdownBox->setText("Match in Progress.  Please wait until current round finishes.");
+        return;
+    }
     vesselOneBtn->update(t);
     vesselTwoBtn->update(t);
     deityVitalityBtn->update(t);
@@ -339,9 +369,9 @@ void ClientLobbyScene::processEvents(sf::Event& e)
 --
 -- REVISIONS: (Date and Description)
 --
--- DESIGNER: Alex Lam and Michael Chimick
+-- DESIGNER: Alex Lam, Chris Klassen and Michael Chimick
 --
--- PROGRAMMER: Alex Lam, Michael Chimick and Melvin Loho
+-- PROGRAMMER: Alex Lam, Chris Klassen, Michael Chimick and Melvin Loho
 --
 -- INTERFACE: void ClientLobbyScene::draw()
 --

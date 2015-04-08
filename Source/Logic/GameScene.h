@@ -2,6 +2,7 @@
 #define GAME_SCENE_H_
 
 #include <set>
+#include <deque>
 #include <vector>
 #include <cstdio>
 #include <SFML/Graphics.hpp>
@@ -55,8 +56,12 @@ void onClickVitalityThree();
 void onClickVitalityTwo();
 void onClickVitalityOne();
 
-static btnStatus bs[3];
+float convertX(float);
+float convertY(float);
 
+static btnStatus bs[3];
+static Marx::Map *myMap;
+static sf::View vm;
 
 class GameScene : public Scene
 {
@@ -80,6 +85,9 @@ class GameScene : public Scene
 		void generateUI();
 		void positionUI();
 		void setPlayerVessel(Vessel *vessel);
+        void stopAllSounds();
+		
+		void addSkillNotification(float _x, float _y, int timer, SKILLTYPE _skillType);
 
 
 		friend void onClickVitalityOne();
@@ -88,6 +96,8 @@ class GameScene : public Scene
 		friend void onClickDemiseOne();
 		friend void onClickDemiseTwo();
 		friend void onClickDemiseThree();
+		friend float convertX(float x);
+		friend float convertY(float y);
 
 	private:
 		/**
@@ -107,32 +117,41 @@ class GameScene : public Scene
 
 		// Resources
 
-		id_resource tilemap;
-		id_resource championSprite;
-		id_resource maskSprite;
-		id_resource wepSprite;
+		static id_resource tilemap;
 
-		id_resource hbarSprite;
-		id_resource hbgSprite;
-		id_resource scat_music;
-		id_resource chick_sound;
-		id_resource placeholderSprite;
+		static id_resource hbarSprite;
+		static id_resource hbgSprite;
 
-		id_resource butSprite;
-		id_resource demiseBtn;
-		id_resource vitalityBtn;
-		id_resource warriorBtn;
-		id_resource shamanBtn;
+		static id_resource butSprite;
+		static id_resource demiseBtn;
+		static id_resource vitalityBtn;
+		static id_resource warriorBtn;
+		static id_resource shamanBtn;
+
+		static id_resource crosshairImg;
+		static id_resource deathImage;
+
+		static id_resource game_msc;
+		static id_resource ambience_msc;
 
 		//VITALITY
-		id_resource buffskillbtn;
-		id_resource healskillbtn;
-		id_resource healingcircleskillbtn;
+		static id_resource buffskillbtn;
+		static id_resource healskillbtn;
+		static id_resource healingcircleskillbtn;
 
 		//DEMISE
-		id_resource debuffskillbtn;
-		id_resource hurtskillbtn;
-		id_resource summonskillbtn;
+		static id_resource debuffskillbtn;
+		static id_resource hurtskillbtn;
+		static id_resource summonskillbtn;
+
+		// Deity AOE's
+		static id_resource deityHLGImg;
+		static id_resource deityDBFImg;
+		static id_resource deityDMGImg;
+		static id_resource deityBUFImg;
+		static id_resource deityRNGImg;
+		static id_resource deityBIGImg;
+		static id_resource deitySUMImg;
 
 		sf::Shader waveShader;
 		float phase;
@@ -149,9 +168,9 @@ class GameScene : public Scene
 		GUI::Button *b1;
 		GUI::Button *b2;
 		GUI::Button *b3;
-		GUI::TextBox *tb;
 		GUI::HealthBar *hb;
-		GUI::TextBox *levelInd;
+		SGO *crossHairSGO;
+		SGO *deathScreen;
 
 		// Misc
 
@@ -161,17 +180,23 @@ class GameScene : public Scene
 		int classType;
 
 		sf::Sound current;
+		
+		id_resource rand_msc;
+
+		sf::Music *music;
+		sf::Music *ambience;
+		sf::Music *randsound;
 
 		// tech demos:
-
-		SGO placeHolderSGO;
-		TheSpinner *s;
-		TheSpinner *s2;
 		sf::Vector2f butSize;
 		const sf::Vector2f skillbtn = sf::Vector2f(24,24);
+		
+		std::deque<skill_notify> snQueue;
 
 		void checkBtns(sf::Time);
-		void setUI();
+		void createClassUI();
+		
+		void updateSkillGraphics(sf::Time t);
 };
 
 #endif

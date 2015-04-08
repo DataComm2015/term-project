@@ -14,6 +14,7 @@ using namespace Marx;
 ServerLobbyScene::ServerLobbyScene(ServerCommand *command)
     : command(command)
 {
+    playerCount = 0;
     timerRunning = false;
     waitingToStart = false;
     timer = SERVER_INITIAL_TIMER_VALUE;
@@ -89,7 +90,7 @@ void ServerLobbyScene::enterScene()
 
 void ServerLobbyScene::leaveScene()
 {
-
+    playerCount = 0;
 }
 
 void ServerLobbyScene::startTimer()

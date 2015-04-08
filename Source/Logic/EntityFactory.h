@@ -3,6 +3,7 @@
 
 #include "../Multimedia/graphics/object/SGO.h"
 #include "../Multimedia/manager/ResourceManager.h"
+#include "../Engine/ProjectileManager.h"
 #include "EntityTypes.h"
 
 namespace Marx
@@ -46,13 +47,24 @@ class EntityFactory
             Marx::Map* map,
             float x,
             float y);
+        Marx::Projectile* makeProjectile(
+            Marx::Map * map,
+            Marx::Entity * entity,
+            Marx::Action * action,
+            sf::Vector2f & v,
+            float height,
+            float width,
+            Marx::Controller *);
     protected:
         EntityFactory();
         ~EntityFactory();
     private:
         static EntityFactory* instance;
-        id_resource gkSprite, projSprite, vesselSprite, maskSprite, spearSprite, structImage;
-        SGO gkSGO, projSGO, vesselSGO, maskSGO, spearSGO, structSprite;
+
+        id_resource gkSprite, minionSprite, minion2Sprite, minion3Sprite, miniBossSprite, miniBeeSprite, projSprite, vesselSprite, maskSprite, spearSprite, staffSprite,structImage;
+        SGO gkSGO, minionSGO, projSGO, miniBossSGO, vesselSGO, maskSGO, spearSGO, staffSGO, structSprite;
+        SGO minion2SGO, minion3SGO, miniBeeSGO;
+        std::vector<SGO> whispSGOs;
 };
 
 #endif

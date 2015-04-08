@@ -209,10 +209,118 @@ TileManager::tocords(std::string& tile, float *coords)
     }
 }
 
-id_resource TileManager::store(sf::FloatRect* r) { return rm.store(r); }
-void TileManager::store(sf::FloatRect* r, id_resource id) { rm.store(r, id, true); }
-sf::FloatRect* TileManager::get(id_resource id) { return rm.get(id); }
-sf::FloatRect* TileManager::remove(id_resource id) { return rm.remove(id); }
-unsigned int TileManager::clear() { return rm.clear(true); }
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: store
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Thomas Tallentire
+--
+-- PROGRAMMER: Thomas Tallentire
+--
+-- INTERFACE: id_resource TileManager::store(sf::Texture* r) 
+--
+-- RETURNS: id_resource - An unsigned int that can be used to get the stored Texture.
+--
+-- NOTES:
+-- Stores a Tile in the resource manager, returns an id_resource as a handle to it.
+----------------------------------------------------------------------------------------------------------------------*/
+id_resource TileManager::store(sf::FloatRect* r) 
+{ 
+	return rm.store(r); 
+}
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: store
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Thomas Tallentire
+--
+-- PROGRAMMER: Thomas Tallentire
+--
+-- INTERFACE: void TileManager::store(sf::Texture* r, id_resource id) 
+--
+-- RETURNS: 
+--
+-- NOTES:
+-- Stores a Tile in the resource manager, replacing the one in the old id slot.
+----------------------------------------------------------------------------------------------------------------------*/
+void TileManager::store(sf::FloatRect* r, id_resource id) 
+{ 
+	rm.store(r, id, true); 
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: get
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Thomas Tallentire
+--
+-- PROGRAMMER: Thomas Tallentire
+--
+-- INTERFACE: sf::Texture* TileManager::get(id_resource id) 
+--
+-- RETURNS: sf::Texture* - The Tile with the associated id
+--
+-- NOTES:
+-- Return the Tile corresponding to the passed in ID.
+----------------------------------------------------------------------------------------------------------------------*/
+sf::FloatRect* TileManager::get(id_resource id) 
+{ 
+	return rm.get(id); 
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: remove
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Thomas Tallentire
+--
+-- PROGRAMMER: Thomas Tallentire
+--
+-- INTERFACE: sf::Texture* TileManager::remove(id_resource id) 
+--
+-- RETURNS: sf::Texture* - The Tile with the associated id
+--
+-- NOTES:
+-- Removes and returns the Tile corresponding to the given ID.
+----------------------------------------------------------------------------------------------------------------------*/
+sf::FloatRect* TileManager::remove(id_resource id) 
+{
+	return rm.remove(id);
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: clear
+--
+-- DATE: February 19, 2015
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Thomas Tallentire
+--
+-- PROGRAMMER: Thomas Tallentire
+--
+-- INTERFACE: unsigned int TileManager::clear() 
+--
+-- RETURNS: unsigned int
+--
+-- NOTES:
+-- Clears the held resource manager.
+----------------------------------------------------------------------------------------------------------------------*/
+unsigned int TileManager::clear() 
+{
+	return rm.clear(true); 
+}
 

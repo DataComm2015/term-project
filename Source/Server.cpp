@@ -7,6 +7,7 @@
 #include "Logic/Entities/ServerNetworkController.h"
 #include "Network/NetworkEntityMultiplexer.h"
 #include "Engine/ProjectileManager.h"
+#include "Multimedia/manager/SoundManager.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -27,17 +28,13 @@ void run(ServerCommand *server);
 
 int main( int argc, char ** argv )
 {
-    if( argc < 2 )
-    {
-        printf("USAGE: %s [LOCAL_PORT]\n",argv[0]);
-        fflush(stdout);
-    }
+    int serv_port = (argc < 2) ? 7000:atoi(argv[1]);
 
     ServerCommand server;
     Manager::ProjectileManager::setServer(&server);
+    Manager::SoundManager::disabled = true;
 
-
-    server.startServer(atoi(argv[1]));
+    server.startServer(serv_port);
     run(&server);
 
     return 0;
