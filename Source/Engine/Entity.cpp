@@ -39,7 +39,8 @@ using namespace Marx;
 --
 -- DATE: February 19, 2015
 --
--- REVISIONS:
+-- REVISIONS: Julian Brandrick - April 5, 2015
+--              -> Added ENTITY_TYPES to constructor
 --
 -- DESIGNER: Marc Vouve
 --
