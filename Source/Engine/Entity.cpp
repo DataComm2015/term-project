@@ -39,7 +39,8 @@ using namespace Marx;
 --
 -- DATE: February 19, 2015
 --
--- REVISIONS:
+-- REVISIONS: Julian Brandrick - April 5, 2015
+--              -> Added ENTITY_TYPES to constructor
 --
 -- DESIGNER: Marc Vouve
 --
@@ -460,6 +461,25 @@ Map * Entity::getMap()
     return map;
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: Entity::getType
+--
+-- DATE: April 5, 2015
+--
+-- REVISIONS:
+--
+-- DESIGNER: Julian Brandrick
+--
+-- PROGRAMMER: Julian Brandrick
+--
+-- INTERFACE: ENTITY_TYPES getType()
+--
+-- RETURNS: ENTITY_TYPES
+--
+-- NOTES:
+--  Returns the type of the current entity.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 ENTITY_TYPES Entity::getType()
 {
     return type;
