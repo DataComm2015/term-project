@@ -58,6 +58,12 @@ class MiniBee : public GateKeeper
 		void processSetHealthEvent(SetHealthEvent* ev);
 		void processAttackEvent(AttackEvent* aev);
 
+		id_resource grassWalkSoundMiniBee;
+		id_resource stoneWalkSoundMiniBee;
+		id_resource hurtSoundMiniBee;
+		id_resource attackSoundMiniBee;
+
+
 	protected:
 		bool movingLeft;
     	bool movingRight;
@@ -88,6 +94,15 @@ class MiniBee : public GateKeeper
 
 	private:
 		SGO shadow;
+
+	public:
+		static const char *travelSnds[4];
+
+		static const char *attackSnds[3];
+
+		static const char *hurtSnds[4];
+
+		static const char *deathSnds[3];
 };
 
 #endif

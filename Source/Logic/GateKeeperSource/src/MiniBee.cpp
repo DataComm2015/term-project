@@ -10,6 +10,7 @@
 **
 **	PROGRAMMER: Filip Gutica A00781910
 **              Chris Klassen
+**              Lewis Scott
 **
 ***********************************************************************************/
 #include "../../Event.h"
@@ -22,11 +23,23 @@
 
 using namespace Manager;
 
-// sound set loaded should be determined by enemy type
-static id_resource grassWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-static id_resource stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_02.ogg"));
-static id_resource hurtSoundMiniBee 	 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-static id_resource attackSoundMiniBee	 = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+const char *MiniBee::travelSnds[4] = {"Assets/Sound/Enemies/bee/babby/bee_travel_01_baby.ogg",
+                                        "Assets/Sound/Enemies/bee/babby/bee_travel_02_baby.ogg",
+                                        "Assets/Sound/Enemies/bee/babby/bee_travel_angry_01_baby.ogg",
+                                        "Assets/Sound/Enemies/bee/babby/bee_travel_angry_02_baby.ogg"};
+
+const char *MiniBee::attackSnds[3] = {"Assets/Sound/Enemies/bee/babby/bee_attack_01_baby.ogg",
+                                        "Assets/Sound/Enemies/bee/babby/bee_attack_02_baby.ogg",
+                                        "Assets/Sound/Enemies/bee/babby/bee_attack_03_baby.ogg"};
+
+const char *MiniBee::hurtSnds[4] = {"Assets/Sound/Enemies/bee/babby/bee_hurt_01_baby.ogg",
+                                      "Assets/Sound/Enemies/bee/babby/bee_hurt_02_baby.ogg",
+                                      "Assets/Sound/Enemies/bee/babby/bee_hurt_03_baby.ogg",
+                                      "Assets/Sound/Enemies/bee/babby/bee_hurt_04_baby.ogg"};
+
+const char *MiniBee::deathSnds[3] = {"Assets/Sound/Enemies/bee/babby/bee_death_01_baby.ogg",
+                                        "Assets/Sound/Enemies/bee/babby/bee_death_02_baby.ogg",
+                                        "Assets/Sound/Enemies/bee/babby/bee_death_03_baby.ogg"};
 
 id_resource beeShadow;
 
@@ -42,6 +55,7 @@ id_resource beeShadow;
 *
 *   PROGRAMMER: Filip Gutica
 *               Chris Klassen
+*               Lewis Scott
 *
 *   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
 *
@@ -90,6 +104,12 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-4, -17);
+
+    grassWalkSoundMiniBee = SoundManager::store(SoundManager::load(MiniBee::travelSnds[rand() % 4]));
+    stoneWalkSoundMiniBee = SoundManager::store(SoundManager::load(MiniBee::travelSnds[rand() % 4]));
+    hurtSoundMiniBee   = SoundManager::store(SoundManager::load(MiniBee::hurtSnds[rand() % 4]));
+    attackSoundMiniBee   = SoundManager::store(SoundManager::load(MiniBee::attackSnds[rand() % 3]));
+
 }
 
 MiniBee::~MiniBee()

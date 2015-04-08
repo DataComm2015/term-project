@@ -72,6 +72,11 @@ class GateKeeper : public Marx::VEntity, public Creature
 	id_resource travel_SndB, attack_SndB, hurt_SndB, death_SndB;
 	//sf::Sound travel_Snd, voice_Snd;
 
+	id_resource grassWalkSoundGK;
+	id_resource stoneWalkSoundGK;
+	id_resource hurtSoundGK;
+	id_resource attackSoundGK;
+
 
 	protected:
 		bool movingLeft;
@@ -102,7 +107,16 @@ class GateKeeper : public Marx::VEntity, public Creature
 		bool soundActive;
 		Animation *gkAnimation;
 
+	public:
+		static const char *travelSnds[4];
+
+		static const char *attackSnds[3];
+
+		static const char *hurtSnds[4];
+
+		static const char *deathSnds[3];
 
 
 };
+
 #endif
