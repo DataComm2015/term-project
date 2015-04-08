@@ -1,3 +1,30 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: Vessel.cpp
+--
+-- PROGRAM: Sojourn
+--
+-- FUNCTIONS:
+--		Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon, Marx::Map * gmap, float x, float y, Marx::Controller* controller_,
+--			float height, float width)
+--		~Vessel();
+--		void Vessel::onUpdate(float deltaTime)
+--		void Vessel::setPlayerEntity(PlayerEntity *entity)
+--		void Vessel::playFootstepSound()
+--		void Vessel::playHurtSound()
+--		void Vessel::playAttackSound()
+--
+--
+-- DATE: February 15, 2015
+--
+-- REVISIONS: N/A
+--
+-- DESIGNER: Sebastian Pelka
+--
+-- PROGRAMMER:  Sebastian Pelka
+--
+-- NOTES:
+--        This file contains the Vessel class implementation.
+----------------------------------------------------------------------------------------------------------------------*/
 #include <iostream>
 #include <time.h>
 #include <cmath>
@@ -20,13 +47,7 @@ id_resource Vessel::grassWalkSound = SoundManager::store(SoundManager::load("Ass
 id_resource Vessel::stoneWalkSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Run/run_stone.ogg"));
 id_resource Vessel::hurtSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Hurt/vessel_hurt.ogg"));
 id_resource Vessel::attackSound = SoundManager::store(SoundManager::load("Assets/Sound/Player/Attack/whip_01.ogg"));
-
 id_resource vesselShadow;
-
-//TO DO:
-//1) GIVE IT A SPRITE
-//2) MAKE THE SPRITE ANIMATE
-//3) DIAGONAL MODEMENT
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel constructor
@@ -34,14 +55,20 @@ id_resource vesselShadow;
 -- DATE: February 15, 2015
 --
 -- REVISIONS: (Date and Description)
+--		Sebastian Pelka and Melvin Loho March 31, 2015
+--				Solved Rendering Issues
+--		Sebastian Pelka		April 1, 2015
+--				updated the constructor for animations
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
 -- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
--- job_class jobclass: the job class you wish to set up the Vessel as
--- GameMap gmap: the game map the Vessel is on
--- int x, int y: the coordinates of the Vessel on the map
+-- 		job_class jobclass: the job class you wish to set up the Vessel as
+-- 		GameMap gmap: the game map the Vessel is on
+-- 		int x, int y: the coordinates of the Vessel on the map
+--		controller_ a pointer to the controller for this class
+--		height, width: the height and width of the object
 --
 -- RETURNS: nothing
 --
@@ -55,16 +82,14 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 		Marx::Controller* controller_,
 		float height,
 		float width
-		/*, job_class jobClass, Ability* abilityList*/ )
+		)
 		: Marx::VEntity(_sprite, gmap, x, y, controller_, 1.0, 1.0, ENTITY_TYPES::VESSEL),
 		mask_sprite(_mask),
 		weapon_sprite(_weapon)
-		//,_controller(controller)
 {
 	attCool = 2;
 	direction = 1; //start facing right
 
-	resetEXP();
 	xSpeed = 0.08;
 	ySpeed = 0.08;
 	movingLeft = false;
@@ -86,7 +111,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 
 	myX = 0;
 	myY = 0;
-	
+
 	currentHealth = 100;
 	maxHealth = 100;
 
@@ -113,18 +138,40 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	std::cout << "Vessel constructed successfully!" << std::endl;
 }
 
-/*-------------------------------------------
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:        Vessel::onUpdate(float deltaTime)
 --
--- PROGRAMMER:  Sebastian Pelka
---				Sanders Lee (Debugged synchronization problem across clients,
---							 Added sound for walking)
---				Alex Lam
---				Julian Brandrick
---				Thomas Tallentire
+-- DATE:            March 27, 2015
 --
--- Called every game loop. dequeues all events from the entity's
--- controller and proceses those events
----------------------------------------------*/
+-- REVISIONS:       (Date and Description)
+-- 		Sebastian Pelka	and Thomas Tallentire March 27, 2015
+--				Updated the function to extend VEntity and use its move function
+--		Sebastian Pelka and Eric Tsang March 28, 2015
+--				Integrated the vessel to move by sending signals to the network
+--		Sebastian Pelka March 29, 2015
+--				Simplified movement to use vectors
+--		Sebastian Pelka April 1, 2015
+--				Vessel body animation implemented
+--		Sebastian Pelka April 3, 2015
+--				Mask and spear animation implemented
+--		Sebastian Pelka and Sanders Lee April 6, 2015
+--				Hooked the Animations into the new testbed. Animations are done.
+--		Sanders Lee
+--				Debugged synchronization problem across clients, Added sound for walking
+--
+-- DESIGNER:        Sebastian Pelka
+--
+-- PROGRAMMER:      Sebastian Pelka, Sanders Lee, Alex Lam, Julian Brandrick, Thomas Tallentire
+--
+-- INTERFACE:       onUpdate(float deltaTime)
+--                  deltaTime: the cooldown time
+--
+-- RETURNS:         void
+--
+-- NOTES:
+--									Called every game loop. dequeues all events from the entity's
+--									controller and proceses those events
+-----------------------------------------------------------------------------------------------*/
 void Vessel::onUpdate(float deltaTime)
 {
 	float val;
@@ -475,25 +522,6 @@ void Vessel::playAttackSound()
 	voice.play();
 	//printf("Attack sound should play\n");
 }
-
-/*---------
--- Calls the function to draw the body around, and handles the movement of the
--- mask and weapon in Vessel.cpp
---
---------------*/
-/*
-void Vessel::draw(Renderer& renderer, sf::RenderStates states) const
-{
-	std::cout << "vessel's draw called" << std::endl;
-	VEntity::draw(renderer, states);
-	sf::FloatRect* tile = Manager::TileManager::get(map->getCell(0, 0)->getTileId());
-	states.transform.translate(left * tile->width, (top + height) * tile->height);
-
-	renderer.draw(mask_sprite, states);
-	renderer.draw(weapon_sprite, states);
-
-}
-*/
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: Vessel destructor
@@ -1041,7 +1069,7 @@ int Vessel::getDefaultSpeed()
 -- PROGRAMMER:	Sanders Lee
 --		Marc Rafanan
 --		Jonathan Chu
---		
+--
 --
 -- INTERFACE: bool Vessel::checkDeath()
 --

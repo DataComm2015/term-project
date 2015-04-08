@@ -60,6 +60,10 @@ EntityFactory* EntityFactory::instance = 0;
 *   DATE:
 *
 *   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
+*              Sebastian Pelka  -Added resources for running animation
+*              Sebastian Pelka  -Added additional SGOs for weapon types
+*              Sebastian Pelka and Sanders Lee
+*                               -Warrior/Shaman selection logic
 *
 *   DESIGNER:
 *
@@ -326,6 +330,9 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *
 *   REVISIONS:    Filip Gutica     - Add and handle cases for Basic types, Minions,
 *                                    mini bees and mini bosses.
+*
+*                 Sebastian Pelka and Sanders Lee
+*                                  - Logic for Selecting warrior or shaman
 *
 *   DESIGNER:
 *
