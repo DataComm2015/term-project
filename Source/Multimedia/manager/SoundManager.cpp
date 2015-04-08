@@ -3,6 +3,7 @@
 Manager::ResourceManager<sf::SoundBuffer*> Manager::SoundManager::rm = Manager::ResourceManager<sf::SoundBuffer*>();
 bool Manager::SoundManager::disabled = false;
 
+
 sf::SoundBuffer* Manager::SoundManager::load(const std::string path)
 {
     if (Manager::SoundManager::disabled)
