@@ -70,9 +70,9 @@ class GateKeeper : public Marx::VEntity, public Creature
   	ENTITY_TYPES getType();
 
 	id_resource travel_SndB, attack_SndB, hurt_SndB, death_SndB;
-	sf::Sound travel_Snd, attack_Snd, hurt_Snd, death_Snd;
+	//sf::Sound travel_Snd, voice_Snd;
 
-	
+
 	protected:
 		bool movingLeft;
     bool movingRight;
