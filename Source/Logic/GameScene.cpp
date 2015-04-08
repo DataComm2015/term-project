@@ -280,7 +280,7 @@ void GameScene::setPlayerVessel(Vessel *vessel)
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-	myVessel = vessel;	
+	myVessel = vessel;
 	myVessel->setHealthBar(hb);
 }
 
@@ -392,23 +392,22 @@ GameScene::~GameScene()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:	update
 *
-*	DATE:
+*	DATE:		April 7, 2015
 *
-*	REVISIONS: (Date and Description)
+*	REVISIONS: 	(Date and Description)
 *
 *	DESIGNER:
 *
 *	PROGRAMMER: Melvin Loho, Sanders Lee, Marc Rafanan, Jonathan Chu
 *
-*	INTERFACE:
+*	INTERFACE:	void GameScene::update(sf::Time t)
+*	sf::Time t: the time of the update
 *
-*	PARAMETERS:
+*	RETURNS: 	void
 *
-*	RETURNS: void
-*
-*	NOTES:
+*	NOTES:		updates all the entities in the game
 ******************************************************************************/
 void GameScene::update(sf::Time t)
 {

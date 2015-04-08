@@ -50,7 +50,25 @@ void PlayerEntity::setMode(PLAYER_MODE mode)
     update(msg);
 }
 
-//sanderschange
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	setType
+--
+-- DATE:		April 7, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Sanders Lee
+--
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	void PlayerEntity::setType(PLAYER_TYPE type)
+-- PLAYER_TYPE type: the type of PlayerEntity this is
+--
+-- RETURNS: 	void
+--
+-- NOTES:       Sets the player type (Warrior or Shaman, Life or Death) for the PlayerEntity.
+--              Part of the function chain that propagates menu selection from lobby to game field.
+-----------------------------------------------------------------------------------------------*/
 void PlayerEntity::setType(PLAYER_TYPE type)
 {
     this->type = type;
@@ -61,7 +79,24 @@ PLAYER_MODE PlayerEntity::getMode()
     return mode;
 }
 
-//sanderschange
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	getType
+--
+-- DATE:		April 7, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Sanders Lee
+--
+-- PROGRAMMER:	Sanders Lee
+--
+-- INTERFACE:	PLAYER_TYPE PlayerEntity::getType()
+--
+-- RETURNS: 	PLAYER_TYPE
+--
+-- NOTES:       Gets the player type (Warrior or Shaman, Life or Death) for the PlayerEntity.
+--              Part of the function chain that propagates menu selection from lobby to game field.
+-----------------------------------------------------------------------------------------------*/
 PLAYER_TYPE PlayerEntity::getType()
 {
     return type;
@@ -171,10 +206,10 @@ void PlayerEntity::skillCaseHandler(Message msg)
 {
     Vessel *vessel = NULL;
     GateKeeper *keeper = NULL;
-    
+
     // Retrieving the skills struct from the message
     skill *sk = ((skill*) msg.data);
-    
+
     // If the skill type is a spawn, randomize spawned enemy
     if (sk->st == SKILLTYPE::SPAWN)
     {
@@ -196,12 +231,11 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 break;
         }
         serverRef->createEnemy(type, NULL, sk->curX, sk->curY);
-        
+
         givePoints(30.0);
-        
+
         // Send the notification to all clients
         sendNotification(sk);
-        
         return;
     }
 
@@ -211,7 +245,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
 
     std::cout << "SKILL RECEIVED" << std::endl;
     auto entities = serverRef->getcMap()->getEntities();
-    
+
     // For each entity on the map, check to see if it was affected by the skill
     for(Entity *entity : entities)
     {
@@ -228,7 +262,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
             std::cout << "x2 " << x2 << std::endl;
             std::cout << "y2 " << y2 << std::endl;
             std::cout << "Radius " << sk->radius << std::endl;
-            
+
             // If the entity was within the skill radius, add the skill event to its event queue and add points to the
             //  player
             if (getDistance(x1, y1, x2, y2) <= sk->radius )
@@ -237,9 +271,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
                 std::cout << "Entity Health: " << vessel->getHealth() << std::endl;
                 std::cout << "Entity VALUE: " << sk->val << std::endl;
-                
+
                 vessel->getController()->addEvent(ev);
-                
+
                 givePoints(15.0);
 
                 vessel = NULL;
@@ -258,7 +292,7 @@ void PlayerEntity::skillCaseHandler(Message msg)
             std::cout << "x2 " << x2 << std::endl;
             std::cout << "y2 " << y2 << std::endl;
             std::cout << "Radius " << sk->radius << std::endl;
-            
+
             // If the entity was within the skill radius, add the skill event to its event queue and add points to the
             //  player
             if (getDistance(x1, y1, x2, y2) <= sk->radius )
@@ -267,9 +301,9 @@ void PlayerEntity::skillCaseHandler(Message msg)
                 std::cout << "DETECTED VESSEL WITHIN RADIUS" << std::endl;
                 std::cout << "Entity Health: " << keeper->getHealth() << std::endl;
                 std::cout << "Entity VALUE: " << sk->val << std::endl;
-                
+
                 keeper->getController()->addEvent(ev);
-                
+
                 givePoints(15.0);
 
                 keeper = NULL;
@@ -306,13 +340,13 @@ void PlayerEntity::skillCaseHandler(Message msg)
 void PlayerEntity::sendNotification(skill *sk)
 {
     auto players = server->getGameState()->getPlayers();
-    
+
     for(auto entry = players.begin(); entry != players.end(); entry++)
     {
         PlayerEntity* playerEntity = entry->second;
-        
+
         Message message;
-        
+
         message.type = (int)PlayerCommandMsgType::SKILL_NOTIFY;
         message.data = (void*)sk;
         message.len  = sizeof(skill);
