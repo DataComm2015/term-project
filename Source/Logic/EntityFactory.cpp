@@ -65,6 +65,7 @@ EntityFactory* EntityFactory::instance = 0;
 *   DESIGNER:
 *
 *   PROGRAMMER: Chris Klassen
+*               Melvin Loho
 *
 *   INTERFACE: EntityFactory();
 *
