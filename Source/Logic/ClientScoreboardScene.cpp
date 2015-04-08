@@ -10,6 +10,7 @@
 -- DESIGNER: Michael Chimick
 --
 -- PROGRAMMER: Michael Chimick
+--             Chris Klassen
 --
 -- NOTES:
 --     This file contains the function implementation of the scoreboard scene for the client.
@@ -40,6 +41,7 @@ float ClientScoreboardScene::currentTime;
 -- DESIGNER: Michael Chimick
 --
 -- PROGRAMMER: Michael Chimick
+--             Chris Klassen
 --
 -- INTERFACE: ClientScoreboardScene::ClientScoreboardScene() : renderer(AppWindow::getInstance(), 48400)
 --

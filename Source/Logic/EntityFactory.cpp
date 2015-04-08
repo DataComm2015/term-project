@@ -4,6 +4,7 @@
 -- PROGRAM: Sojourn
 --
 -- FUNCTIONS:
+--      EntityFactory();
 --
 -- DATE:
 --

@@ -5,6 +5,7 @@
 #include "../Event.h"
 #include "../Skills.h"
 #include "../../Multimedia/manager/SoundManager.h"
+#include "../../Engine/AttackAction.h"
 #include "PlayerEntity.h"
 
 #define ATTACK_COOLDOWN 0.5F
@@ -31,7 +32,7 @@ id_resource vesselShadow;
 -- REVISIONS: (Date and Description)
 --
 -- DESIGNER: Sebastian Pelka, Sanders Lee
--- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun
+-- PROGRAMMER: Sebastian Pelka, Sanders Lee, Jeff Bayntun, Chris Klassen
 --
 -- INTERFACE: Vessel::Vessel( job_class jobclass, GameMap gmap, int x, int y )
 -- job_class jobclass: the job class you wish to set up the Vessel as
@@ -84,6 +85,19 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	
 	currentHealth = 100;
 	maxHealth = 100;
+
+	// TODO: Set the new attack based on the class
+	// delete actionList[normalAttack];
+	//
+	// if (true)
+	// {
+	// 	actionList[normalAttack] = new Marx::AttackAction(5, 20);
+	// }
+	// else
+	// {
+	// 	actionList[normalAttack] = new Marx::AttackAction(10, 5);
+	// }
+
 
 	runAnim = new Animation(&_sprite, sf::Vector2i(32, 32), 8, 3);
 	runAnim_mask = new Animation(&mask_sprite, sf::Vector2i(32, 32), 8, 3);
