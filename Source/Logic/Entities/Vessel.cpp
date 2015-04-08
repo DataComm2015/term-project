@@ -1039,6 +1039,9 @@ int Vessel::getDefaultSpeed()
 -- DESIGNER:	Sanders Lee
 --
 -- PROGRAMMER:	Sanders Lee
+--		Marc Rafanan
+--		Jonathan Chu
+--		
 --
 -- INTERFACE: bool Vessel::checkDeath()
 --
@@ -1049,7 +1052,7 @@ int Vessel::getDefaultSpeed()
 ----------------------------------------------------------------------------------------------------------------------*/
 bool Vessel::checkDeath()
 {
-	return (top == -100 && left == -100);
+	return (currentHealth <= 0);
 }
 
 /*------------------------------------------------------------------------------------------------------------------
