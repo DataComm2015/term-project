@@ -436,8 +436,6 @@ Entity* EntityFactory::makeEntity(
 {
     Entity* entity;
 
-    std::cout << "SDAGDRHDARH" << std::endl;
-
     switch(type)
     {
         case ENTITY_TYPES::BASIC_TYPE:
