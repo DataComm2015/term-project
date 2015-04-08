@@ -316,7 +316,7 @@ void Vessel::onUpdate(float deltaTime)
 					break;
 					case SKILLTYPE::BIGHEAL:
 						currentHealth += ev->getValue();
-						myHealthBar->update((float)currentHealth/(float)maxHealth);
+						if (myHealthBar) myHealthBar->update((float)currentHealth/(float)maxHealth);
 					break;
 					case SKILLTYPE::SPAWN:
 						// Vessel implementation not needed

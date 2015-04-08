@@ -6,7 +6,24 @@
 #include "../Multimedia/graphics/Animation.h"
 
 
-
+/*----------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: VEntity
+--
+-- DATE: April 5, 2015
+--
+-- REVISIONS: Julian Brandrick - April 5, 2015
+--				-> Added an entity type parameter and gave it the default type of I_DONT_KNOW
+--
+-- DESIGNER: 
+--
+-- PROGRAMMER: 
+--
+-- INTERFACE: Marx::VEntity::VEntity(SGO & _sprite, Map * _map, float x, float y
+									, Controller * ctrl, float h, float w, ENTITY_TYPES eType)
+--
+-- NOTES:
+--  
+----------------------------------------------------------------------------------------------------------------------*/
 Marx::VEntity::VEntity(SGO & _sprite, Map * _map, float x, float y, Controller * ctrl, float h, float w, ENTITY_TYPES eType) :
 Entity(_map, eType, x, y, ctrl, h, w)
 {
