@@ -35,6 +35,8 @@ class Minion : public GateKeeper
 		void setXSpeed(float x);
 		void setYSpeed(float y);
     void setSpeed(int _speed);
+		float getXSpeed();
+		float getYSpeed();
 		int getRange();
 		int getHealth();
 		int getAttack();
@@ -48,14 +50,20 @@ class Minion : public GateKeeper
   	void stopAllSounds();
     Entity* getEntity();
 	  bool isMoving();
-		void playSound(float, float);
+		void playTravelSound(float, float);
+		void playHurtSound();
+		void playAttackSound();
 		void animate();
+		void processMoveEvent(MoveEvent* ev);
+		void processSkillEvent(SkillEvent* ev);
+		void processSetHealthEvent(SetHealthEvent* ev);
+		void processAttackEvent(AttackEvent* aev);
 
 	protected:
 		bool movingLeft;
-    bool movingRight;
+    	bool movingRight;
 		bool movingUp;
-    bool movingDown;
+    	bool movingDown;
 		int _range;
 		int _type;
 		int _health;
@@ -78,6 +86,9 @@ class Minion : public GateKeeper
 		BlockZone steppedTile;
 		bool soundActive;
 		Animation *gkAnimation;
+
+	private:
+		SGO shadow;
 
 };
 

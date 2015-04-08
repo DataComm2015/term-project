@@ -166,7 +166,24 @@ bool MoveEvent::forced()
     return force;
 }
 
-// Ability event start 
+/* ------------------------------- Skill Event ----------------------------------- */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType) :Event(Marx::SKILL)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType) :Event(Marx::SKILL)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Constructs a skill event
+-----------------------------------------------------------------------------------------------*/
 SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _skillType) :Event(Marx::SKILL)
 {
     x = _x;
@@ -176,6 +193,23 @@ SkillEvent::SkillEvent(float _x, float _y, int _radius, int _value, SKILLTYPE _s
     skillType = _skillType;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	SkillEvent::SkillEvent(const SkillEvent& other):Event(other.type)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	SkillEvent::SkillEvent(const SkillEvent& other):Event(other.type)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Copys a skill event
+-----------------------------------------------------------------------------------------------*/
 SkillEvent::SkillEvent(const SkillEvent& other)
     :Event(other.type)
 {
@@ -186,56 +220,226 @@ SkillEvent::SkillEvent(const SkillEvent& other)
     skillType = other.skillType;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	float SkillEvent::getX()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	float SkillEvent::getX()
+--
+-- RETURNS: 	x val
+--
+-- NOTES: 		Gets x val
+-----------------------------------------------------------------------------------------------*/
 float SkillEvent::getX()
 {
     return x;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillEvent::setX(float _x)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	void SkillEvent::setX(float _x)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets x
+-----------------------------------------------------------------------------------------------*/
 void SkillEvent::setX(float _x)
 {
     x = _x;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	float SkillEvent::getY()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	float SkillEvent::getY()
+--
+-- RETURNS: 	y val
+--
+-- NOTES: 		Gets y val
+-----------------------------------------------------------------------------------------------*/
 float SkillEvent::getY()
 {
     return y;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillEvent::setY(float _y)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	void SkillEvent::setY(float _y)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets y
+-----------------------------------------------------------------------------------------------*/
 void SkillEvent::setY(float _y)
 {
     y = _y;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	float SkillEvent::getRadius()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	float SkillEvent::getRadius()
+--
+-- RETURNS: 	radius val
+--
+-- NOTES: 		Gets radius val
+-----------------------------------------------------------------------------------------------*/
 float SkillEvent::getRadius()
 {
     return radius;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillEvent::setRadius(float _radius)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE: void SkillEvent::setRadius(float _radius)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets radius
+-----------------------------------------------------------------------------------------------*/
 void SkillEvent::setRadius(float _radius)
 {
     radius = _radius;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	int SkillEvent::getValue()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	int SkillEvent::getValue()
+--
+-- RETURNS: 	value val
+--
+-- NOTES: 		Gets value val
+-----------------------------------------------------------------------------------------------*/
 int SkillEvent::getValue()
 {
     return value;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillEvent::setValue(int _value)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE: void SkillEvent::setValue(int _value)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets value
+-----------------------------------------------------------------------------------------------*/
 void SkillEvent::setValue(int _value)
 {
     value = _value;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	SKILLTYPE SkillEvent::getSkillType()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	SKILLTYPE SkillEvent::getSkillType()
+--
+-- RETURNS: 	skillType val
+--
+-- NOTES: 		Gets skillType val
+-----------------------------------------------------------------------------------------------*/
 SKILLTYPE SkillEvent::getSkillType()
 {
     return skillType;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillEvent::setSkillType(SKILLTYPE _skillType)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE: void SkillEvent::setSkillType(SKILLTYPE _skillType)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets _skillType
+-----------------------------------------------------------------------------------------------*/
 void SkillEvent::setSkillType(SKILLTYPE _skillType)
 {
     skillType = _skillType;
 }
-// Ability event end 
+// Ability event end
 
 /* ------------------------------- Attack Event ----------------------------------- */
 AttackEvent::AttackEvent(int _srcid, enum ActionType type, int _cellx, int _celly) :
@@ -322,7 +526,24 @@ float AddPointsEvent::getPoints()
 }
 
 
-// Ability notification start 
+/* ------------------------------- Skill Notification Event ----------------------------------- */
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	SkillNotification::SkillNotification(float _x, float _y, SKILLTYPE _skillType) :Event(Marx::SKILL_NOTIFY)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	SkillNotification::SkillNotification(float _x, float _y, SKILLTYPE _skillType) :Event(Marx::SKILL_NOTIFY)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Constructs a skill notification event
+-----------------------------------------------------------------------------------------------*/
 SkillNotification::SkillNotification(float _x, float _y, SKILLTYPE _skillType) :Event(Marx::SKILL_NOTIFY)
 {
     x = _x;
@@ -330,34 +551,135 @@ SkillNotification::SkillNotification(float _x, float _y, SKILLTYPE _skillType) :
     skillType = _skillType;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	float SkillNotification::getX()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	float SkillNotification::getX()
+--
+-- RETURNS: 	x val
+--
+-- NOTES: 		Gets x val
+-----------------------------------------------------------------------------------------------*/
 float SkillNotification::getX()
 {
     return x;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillNotification::setX(float _x)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE: void SkillNotification::setX(float _x)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets X
+-----------------------------------------------------------------------------------------------*/
 void SkillNotification::setX(float _x)
 {
     x = _x;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	float SkillNotification::getY()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE:	float SkillNotification::getY()
+--
+-- RETURNS: 	y val
+--
+-- NOTES: 		Gets y val
+-----------------------------------------------------------------------------------------------*/
 float SkillNotification::getY()
 {
     return y;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillNotification::setY(float _y)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE: void SkillNotification::setY(float _y)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets y
+-----------------------------------------------------------------------------------------------*/
 void SkillNotification::setY(float _y)
 {
     y = _y;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	SKILLTYPE SkillNotification::getSkillType()
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE: SKILLTYPE SkillNotification::getSkillType()
+--
+-- RETURNS: 	skilltype val
+--
+-- NOTES: 		get skilltype
+-----------------------------------------------------------------------------------------------*/
 SKILLTYPE SkillNotification::getSkillType()
 {
     return skillType;
 }
 
+/*----------------------------------------------------------------------------------------------
+-- FUNCTION:	void SkillNotification::setSkillType(SKILLTYPE _skillType)
+--
+-- DATE:		April 3, 2015
+--
+-- REVISIONS:	(Date and Description)
+--
+-- DESIGNER:	Alex Lam, Julian Brandrick
+--
+-- PROGRAMMER:	Alex Lam, Julian Brandrick
+--
+-- INTERFACE: void SkillNotification::setSkillType(SKILLTYPE _skillType)
+--
+-- RETURNS: 	void
+--
+-- NOTES: 		Sets _skillType
+-----------------------------------------------------------------------------------------------*/
 void SkillNotification::setSkillType(SKILLTYPE _skillType)
 {
     skillType = _skillType;
 }
-// Ability notification end 
-
+// Ability notification end

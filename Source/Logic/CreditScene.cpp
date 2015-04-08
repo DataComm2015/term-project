@@ -11,12 +11,49 @@ using std::cerr;
 using std::endl;
 using namespace Marx;
 
+/******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 CreditScene * CreditScene::getInstance()
 {
     static CreditScene * scene = new CreditScene(MainMenuScene::getInstance());
     return scene;
 }
 
+/******************************************************************************
+*	FUNCTION:   The constructor for the credit scene
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*               Jonathan Chu
+*
+*	PARAMETERS: 
+*
+*	RETURNS:    void
+*
+*	NOTES:
+******************************************************************************/
 CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstance(), 48400)
 {
     // trying to create a background
@@ -35,14 +72,37 @@ CreditScene::CreditScene(MainMenuScene* mainmen) : renderer(AppWindow::getInstan
     creditText = new SGO(*Manager::TextureManager::get(creditImg));
     creditText->sprite().setScale(3, 3);
     /* Get texture assets */
+    
     // as art assets are created for these, add them
     backImg = Manager::TextureManager::store(Manager::TextureManager::load("Assets/connect_btn.png"));
    	backBtn = new GUI::Button(*Manager::TextureManager::get(backImg), sf::Vector2f(BTN_SIZE, BTN_SIZE), viewMain, onClick);
 
+    credits_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/music.wav"));
+    music = Manager::MusicManager::get(credits_msc);
+	
+	lord_msc = Manager::MusicManager::store(Manager::MusicManager::load("Assets/Sound/lorde.wav"));
+    lord = Manager::MusicManager::get(lord_msc);
 }
 
-
-
+/******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 CreditScene::~CreditScene()
 {
     delete backBtn;
@@ -54,6 +114,26 @@ CreditScene::~CreditScene()
     // delete nicknameLbl;
 }
 
+/******************************************************************************
+*	FUNCTION:   loads the objects
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*               Jonathan Chu
+*
+*	INTERFACE:  void CreditScene::onLoad()
+*
+*	PARAMETERS: 
+*
+*	RETURNS:    void
+*
+*	NOTES:
+******************************************************************************/
 void CreditScene::onLoad()
 {
     /* Set button positions */
@@ -63,8 +143,30 @@ void CreditScene::onLoad()
 
     /* Set the active view */
     updateMainView(viewMain);
+
+    music->play();
+	lord->play();
 }
 
+/******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void CreditScene::update(sf::Time t)
 {
     backBtn->update(t);
@@ -80,6 +182,25 @@ void CreditScene::update(sf::Time t)
     }
 }
 
+/******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void CreditScene::processEvents(sf::Event& e)
 {
     if (e.type == sf::Event::Closed)
@@ -88,6 +209,25 @@ void CreditScene::processEvents(sf::Event& e)
     }
 }
 
+/******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void CreditScene::draw()
 {
     AppWindow& window = AppWindow::getInstance();
@@ -110,6 +250,25 @@ void CreditScene::draw()
     window.display();
 }
 
+/******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void CreditScene::onClick()
 {
     AppWindow::getInstance().removeScene(1);
@@ -117,6 +276,25 @@ void CreditScene::onClick()
     AppWindow::getInstance().addScene(CreditScene::getInstance()->mainmenu);
 }
 
+/******************************************************************************
+*	FUNCTION:
+*
+*	DATE:
+*
+*	REVISIONS: (Date and Description)
+*
+*	DESIGNER:
+*
+*	PROGRAMMER:
+*
+*	INTERFACE:
+*
+*	PARAMETERS:
+*
+*	RETURNS: void
+*
+*	NOTES:
+******************************************************************************/
 void CreditScene::updateMainView(sf::View& v)
 {
     v = AppWindow::getInstance().getCurrentView();
