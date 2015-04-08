@@ -1,7 +1,7 @@
 CXX=g++
 CPPFLAGS=-std=c++11 -g
 CLIENT_EXE=Soujourn
-SERVER_EXE=server
+SERVER_EXE=SoujournServer
 
 ## FILES
 
@@ -73,8 +73,8 @@ FILES_NETWORK=	Network/Client.o \
 				Network/NetworkEntityMultiplexer.o \
 				Network/NetworkEntity.o
 
-FILE_CLIENT=		Client.cpp
-FILE_SERVER=		Server.cpp
+FILE_CLIENT=	Client.cpp
+FILE_SERVER=	Server.cpp
 
 ## Targets
 

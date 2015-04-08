@@ -130,6 +130,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 --				Alex Lam
 --				Julian Brandrick
 --				Thomas Tallentire
+--              Melvin Loho
 --
 -- Called every game loop. dequeues all events from the entity's
 -- controller and proceses those events

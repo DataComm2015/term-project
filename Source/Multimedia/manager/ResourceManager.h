@@ -13,7 +13,8 @@ namespace Manager
 	 * 
 	 * Loads files into resources of type T(declared when instantiated).
 	 * 
-	 * @author Lewis Scott
+	 * @designer Melvin Loho, Lewis Scott
+	 * @programmer Lewis Scott
 	 */
 	template <typename T> class ResourceManager
 	{
