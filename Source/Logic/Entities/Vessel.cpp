@@ -95,7 +95,7 @@ Vessel::Vessel( SGO& _sprite, SGO _mask, SGO _weapon,
 	runAnim_wep = new Animation(&weapon_sprite, sf::Vector2i(32, 32), 8, 3);
 
 	this->add(mask_sprite);
-  this->add(weapon_sprite);
+  	this->add(weapon_sprite);
 
 	// Add the drop shadow
 	vesselShadow = Manager::TextureManager::store(
