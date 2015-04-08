@@ -30,7 +30,33 @@ using namespace Manager;
 id_resource beeShadow;
 
 
-// bug fix by Sanders Lee
+/******************************************************************************
+*   FUNCTION: MiniBee() Constructor
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
+*
+*   PARAMETERS: sprite  - Sprite for this enemy
+*               map     - Pointer to the map this enemy resides on
+*               x       - x coordinate
+*               y       - y coordinate
+*               ctrl    - pointer to the controller controlling this enemy
+*               h       - height
+*               w       - width
+*
+*   RETURNS: void
+*
+*   NOTES: Constructor for gatekeepers. Initializes the gate keeper sets attributes
+*          Sets animation.
+******************************************************************************/
+
 MiniBee::MiniBee(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* ctrl, float h = 1.0, float w = 1.0) :
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
