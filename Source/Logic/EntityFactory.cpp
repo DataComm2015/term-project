@@ -65,6 +65,7 @@ EntityFactory* EntityFactory::instance = 0;
 *   DESIGNER:
 *
 *   PROGRAMMER: Chris Klassen
+*               Filip Gutica
 *
 *   INTERFACE: EntityFactory();
 *
@@ -332,7 +333,8 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *
 *   DESIGNER:
 *
-*   PROGRAMMER:
+*   PROGRAMMER: Filip Gutica
+*               Sanders Lee
 *
 *   INTERFACE:  Entity* EntityFactory::makeEntity(ENTITY_TYPES type,
 *                   Controller* cont, Map* map, float x, float y)
@@ -412,7 +414,7 @@ Entity* EntityFactory::makeEntity(
 *
 *   DESIGNER:
 *
-*   PROGRAMMER:
+*   PROGRAMMER: Filip Gutica
 *
 *
 *   INTERFACE:

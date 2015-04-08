@@ -189,6 +189,30 @@ int ServerGameScene::getWorldSeed()
     return worldSeed;
 }
 
+/******************************************************************************
+*   FUNCTION: createEnemy
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica     - Added initializing of the server enemy controller
+*                                 adding enemies to the list of gate keepers
+*                                 mapping each enemy to a server enemy controller
+*
+*   DESIGNER:
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: createEnemy(ENTITY_TYPES, Behaviour*, float, float)
+*
+*   PARAMETERS: type          - Type of enemy to create
+*               behaviour     - Behaviour
+*               x             - x coordinate
+*               y             - y coordinate
+*
+*   RETURNS: void
+*
+*   NOTES:
+******************************************************************************/
 void ServerGameScene::createEnemy(ENTITY_TYPES type, Behaviour *behaviour, float x, float y)
 {
     EnemyControllerInit initData;
