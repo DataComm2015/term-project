@@ -400,7 +400,7 @@ GameScene::~GameScene()
 *
 *	DESIGNER:
 *
-*	PROGRAMMER: Melvin Loho, Sanders Lee, Marc Rafanan
+*	PROGRAMMER: Melvin Loho, Sanders Lee, Marc Rafanan, Jonathan Chu
 *
 *	INTERFACE:
 *
@@ -628,8 +628,7 @@ void GameScene::processEvents(sf::Event& e)
 *
 *	DESIGNER: Chris Klassen
 *
-*	PROGRAMMER: Chris Klassen, Alex Lam, Marc Rafanan
-*				Jonathan Chu
+*	PROGRAMMER: Chris Klassen, Alex Lam, Marc Rafanan, Jonathan Chu
 *
 *	INTERFACE: draw();
 *
