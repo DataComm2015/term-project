@@ -7,7 +7,7 @@
 *
 * @revisions	2015-03-18 - Removed BGO parent from constructor
 *
-* @designer   
+* @designer     
 *
 * @programmer   Jonathan Chu
 *				Marc Rafanan
@@ -29,7 +29,7 @@ BoolButton::BoolButton(sf::IntRect* theStates, std::function onClick, SGO* toChe
 *
 * @revisions
 *
-* @designer   
+* @designer     
 *
 * @programmer   Jonathan Chu
 *
@@ -47,7 +47,7 @@ bool BoolButton::getState()
 *
 * @revisions
 *
-* @designer   
+* @designer     
 *
 * @programmer   Jonathan Chu
 *

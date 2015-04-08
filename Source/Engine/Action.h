@@ -9,17 +9,20 @@ This class is a pure virtual class that details implementation for the Projectil
 
 #include <SFML/System/Time.hpp>
 #include "Entity.h"
+#include "Projectile.h"
 
 namespace Marx
 {
+	class Projectile;
+	
 	class Action
 	{
 		protected:
 			float TTL;
 		public:
 			Action(float _TTL) : TTL(_TTL) {}
-			virtual void onUpdate(Entity * me, float) = 0;
-			virtual void onHit(Entity * me, Entity * e ) = 0;
+			virtual void onUpdate(Projectile * me, float) = 0;
+			virtual void onHit(Projectile * me, Entity * e ) = 0;
 			float getTTL(){ return TTL; };
 	};
 };

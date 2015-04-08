@@ -23,10 +23,10 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-//static id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-//static id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
+id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
+id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
 
 
 /******************************************************************************
@@ -72,19 +72,6 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     int randDirection = (rand() % 3) - 1;
     getSprite().sprite().setScale(randDirection, 1);
 
-	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_02.ogg"));
-    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_03.ogg"));
-    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/bee/bee_death_02.ogg"));
-	
-	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
-	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
-	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
-	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
-
-	travel_Snd.setLoop(true);
-    travel_Snd.play();*/
-	
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
 }
 
@@ -127,8 +114,6 @@ void GateKeeper::onUpdate(float deltaTime)
       ; ++it )
   {
 
-	std::cout << "GateKeeper::Event " << (*it)->type << std::endl;
-
     // switch on type
     switch((*it)->type)
     {
@@ -142,9 +127,12 @@ void GateKeeper::onUpdate(float deltaTime)
   		}
   		case ::Marx::SET_HEALTH:
   		{
-  			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			if (top != -100)
+			{
+	  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-        processSetHealthEvent(event);
+		   	 	processSetHealthEvent(event);
+			}
 
         break;
   		}
@@ -187,7 +175,7 @@ void GateKeeper::onUpdate(float deltaTime)
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: onUpdate(float)
+*   INTERFACE: processMoveEvent(MoveEvent* ev)
 *
 *   PARAMETERS: ev   - Event to be processed
 *
@@ -249,21 +237,23 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
 /******************************************************************************
-*   FUNCTION: processMoveEvent
+*   FUNCTION: processSkillEvent
 *
 *   DATE: April 6 2014
 *
-*   REVISIONS:
+*   REVISIONS: Filip Gutica   - Created seperate function
 *
-*   DESIGNER:   Filip Gutica
+*   DESIGNER:   Alex Lam
+*               Julian Brandrick
 *
-*   PROGRAMMER: Filip Gutica
+*   PROGRAMMER: Alex Lam
+*               Julian Brandrick
 *
-*   INTERFACE: onUpdate(float)
+*   INTERFACE: processSkillEvent(SkillEvent* ev)
 *
 *   PARAMETERS: ev   - Event to be processed
 *
@@ -274,7 +264,6 @@ void GateKeeper::processMoveEvent(MoveEvent* ev)
 ******************************************************************************/
 void GateKeeper::processSkillEvent(SkillEvent* ev)
 {
-  printf("GateKeeper BEFORE Health: %d\n", _health);
   switch(ev->getSkillType())
   {
       case SKILLTYPE::HEAL:
@@ -291,16 +280,41 @@ void GateKeeper::processSkillEvent(SkillEvent* ev)
           _xSpeed -= ev->getValue();
           _ySpeed -= ev->getValue();
       break;
+      case SKILLTYPE::BIGHEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::SPAWN:
+          // Vessel implementation not needed
+      break;
   }
 
-  printf("GateKeeper AFTER Health: %d\n", _health);
 
   if(_health <= 0)
   {
-    std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
     onDestroy();
   }
 }
+
+/******************************************************************************
+*   FUNCTION: processSetHealthEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:  Filip Gutica    - Made seperate function
+*
+*   DESIGNER:   Thomas Tallentire
+*
+*   PROGRAMMER: Thomas Tallenire
+*
+*   INTERFACE: processSetHealthEvent(SetHealthEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Processes set health events generated by the server enemy controller.
+*   Moves this entity
+******************************************************************************/
 void GateKeeper::processSetHealthEvent(SetHealthEvent* ev)
 {
   _health = getHealth()-ev->getChange();
@@ -311,18 +325,37 @@ void GateKeeper::processSetHealthEvent(SetHealthEvent* ev)
 
   if(_health <= 0)
   {
-    std::cout << "GateKeeper Dead" << std::endl;
     onDestroy();
   }
 }
+
+
+/******************************************************************************
+*   FUNCTION: processAttackEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:  Filip Gutica    - Made seperate function
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: processAttackEvent(AttackEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Proces attack events. Generate attacks
+******************************************************************************/
 void GateKeeper::processAttackEvent(AttackEvent* aev)
 {
-  std::cout << "ATTACK" << std::endl;
   createAttack(*aev, getSprite(), left, top);
 }
 
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -332,7 +365,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
@@ -341,9 +374,9 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   NOTES: Plays sound associated with this enemy
 ******************************************************************************/
-void GateKeeper::playSound(float xSpeed, float ySpeed)
+void GateKeeper::playTravelSound(float xSpeed, float ySpeed)
 {
-  /*soundActive = false;
+  soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
@@ -400,9 +433,9 @@ void GateKeeper::playSound(float xSpeed, float ySpeed)
 *
 *   PROGRAMMER: Filip Gutica
 *
-*   INTERFACE: animate(float)
+*   INTERFACE: animate()
 *
-*   PARAMETERS: deltaTime   - Time this onUpdate was called
+*   PARAMETERS: void
 *
 *   RETURNS: void
 *

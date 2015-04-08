@@ -59,13 +59,11 @@ EntityFactory* EntityFactory::instance = 0;
 *
 *   DATE:
 *
-*   REVISIONS: (Date and Description)
+*   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
 *
 *   DESIGNER:
 *
 *   PROGRAMMER: Chris Klassen
-*
-*   REVISIONS: Filip Gutica     -Added resources and SGOs for different enemy types.
 *
 *   INTERFACE: EntityFactory();
 *
@@ -326,14 +324,13 @@ Entity* EntityFactory::makeEntityFromNetworkMessage(
 *
 *   DATE:
 *
-*   REVISIONS: (Date and Description)
+*   REVISIONS:    Filip Gutica     - Add and handle cases for Basic types, Minions,
+*                                    mini bees and mini bosses.
 *
 *   DESIGNER:
 *
 *   PROGRAMMER:
 *
-*                 Filip Gutica     - Added cases for Basic types, Minions, mini bees and
-*                                    mini bosses.
 *   INTERFACE:
 *
 *   PARAMETERS:
@@ -373,8 +370,6 @@ Entity* EntityFactory::makeEntity(
         case STRUCTURES:
             //entity = new Structure(structSprite, map, x, y, cont, 1.0, 1.0);
             break;
-        case ENTITY_TYPES::I_DONT_KNOW:
-        case ENTITY_TYPES::BAWS:
         case ENTITY_TYPES::MINION:
         {
           int random = rand() % 3;
@@ -493,4 +488,3 @@ Projectile* EntityFactory::makeProjectile(
     std::cout << "MakeProjectile" << std::endl;
     return Manager::ProjectileManager::getProjectile(projSGO, map, entity, action, v, height, width, cont);
 }
-

@@ -34,6 +34,8 @@
 
 namespace Marx
 {
+	class Action;
+
 	class Projectile : public VEntity
 	{
 		private:

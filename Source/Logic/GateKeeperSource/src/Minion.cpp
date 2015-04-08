@@ -22,10 +22,10 @@
 using namespace Manager;
 
 // sound set loaded should be determined by enemy type
-//static id_resource grassWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource stoneWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-//static id_resource hurtSoundMinion 			= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-//static id_resource attackSoundMinion		= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
+static id_resource grassWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
+static id_resource stoneWalkSoundMinion = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_02.ogg"));
+static id_resource hurtSoundMinion 	 	= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_hurt_01.ogg"));
+static id_resource attackSoundMinion	= SoundManager::store(SoundManager::load("Assets/Sound/Enemies/wisp/wisp_attack_01.ogg"));
 
 id_resource minShadow;
 
@@ -59,7 +59,7 @@ Minion::Minion(SGO& sprite, Marx::Map* map, float x, float y, Marx::Controller* 
 GateKeeper(sprite, map, x, y, ctrl, h, w)
 {
     _range = 10;
-    _health = 100;
+    _health = 60;
     _type = 1;
     _attack = 1;
     _attackSpeed = 1;
@@ -86,19 +86,7 @@ GateKeeper(sprite, map, x, y, ctrl, h, w)
 
     this->add(shadow);
     shadow.sprite().setOrigin(-11, -28);
-	
-	/*travel_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_travel_01.ogg"));
-    attack_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_attack_02.ogg"));
-    hurt_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_hurt_03.ogg"));
-    death_SndB = Manager::SoundManager::store(Manager::SoundManager::load("Assets/Sound/Enemies/wisp/wisp_death.ogg"));
 
-	travel_Snd = Manager::SoundManager::play(travel_SndB, sf::Vector2f(x, y));
-	attack_Snd = Manager::SoundManager::play(attack_SndB, sf::Vector2f(x, y));
-	hurt_Snd = Manager::SoundManager::play(hurt_SndB, sf::Vector2f(x, y));
-	death_Snd = Manager::SoundManager::play(death_SndB, sf::Vector2f(x, y));
-
-	travel_Snd.setLoop(true);
-    travel_Snd.play();*/
 }
 
 Minion::~Minion()
@@ -140,8 +128,6 @@ void Minion::onUpdate(float deltaTime)
       ; ++it )
   {
 
-	std::cout << "Minion::Event " << (*it)->type << std::endl;
-
     // switch on type
     switch((*it)->type)
     {
@@ -152,85 +138,16 @@ void Minion::onUpdate(float deltaTime)
         processMoveEvent(ev);
 
     		break;
-/*<<<<<<< HEAD
-		}
-		case ::Marx::SET_HEALTH:
-		{
-			SetHealthEvent * event = (SetHealthEvent*)(*it);
-			_health = getHealth()-event->getChange();
-			
-			/*Entity *e = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()))->getEntity();
-			float enemyHy = sqrt(e->left*e->left + e->top*e->top); 
-			float myHy = sqrt(left*left + top*top); 
-			rMove(enemyHy - myHy, enemyHy - myHy, false);*/
 
-/*			if (Manager::ProjectileManager::getServer())
-			{
-				ServerNetworkController * cont = dynamic_cast<ServerNetworkController*>(NetworkEntityMultiplexer::getInstance()->getEntityById(event->getEntId()));
-				AddPointsEvent *pointsEvent = new AddPointsEvent(event->getChange());
-				cont->addEvent(pointsEvent);
-			}
-
-			if(_health <= 0)
-			{
-				std::cout << "Minion Dead" << std::endl;
-				onDestroy();
-			}
-
-            break;
-		}
-		case ::Marx::ATTACK:
-		{
-			_attackSpeed -= deltaTime;
-			if (_attackSpeed <= 0)
-			{
-				SkillAttackEvent* saev = (SkillAttackEvent*) (*it);
-				std::cout << "ATTACK" << std::endl;
-				createSkAttack(*saev, getSprite(), left, top);
-				_attackSpeed = 1;
-			}
-			break;
-		}
-        case ::Marx::SKILL:
-        {
-            // process the skill event, and increase/decrease hp and stuff
-            SkillEvent *ev = (SkillEvent*)(*it);
-            printf("GateKeeper BEFORE Health: %d\n", _health);
-            switch(ev->getSkillType())
-            {
-                case SKILLTYPE::HEAL:
-                    _health += ev->getValue();
-                break;
-                case SKILLTYPE::DMG:
-                    _health -= ev->getValue();
-                break;
-                case SKILLTYPE::BUFF:
-                    _xSpeed += ev->getValue();
-                    _ySpeed += ev->getValue();
-                break;
-                case SKILLTYPE::DEBUFF:
-                    _xSpeed -= ev->getValue();
-                    _ySpeed -= ev->getValue();
-                break;
-            }
-
-            printf("GateKeeper AFTER Health: %d\n", _health);
-
-            if(_health <= 0)
-            {
-              std::cout << "Moving GateKeeper to ambiguous destination!!" << std::endl;
-              onDestroy();
-            }
-            break;
-        }
-=======*/
   		}
   		case ::Marx::SET_HEALTH:
   		{
-  			SetHealthEvent * event = (SetHealthEvent*)(*it);
+			if (top != -100)
+			{
+	  			SetHealthEvent * event = (SetHealthEvent*)(*it);
 
-        processSetHealthEvent(event);
-
+		   		processSetHealthEvent(event);
+			}
         break;
   		}
       case ::Marx::ATTACK:
@@ -261,7 +178,26 @@ void Minion::onUpdate(float deltaTime)
 
 }
 
-
+/******************************************************************************
+*   FUNCTION: processMoveEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: processMoveEvent(MoveEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Processes move events generated by the server enemy controller.
+*   Moves this entity
+******************************************************************************/
 void Minion::processMoveEvent(MoveEvent* ev)
 {
   int xDir = ev->getXDir();
@@ -315,12 +251,33 @@ void Minion::processMoveEvent(MoveEvent* ev)
     movingDown = false;
   }
 
-  playSound(newXSpeed, newYSpeed);
+  playTravelSound(newXSpeed, newYSpeed);
 }
 
+/******************************************************************************
+*   FUNCTION: processSkillEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica   - Created seperate function
+*
+*   DESIGNER:   Alex Lam
+*               Julian Brandrick
+*
+*   PROGRAMMER: Alex Lam
+*               Julian Brandrick
+*
+*   INTERFACE: processSkillEvent(SkillEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Processes move events generated by the server enemy controller.
+*   Moves this entity
+******************************************************************************/
 void Minion::processSkillEvent(SkillEvent* ev)
 {
-  printf("Minion BEFORE Health: %d\n", _health);
   switch(ev->getSkillType())
   {
       case SKILLTYPE::HEAL:
@@ -328,6 +285,7 @@ void Minion::processSkillEvent(SkillEvent* ev)
       break;
       case SKILLTYPE::DMG:
           _health -= ev->getValue();
+          playHurtSound();
       break;
       case SKILLTYPE::BUFF:
           _xSpeed += ev->getValue();
@@ -337,19 +295,45 @@ void Minion::processSkillEvent(SkillEvent* ev)
           _xSpeed -= ev->getValue();
           _ySpeed -= ev->getValue();
       break;
+      case SKILLTYPE::BIGHEAL:
+          _health += ev->getValue();
+      break;
+      case SKILLTYPE::SPAWN:
+          // Vessel implementation not needed
+      break;
   }
 
-  printf("Minion AFTER Health: %d\n", _health);
 
   if(_health <= 0)
   {
-    std::cout << "Moving Minion to ambiguous destination!!" << std::endl;
     onDestroy();
   }
 }
+
+/******************************************************************************
+*   FUNCTION: processSetHealthEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:  Filip Gutica    - Made seperate function
+*
+*   DESIGNER:   Thomas Tallentire
+*
+*   PROGRAMMER: Thomas Tallenire
+*
+*   INTERFACE: processSetHealthEvent(SetHealthEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Processes set health events generated by the server enemy controller.
+*   Moves this entity
+******************************************************************************/
 void Minion::processSetHealthEvent(SetHealthEvent* ev)
 {
-  _health = getHealth()-ev->getChange();
+  _health = getHealth() - ev->getChange();
+  playHurtSound();
 
   Controller * cont = dynamic_cast<Controller*>(NetworkEntityMultiplexer::getInstance()->getEntityById(ev->getEntId()));
   AddPointsEvent *pointsEvent = new AddPointsEvent(ev->getChange());
@@ -357,18 +341,37 @@ void Minion::processSetHealthEvent(SetHealthEvent* ev)
 
   if(_health <= 0)
   {
-    std::cout << "Minion Dead" << std::endl;
     onDestroy();
   }
 }
+
+/******************************************************************************
+*   FUNCTION: processAttackEvent
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS:  Filip Gutica    - Made seperate function
+*
+*   DESIGNER:   Filip Gutica
+*
+*   PROGRAMMER: Filip Gutica
+*
+*   INTERFACE: processAttackEvent(AttackEvent* ev)
+*
+*   PARAMETERS: ev   - Event to be processed
+*
+*   RETURNS: void
+*
+*   NOTES: Proces attack events. Generate attacks
+******************************************************************************/
 void Minion::processAttackEvent(AttackEvent* aev)
 {
-  std::cout << "ATTACK" << std::endl;
   createAttack(*aev, getSprite(), left, top);
+  playAttackSound();
 }
 
 /******************************************************************************
-*   FUNCTION: playSound()
+*   FUNCTION: playTravelSound()
 *
 *   DATE: April 6 2014
 *
@@ -378,7 +381,7 @@ void Minion::processAttackEvent(AttackEvent* aev)
 *
 *   PROGRAMMER: Sanders Lee
 *
-*   INTERFACE: playSound(float, float)
+*   INTERFACE: playTravelSound(float, float)
 *
 *   PARAMETERS: xSpeed   - Horizontal speed
 *               ySpeed   - Vertical speed
@@ -387,18 +390,18 @@ void Minion::processAttackEvent(AttackEvent* aev)
 *
 *   NOTES: Plays sound associated with this enemy
 ******************************************************************************/
-void Minion::playSound(float xSpeed, float ySpeed)
+void Minion::playTravelSound(float xSpeed, float ySpeed)
 {
-/*  soundActive = false;
+  soundActive = false;
   steppedTile = GRASS;
 
   // Sounds for walking:
   // first get the tile type we're walking on
   Cell* footstepTile = *getCell().begin();
   sf::Vector2f soundPos(left, top);
-    footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's Minion's
+  footstep.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's Minion's
                                   // footsteps from fading & being off-center
-    footstep.setMinDistance(3.0);
+  footstep.setMinDistance(3.0);
 
   if (footstepTile->getTileId() >= GRASS_TL && footstepTile->getTileId() <= GRASS_BR)
   {
@@ -434,6 +437,64 @@ void Minion::playSound(float xSpeed, float ySpeed)
     footstep.stop();
     soundActive = false;
   }//*/
+}
+
+/******************************************************************************
+*   FUNCTION: playHurtSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playHurtSound()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
+void Minion::playHurtSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(hurtSoundMinion, soundPos);
+	voice.play();
+}
+
+/******************************************************************************
+*   FUNCTION: playAttackSound()
+*
+*   DATE: April 6 2014
+*
+*   REVISIONS: Filip Gutica    - Moved from on update to seperate function
+*
+*   DESIGNER:   Sanders Lee
+*
+*   PROGRAMMER: Sanders Lee
+*
+*   INTERFACE: playAttackSound()
+*
+*   PARAMETERS: void
+*
+*   RETURNS: void
+*
+*   NOTES: Plays sound associated with this enemy
+******************************************************************************/
+void Minion::playAttackSound()
+{
+    sf::Vector2f soundPos(left + newXSpeed, top + newYSpeed);
+	voice.setPosition(left + newXSpeed, top + newYSpeed, 0);  // this line prevent's enemy's
+															  // voice from fading & being off-center
+	voice.setMinDistance(3.0);
+	voice = SoundManager::play(attackSoundMinion, soundPos);
+	voice.play();
 }
 
 /******************************************************************************
