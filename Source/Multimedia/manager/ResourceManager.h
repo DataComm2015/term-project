@@ -13,7 +13,8 @@ namespace Manager
 	 * 
 	 * Loads files into resources of type T(declared when instantiated).
 	 * 
-	 * @author Lewis Scott
+	 * @designer Melvin Loho, Lewis Scott
+	 * @programmer Lewis Scott
 	 */
 	template <typename T> class ResourceManager
 	{
@@ -34,7 +35,6 @@ namespace Manager
 			* @param - std::string path - a qualified path to the desired resource
 			* @return - object<T> - The resource that was loaded
 			*/
-			//virtual T load(const std::string);
 		
 			/**
 			* Creates an ID for a resource and stores it.

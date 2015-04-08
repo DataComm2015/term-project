@@ -1,7 +1,25 @@
-	#include "AppWindow.h"
+#include "AppWindow.h"
 
 using namespace Marx;
 
+/******************************************************************************
+*	FUNCTION: getInstance
+*
+*	DATE: March 10, 2015
+*
+*	DESIGNER: Melvin Loho
+*
+*	PROGRAMMER: Melvin Loho
+*
+*	INTERFACE: AppWindow& AppWindow::getInstance()
+*
+*	RETURNS:
+*		The static AppWindow object.
+*
+*	NOTES:
+*		Returns the static AppWindow object.
+*
+******************************************************************************/
 AppWindow& AppWindow::getInstance()
 {
 	static AppWindow app;
@@ -196,6 +214,29 @@ void AppWindow::run()
 	}
 }
 
+/******************************************************************************
+*	FUNCTION: AppWindow
+*
+*	DATE: February 15, 2015
+*
+*	REVISIONS: February 16, 2016
+*
+*	DESIGNER: Marc Vouve
+*			  Melvin Loho
+*
+*	PROGRAMMER: Marc Vouve
+*			    Melvin Loho
+*
+*	INTERFACE: AppWindow::AppWindow()
+*
+*	PARAMETERS:
+*
+*	RETURNS:
+*
+*	NOTES:
+*		Creates the game window.
+*
+******************************************************************************/
 AppWindow::AppWindow() : sf::RenderWindow(sf::VideoMode(1366, 768), "Sojourn", sf::Style::Close, sf::ContextSettings(0,0,0))
 {
 	Scene *s = new Scene;

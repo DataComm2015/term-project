@@ -10,6 +10,8 @@
 **	DESIGNER: 	Filip Gutica A00781910
 **
 **	PROGRAMMER: Filip Gutica A00781910
+**              Chris Klassen
+**              Lewis Scott
 **
 ***********************************************************************************/
 #include "GateKeeper.h"
@@ -20,14 +22,25 @@
 #include <cstdlib>
 #include <cmath>
 
+const char *GateKeeper::travelSnds[4] = {"Assets/Sound/Enemies/bee/bee_travel_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_travel_02.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_travel_angry_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_travel_angry_02.ogg"};
+
+const char *GateKeeper::attackSnds[3] = {"Assets/Sound/Enemies/bee/bee_attack_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_attack_02.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_attack_03.ogg"};
+
+const char *GateKeeper::hurtSnds[4] = {"Assets/Sound/Enemies/bee/bee_hurt_01.ogg",
+                                      "Assets/Sound/Enemies/bee/bee_hurt_02.ogg",
+                                      "Assets/Sound/Enemies/bee/bee_hurt_03.ogg",
+                                      "Assets/Sound/Enemies/bee/bee_hurt_04.ogg"};
+
+const char *GateKeeper::deathSnds[3] = {"Assets/Sound/Enemies/bee/bee_death_01.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_death_02.ogg",
+                                        "Assets/Sound/Enemies/bee/bee_death_03.ogg"};
+
 using namespace Manager;
-
-// sound set loaded should be determined by enemy type
-id_resource grassWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-id_resource stoneWalkSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_travel_01.ogg"));
-id_resource hurtSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_hurt_01.ogg"));
-id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound/Enemies/bee/bee_attack_01.ogg"));
-
 
 /******************************************************************************
 *   FUNCTION: GateKeeper() Constructor
@@ -39,6 +52,8 @@ id_resource attackSoundGK = SoundManager::store(SoundManager::load("Assets/Sound
 *   DESIGNER:   Filip Gutica
 *
 *   PROGRAMMER: Filip Gutica
+*               Chris Klassen
+*               Lewis Scott
 *
 *   INTERFACE: GateKeeper(SGO&, Map*, float, float, Controller, float, float)
 *
@@ -73,6 +88,11 @@ VEntity(sprite, map, x, y, ctrl, h, w, ENTITY_TYPES::BASIC_TYPE)
     getSprite().sprite().setScale(randDirection, 1);
 
     gkAnimation = new Animation(&sprite, sf::Vector2i(40, 40), 16, 4);
+
+    grassWalkSoundGK = SoundManager::store(SoundManager::load(GateKeeper::travelSnds[rand() % 4]));
+    stoneWalkSoundGK = SoundManager::store(SoundManager::load(GateKeeper::travelSnds[rand() % 4]));
+    hurtSoundGK = SoundManager::store(SoundManager::load(GateKeeper::hurtSnds[rand() % 4]));
+    attackSoundGK = SoundManager::store(SoundManager::load(GateKeeper::attackSnds[rand() % 3]));
 }
 
 GateKeeper::~GateKeeper()
@@ -372,7 +392,7 @@ void GateKeeper::processAttackEvent(AttackEvent* aev)
 *
 *   RETURNS: void
 *
-*   NOTES: Plays sound associated with this enemy
+*   NOTES: Plays travelling sound associated with this enemy
 ******************************************************************************/
 void GateKeeper::playTravelSound(float xSpeed, float ySpeed)
 {

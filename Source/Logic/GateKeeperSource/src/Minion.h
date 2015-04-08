@@ -59,6 +59,11 @@ class Minion : public GateKeeper
 		void processSetHealthEvent(SetHealthEvent* ev);
 		void processAttackEvent(AttackEvent* aev);
 
+		id_resource grassWalkSoundMinion;
+		id_resource stoneWalkSoundMinion;
+		id_resource hurtSoundMinion;
+		id_resource attackSoundMinion;
+
 	protected:
 		bool movingLeft;
     	bool movingRight;
@@ -89,6 +94,13 @@ class Minion : public GateKeeper
 
 	private:
 		SGO shadow;
+
+	public:
+		static const char *travelSnds[4];
+
+		static const char *attackSnds[3];
+
+		static const char *hurtSnds[3];
 
 };
 

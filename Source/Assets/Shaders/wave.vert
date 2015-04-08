@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: wave.vert - GLSL wave shader
 --
--- PROGRAM: Project Spectre
+-- PROGRAM: Sojourn
 --
 -- DATE: February 9th, 2015
 --

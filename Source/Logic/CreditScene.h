@@ -54,6 +54,8 @@ class CreditScene : public Scene
 
 	sf::Music *music;
 	id_resource credits_msc;
+	sf::Music *lord;
+	id_resource lord_msc;
 
 };
 void nextTextBox( void * data );

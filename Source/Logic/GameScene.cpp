@@ -69,6 +69,7 @@ id_resource GameScene::ambience_msc = Manager::MusicManager::store(Manager::Musi
 *	DESIGNER: Chris Klassen
 *
 *	PROGRAMMER: Chris Klassen
+*               Melvin Loho
 *
 *	INTERFACE: GameScene()
 *
@@ -114,7 +115,7 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 	}
 	generateWater();
 
-	const char *randomsounds[21] = {"Assets/Sound/Announcer/Random/canlee.ogg", "Assets/Sound/Announcer/Random/cts_win.ogg", "Assets/Sound/Announcer/Random/dank_memes.ogg", "Assets/Sound/Announcer/Random/database_colour.ogg", "Assets/Sound/Announcer/Random/georgi.ogg", "Assets/Sound/Announcer/Random/get_client_rekt.ogg", "Assets/Sound/Announcer/Random/get_rekt.ogg", "Assets/Sound/Announcer/Random/good_mark.ogg", "Assets/Sound/Announcer/Random/grapefruit_time.ogg", "Assets/Sound/Announcer/Random/hello.ogg", "Assets/Sound/Announcer/Random/how_are_you_doing.ogg", "Assets/Sound/Announcer/Random/i_am_manuel.ogg", "Assets/Sound/Announcer/Random/i_am_manuel_2.ogg", "Assets/Sound/Announcer/Random/jo-el.ogg", "Assets/Sound/Announcer/Random/pizza_time.ogg", "Assets/Sound/Announcer/Random/pooping_back_and_forth.ogg", "Assets/Sound/Announcer/Random/sampres.ogg", "Assets/Sound/Announcer/Random/smarties.ogg", "Assets/Sound/Announcer/Random/star_dot_cpp.ogg", "Assets/Sound/Announcer/Random/ts_win.ogg", "Assets/Sound/Announcer/Random/tuts_my_barreh.ogg"};
+	const char *randomsounds[21] = {"Assets/Sound/Announcer/Random/canlee.ogg", "Assets/Sound/Announcer/Random/cts_win.ogg", "Assets/Sound/Announcer/Random/dank_memes.ogg", "Assets/Sound/Announcer/Random/database_colour.ogg", "Assets/Sound/Announcer/Random/georgi.ogg", "Assets/Sound/Announcer/Random/get_client_rekt.ogg", "Assets/Sound/Announcer/Random/get_rekt.ogg", "Assets/Sound/Announcer/Random/pooping_back_and_forth.ogg", "Assets/Sound/Announcer/Random/grapefruit_time.ogg", "Assets/Sound/Announcer/Random/hello.ogg", "Assets/Sound/Announcer/Random/how_are_you_doing.ogg", "Assets/Sound/Announcer/Random/i_am_manuel.ogg", "Assets/Sound/Announcer/Random/i_am_manuel_2.ogg", "Assets/Sound/Announcer/Random/jo-el.ogg", "Assets/Sound/Announcer/Random/pizza_time.ogg", "Assets/Sound/Announcer/Random/good_mark.ogg", "Assets/Sound/Announcer/Random/sampres.ogg", "Assets/Sound/Announcer/Random/smarties.ogg", "Assets/Sound/Announcer/Random/star_dot_cpp.ogg", "Assets/Sound/Announcer/Random/ts_win.ogg", "Assets/Sound/Announcer/Random/tuts_my_barreh.ogg"};
 
 	rand_msc = Manager::MusicManager::store(Manager::MusicManager::load(randomsounds[(rand() % 20)]));
 	randsound = Manager::MusicManager::get(rand_msc);
@@ -136,10 +137,11 @@ GameScene::GameScene() : renderer(AppWindow::getInstance(), 48400)
 *
 *	PROGRAMMER: Alex Lam
 *				Jonathan Chu
+*               Melvin Loho
 *
-*	INTERFACE:void GameScene::onLoad()
+*	INTERFACE: void GameScene::onLoad()
 *
-*	PARAMETERS:none
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
@@ -207,6 +209,7 @@ void GameScene::onLoad()
 *
 *	PROGRAMMER:	Marc Rafanan
 *				Jonathan Chu
+*               Melvin Loho
 *
 *	INTERFACE:	void GameScene::positionUI()
 *
@@ -250,23 +253,23 @@ void GameScene::positionUI()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION: setPlayerVessel
 *
-*	DATE:
+*	DATE: April 7, 2015
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER:
+*	DESIGNER: Melvin Loho
 *
-*	PROGRAMMER:
+*	PROGRAMMER: Melvin Loho
 *
-*	INTERFACE:
+*	INTERFACE: void GameScene::setPlayerVessel(Vessel *vessel)
 *
-*	PARAMETERS:
+*	PARAMETERS: vessel The Vessel object
 *
 *	RETURNS: void
 *
-*	NOTES:
+*	NOTES: Sets the specified Vessel object as the one that we own now.
 ******************************************************************************/
 void GameScene::setPlayerVessel(Vessel *vessel)
 {
@@ -280,7 +283,7 @@ void GameScene::setPlayerVessel(Vessel *vessel)
 	// position healthbar
 	hb->sprite().setPosition(20, 20);
 
-	myVessel = vessel;	
+	myVessel = vessel;
 	myVessel->setHealthBar(hb);
 }
 
@@ -392,23 +395,22 @@ GameScene::~GameScene()
 
 
 /******************************************************************************
-*	FUNCTION:
+*	FUNCTION:	update
 *
-*	DATE:
+*	DATE:		April 7, 2015
 *
-*	REVISIONS: (Date and Description)
+*	REVISIONS: 	(Date and Description)
 *
 *	DESIGNER:
 *
-*	PROGRAMMER: Melvin Loho, Sanders Lee, Marc Rafanan
+*	PROGRAMMER: Melvin Loho, Sanders Lee, Marc Rafanan, Jonathan Chu
 *
-*	INTERFACE:
+*	INTERFACE:	void GameScene::update(sf::Time t)
+*	sf::Time t: the time of the update
 *
-*	PARAMETERS:
+*	RETURNS: 	void
 *
-*	RETURNS: void
-*
-*	NOTES:
+*	NOTES:		updates all the entities in the game
 ******************************************************************************/
 void GameScene::update(sf::Time t)
 {
@@ -628,8 +630,7 @@ void GameScene::processEvents(sf::Event& e)
 *
 *	DESIGNER: Chris Klassen
 *
-*	PROGRAMMER: Chris Klassen, Alex Lam, Marc Rafanan
-*				Jonathan Chu
+*	PROGRAMMER: Chris Klassen, Alex Lam, Marc Rafanan, Jonathan Chu
 *
 *	INTERFACE: draw();
 *
@@ -928,13 +929,13 @@ void GameScene::generateUI()
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam
+*	DESIGNER: Alex Lam, Melvin Loho
 *
-*	PROGRAMMER: Alex Lam
+*	PROGRAMMER: Alex Lam, Melvin Loho
 *
 *	INTERFACE: void GameScene::createClassUI()
 *
-*	PARAMETERS:none
+*	PARAMETERS: none
 *
 *	RETURNS: void
 *
@@ -1192,7 +1193,7 @@ void onClickDemiseThree()
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam, Julian Brandrick
+*	DESIGNER: Melvin Loho, Alex Lam, Julian Brandrick
 *
 *	PROGRAMMER: Alex Lam, Julian Brandrick
 *
@@ -1218,7 +1219,7 @@ float convertX(float x)
 *
 *	REVISIONS: (Date and Description)
 *
-*	DESIGNER: Alex Lam, Julian Brandrick
+*	DESIGNER: Melvin Loho, Alex Lam, Julian Brandrick
 *
 *	PROGRAMMER: Alex Lam, Julian Brandrick
 *

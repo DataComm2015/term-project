@@ -58,6 +58,11 @@ class MiniBoss : public GateKeeper
 		void processSetHealthEvent(SetHealthEvent* ev);
 		void processAttackEvent(AttackEvent* aev);
 
+		id_resource grassWalkSoundMBoss;
+		id_resource stoneWalkSoundMBoss;
+		id_resource hurtSoundMBoss;
+		id_resource attackSoundMBoss;
+
 	protected:
 		bool movingLeft;
     	bool movingRight;
@@ -85,6 +90,13 @@ class MiniBoss : public GateKeeper
 		BlockZone steppedTile;
 		bool soundActive;
 		Animation *gkAnimation;
+
+	public:
+		static const char *travelSnds[3];
+
+		static const char *attackSnds[5];
+
+		static const char *hurtSnds[4];
 
 };
 

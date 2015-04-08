@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: pound.vert - GLSL pound shader
 --
--- PROGRAM: Project Spectre
+-- PROGRAM: Sojourn
 --
 -- DATE: February 9th, 2015
 --
